@@ -16,7 +16,7 @@ https://andonekwon.tistory.com/59
 
 NAT과 방화벽으로 인한 통신 방해 문제 해결
 
-- STUN (Session Traversal Utilities for NAT)
+- STUN (Session Traversal Utilities for NAT) 
   - Kurento 미디어 서버를 Signaling Server로 이용
   - WebRTC 미디어 서버와 클라이언트 API등의 WebRTC 전체 사양이 구현된 패키지
   - https://doc-kurento.readthedocs.io/en/latest/
