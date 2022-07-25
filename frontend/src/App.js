@@ -1,10 +1,42 @@
 import { Route, Routes } from 'react-router-dom';
+
+// page
+import Layout from './layout/Layout';
+// accounts
 import IndexPage from './pages/IndexPage';
+import LoginPage from './pages/accounts/LoginPage';
+import LogoutPage from './pages/accounts/LogoutPage';
+import SignUpPage from './pages/accounts/SignUpPage';
+// lectures
+import LecturesPage from './pages/lectures/LecturesPage';
+// snacks
+import SnacksPage from './pages/snacks/SnacksPage';
+// notfount
+import NotFound from './pages/NotFound';
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<IndexPage />} />
+      {/* Index */}
+      <Route path="" element={<Layout />}>
+        <Route path="" element={<IndexPage />} />
+      </Route>
+      {/* accounts */}
+      <Route path="accounts" element={<Layout />}>
+        <Route path="login" element={<LoginPage />} />
+        <Route path="logout" element={<LogoutPage />} />
+        <Route path="signup" element={<SignUpPage />} />
+        <Route path="profile" element={<LoginPage />} />
+      </Route>
+      {/* lectures */}
+      <Route path="lectures" element={<Layout />}>
+        <Route path="" element={<LecturesPage />} />
+      </Route>
+      {/* snacks */}
+      <Route path="snacks" element={<Layout />}>
+        <Route path="" element={<SnacksPage />} />
+      </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
