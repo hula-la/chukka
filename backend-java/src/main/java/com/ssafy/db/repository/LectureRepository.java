@@ -12,9 +12,11 @@ import java.util.Optional;
 
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, String> {
-    Optional<Lecture> findAll(List<Lecture> list);
+    // 전체 강의 목록 조회
+    //    Optional<Lecture> findAll(List<Lecture> list);
 
+    // 공지사항 수정
     @Modifying(clearAutomatically = true)
     @Query("update Lecture lec set lec.lecNotice = :lecNotice where lec.lecId = :lecId")
-    Optional<LectureNoticeRes> updatLecNotice(int lecId, String lecNotice);
+    Optional<LectureNoticeRes> updateLecNotice(int lecId, String lecNotice);
 }

@@ -1,4 +1,4 @@
-package com.ssafy.db.entity;
+wjpackage com.ssafy.db.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 

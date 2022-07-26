@@ -13,7 +13,7 @@ public class Review{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int review_id;
+    private int reviewId;
 
     @ManyToOne
     @JoinColumn(name = "lec_id")
@@ -23,11 +23,11 @@ public class Review{
     @JoinColumn(name = "userId")
     private User user;
 
-    private int review_score;
+    private int reviewScore;
 
     @Temporal(TemporalType.DATE)
-    private Date review_regdate;
+    private Date reviewRegdate;
 
-    private String review_contents;
+    private String reviewContents;
 
 }

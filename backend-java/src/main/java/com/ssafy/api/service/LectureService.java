@@ -10,7 +10,7 @@ import java.util.List;
 public interface LectureService {
 
     // Read
-  	List<Lecture> findAll();
+//  	List<Lecture> findAll();
 
     // Update
     Lecture updateLecNotice(int lecId, String lecNotice);

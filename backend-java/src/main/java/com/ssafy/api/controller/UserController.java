@@ -1,7 +1,6 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.user.UserModifyReq;
-import com.ssafy.api.request.user.UserReq;
 import com.ssafy.api.response.user.UserModifyRes;
 import com.ssafy.api.response.user.UserYourRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,11 +123,11 @@ public class UserController {
 			@ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<UserLoginPostRes> modifyProfile(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo) {
+	public ResponseEntity<UserModifyRes> modifyProfile(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo) {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		Integer res = userService.updateUser(loginUserId, modifyInfo);
-		return ResponseEntity.status(200).body(UserModifyRes.of(200, "Success", null, null, null));
+		return ResponseEntity.status(200).body(UserModifyRes.of(200, "Success", null, null));
 	}
 
 }

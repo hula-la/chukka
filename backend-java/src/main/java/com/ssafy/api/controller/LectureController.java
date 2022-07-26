@@ -23,15 +23,15 @@ public class LectureController {
     LectureService lectureService;
 
     // 전체 강의 목록 =============================================================================
-    @GetMapping("/")
-    @ApiOperation(value = "전체 강의 목록", notes = "전체 게시글을 불러온다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
-            @ApiResponse(code = 500, message = "서버 오류")
-    })
-    public ResponseEntity<List<Lecture>> lectureList() {
-        return ResponseEntity.ok(lectureService.findAll());
-    }
+//    @GetMapping("/")
+//    @ApiOperation(value = "전체 강의 목록", notes = "전체 게시글을 불러온다.")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "성공"),
+//            @ApiResponse(code = 500, message = "서버 오류")
+//    })
+//    public ResponseEntity<List<Lecture>> lectureList() {
+//        return ResponseEntity.ok(lectureService.findAll());
+//    }
 
     @PutMapping("/")
     @ApiOperation(value = "공지사항", notes = "공지사항을 업데이트한다.")

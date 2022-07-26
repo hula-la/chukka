@@ -16,14 +16,14 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     LectureRepository lectureRepository;
 
-    @Override
-    public List<Lecture> findAll() {
-        return lectureRepository.findAll();
-    }
+//    @Override
+//    public List<Lecture> findAll() {
+//        return lectureRepository.findAll();
+//    }
 
     @Override
     public Lecture updateLecNotice(int lecId, String lecNotice) {
-        lectureRepository.updatLecNotice(lecId, lecNotice);
+        lectureRepository.updateLecNotice(lecId, lecNotice);
         return null;
 
     }
