@@ -1,7 +1,10 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.user.UserModifyReq;
+import com.ssafy.common.util.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private JavaMailSender emailSender;
 	
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
@@ -58,8 +64,26 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Integer updateUser(String userId, UserModifyReq modifyInfo) {
-		userRepository.updateUser(userId, modifyInfo.getUserName(), modifyInfo.getUserPhone(), modifyInfo.getUserEmail(), modifyInfo.getUserGender(), modifyInfo.getUserAge(), modifyInfo.getUserNickname(), modifyInfo.getUserProfile());
+	public User updateUser(String userId, UserModifyReq modifyInfo) {
+		userRepository.updateUser(userId, modifyInfo.getUserPhone(), modifyInfo.getUserEmail(), modifyInfo.getUserGender(), modifyInfo.getUserBirth(), modifyInfo.getUserNickname(), modifyInfo.getUserProfile());
+		User user = userRepository.findByUserId(userId).get();
+		return user;
+	}
+
+	@Override
+	public Integer updatePw(String userId, String userPw) {
+		String password = passwordEncoder.encode(userPw);
+		userRepository.updatePassword(userId, password);
 		return null;
+	}
+
+	@Override
+	public void sendPw(MailUtil mail) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom("chukkadance@naver.com");
+		message.setTo(mail.getAddress());
+		message.setSubject(mail.getTitle());
+		message.setText(mail.getContent());
+		emailSender.send(message);
 	}
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.beans.Transient;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -26,6 +27,11 @@ public interface UserRepository extends JpaRepository<User, String> {
     Optional<Integer> updateUserAccessToken(String userId, String userAccessToken);
     @Transactional
     @Modifying
-    @Query(value = "update User u set u.userName = :userName, u.userPhone = :userPhone, u.userEmail = :userEmail, u.userGender = :userGender, u.userAge = :userAge, u.userNickname = :userNickname, u.userProfile = :userProfile where u.userId = :userId", nativeQuery = true)
-    Optional<Integer> updateUser(String userId, String userName, String userPhone, String userEmail, String userGender, String userAge, String userNickname, String userProfile);
+    @Query(value = "update User u set u.userPhone = :userPhone, u.userEmail = :userEmail, u.userGender = :userGender, u.userBirth = :userBirth, u.userNickname = :userNickname, u.userProfile = :userProfile where u.userId = :userId", nativeQuery = true)
+    Optional<Integer> updateUser(String userId, String userPhone, String userEmail, int userGender, Date userBirth, String userNickname, String userProfile);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update User u set u.userPw = :userPw where u.userId = :userId", nativeQuery = true)
+    Optional<Integer> updatePassword(String userId, String userPw);
 }

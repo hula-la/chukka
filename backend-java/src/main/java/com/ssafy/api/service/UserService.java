@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.request.user.UserRegisterPostReq;
+import com.ssafy.common.util.MailUtil;
 import com.ssafy.db.entity.User;
 
 /**
@@ -12,5 +13,7 @@ public interface UserService {
 	User getUserByUserId(String userId);
 	User getUserByUserNickname(String userNickname);
 	Integer updateUserToken(String userId, String userAccessToken);
-	Integer updateUser(String userId, UserModifyReq modifyInfo);
+	User updateUser(String userId, UserModifyReq modifyInfo);
+	Integer updatePw(String userId, String userPw);
+	void sendPw(MailUtil mail);
 }
