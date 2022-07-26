@@ -32,12 +32,12 @@ public class User{
     private int userAge;
     private String userNickname;
     private String userProfile;
-    private String followings;
+    private String userAccessToken;
 
     // 경험치 관련
-    private int user_lv_lec;
-    private int user_lv_tik;
-    private int user_lv_game;
+    private int userLvLec;
+    private int userLvSnacks;
+    private int userLvGame;
     
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

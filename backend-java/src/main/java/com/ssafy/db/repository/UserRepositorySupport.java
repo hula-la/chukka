@@ -1,6 +1,7 @@
 package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.User;
 
@@ -24,4 +25,5 @@ public class UserRepositorySupport {
         if(user == null) return Optional.empty();
         return Optional.ofNullable(user);
     }
+
 }

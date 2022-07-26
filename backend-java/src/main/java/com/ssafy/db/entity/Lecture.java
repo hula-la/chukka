@@ -16,18 +16,19 @@ public class Lecture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lec_id")
-    private int lec_id;
+    private int lecId;
 
     @ManyToOne
     @JoinColumn(name = "ins_id")
     private Instructor instructor;
 
-    private String lec_title;
-    private String lec_contents;
-    private int lec_price;
+    private String lecTitle;
+    private String lecContents;
+    private int lecPrice;
+    private String lecNotice;
 
     @Temporal(TemporalType.DATE)
-    private Date lec_start_date;
+    private Date lecStartDate;
 
     @Temporal(TemporalType.DATE)
     private Date lec_end_date;

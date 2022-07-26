@@ -19,7 +19,6 @@ public class PayList {
 
     @ManyToOne
     @JoinColumn(name = "pay_id")
-//    @JoinColumn(name = "user_id")
     private Pay pay;
 
     @ManyToOne
@@ -28,7 +27,6 @@ public class PayList {
 
     @ManyToOne
     @JoinColumn(name = "lec_id")
-//    @JoinColumn(name = "ins_id")
     private Lecture lecture;
 
 }
