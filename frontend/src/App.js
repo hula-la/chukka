@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
+import './App.css';
 
 // page
 import Layout from './layout/Layout';
@@ -11,33 +12,41 @@ import SignUpPage from './pages/accounts/SignUpPage';
 import LecturesPage from './pages/lectures/LecturesPage';
 // snacks
 import SnacksPage from './pages/snacks/SnacksPage';
+// games
+import GamesPage from './pages/games/GamesPage';
 // notfount
 import NotFound from './pages/NotFound';
 
 const App = () => {
   return (
-    <Routes>
-      {/* Index */}
-      <Route path="" element={<Layout />}>
-        <Route path="" element={<IndexPage />} />
-      </Route>
-      {/* accounts */}
-      <Route path="accounts" element={<Layout />}>
-        <Route path="login" element={<LoginPage />} />
-        <Route path="logout" element={<LogoutPage />} />
-        <Route path="signup" element={<SignUpPage />} />
-        <Route path="profile" element={<LoginPage />} />
-      </Route>
-      {/* lectures */}
-      <Route path="lectures" element={<Layout />}>
-        <Route path="" element={<LecturesPage />} />
-      </Route>
-      {/* snacks */}
-      <Route path="snacks" element={<Layout />}>
-        <Route path="" element={<SnacksPage />} />
-      </Route>
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <div className="App">
+      <Routes>
+        {/* Index */}
+        <Route path="" element={<Layout />}>
+          <Route path="" element={<IndexPage />} />
+        </Route>
+        {/* accounts */}
+        <Route path="accounts" element={<Layout />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="logout" element={<LogoutPage />} />
+          <Route path="signup" element={<SignUpPage />} />
+          <Route path="profile" element={<LoginPage />} />
+        </Route>
+        {/* lectures */}
+        <Route path="lectures" element={<Layout />}>
+          <Route path="" element={<LecturesPage />} />
+        </Route>
+        {/* snacks */}
+        <Route path="snacks" element={<Layout />}>
+          <Route path="" element={<SnacksPage />} />
+        </Route>
+        {/* games */}
+        <Route path="games" element={<Layout />}>
+          <Route path="" element={<GamesPage />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
   );
 };
 
