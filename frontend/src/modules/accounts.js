@@ -38,3 +38,5 @@ const accounts = handleActions(
   },
   initialState,
 );
+
+export default accounts;
