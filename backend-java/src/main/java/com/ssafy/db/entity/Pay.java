@@ -18,17 +18,17 @@ public class Pay{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pay_id")
-    private int pay_id;
+    private int payId;
 
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
     @Temporal(TemporalType.DATE)
-    private Date pay_date;
+    private Date payDate;
 
-    private int pay_amount;
-    private int pay_method;
+    private int payAmount;
+    private int payMethod;
 
     @OneToMany(mappedBy = "pay")
     private List<PayList> payLists = new ArrayList<>();

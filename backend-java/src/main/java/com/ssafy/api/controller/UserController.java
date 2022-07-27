@@ -2,9 +2,12 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.request.user.UserPasswordModifyReq;
-import com.ssafy.api.response.user.UserYourRes;
+import com.ssafy.api.response.user.*;
 import com.ssafy.common.util.MailUtil;
+import com.ssafy.db.entity.Pay;
+import com.ssafy.db.entity.Snacks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.api.request.user.UserLoginPostReq;
 import com.ssafy.api.request.user.UserRegisterPostReq;
-import com.ssafy.api.response.user.UserLoginPostRes;
-import com.ssafy.api.response.user.UserMyRes;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -27,6 +28,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -44,7 +46,6 @@ public class UserController {
 	PasswordEncoder passwordEncoder;
 
 	/**
-	 * profile (사진파일) 저장하는 코드 짜기
 	 * Optional 부분 .get 메서드 쓴 곳 수정 (.get()은 null을 반환하지 않고 Exception을 유발함)
 	**/
 
@@ -246,4 +247,50 @@ public class UserController {
 		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Email"));
 	}
 
+	// 수정 필요 ********************************************************************************************************
+	// - userId를 그냥 authentication에서 가져오기 ************************************************************************
+	// - pageable parameter로 가져오기 ***********************************************************************************
+	// 마이페이지 수강 목록 ================================================================================================
+	@GetMapping("/accounts/{userId}/lectures/")
+	@ApiOperation(value = "나의 수강 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 수강 강의 목록을 반환한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success")
+	})
+	public ResponseEntity<UserMyLectureListRes> getMyLecture(
+			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
+		// 강의 아이디, 강의 썸네일, 강의명, 강사명 조회하기
+		List<UserMyLectureRes> list = userService.getLecturesByUserId(userId, pageable);
+		return ResponseEntity.status(200).body(UserMyLectureListRes.of(200, "Success", list));
+	}
+
+	// 수정 필요 ********************************************************************************************************
+	// - userId를 그냥 authentication에서 가져오기 ************************************************************************
+	// - pageable parameter로 가져오기 ***********************************************************************************
+	// 마이페이지 스낵스 목록 ================================================================================================
+	@GetMapping("/accounts/{userId}/snacks/")
+	@ApiOperation(value = "나의 스낵스 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 업로드 스낵스 목록을 반환한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success")
+	})
+	public ResponseEntity<UserMySnacksListRes> getMySnacks(
+			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
+		List<Snacks> list = userService.getSnacksByUserId(userId, pageable);
+		return ResponseEntity.status(200).body(UserMySnacksListRes.of(200, "Success", list));
+	}
+
+	// 수정 필요 ********************************************************************************************************
+	// - userId를 그냥 authentication에서 가져오기 ************************************************************************
+	// - pageable parameter로 가져오기 ***********************************************************************************
+	// - fetch join 되는지 확인하기 ***************************************************************************************
+	// 마이페이지 결제 목록 ================================================================================================
+	@GetMapping("/accounts/{userId}/orders/")
+	@ApiOperation(value = "나의 결제 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 결제 목록을 반환한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success")
+	})
+	public ResponseEntity<UserMyPayListRes> getMyOrders(
+			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
+		List<Pay> list = userService.getPaysByUserId(userId, pageable);
+		return ResponseEntity.status(200).body(UserMyPayListRes.of(200, "Success", list));
+	}
 }
