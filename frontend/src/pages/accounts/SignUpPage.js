@@ -1,8 +1,11 @@
+import SignupTemplate from '../../components/accounts/SignupTemplate';
+import SignupForm from '../../components/accounts/SignupForm';
+
 const SignUpPage = () => {
   return (
-    <div>
-      <h1>SignUpPage</h1>
-    </div>
+    <SignupTemplate>
+      <SignupForm />
+    </SignupTemplate>
   );
 };
 
