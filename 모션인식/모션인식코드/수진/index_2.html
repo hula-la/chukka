@@ -7,6 +7,7 @@
 <body>
 	<video id="videoInput" style="display:none"></video>
   <img id="video" src="">
+  <img id="video2" src="">
   <canvas id="videoOutput"></canvas>
   <button onclick=stream()>Send</button>
 </body>
@@ -14,17 +15,30 @@
   var w = 320, h = 240;
 	var url = "ws://localhost:8000/client"
 	var ws = new WebSocket(url);
+  ws.binaryType = "arraybuffer";
+
+  // websocket 연결
 	ws.onopen = function(){
 		console.log("Websocket is connected.");
 	}
+
+  
 	ws.onmessage = function(msg){
-		console.log(msg.data);
-    var arrayBufferView = new Uint8Array( msg.data);
+		// console.log(msg.data);
+    var msg = JSON.parse(msg.data)
+    var arrayBufferView = new Uint8Array( msg.client);
     var blob = new Blob( [ arrayBufferView ], { type: "multipart/x-mixed-replace" } );
     var urlCreator = window.URL || window.webkitURL;
     var imageUrl = urlCreator.createObjectURL( blob );
     var img = document.querySelector( "#video" );
     img.src = imageUrl;
+
+    var arrayBufferView2 = new Uint8Array( msg.dancer);
+    var blob2 = new Blob( [ arrayBufferView ], { type: "multipart/x-mixed-replace" } );
+    var urlCreator = window.URL || window.webkitURL;
+    var imageUrl2 = urlCreator.createObjectURL( blob2 );
+    var img2 = document.querySelector( "#video2" );
+    img2.src = imageUrl2;
 	}
 
 	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -46,19 +60,20 @@
   canvas.height = h;
   var ctx = canvas.getContext("2d");
   function processImage(){
-        console.log("카마라 온")
         ctx.drawImage(video, 0, 0, w, h);
         setTimeout(processImage, 1);
   }
   processImage();
 
   function stream(){
-    setInterval(sendImage, 30);
+    setInterval(sendImage, 100);
   }
 
   function sendImage(){
     var rawData = canvas.toDataURL("image/jpeg", 0.5);
     ws.send(rawData);
   }
+
+
 </script>
 </html>
