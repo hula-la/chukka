@@ -22,8 +22,6 @@ public class ReviewPostReq {
     User user;
     @ApiModelProperty(name = "평점", example = "1~5")
     int reviewScore;
-    @ApiModelProperty(name = "등록일", example = "2020-10-10")
-    Date reviewRegdate;
     @ApiModelProperty(name = "리뷰내용", example = "이 강의 진짜 좋네요")
     String reviewContents;
 

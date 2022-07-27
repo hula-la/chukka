@@ -8,8 +8,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-
 @Getter
 @Setter
 @ApiModel("ReviewPostResponse")
@@ -22,8 +20,6 @@ public class ReviewPostRes extends BaseResponseBody {
     User user;
     @ApiModelProperty(name = "평점", example = "1~5")
     int reviewScore;
-    @ApiModelProperty(name = "등록일", example = "2020-10-10")
-    Date reviewRegdate;
     @ApiModelProperty(name = "리뷰내용", example = "이 강의 진짜 좋네요")
     String reviewContents;
 
@@ -33,7 +29,6 @@ public class ReviewPostRes extends BaseResponseBody {
                                    Lecture lecture,
                                    User user,
                                    int reviewScore,
-                                   Date reviewRegdate,
                                    String reviewContents) {
 
         ReviewPostRes res = new ReviewPostRes();
@@ -43,7 +38,6 @@ public class ReviewPostRes extends BaseResponseBody {
         res.setLecture(lecture);
         res.setUser(user);
         res.setReviewScore(reviewScore);
-        res.setReviewRegdate(reviewRegdate);
         res.setReviewContents(reviewContents);
         return res;
     }

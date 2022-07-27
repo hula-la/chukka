@@ -2,6 +2,7 @@ package com.ssafy.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class Review{
     private int reviewScore;
 
     @Temporal(TemporalType.DATE)
+    @CreatedDate
     private Date reviewRegdate;
 
     private String reviewContents;
