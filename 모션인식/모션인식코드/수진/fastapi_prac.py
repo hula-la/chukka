@@ -1,3 +1,4 @@
+import json
 from fastapi import FastAPI, WebSocket
 import base64, cv2
 app = FastAPI()
@@ -315,6 +316,7 @@ def get_stream_video():
 
 def video_streaming():
     return get_stream_video()
+    
 
 @app.get("/video")
 def main():
@@ -359,17 +361,11 @@ def main():
     return StreamingResponse(generate_frames(cap,i), media_type = 'multipart/x-mixed-replace; boundary=frame')
     
 
-
 @app.websocket("/client")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
-        data = await websocket.receive_text()
-        # print(data)
-        img = cv2.imdecode(np.fromstring(base64.b64decode(data.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
-        
-        
-        
+
         trainer_video = r'dance_video/dancer.mp4'
         keyp_list=[
             [199 , 79 , 199 , 107 , 165 , 107,  145,  133 , 121,  135,  232 , 109  ,264 , 137 , 305 , 172  ,175 , 195 , 147  ,228 ,  0  , 0  ,216 , 193  ,223  ,244 , 256 , 305  ,191 , 72 , 206 , 72 , 177,  74 , 218,  74],
@@ -392,17 +388,15 @@ async def websocket_endpoint(websocket: WebSocket):
         dim=(420,720)
         ########################################################################################
         cap = cv2.VideoCapture(trainer_video)
-        cam = img
 
         fps_time = 0 #Initializing fps to 0
         while True:
-            ret_val, image_1 = cam.read()
+            data = await websocket.receive_text()
+            img = cv2.imdecode(np.fromstring(base64.b64decode(data.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+            image_1 = img
             e_d=0
             ret_val_1,image_2 = cap.read()
-            if not ret_val:
-                await websocket.send_text(f"WebCame Connect Fail : {websocket.client}")
-                break
-            if ret_val_1 and ret_val:
+            if ret_val_1:
                 # resizing the images
                 image_2 = cv2.resize(image_2, dim, interpolation = cv2.INTER_AREA)
                 image_1 = cv2.resize(image_1, dim, interpolation = cv2.INTER_AREA)
@@ -414,8 +408,6 @@ async def websocket_endpoint(websocket: WebSocket):
                 # Showing FPS
                 cv2.putText(image_2, "FPS: %f" % (1.0 / (time.time() - fps_time)), (10, 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-                # Displaying the dancer feed.
-                cv2.imshow('Dancer Window', image_2)
                 # Getting User keypoints, normalization and comparing also plotting the keypoints and lines to the image
                 image_1 = TfPoseEstimator.draw_humans(image_1, humans_2, imgcopy=False) # 선 표시하는 코드
                 npimg = np.copy(image_1)
@@ -441,20 +433,15 @@ async def websocket_endpoint(websocket: WebSocket):
                             try:
                                 if k>=36:
                                     break
-                                #print(k)
-                                #print(keypoints_list[i][j])
                                 features[k]=centers[j][0]
                                 features[k+1]=centers[j][1]
                             except:
                                 features[k]=0
                                 features[k+1]=0
                         features=transformer.transform([features])
-                        #print(features[0])
                         min_=100 # Intializing a value to get minimum cosine similarity score from the dancer array list with the user
                         for j in keyp_list:
-                            #print(j)
                             sim_score=findCosineSimilarity_1(j,features[0])
-                            #print(sim_score)
                             #Getting the minimum Cosine Similarity Score
                             if min_>sim_score:
                                 min_=sim_score
@@ -471,15 +458,15 @@ async def websocket_endpoint(websocket: WebSocket):
                 cv2.putText(image_1, "FPS: %f" % (1.0 / (time.time() - fps_time)), (10, 50),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-                # image_1 : 웹캠 이미지
                 ret, buffer = cv2.imencode('.jpg', image_1)
-                await websocket.send_bytes(bytearray(buffer))  # client 에 메시지 전달
-                frame = buffer.tobytes()
-                # yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
-                #    bytearray(buffer) + b'\r\n')
+                ret2, buffer2 = cv2.imencode('.jpg', image_2)
 
-                # Display the user feed
-                # cv2.imshow('User Window', image_1) # 기존 코드
+                await websocket.send_json(json.dumps({
+                    "client":bytearray(buffer),
+                    "dancer":bytearray(buffer2),
+                    }))
+                # await websocket.send_bytes()  # client 에 메시지 전달
+                frame = buffer.tobytes()
             
 
                 fps_time = time.time()
@@ -488,10 +475,17 @@ async def websocket_endpoint(websocket: WebSocket):
             else:
                 break
 
-        # cap.release()
+        cap.release()
         
         
-        cv2.imshow('image', img)
         cv2.waitKey(1)
 
+
+@app.websocket("/client2")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        ret, buffer = cv2.imencode('.jpg', data)
+        await websocket.send_bytes(bytearray(buffer)) 
 
