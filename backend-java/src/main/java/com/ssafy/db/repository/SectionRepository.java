@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface SectionRepository extends JpaRepository<Section, String> {
 
     // 소강의 불러오기
-    List<Section> findByLectureOrderBySecId(Section section);
+    List<Section> findByLectureOrderBySecId(Lecture lecture);
 
     // 소강의 수정하기
     @Modifying(clearAutomatically = true)
@@ -20,7 +20,7 @@ public interface SectionRepository extends JpaRepository<Section, String> {
             "set sec.secId = :secId," +
             "sec.secTitle = :secTitle," +
             "sec.secContents = :secContents " +
-            "where sec.lecture = : lecture " +
+            "where sec.lecture = :lecture " +
             "and sec.secId = :secId", nativeQuery = true)
     Optional<Integer> updateSection(int secId, String secTitle, String secContents, Lecture lecture);
 
