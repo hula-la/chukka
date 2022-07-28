@@ -31,7 +31,5 @@ public class UserRegisterPostReq {
 	Date userBirth;
 	@ApiModelProperty(name="유저 Nickname", example="your_nickname")
 	String userNickname;
-	@ApiModelProperty(name="유저 Profile", example="img/profile.png")
-	String userProfile;
 
 }

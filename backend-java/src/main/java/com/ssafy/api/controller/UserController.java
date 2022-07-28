@@ -1,20 +1,19 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.request.user.UserModifyReq;
-import com.ssafy.api.request.user.UserPasswordModifyReq;
+import com.ssafy.api.request.user.*;
 import com.ssafy.api.response.user.*;
 import com.ssafy.common.util.MailUtil;
 import com.ssafy.db.entity.Pay;
+import com.ssafy.db.entity.PayList;
 import com.ssafy.db.entity.Snacks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import com.ssafy.api.request.user.UserLoginPostReq;
-import com.ssafy.api.request.user.UserRegisterPostReq;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -47,6 +46,8 @@ public class UserController {
 
 	/**
 	 * Optional 부분 .get 메서드 쓴 곳 수정 (.get()은 null을 반환하지 않고 Exception을 유발함)
+	 * JWT 공부
+	 * Authentication / Authorization 공부
 	**/
 
 
@@ -92,7 +93,7 @@ public class UserController {
 		if(user == null) {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 		}
-		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid"));
+		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid"));
 	}
 
 	// 로그인 ===========================================================================================================
@@ -107,46 +108,32 @@ public class UserController {
 		String password = loginInfo.getUserPw();
 		User user = userService.getUserByUserId(userId);
 		if(user == null) {
-			return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid User", null, null, null));
+			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid User"));
 		}
 		// 로그인 요청한 유저로부터 입력된 패스워드와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
 		if(passwordEncoder.matches(password, user.getUserPw())) {
 			// 유효한 패스워드가 맞는 경우
 			String accessToken = JwtTokenUtil.getToken(userId);
+			String refreshToken = JwtTokenUtil.getRefreshToken(userId, 5);
 			// accessToken DB에 넣기
-			Integer res = userService.updateUserToken(userId, accessToken);
+			userService.updateUserToken(userId, refreshToken);
 			// 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", accessToken, user.getUserNickname(), user.getUserProfile()));
+			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", accessToken, refreshToken, user.getUserNickname(), user.getUserProfile()));
 		}
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
 		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid User"));
 	}
 
-	// 수정 필요 ********************************************************************************************************
 	// 로그아웃 =========================================================================================================
-//	@PostMapping("/logout/")
-//	@ApiOperation(value = "로그아웃", notes = "로그아웃한다.")
-//	@ApiResponses({
-//			@ApiResponse(code = 200, message = "Success", response = UserLoginPostRes.class),
-//			@ApiResponse(code = 401, message = "Invalid Password", response = BaseResponseBody.class)
-//	})
-//	public ResponseEntity<UserLoginPostRes> logout(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginPostReq loginInfo) {
-//		String userId = loginInfo.getUserId();
-//		String password = loginInfo.getUserPw();
-//
-//		User user = userService.getUserByUserId(userId);
-//		// 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
-//		if(passwordEncoder.matches(password, user.getUserPw())) {
-//			// 유효한 패스워드가 맞는 경우
-//			String accessToken = JwtTokenUtil.getToken(userId);
-//			// accessToken DB에 넣기
-//			Integer res = userService.updateUserToken(userId, accessToken);
-//			// 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-//			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", accessToken, user.getUserNickname(), user.getUserProfile()));
-//		}
-//		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-//		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null, null, null));
-//	}
+	@PostMapping("/logout/")
+	@ApiOperation(value = "로그아웃", notes = "로그아웃한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
+	})
+	public ResponseEntity<BaseResponseBody> logout(@RequestBody @ApiParam(value="회원 아이디", required = true) String userId) {
+		userService.logout(userId);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+	}
 
 	// 회원 정보 조회 ====================================================================================================
 	@PostMapping("/")
@@ -154,7 +141,8 @@ public class UserController {
     @ApiResponses({
         @ApiResponse(code = 200, message = "MySuccess", response = UserMyRes.class),
 		@ApiResponse(code = 201, message = "YourSuccess", response = UserYourRes.class),
-        @ApiResponse(code = 401, message = "Invalid Nickname", response = BaseResponseBody.class)
+        @ApiResponse(code = 401, message = "Invalid Nickname", response = BaseResponseBody.class),
+		@ApiResponse(code = 403, message = "Invalid User", response = BaseResponseBody.class)
     })
 	public ResponseEntity<?> getUserInfo(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="회원 닉네임", required = true) String userNickname) {
 		/**
@@ -176,8 +164,11 @@ public class UserController {
 				return ResponseEntity.status(200).body(UserYourRes.of(201, "YourSuccess", user));
 			}
 		// 비로그인
-		} else {
+		} else if(authentication.getPrincipal().equals("")) {
 			return ResponseEntity.status(200).body(UserYourRes.of(201, "YourSuccess", user));
+		// 토큰 만료
+		} else {
+			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Invalid User"));
 		}
 	}
 
@@ -219,10 +210,10 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "Invalid Email", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<? extends BaseResponseBody> searchPw(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="회원 이메일", required = true) String userEmail) {
-		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-		String loginUserId = userDetails.getUsername();
-		User user = userService.getUserByUserId(loginUserId);
+	public ResponseEntity<? extends BaseResponseBody> searchPw(@RequestBody @ApiParam(value="회원 아이디 및 이메일", required = true) UserPasswordSearchReq info) {
+		String userId = info.getUserId();
+		String userEmail = info.getUserEmail();
+		User user = userService.getUserByUserId(userId);
 		if(user.getUserEmail().equals(userEmail)) {
 			// 랜덤 비밀번호 생성 (newPw)
 			int leftLimit = 48; // numeral '0'
@@ -235,7 +226,7 @@ public class UserController {
 					.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
 					.toString();
 			// 회원 비밀번호 변경
-			userService.updatePw(loginUserId, newPw);
+			userService.updatePw(userId, newPw);
 			// 메일 보내기
 			MailUtil mail = new MailUtil();
 			mail.setTitle("[CHUKKA] 비밀번호 변경 안내입니다.");
@@ -251,7 +242,7 @@ public class UserController {
 	// - userId를 그냥 authentication에서 가져오기 ************************************************************************
 	// - pageable parameter로 가져오기 ***********************************************************************************
 	// 마이페이지 수강 목록 ================================================================================================
-	@GetMapping("/accounts/{userId}/lectures/")
+	@GetMapping("/{userId}/lectures/")
 	@ApiOperation(value = "나의 수강 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 수강 강의 목록을 반환한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success")
@@ -267,7 +258,7 @@ public class UserController {
 	// - userId를 그냥 authentication에서 가져오기 ************************************************************************
 	// - pageable parameter로 가져오기 ***********************************************************************************
 	// 마이페이지 스낵스 목록 ================================================================================================
-	@GetMapping("/accounts/{userId}/snacks/")
+	@GetMapping("/{userId}/snacks/")
 	@ApiOperation(value = "나의 스낵스 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 업로드 스낵스 목록을 반환한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success")
@@ -283,7 +274,7 @@ public class UserController {
 	// - pageable parameter로 가져오기 ***********************************************************************************
 	// - fetch join 되는지 확인하기 ***************************************************************************************
 	// 마이페이지 결제 목록 ================================================================================================
-	@GetMapping("/accounts/{userId}/orders/")
+	@GetMapping("/{userId}/orders/")
 	@ApiOperation(value = "나의 결제 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 결제 목록을 반환한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success")

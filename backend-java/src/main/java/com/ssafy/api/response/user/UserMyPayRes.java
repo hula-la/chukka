@@ -1,12 +1,15 @@
 package com.ssafy.api.response.user;
 
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.db.entity.Pay;
+import com.ssafy.db.entity.PayList;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 유저 로그인 API ([POST] /api/v1/auth) 요청에 대한 응답값 정의.
@@ -24,11 +27,18 @@ public class UserMyPayRes extends BaseResponseBody{
 	int payAmount;
 	@ApiModelProperty(name="강사명", example="Kim")
 	int payMethod;
+	@ApiModelProperty(name="강사명", example="Kim")
+	List<PayList> payList;
 	
-	public static UserMyPayRes of(Integer statusCode, String message, int lecId, String lecThumb, String lecTitle, String instructor) {
+	public static UserMyPayRes of(Integer statusCode, String message, Pay pay) {
 		UserMyPayRes res = new UserMyPayRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);
+		res.setPayId(pay.getPayId());
+		res.setPayDate(pay.getPayDate());
+		res.setPayAmount(pay.getPayAmount());
+		res.setPayMethod(pay.getPayMethod());
+		res.setPayList(pay.getPayLists());
 		return res;
 	}
 }

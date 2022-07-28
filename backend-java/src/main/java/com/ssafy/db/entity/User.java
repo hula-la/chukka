@@ -27,9 +27,9 @@ public class User{
     private String userEmail;
     private Integer userGender;
     private String userNickname;
-    private String userAccessToken;
+    private String userRefreshToken;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date userBirth;
 
     private Integer userPoint;
@@ -67,7 +67,7 @@ public class User{
     @PrePersist
     public void prePersist() {
         this.userPoint = this.userPoint == null ? 0 : this.userPoint;
-        this.userProfile = this.userProfile == null ? "img/profile.png" : this.userProfile;
+        this.userProfile = this.userProfile == null ? "default.png" : this.userProfile;
         this.userType = this.userType == null ? 0 : this.userType;
         this.userLvLec = this.userLvLec == null ? 0 : this.userLvLec;
         this.userLvSnacks = this.userLvSnacks == null ? 0 : this.userLvSnacks;

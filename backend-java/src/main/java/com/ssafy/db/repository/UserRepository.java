@@ -24,8 +24,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Transactional
 //    @Modifying(clearAutomatically = true)
     @Modifying
-    @Query(value = "update User u set u.user_access_token = :userAccessToken where u.user_id = :userId", nativeQuery = true)
-    Optional<Integer> updateUserAccessToken(String userId, String userAccessToken);
+    @Query(value = "update User u set u.user_refresh_token = :userRefreshToken where u.user_id = :userId", nativeQuery = true)
+    Optional<Integer> updateUserRefreshToken(String userId, String userRefreshToken);
     @Transactional
     @Modifying
     @Query(value = "update User u set u.user_phone = :userPhone, u.user_email = :userEmail, u.user_gender = :userGender, u.user_birth = :userBirth, u.user_nickname = :userNickname, u.user_profile = :userProfile where u.user_id = :userId", nativeQuery = true)
@@ -34,6 +34,12 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Transactional
     @Modifying
     @Query(value = "update User u set u.user_pw = :userPw where u.user_id = :userId", nativeQuery = true)
-    Optional<Integer> updatePassword(String userId, String userPw);
+    void updatePassword(String userId, String userPw);
+
+    Optional<User> findUserByUserRefreshToken(String userRefreshToken);
+    @Transactional
+    @Modifying
+    @Query(value = "update User u set u.user_refresh_token = '' where u.user_id = :userId", nativeQuery = true)
+    void updateRefreshToken(String userId);
 
 }

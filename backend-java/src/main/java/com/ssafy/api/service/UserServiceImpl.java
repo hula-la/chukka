@@ -58,7 +58,6 @@ public class UserServiceImpl implements UserService {
 		user.setUserGender(userRegisterInfo.getUserGender());
 		user.setUserBirth(userRegisterInfo.getUserBirth());
 		user.setUserNickname(userRegisterInfo.getUserNickname());
-		user.setUserProfile(userRegisterInfo.getUserProfile());
 		return userRepository.save(user);
 	}
 
@@ -82,9 +81,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Integer updateUserToken(String userId, String userAccessToken) {
-		userRepository.updateUserAccessToken(userId, userAccessToken);
-		return null;
+	public void updateUserToken(String userId, String userAccessToken) {
+		userRepository.updateUserRefreshToken(userId, userAccessToken);
 	}
 
 	@Override
@@ -123,7 +121,21 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<Pay> getPaysByUserId(String userId, Pageable pageable) {
-		return payRepository.findAllWithPaylistUsingFetchJoin(userId, pageable);
+		return payRepository.findPaylistUsingFetchJoin(userId, pageable);
+	}
+
+	@Override
+	public User getUserByRefreshToken(String refreshToken) {
+		Optional<User> user = userRepository.findUserByUserRefreshToken(refreshToken);
+		if(user.isPresent()) {
+			return user.get();
+		}
+		return null;
+	}
+
+	@Override
+	public void logout(String userId) {
+		userRepository.updateRefreshToken(userId);
 	}
 
 }
