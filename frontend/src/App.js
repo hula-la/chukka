@@ -10,6 +10,7 @@ import LogoutPage from './pages/accounts/LogoutPage';
 import SignUpPage from './pages/accounts/SignUpPage';
 // lectures
 import LecturesPage from './pages/lectures/LecturesPage';
+import LivePage from './pages/lectures/LivePage';
 // snacks
 import SnacksPage from './pages/snacks/SnacksPage';
 // games
@@ -35,6 +36,7 @@ const App = () => {
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
           <Route path="" element={<LecturesPage />} />
+          <Route path="live" element={<LivePage />} />
         </Route>
         {/* snacks */}
         <Route path="snacks" element={<Layout />}>
