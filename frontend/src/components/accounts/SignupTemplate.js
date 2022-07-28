@@ -28,6 +28,7 @@ const SignupBox = styled.div`
     height: 2px;
     background: #ff2c55;
     width: 100%;
+    margin-bottom: 0.5rem;
   }
   width: 250px;
 `;

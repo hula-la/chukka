@@ -1,10 +1,10 @@
 import SignupTemplate from '../../components/accounts/SignupTemplate';
-import SignupForm from '../../components/accounts/SignupForm';
+import SignupContainer from '../../containers/accounts/SignupContainer';
 
 const SignUpPage = () => {
   return (
     <SignupTemplate>
-      <SignupForm />
+      <SignupContainer />
     </SignupTemplate>
   );
 };
