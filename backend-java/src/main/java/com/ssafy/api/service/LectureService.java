@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.lecture.LecturePostReq;
+import com.ssafy.api.request.lecture.LectureUpdateReq;
 import com.ssafy.db.entity.Lecture;
 
 import java.util.List;
@@ -10,13 +11,21 @@ import java.util.List;
  */
 public interface LectureService {
 
-    // Create
+    // Create ==========================================================================================================
     Lecture createLecture(LecturePostReq lecturePostReq);
 
-    // Read
+    // Read ============================================================================================================
+    // 전체 강의 조회
   	List<Lecture> findAll();
 
-    // Update
+    // 결제한 강의 조회
+
+    // Update ==========================================================================================================
+    // 강의 수정
+    Lecture updateLecture(int lecId, LectureUpdateReq lectureUpdateReq);
+    // 공지사항 수정
     Lecture updateLecNotice(int lecId, String lecNotice);
 
+    // Delete ==========================================================================================================
+    Integer deleteByLecId(int lecId);
 }

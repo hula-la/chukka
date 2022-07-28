@@ -45,7 +45,7 @@ public class ReviewController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공")
     })
-    public ResponseEntity<?> deleteByReviewId(@RequestBody @ApiParam(value = "삭제할 댓글 정보", required = true) int reviewId) {
+    public ResponseEntity<?> deleteByReviewId(@RequestBody @ApiParam(value = "삭제할 댓글 ID", required = true) int reviewId) {
 
         return ResponseEntity.ok(reviewService.deleteByReviewId(reviewId));
     }

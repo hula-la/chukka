@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.lecture.LecturePostReq;
+import com.ssafy.api.request.lecture.LectureUpdateReq;
 import com.ssafy.api.response.lecture.LectureNoticeRes;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.LectureRepository;
@@ -30,10 +31,35 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
+    public Lecture updateLecture(int lecId, LectureUpdateReq lectureUpdateReq) {
+
+        int lecInfo = lecId;
+        lectureRepository.updateLecture(lecInfo,
+                lectureUpdateReq.getThumbnail(),
+                lectureUpdateReq.getLecTitle(),
+                lectureUpdateReq.getLecContents(),
+                lectureUpdateReq.getLecPrice(),
+                lectureUpdateReq.getLecNotice(),
+                lectureUpdateReq.getLecStartDate(),
+                lectureUpdateReq.getLecEndDate(),
+                lectureUpdateReq.getLecCategory(),
+                lectureUpdateReq.getLecLevel(),
+                lectureUpdateReq.getLecLimit(),
+                lectureUpdateReq.getLecGenre());
+        return null;
+    }
+
+    @Override
     public Lecture updateLecNotice(int lecId, String lecNotice) {
         lectureRepository.updateLecNotice(lecId, lecNotice);
         return null;
 
+    }
+
+    @Override
+    public Integer deleteByLecId(int lecId) {
+        lectureRepository.deleteByLecId(lecId);
+        return null;
     }
 
 }

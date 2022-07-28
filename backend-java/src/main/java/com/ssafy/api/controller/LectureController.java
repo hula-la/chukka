@@ -2,7 +2,9 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.lecture.LectureNoticeReq;
 import com.ssafy.api.request.lecture.LecturePostReq;
+import com.ssafy.api.request.lecture.LectureUpdateReq;
 import com.ssafy.api.response.lecture.LectureNoticeRes;
+import com.ssafy.api.response.lecture.LectureUpdateRes;
 import com.ssafy.api.service.LectureService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Lecture;
@@ -47,10 +49,23 @@ public class LectureController {
         return ResponseEntity.ok(lectureService.findAll());
     }
 
+    // 강의 내용 수정 ====================================================================================================
+    @PutMapping("/{lecId}")
+    @ApiOperation(value = "강의 수정" , notes = "강의 ID를 통해 해당 강의 내용을 수정한다")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공")
+    })
+    public ResponseEntity<LectureUpdateRes> updateLecture(@RequestBody @ApiParam(value = "수정할 강의 내용", required = true) LectureUpdateReq lectureUpdateReq) {
+        int lecId = lectureUpdateReq.getLecId();
+        Lecture lecture = lectureService.updateLecture(lecId, lectureUpdateReq);
+        return ResponseEntity.status(200).body(LectureUpdateRes.of(200,"Success", lecture));
+    }
+
+
     // 공지사항 수정 =====================================================================================================
     @PutMapping("/")
     @ApiOperation(value = "공지사항", notes = "공지사항을 업데이트한다.")
-    public ResponseEntity<LectureNoticeRes> updateLecNotice(@RequestBody @ApiParam(value = "수정할 공지사항", required = true) LectureNoticeReq updateInfo) {
+    public ResponseEntity<? extends BaseResponseBody> updateLecNotice(@RequestBody @ApiParam(value = "수정할 공지사항", required = true) LectureNoticeReq updateInfo) {
 
         String lecNotice = updateInfo.getLecNotice();
         int lecId = updateInfo.getLecId();
@@ -58,6 +73,15 @@ public class LectureController {
         return ResponseEntity.status(200).body(LectureNoticeRes.of(200,"Success", lecId, lecNotice));
     }
 
+    @DeleteMapping("/")
+    @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공")
+    })
+    public ResponseEntity<?> deleteByLecId(@RequestBody @ApiParam(value = "삭제할 강의 ID", required = true) int lecId) {
+
+        return ResponseEntity.ok(lectureService.deleteByLecId(lecId));
+    }
 }
 
 
