@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.db.entity.Lecture;
 
 import java.util.List;
@@ -9,8 +10,11 @@ import java.util.List;
  */
 public interface LectureService {
 
+    // Create
+    Lecture createLecture(LecturePostReq lecturePostReq);
+
     // Read
-//  	List<Lecture> findAll();
+  	List<Lecture> findAll();
 
     // Update
     Lecture updateLecNotice(int lecId, String lecNotice);

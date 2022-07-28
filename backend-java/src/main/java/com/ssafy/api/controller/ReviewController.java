@@ -5,7 +5,6 @@ import com.ssafy.api.service.ReviewService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.Review;
-import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,19 +33,20 @@ public class ReviewController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
-//    // 강의별 리뷰 조회 ==================================================================================================
-//    @GetMapping("/")
-//    @ApiOperation(value = "리뷰 조회", notes = "강의별 전체 리뷰를 조회한다.")
-//    public ResponseEntity<List<Review>> findByLecIdOrderByReviewId(Lecture lecture) {
-//        return ResponseEntity.ok(reviewService.findByLecIdOrderByReviewId(lecture));
-//    }
+    // 강의별 리뷰 조회 ==================================================================================================
+    @GetMapping("/")
+    @ApiOperation(value = "리뷰 조회", notes = "강의별 전체 리뷰를 조회한다.")
+    public ResponseEntity<List<Review>> findByLectureOrderByReviewId(Lecture lecture) {
+        return ResponseEntity.ok(reviewService.findByLectureOrderByReviewId(lecture));
+    }
 
-//    @DeleteMapping("/")
-//    @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제한다.")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "성공")
-//    })
-//    public ResponseEntity<Integer> deleteReview(@RequestBody @ApiParam(value = "삭제할 댓글 정보", required = true) Lecture lecture, User user, int reviewId) {
-//        Review review = reviewService.deleteReview(lecture, user, reviewId);
-//    }
+    @DeleteMapping("/")
+    @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공")
+    })
+    public ResponseEntity<?> deleteByReviewId(@RequestBody @ApiParam(value = "삭제할 댓글 정보", required = true) int reviewId) {
+
+        return ResponseEntity.ok(reviewService.deleteByReviewId(reviewId));
+    }
 }

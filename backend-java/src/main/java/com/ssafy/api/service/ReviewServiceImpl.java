@@ -25,13 +25,13 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public List<Review> findByLecIdOrderByReviewId(Lecture lecture) {
-        return reviewRepository.findByLecIdOrderByReviewId(lecture);
+    public List<Review> findByLectureOrderByReviewId(Lecture lecture) {
+        return reviewRepository.findByLectureOrderByReviewId(lecture);
     }
 
     @Override
-    public Integer deleteReview(Lecture lecture, User user, int reviewId) {
-        reviewRepository.deleteByReviewId(lecture, user, reviewId);
+    public Integer deleteByReviewId(int reviewId) {
+        reviewRepository.deleteByReviewId(reviewId);
         return null;
     }
 }

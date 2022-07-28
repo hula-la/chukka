@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.response.lecture.LectureNoticeRes;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.LectureRepository;
@@ -16,10 +17,17 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     LectureRepository lectureRepository;
 
-//    @Override
-//    public List<Lecture> findAll() {
-//        return lectureRepository.findAll();
-//    }
+    @Override
+    public List<Lecture> findAll() {
+        return lectureRepository.findAll();
+    }
+
+    @Override
+    public Lecture createLecture(LecturePostReq lecturePostReq) {
+        Lecture lecture = new Lecture();
+        lecture.setLecId(lecturePostReq.getLecId());
+        return lectureRepository.save(lecture);
+    }
 
     @Override
     public Lecture updateLecNotice(int lecId, String lecNotice) {

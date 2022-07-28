@@ -22,6 +22,8 @@ public class Lecture {
     @JoinColumn(name = "ins_id")
     private Instructor instructor;
 
+    private String thumbnail;
+
     private String lecTitle;
     private String lecContents;
     private int lecPrice;
@@ -31,12 +33,12 @@ public class Lecture {
     private Date lecStartDate;
 
     @Temporal(TemporalType.DATE)
-    private Date lec_end_date;
+    private Date lecEndDate;
 
-    private int lec_category;
-    private int lec_level;
-    private int lec_limit;
-    private String lec_genre;
+    private int lecCategory;
+    private int lecLevel;
+    private int lecLimit;
+    private String lecGenre;
 
     @OneToMany(mappedBy = "lecture")
     private List<Cart> carts = new ArrayList<>();

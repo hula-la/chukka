@@ -12,8 +12,9 @@ import java.util.Optional;
 
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, String> {
+
     // 전체 강의 목록 조회
-    //    Optional<Lecture> findAll(List<Lecture> list);
+    List<Lecture> findAll();
 
     // 공지사항 수정
     @Modifying(clearAutomatically = true)
