@@ -1,8 +1,11 @@
+import LoginTemplate from '../../components/accounts/LoginTemplate';
+import LoginForm from '../../components/accounts/LoginForm';
+
 const LoginPage = () => {
   return (
-    <div>
-      <h1>LoginPage</h1>
-    </div>
+    <LoginTemplate>
+      <LoginForm />
+    </LoginTemplate>
   );
 };
 
