@@ -8,8 +8,10 @@ const StyledButton = styled.button`
   border-radius: 12px;
   width: 140px;
   height: 42px;
+  border: none;
   cursor: pointer;
   &:hover {
+    z-index: 100;
   }
 `;
 
