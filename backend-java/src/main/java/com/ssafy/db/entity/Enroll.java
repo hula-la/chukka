@@ -15,11 +15,10 @@ public class Enroll {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int enroll_id;
+    private int enrollId;
 
     @ManyToOne
     @JoinColumn(name = "lec_id")
-//    @JoinColumn(name = "ins_id")
     private Lecture lecture;
 
     @ManyToOne

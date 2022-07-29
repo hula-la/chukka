@@ -1,6 +1,7 @@
 package com.ssafy.db.repository;
 
 import com.ssafy.api.request.user.UserModifyReq;
+import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.beans.Transient;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -22,10 +24,22 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Transactional
 //    @Modifying(clearAutomatically = true)
     @Modifying
-    @Query(value = "update User u set u.userAccessToken = :userAccessToken where u.userId = :userId", nativeQuery = true)
-    Optional<Integer> updateUserAccessToken(String userId, String userAccessToken);
+    @Query(value = "update User u set u.user_refresh_token = :userRefreshToken where u.user_id = :userId", nativeQuery = true)
+    Optional<Integer> updateUserRefreshToken(String userId, String userRefreshToken);
     @Transactional
     @Modifying
-    @Query(value = "update User u set u.userName = :userName, u.userPhone = :userPhone, u.userEmail = :userEmail, u.userGender = :userGender, u.userAge = :userAge, u.userNickname = :userNickname, u.userProfile = :userProfile where u.userId = :userId", nativeQuery = true)
-    Optional<Integer> updateUser(String userId, String userName, String userPhone, String userEmail, String userGender, String userAge, String userNickname, String userProfile);
+    @Query(value = "update User u set u.user_phone = :userPhone, u.user_email = :userEmail, u.user_gender = :userGender, u.user_birth = :userBirth, u.user_nickname = :userNickname, u.user_profile = :userProfile where u.user_id = :userId", nativeQuery = true)
+    Optional<Integer> updateUser(String userId, String userPhone, String userEmail, int userGender, Date userBirth, String userNickname, String userProfile);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update User u set u.user_pw = :userPw where u.user_id = :userId", nativeQuery = true)
+    void updatePassword(String userId, String userPw);
+
+    Optional<User> findUserByUserRefreshToken(String userRefreshToken);
+    @Transactional
+    @Modifying
+    @Query(value = "update User u set u.user_refresh_token = '' where u.user_id = :userId", nativeQuery = true)
+    void updateRefreshToken(String userId);
+
 }

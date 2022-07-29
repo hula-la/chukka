@@ -26,6 +26,7 @@ public class Lecture {
     private String lecContents;
     private int lecPrice;
     private String lecNotice;
+    private String thumbnail;
 
     @Temporal(TemporalType.DATE)
     private Date lecStartDate;
