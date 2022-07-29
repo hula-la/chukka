@@ -31,8 +31,6 @@ public class User{
     private String userName;
     private String userPhone;
     private String userEmail;
-
-    private int userAge;
     private String userNickname;
     private String userAccessToken;
 
@@ -48,6 +46,7 @@ public class User{
     private Date userBirth;
 
     private Integer userPoint;
+    // 프론트랑 얘기 필요 일단 킵. 근데 아무리 생각해도 백에서 저장할 필요 없음.
     private String userProfile;
     private Integer userType;
 

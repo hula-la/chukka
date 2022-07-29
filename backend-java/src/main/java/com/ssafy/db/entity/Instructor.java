@@ -14,13 +14,13 @@ public class Instructor{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ins_id")
-    private int ins_id;
+    @Column(name = "insId")
+    private String insId;
 
-    private String ins_name;
-    private String ins_email;
-    private String ins_profile;
-    private String ins_introduce;
+    private String insName;
+    private String insEmail;
+    private String insProfile;
+    private String insIntroduce;
 
     @OneToMany(mappedBy = "instructor")
     private List<Lecture> lectures = new ArrayList<>();

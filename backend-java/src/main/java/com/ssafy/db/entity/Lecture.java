@@ -36,6 +36,7 @@ public class Lecture {
     private int lecCategory;
     private int lecLevel;
     private int lecLimit;
+    private Integer lecStudent;
     private String lecGenre;
 
     @OneToMany(mappedBy = "lecture")
@@ -53,4 +54,8 @@ public class Lecture {
     @OneToMany(mappedBy = "lecture")
     private List<Section> sections = new ArrayList<>();
 
+    @PrePersist
+    public void prePersist() {
+        this.lecStudent = this.lecStudent == null ? 0 : this.lecStudent;
+    }
 }
