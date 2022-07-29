@@ -24,7 +24,11 @@ bin/
 *.iws
 *.iml
 *.ipr
+<<<<<<< HEAD
 application-hide.yml
+=======
+*.yml
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/

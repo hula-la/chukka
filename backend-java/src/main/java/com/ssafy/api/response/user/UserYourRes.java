@@ -14,6 +14,7 @@ import lombok.Setter;
 @Setter
 @ApiModel("UserYourResponse")
 public class UserYourRes extends BaseResponseBody {
+<<<<<<< HEAD
 	@ApiModelProperty(name="User ID")
 	String userId;
 	@ApiModelProperty(name="User Name")
@@ -22,15 +23,41 @@ public class UserYourRes extends BaseResponseBody {
 	String userPhone;
 	@ApiModelProperty(name="User Email")
 	String userEmail;
+=======
+	@ApiModelProperty(name="User Name", example="your_name")
+	String userName;
+	@ApiModelProperty(name="User Gender", example="1")
+	int userGender;
+	@ApiModelProperty(name="User Nickname", example="your_nickname")
+	String userNickname;
+	@ApiModelProperty(name="User Profile", example="img/profile.png")
+	String userProfile;
+	@ApiModelProperty(name="User Lecture Level", example="500")
+	private int userLvLec;
+	@ApiModelProperty(name="User Snacks Level", example="500")
+	private int userLvSnacks;
+	@ApiModelProperty(name="User Game Level", example="500")
+	private int userLvGame;
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 
 	public static UserYourRes of(Integer statusCode, String message, User user) {
 		UserYourRes res = new UserYourRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);
+<<<<<<< HEAD
 		res.setUserId(user.getUserId());
 		res.setUserName(user.getUserName());
 		res.setUserPhone(user.getUserPhone());
 		res.setUserEmail(user.getUserEmail());
+=======
+		res.setUserName(user.getUserName());
+		res.setUserGender(user.getUserGender());
+		res.setUserNickname(user.getUserNickname());
+		res.setUserProfile(user.getUserProfile());
+		res.setUserLvLec(user.getUserLvLec());
+		res.setUserLvSnacks(user.getUserLvSnacks());
+		res.setUserLvGame(user.getUserLvGame());
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 		return res;
 	}
 }

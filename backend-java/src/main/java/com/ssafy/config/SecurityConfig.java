@@ -6,6 +6,10 @@ import com.ssafy.common.auth.SsafyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+<<<<<<< HEAD
+=======
+import org.springframework.http.HttpMethod;
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -60,8 +64,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
+<<<<<<< HEAD
                 .antMatchers("/api/v1/users/me").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
     	        	    .anyRequest().permitAll()
+=======
+                .antMatchers(HttpMethod.PUT, "/password").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
+                .antMatchers("/").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
+                .antMatchers("/my*").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
+                        .anyRequest().permitAll()
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
                 .and().cors();
     }
 }

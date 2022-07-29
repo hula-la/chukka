@@ -8,6 +8,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+<<<<<<< HEAD
+=======
+import java.util.Date;
+
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 /**
  * 회원 본인 정보 조회 API ([GET] /api/v1/users/me) 요청에 대한 응답값 정의.
  */
@@ -15,6 +20,7 @@ import lombok.Setter;
 @Setter
 @ApiModel("UserMyResponse")
 public class UserMyRes extends BaseResponseBody {
+<<<<<<< HEAD
 	@ApiModelProperty(name="User ID")
 	String userId;
 	@ApiModelProperty(name="User Name")
@@ -39,6 +45,32 @@ public class UserMyRes extends BaseResponseBody {
 	private int user_lv_snacks;
 	@ApiModelProperty(name="User Game Level")
 	private int user_lv_game;
+=======
+	@ApiModelProperty(name="User ID", example="your_id")
+	String userId;
+	@ApiModelProperty(name="User Name", example="your_name")
+	String userName;
+	@ApiModelProperty(name="User Phone", example="010-1234-5678")
+	String userPhone;
+	@ApiModelProperty(name="User Email", example="abcd@ssafy.com")
+	String userEmail;
+	@ApiModelProperty(name="User Gender", example="1")
+	private int userGender;
+	@ApiModelProperty(name="User Point", example="500")
+	private int userPoint;
+	@ApiModelProperty(name="User 생년월일", example="2022-01-01")
+	private Date userBirth;
+	@ApiModelProperty(name="User Nickname", example="your_nickname")
+	private String userNickname;
+	@ApiModelProperty(name="User Profile", example="img/profile.png")
+	private String userProfile;
+	@ApiModelProperty(name="User Lecture Level", example="500")
+	private int userLvLec;
+	@ApiModelProperty(name="User Snacks Level", example="500")
+	private int userLvSnacks;
+	@ApiModelProperty(name="User Game Level", example="500")
+	private int userLvGame;
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 
 	public static UserMyRes of(Integer statusCode, String message, User user) {
 		UserMyRes res = new UserMyRes();
@@ -48,6 +80,17 @@ public class UserMyRes extends BaseResponseBody {
 		res.setUserName(user.getUserName());
 		res.setUserPhone(user.getUserPhone());
 		res.setUserEmail(user.getUserEmail());
+<<<<<<< HEAD
+=======
+		res.setUserGender(user.getUserGender());
+		res.setUserPoint(user.getUserPoint());
+		res.setUserBirth(user.getUserBirth());
+		res.setUserNickname(user.getUserNickname());
+		res.setUserProfile(user.getUserProfile());
+		res.setUserLvLec(user.getUserLvLec());
+		res.setUserLvSnacks(user.getUserLvSnacks());
+		res.setUserLvGame(user.getUserLvGame());
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 		return res;
 	}
 }

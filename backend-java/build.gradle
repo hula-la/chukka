@@ -99,6 +99,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.plugin:spring-plugin-core:2.0.0.RELEASE")
+<<<<<<< HEAD
+=======
+    implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.0'
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
     testImplementation("org.springframework.security:spring-security-test")
     annotationProcessor("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("mysql:mysql-connector-java")

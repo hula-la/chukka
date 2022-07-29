@@ -26,6 +26,10 @@ public class JwtTokenUtil {
     private static Integer expirationTime;
 
     public static final String TOKEN_PREFIX = "Bearer ";
+<<<<<<< HEAD
+=======
+    public static final String REFRESH_TOKEN_PREFIX = "Refresh ";
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
     public static final String HEADER_STRING = "Authorization";
     public static final String ISSUER = "ssafy.com";
     
@@ -57,10 +61,18 @@ public class JwtTokenUtil {
                 .sign(Algorithm.HMAC512(secretKey.getBytes()));
     }
 
+<<<<<<< HEAD
     public static String getToken(Instant expires, String userId) {
         return JWT.create()
                 .withSubject(userId)
                 .withExpiresAt(Date.from(expires))
+=======
+    public static String getRefreshToken(String userId, int times) {
+        Date expires = JwtTokenUtil.getTokenExpiration(expirationTime * times);
+        return JWT.create()
+                .withSubject(userId)
+                .withExpiresAt(expires)
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
                 .withIssuer(ISSUER)
                 .withIssuedAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()))
                 .sign(Algorithm.HMAC512(secretKey.getBytes()));

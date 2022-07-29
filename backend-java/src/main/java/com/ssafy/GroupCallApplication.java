@@ -1,9 +1,13 @@
 package com.ssafy;
 
 import org.springframework.boot.SpringApplication;
+<<<<<<< HEAD
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+=======
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;

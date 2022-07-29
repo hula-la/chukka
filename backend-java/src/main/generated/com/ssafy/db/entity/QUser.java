@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 wjpackage com.ssafy.db.entity;
+=======
+package com.ssafy.db.entity;
+>>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
