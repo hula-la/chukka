@@ -11,6 +11,9 @@ const INITIALIZE_FORM = 'login/INITIALIZE_FORM';
 const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] =
   createRequestActionTypes('login/LOGIN');
 
+const authAPI = '';
+const accounts = '';
+
 export const changeField = createAction(
   CHANGE_FIELD,
   ({ form, key, value }) => ({
