@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 	PayRepository payRepository;
 
 
-	@Autowired
+//	@Autowired
 	private JavaMailSender emailSender;
 	@Value("${spring.mail.username}")
 	private String email;

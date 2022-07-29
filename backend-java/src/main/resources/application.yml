@@ -39,8 +39,7 @@ logging:
     name: ./ssafy-web.log
 spring:
   profiles:
-    include:
-      hide
+    include: hide
 build:
   date: '@build.date@'
 jwt:
