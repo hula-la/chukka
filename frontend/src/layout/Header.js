@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import Button from '../components/common/Button';
-import MenuItems from '../components/common/MenuItems';
+import Button from '../components/Button';
+import MenuItems from '../components/MenuItems';
 
 const NavBar = styled.div`
   color: #ffffff;

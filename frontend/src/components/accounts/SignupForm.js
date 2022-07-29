@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { registerUser } from '../../features/users/userActions';
 
 const SignupFormBlock = styled.div``;
 
@@ -45,40 +47,84 @@ const StyledButton = styled.button`
 `;
 
 const SignupForm = () => {
+  const dispatch = useDispatch();
+
+  const [signUpInputs, setSignUpInputs] = useState({
+    userId: '',
+    nickName: '',
+    password: '',
+    passwordConfirm: '',
+    email: '',
+    phoneNumber: '',
+    birthDay: '',
+  });
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    const nextInputs = {
+      ...signUpInputs,
+      [name]: value,
+    };
+    setSignUpInputs(nextInputs);
+  };
+  const onSubmit = (e) => {
+    e.preventDefault();
+    // 회원가입 form Submit -> 유효성 검사 하고 dispatch
+    if (signUpInputs.password === signUpInputs.passwordConfirm) {
+      dispatch(registerUser(signUpInputs));
+    } else {
+      alert('패스워드가 다릅니다!');
+    }
+  };
   return (
     <SignupFormBlock>
-      <form>
+      <form onSubmit={onSubmit}>
         <div>
           <StyledLabel>아이디</StyledLabel>
-          <StyledInput />
+          <StyledInput name="userId" onChange={onChange} required />
         </div>
         <div>
           <StyledLabel>닉네임</StyledLabel>
-          <StyledInput />
+          <StyledInput name="nickName" onChange={onChange} required />
         </div>
         <div>
           <StyledLabel>비밀번호</StyledLabel>
-          <StyledInput type="password" />
+          <StyledInput
+            name="password"
+            type="password"
+            onChange={onChange}
+            required
+          />
         </div>
 
         <div>
           <StyledLabel>비밀번호 확인</StyledLabel>
-          <StyledInput type="password" />
+          <StyledInput
+            name="passwordConfirm"
+            type="password"
+            onChange={onChange}
+            required
+          />
         </div>
 
         <div>
           <StyledLabel>이메일</StyledLabel>
-          <StyledInput type="email" />
+          <StyledInput name="email" type="email" onChange={onChange} required />
         </div>
 
         <div>
           <StyledLabel>휴대폰 번호</StyledLabel>
-          <StyledInput />
+          <StyledInput name="phoneNumber" onChange={onChange} required />
         </div>
 
         <div>
           <StyledLabel>생년 월일</StyledLabel>
-          <StyledInput type="date" />
+          <StyledInput
+            name="birthDay"
+            type="date"
+            onChange={onChange}
+            required
+          />
         </div>
 
         <StyledButton>회원가입</StyledButton>
