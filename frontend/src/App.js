@@ -8,6 +8,7 @@ import IndexPage from './pages/IndexPage';
 import LoginPage from './pages/accounts/LoginPage';
 import LogoutPage from './pages/accounts/LogoutPage';
 import SignUpPage from './pages/accounts/SignUpPage';
+import ProfilePage from './pages/accounts/ProfilePage';
 // lectures
 import LecturesPage from './pages/lectures/LecturesPage';
 // snacks
@@ -30,7 +31,7 @@ const App = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="logout" element={<LogoutPage />} />
           <Route path="signup" element={<SignUpPage />} />
-          <Route path="profile" element={<LoginPage />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
