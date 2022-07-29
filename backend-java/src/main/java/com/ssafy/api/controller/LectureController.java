@@ -1,19 +1,17 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.lecture.LectureNoticeReq;
-<<<<<<< HEAD
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
 import com.ssafy.api.response.lecture.LectureNoticeRes;
 import com.ssafy.api.response.lecture.LectureUpdateRes;
 import com.ssafy.api.service.LectureService;
+
 import com.ssafy.common.model.response.BaseResponseBody;
-=======
-import com.ssafy.api.response.lecture.LectureNoticeRes;
-import com.ssafy.api.service.LectureService;
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 import com.ssafy.db.entity.Lecture;
+
 import io.swagger.annotations.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +29,6 @@ public class LectureController {
     @Autowired
     LectureService lectureService;
 
-<<<<<<< HEAD
     // 강의 생성하기 =====================================================================================================
     @PostMapping("/")
     @ApiOperation(value = "강의 생성", notes = "제공받은 정보(pdf 등)을 통해 강의페이지를 생성한다.")
@@ -45,9 +42,7 @@ public class LectureController {
     }
 
     // 전체 강의 목록 ====================================================================================================
-=======
-    // 전체 강의 목록 =============================================================================
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
+
     @GetMapping("/")
     @ApiOperation(value = "전체 강의 목록", notes = "전체 게시글을 불러온다.")
     @ApiResponses({
@@ -58,7 +53,6 @@ public class LectureController {
         return ResponseEntity.ok(lectureService.findAll());
     }
 
-<<<<<<< HEAD
     // 강의 내용 수정 ====================================================================================================
     @PutMapping("/{lecId}")
     @ApiOperation(value = "강의 수정" , notes = "강의 ID를 통해 해당 강의 내용을 수정한다")
@@ -73,14 +67,10 @@ public class LectureController {
 
 
     // 공지사항 수정 =====================================================================================================
-    @PutMapping("/")
-    @ApiOperation(value = "공지사항", notes = "공지사항을 업데이트한다.")
-    public ResponseEntity<? extends BaseResponseBody> updateLecNotice(@RequestBody @ApiParam(value = "수정할 공지사항", required = true) LectureNoticeReq updateInfo) {
-=======
+
     @PutMapping("/")
     @ApiOperation(value = "공지사항", notes = "공지사항을 업데이트한다.")
     public ResponseEntity<LectureNoticeRes> updateLecNotice(@RequestBody @ApiParam(value = "수정할 공지사항", required = true) LectureNoticeReq updateInfo) {
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 
         String lecNotice = updateInfo.getLecNotice();
         int lecId = updateInfo.getLecId();
@@ -88,7 +78,6 @@ public class LectureController {
         return ResponseEntity.status(200).body(LectureNoticeRes.of(200,"Success", lecId, lecNotice));
     }
 
-<<<<<<< HEAD
     @DeleteMapping("/")
     @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제한다.")
     @ApiResponses({
@@ -98,8 +87,6 @@ public class LectureController {
 
         return ResponseEntity.ok(lectureService.deleteByLecId(lecId));
     }
-=======
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 }
 
 

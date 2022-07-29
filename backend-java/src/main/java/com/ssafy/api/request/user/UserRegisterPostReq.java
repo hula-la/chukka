@@ -5,11 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-<<<<<<< HEAD
-=======
 import java.util.Date;
 
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 /**
  * 유저 회원가입 API ([POST] /api/v1/users) 요청에 필요한 리퀘스트 바디 정의.
  */
@@ -30,18 +27,14 @@ public class UserRegisterPostReq {
 	String userEmail;
 	@ApiModelProperty(name="유저 Gender", example="1")
 	int userGender;
-<<<<<<< HEAD
 	@ApiModelProperty(name="유저 Age", example="20")
 	int userAge;
-	@ApiModelProperty(name="유저 Nickname", example="your_nickname")
-	String userNickname;
 	@ApiModelProperty(name="유저 Name", example="img/profile.png")
 	String userProfile;
-=======
+
 	@ApiModelProperty(name="유저 생년월일", example="2022-01-01")
 	Date userBirth;
 	@ApiModelProperty(name="유저 Nickname", example="your_nickname")
 	String userNickname;
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 
 }

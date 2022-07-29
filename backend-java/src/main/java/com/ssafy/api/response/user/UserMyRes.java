@@ -8,11 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-<<<<<<< HEAD
-=======
 import java.util.Date;
-
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 /**
  * 회원 본인 정보 조회 API ([GET] /api/v1/users/me) 요청에 대한 응답값 정의.
  */
@@ -20,32 +16,7 @@ import java.util.Date;
 @Setter
 @ApiModel("UserMyResponse")
 public class UserMyRes extends BaseResponseBody {
-<<<<<<< HEAD
-	@ApiModelProperty(name="User ID")
-	String userId;
-	@ApiModelProperty(name="User Name")
-	String userName;
-	@ApiModelProperty(name="User Phone")
-	String userPhone;
-	@ApiModelProperty(name="User Email")
-	String userEmail;
-	@ApiModelProperty(name="User Gender")
-	private int userGender;
-	@ApiModelProperty(name="User Point")
-	private int userPoint;
-	@ApiModelProperty(name="User Age")
-	private int userAge;
-	@ApiModelProperty(name="User Nickname")
-	private String userNickname;
-	@ApiModelProperty(name="User Profile")
-	private String userProfile;
-	@ApiModelProperty(name="User Lecture Level")
-	private int user_lv_lec;
-	@ApiModelProperty(name="User Snacks Level")
-	private int user_lv_snacks;
-	@ApiModelProperty(name="User Game Level")
-	private int user_lv_game;
-=======
+
 	@ApiModelProperty(name="User ID", example="your_id")
 	String userId;
 	@ApiModelProperty(name="User Name", example="your_name")
@@ -70,7 +41,6 @@ public class UserMyRes extends BaseResponseBody {
 	private int userLvSnacks;
 	@ApiModelProperty(name="User Game Level", example="500")
 	private int userLvGame;
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 
 	public static UserMyRes of(Integer statusCode, String message, User user) {
 		UserMyRes res = new UserMyRes();
@@ -80,8 +50,6 @@ public class UserMyRes extends BaseResponseBody {
 		res.setUserName(user.getUserName());
 		res.setUserPhone(user.getUserPhone());
 		res.setUserEmail(user.getUserEmail());
-<<<<<<< HEAD
-=======
 		res.setUserGender(user.getUserGender());
 		res.setUserPoint(user.getUserPoint());
 		res.setUserBirth(user.getUserBirth());
@@ -90,7 +58,6 @@ public class UserMyRes extends BaseResponseBody {
 		res.setUserLvLec(user.getUserLvLec());
 		res.setUserLvSnacks(user.getUserLvSnacks());
 		res.setUserLvGame(user.getUserLvGame());
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 		return res;
 	}
 }

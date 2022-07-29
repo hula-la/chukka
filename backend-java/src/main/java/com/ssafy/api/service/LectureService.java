@@ -1,10 +1,8 @@
 package com.ssafy.api.service;
 
-<<<<<<< HEAD
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
-=======
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
+
 import com.ssafy.db.entity.Lecture;
 
 import java.util.List;
@@ -14,7 +12,6 @@ import java.util.List;
  */
 public interface LectureService {
 
-<<<<<<< HEAD
     // Create ==========================================================================================================
     Lecture createLecture(LecturePostReq lecturePostReq);
 
@@ -32,12 +29,5 @@ public interface LectureService {
 
     // Delete ==========================================================================================================
     Integer deleteByLecId(int lecId);
-=======
-    // Read
-  	List<Lecture> findAll();
 
-    // Update
-    Lecture updateLecNotice(int lecId, String lecNotice);
-
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 }

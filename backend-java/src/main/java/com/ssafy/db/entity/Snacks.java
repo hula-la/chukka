@@ -17,11 +17,7 @@ public class Snacks{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-<<<<<<< HEAD
-    private int snacks_id;
-=======
     private int snacksId;
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 
     private String snacks_title;
     private String snacks_contents;

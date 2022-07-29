@@ -1,33 +1,28 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.user.UserModifyReq;
-<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
-=======
+
 import com.ssafy.api.response.user.UserMyLectureRes;
 import com.ssafy.common.util.MailUtil;
 import com.ssafy.db.entity.Pay;
 import com.ssafy.db.entity.Snacks;
 import com.ssafy.db.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.user.UserRegisterPostReq;
 import com.ssafy.db.entity.User;
-<<<<<<< HEAD
+
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
-=======
-
 import java.util.List;
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 import java.util.Optional;
 
 /**
@@ -40,12 +35,9 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	UserRepositorySupport userRepositorySupport;
-<<<<<<< HEAD
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
-=======
 
 	@Autowired
 	LectureRepository lectureRepository;
@@ -53,53 +45,42 @@ public class UserServiceImpl implements UserService {
 	SnacksRepository snacksRepository;
 	@Autowired
 	PayRepository payRepository;
-	
-	@Autowired
-	PasswordEncoder passwordEncoder;
+
 
 	@Autowired
 	private JavaMailSender emailSender;
 	@Value("${spring.mail.username}")
 	private String email;
 
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
+
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
 		User user = new User();
 		user.setUserId(userRegisterInfo.getUserId());
 		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
 		user.setUserPw(passwordEncoder.encode(userRegisterInfo.getUserPw()));
-<<<<<<< HEAD
-=======
 		user.setUserName(userRegisterInfo.getUserName());
 		user.setUserPhone(userRegisterInfo.getUserPhone());
 		user.setUserEmail(userRegisterInfo.getUserEmail());
 		user.setUserGender(userRegisterInfo.getUserGender());
 		user.setUserBirth(userRegisterInfo.getUserBirth());
 		user.setUserNickname(userRegisterInfo.getUserNickname());
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 		return userRepository.save(user);
 	}
 
 	@Override
 	public User getUserByUserId(String userId) {
 		// 디비에 유저 정보 조회 (userId 를 통한 조회).
-<<<<<<< HEAD
-		User user = userRepositorySupport.findUserByUserId(userId).get();
-		return user;
-=======
 		Optional<User> user = userRepository.findByUserId(userId);
 		if(user.isPresent()) {
 			return user.get();
 		}
 		return null;
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 	}
 
 	@Override
 	public User getUserByUserNickname(String userNickname) {
 		Optional<User> user = userRepository.findByUserNickname(userNickname);
-<<<<<<< HEAD
 		if(user == null) {
 			return null;
 		}
@@ -107,23 +88,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Integer updateUserToken(String userId, String userAccessToken) {
-		userRepository.updateUserAccessToken(userId, userAccessToken);
-=======
-		if(user.isPresent()) {
-			return user.get();
-		}
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
-		return null;
-	}
-
-	@Override
-<<<<<<< HEAD
-	public Integer updateUser(String userId, UserModifyReq modifyInfo) {
-		userRepository.updateUser(userId, modifyInfo.getUserName(), modifyInfo.getUserPhone(), modifyInfo.getUserEmail(), modifyInfo.getUserGender(), modifyInfo.getUserAge(), modifyInfo.getUserNickname(), modifyInfo.getUserProfile());
-		return null;
-	}
-=======
 	public void updateUserToken(String userId, String userAccessToken) {
 		userRepository.updateUserRefreshToken(userId, userAccessToken);
 	}
@@ -181,5 +145,4 @@ public class UserServiceImpl implements UserService {
 		userRepository.updateRefreshToken(userId);
 	}
 
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 }
