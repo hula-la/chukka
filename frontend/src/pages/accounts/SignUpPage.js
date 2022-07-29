@@ -162,11 +162,3 @@ const SignUpPage = () => {
 };
 
 export default SignUpPage;
-
-const signUpForm = () => {
-  return (
-    <div>
-      <h1></h1>
-    </div>
-  );
-};
