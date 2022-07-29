@@ -1,5 +1,5 @@
 import json
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, Header, Request, Response, WebSocket
 import base64, cv2
 app = FastAPI()
 
@@ -459,12 +459,17 @@ async def websocket_endpoint(websocket: WebSocket):
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
                 ret, buffer = cv2.imencode('.jpg', image_1)
-                ret2, buffer2 = cv2.imencode('.jpg', image_2)
 
-                await websocket.send_json(json.dumps({
-                    "client":bytearray(buffer),
-                    "dancer":bytearray(buffer2),
-                    }))
+
+                cli_str = bytearray(buffer)
+
+
+
+                # await websocket.send_json(json.dumps({
+                #     "client":base64.urlsafe_b64encode(cli_str).decode('utf8'),
+                #     "dancer":base64.urlsafe_b64encode(dan_str).decode('utf8'),
+                #     }))
+                await websocket.send_text(cli_str)
                 # await websocket.send_bytes()  # client 에 메시지 전달
                 frame = buffer.tobytes()
             
@@ -481,11 +486,32 @@ async def websocket_endpoint(websocket: WebSocket):
         cv2.waitKey(1)
 
 
-@app.websocket("/client2")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        ret, buffer = cv2.imencode('.jpg', data)
-        await websocket.send_bytes(bytearray(buffer)) 
+
+from fastapi.templating import Jinja2Templates
+
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/")
+async def read_root(request: Request):
+    return templates.TemplateResponse("index.htm", context={"request": request})
+
+
+@app.get("/game/dancer")
+async def dancer_video(range: str = Header(None)):
+    trainer_video = r'dance_video/dancer.mp4'
+    CHUNK_SIZE = 1024*1024
+
+    start, end = range.replace("bytes=", "").split("-")
+    start = int(start)
+    end = int(end) if end else start + CHUNK_SIZE
+    with open(trainer_video, "rb") as video:
+        video.seek(start)
+        data = video.read(end - start)
+        filesize = str(trainer_video.stat().st_size)
+        headers = {
+            'Content-Range': f'bytes {str(start)}-{str(end)}/{filesize}',
+            'Accept-Ranges': 'bytes'
+        }
+        return Response(data, status_code=206, headers=headers, media_type="video/mp4")
+
 

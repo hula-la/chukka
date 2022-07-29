@@ -6,8 +6,10 @@
 </head>
 <body>
 	<video id="videoInput" style="display:none"></video>
-  <img id="video" src="">
-  <img id="video2" src="">
+  <img id="my_video" width="200" src="">
+  <video id="dancer_video" width="200" controls muted="muted">
+    <source src="http://localhost:8000/game/dancer" type="video/mp4"/>
+</video>
   <canvas id="videoOutput"></canvas>
   <button onclick=stream()>Send</button>
 </body>
@@ -25,20 +27,12 @@
   
 	ws.onmessage = function(msg){
 		// console.log(msg.data);
-    var msg = JSON.parse(msg.data)
-    var arrayBufferView = new Uint8Array( msg.client);
+    var arrayBufferView = new Uint8Array( msg.data);
     var blob = new Blob( [ arrayBufferView ], { type: "multipart/x-mixed-replace" } );
     var urlCreator = window.URL || window.webkitURL;
     var imageUrl = urlCreator.createObjectURL( blob );
-    var img = document.querySelector( "#video" );
+    var img = document.querySelector( "#my_video" );
     img.src = imageUrl;
-
-    var arrayBufferView2 = new Uint8Array( msg.dancer);
-    var blob2 = new Blob( [ arrayBufferView ], { type: "multipart/x-mixed-replace" } );
-    var urlCreator = window.URL || window.webkitURL;
-    var imageUrl2 = urlCreator.createObjectURL( blob2 );
-    var img2 = document.querySelector( "#video2" );
-    img2.src = imageUrl2;
 	}
 
 	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -66,6 +60,7 @@
   processImage();
 
   function stream(){
+    document.getElementById("dancer_video").play();
     setInterval(sendImage, 100);
   }
 
