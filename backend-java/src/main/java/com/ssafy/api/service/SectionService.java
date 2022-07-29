@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.section.SectionPostReq;
+import com.ssafy.api.request.section.SectionUpdateReq;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.Section;
 
@@ -18,7 +19,9 @@ public interface SectionService {
 
     // Update
     // 소강의 내용 수정하기
-    //Section updateSection()''
+     Section updateSection(int secId, SectionUpdateReq sectionUpdateReq);
 
-
+    // Delete
+    // 소강의 삭제하기
+     Integer deleteBySecId(int secId);
 }

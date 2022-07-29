@@ -1,5 +1,6 @@
 package com.ssafy.db.repository;
 
+import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.Section;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,11 +19,11 @@ public interface SectionRepository extends JpaRepository<Section, String> {
     @Modifying(clearAutomatically = true)
     @Query(value = "update Section sec " +
             "set sec.secId = :secId," +
+            "sec.Instructor = :instructor," +
             "sec.secTitle = :secTitle," +
             "sec.secContents = :secContents " +
-            "where sec.lecture = :lecture " +
-            "and sec.secId = :secId", nativeQuery = true)
-    Optional<Integer> updateSection(int secId, String secTitle, String secContents, Lecture lecture);
+            "where sec.secId = :secId", nativeQuery = true)
+    Optional<Integer> updateSection(int secId, Instructor instructor, String secTitle, String secContents);
 
     // 소강의 삭제하기
     Optional<Integer> deleteBySecId(int secId);
