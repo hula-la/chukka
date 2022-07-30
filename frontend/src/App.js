@@ -3,22 +3,22 @@ import './App.css';
 
 // page
 import Layout from './layout/Layout';
-// accounts
+// user
 import IndexPage from './pages/IndexPage';
-import LoginPage from './pages/accounts/LoginPage';
-import LogoutPage from './pages/accounts/LogoutPage';
-import SignUpPage from './pages/accounts/SignUpPage';
-import ProfilePage from './pages/accounts/ProfilePage';
-import MyListPage from './pages/accounts/MyListPage';
-import changeProfilePage from './pages/accounts/changeProfilePage';
+import LoginPage from './pages/user/LoginPage';
+import LogoutPage from './pages/user/LogoutPage';
+import SignUpPage from './pages/user/SignUpPage';
+import ProfilePage from './pages/user/ProfilePage';
+import MyListPage from './pages/user/MyListPage';
+import changeProfilePage from './pages/user/changeProfilePage';
 
 // lectures
-import LecturesPage from './pages/lectures/LecturesPage';
-import LivePage from './pages/lectures/LivePage';
+import LecturesPage from './pages/lecture/LecturesPage';
+import LivePage from './pages/lecture/LivePage';
 // snacks
 import SnacksPage from './pages/snacks/SnacksPage';
 // games
-import GamesPage from './pages/games/GamesPage';
+import GamesPage from './pages/game/GamesPage';
 // notfount
 import NotFound from './pages/NotFound';
 const App = () => {

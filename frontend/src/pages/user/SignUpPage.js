@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../../features/users/userActions';
+import { registerUser } from '../../features/user/userActions';
 
 const StyledInput = styled.input`
   font-size: 1rem;

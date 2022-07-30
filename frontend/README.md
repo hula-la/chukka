@@ -22,7 +22,7 @@ frontend
         |-- MenuItems.js
         ...
     |-- features    // 기능 관련 코드, 컴포넌트
-        |-- users
+        |-- user
             |--userActions.js
             |--userSlice.js
         |-- lectures

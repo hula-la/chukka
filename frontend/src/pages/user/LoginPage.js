@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { registerUser, userLogin } from '../../features/users/userActions';
+import { userLogin } from '../../features/user/userActions';
 
 const LoginTemplateBlock = styled.div`
   display: flex;
