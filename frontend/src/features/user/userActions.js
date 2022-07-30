@@ -5,7 +5,6 @@ export const registerUser = createAsyncThunk(
   'user/register',
   async (data, { rejectWithValue }) => {
     try {
-      console.log('disPatch registerUser!');
       const config = {
         headers: {
           // 'Content-Type': 'application/json',
@@ -17,7 +16,6 @@ export const registerUser = createAsyncThunk(
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
       } else {
-        console.log('test');
         return rejectWithValue(error.message);
       }
     }

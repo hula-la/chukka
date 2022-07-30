@@ -29,15 +29,18 @@ const userSlice = createSlice({
   extraReducers: {
     // 유저 로그인
     [userLogin.pending]: (state) => {
+      // 액션 디스패치
       state.loading = true;
       state.error = null;
     },
     [userLogin.fulfilled]: (state, { payload }) => {
+      // 요청 성공
       state.loading = false;
       state.userInfo = payload;
       state.userToken = payload.userToken;
     },
     [userLogin.rejected]: (state, { payload }) => {
+      // 요청 실패
       state.loading = false;
       state.error = payload;
     },
