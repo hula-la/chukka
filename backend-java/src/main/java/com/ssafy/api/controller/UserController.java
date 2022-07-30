@@ -66,9 +66,9 @@ public class UserController {
 
 	// 회원 가입 ========================================================================================================
 	@PostMapping("/signup/")
-	@ApiOperation(value = "회원 가입", notes = "<strong>아이디, 패스워드, 이름, 핸드폰 번호, 이메일, 성별, 나이, 닉네임, 그리고 프로필</strong>을 통해 회원가입한다.")
+	@ApiOperation(value = "회원 가입", notes = "<strong>아이디, 패스워드, 이름, 핸드폰 번호, 이메일, 성별, 나이, 그리고 닉네임</strong>을 통해 회원가입한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success")
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> register(
 			@RequestBody @ApiParam(value="회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
@@ -83,8 +83,8 @@ public class UserController {
 	@GetMapping("/checkid/{userId}")
 	@ApiOperation(value = "아이디 중복 검사", notes = "<strong>아이디</strong>를 통해 중복된 아이디인지 검사한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success"),
-			@ApiResponse(code = 401, message = "Invalid")
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "Invalid", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> checkId(
 			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId) {
@@ -99,8 +99,8 @@ public class UserController {
 	@GetMapping("/checkNick/{userNickname}")
 	@ApiOperation(value = "닉네임 중복 검사", notes = "<strong>닉네임</strong>을 통해 중복된 닉네임인지 검사한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success"),
-			@ApiResponse(code = 401, message = "Invalid")
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "Invalid", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> checkNickname(
 			@PathVariable @ApiParam(value="유저 닉네임", required = true) String userNickname) {
@@ -133,7 +133,7 @@ public class UserController {
 			// accessToken DB에 넣기
 			userService.updateUserToken(userId, refreshToken);
 			// 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", accessToken, refreshToken, user.getUserNickname(), user.getUserProfile()));
+			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", accessToken, refreshToken, user.getUserNickname(), user.getUserProfile(), user.getUserType()));
 		}
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
 		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid User"));
@@ -260,7 +260,7 @@ public class UserController {
 	@GetMapping("/{userId}/lectures/")
 	@ApiOperation(value = "나의 수강 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 수강 강의 목록을 반환한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success")
+			@ApiResponse(code = 200, message = "Success", response = UserMyLectureListRes.class)
 	})
 	public ResponseEntity<UserMyLectureListRes> getMyLecture(
 			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
@@ -276,7 +276,7 @@ public class UserController {
 	@GetMapping("/{userId}/snacks/")
 	@ApiOperation(value = "나의 스낵스 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 업로드 스낵스 목록을 반환한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success")
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<UserMySnacksListRes> getMySnacks(
 			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
@@ -292,11 +292,29 @@ public class UserController {
 	@GetMapping("/{userId}/orders/")
 	@ApiOperation(value = "나의 결제 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 결제 목록을 반환한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success")
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<UserMyPayListRes> getMyOrders(
 			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
 		List<Pay> list = userService.getPaysByUserId(userId, pageable);
 		return ResponseEntity.status(200).body(UserMyPayListRes.of(200, "Success", list));
+	}
+
+	// 회원 탈퇴 ========================================================================================================
+	@PostMapping("/quit/")
+	@ApiOperation(value = "회원 탈퇴", notes = "<strong>비밀번호</strong>를 받아 확인한 후 현재 로그인한 회원의 계정을 삭제한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "Invalid Password", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<BaseResponseBody> quit(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="비밀번호 정보", required = true) String password) {
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String loginUserId = userDetails.getUsername();
+		User user = userService.getUserByUserId(loginUserId);
+		if(passwordEncoder.matches(password, user.getUserPw())) {
+			userService.quit(loginUserId);
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		}
+		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Password"));
 	}
 }

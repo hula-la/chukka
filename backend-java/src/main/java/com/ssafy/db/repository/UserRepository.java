@@ -4,6 +4,7 @@ import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.db.entity.Lecture;
 
 import com.ssafy.db.entity.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,7 @@ import javax.transaction.Transactional;
 import java.beans.Transient;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -30,11 +32,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Modifying
     @Query(value = "update User u set u.userAccessToken = :userAccessToken where u.userId = :userId", nativeQuery = true)
     Optional<Integer> updateUserAccessToken(String userId, String userAccessToken);
-
-    @Transactional
-    @Modifying
-    @Query(value = "update User u set u.userName = :userName, u.userPhone = :userPhone, u.userEmail = :userEmail, u.userGender = :userGender, u.userAge = :userAge, u.userNickname = :userNickname, u.userProfile = :userProfile where u.userId = :userId", nativeQuery = true)
-    Optional<Integer> updateUser(String userId, String userName, String userPhone, String userEmail, String userGender, String userAge, String userNickname, String userProfile);
 
     @Query(value = "update User u set u.user_refresh_token = :userRefreshToken where u.user_id = :userId", nativeQuery = true)
     Optional<Integer> updateUserRefreshToken(String userId, String userRefreshToken);
@@ -55,5 +52,26 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Modifying
     @Query(value = "update User u set u.user_refresh_token = '' where u.user_id = :userId", nativeQuery = true)
     void updateRefreshToken(String userId);
+
+    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u")
+    List<User> getUsers(Pageable pageable);
+
+    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u where u.userId like :userId")
+    List<User> getUsersByUserId(String userId);
+
+    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u where u.userName like :userName")
+    List<User> getUsersByUserName(String userName);
+
+    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u where u.userNickname like :userNickname")
+    List<User> getUsersByUserNickname(String userNickname);
+
+    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u where u.userEmail like :userEmail")
+    List<User> getUsersByUserEmail(String userEmail);
+
+    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u where u.userPhone like :userPhone")
+    List<User> getUsersByUserPhone(String userPhone);
+
+    @Query(value = "update User u set u.userType = 1 where u.userId = :userId", nativeQuery = true)
+    void updateUserType(String userId);
 
 }

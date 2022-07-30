@@ -13,7 +13,6 @@ import java.util.List;
 public class Instructor{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "insId")
     private String insId;
 

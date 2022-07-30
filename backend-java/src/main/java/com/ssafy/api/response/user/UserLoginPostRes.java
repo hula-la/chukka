@@ -22,8 +22,10 @@ public class UserLoginPostRes extends BaseResponseBody{
 	String userNickname;
 	@ApiModelProperty(name="유저 Profile", example="img/profile.png")
 	String userProfile;
+	@ApiModelProperty(name="유저 Type", example="0")
+	int userType;
 
-	public static UserLoginPostRes of(Integer statusCode, String message, String accessToken, String refreshToken, String userNickname, String userProfile) {
+	public static UserLoginPostRes of(Integer statusCode, String message, String accessToken, String refreshToken, String userNickname, String userProfile, int userType) {
 		UserLoginPostRes res = new UserLoginPostRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);
@@ -31,6 +33,7 @@ public class UserLoginPostRes extends BaseResponseBody{
 		res.setRefreshToken(refreshToken);
 		res.setUserNickname(userNickname);
 		res.setUserProfile(userProfile);
+		res.setUserType(userType);
 		return res;
 	}
 }
