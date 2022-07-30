@@ -5,16 +5,25 @@ import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  & .content {
+  width: 100%;
+  max-width: 1200px;
+  & > .content {
+    box-sizing: border-box;
+    height: auto;
+    min-height: 100%;
+    /* padding-bottom: 150px; */
+    padding-bottom: 100px;
   }
 `;
 
 const Layout = () => {
   return (
     <Wrapper>
-      <Header />
       <div className="content">
-        <Outlet />
+        <Header />
+        <div>
+          <Outlet />
+        </div>
       </div>
       <Footer />
     </Wrapper>

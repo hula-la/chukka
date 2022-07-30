@@ -8,7 +8,6 @@ const NavBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
   height: 80px;
@@ -36,10 +35,12 @@ const Header = () => {
       title: 'Lectures',
       submenu: [
         {
-          title: 'Lecture1',
+          title: 'Lectures',
+          url: '/lectures',
         },
         {
-          title: 'Lecture2',
+          title: 'Lectures Live',
+          url: '/lectures/live',
         },
       ],
     },
