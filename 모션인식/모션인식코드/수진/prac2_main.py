@@ -9,29 +9,29 @@ app = FastAPI()
 
 import cv2
 
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    print(f"client connected : {websocket.client}")
-    await websocket.accept() # client의 websocket 접속 허용
-    await websocket.send_text(f"Welcome client : {websocket.client}")
-    camera = cv2.VideoCapture(0,cv2.CAP_DSHOW)
+# @app.websocket("/ws")
+# async def websocket_endpoint(websocket: WebSocket):
+#     print(f"client connected : {websocket.client}")
+#     await websocket.accept() # client의 websocket 접속 허용
+#     await websocket.send_text(f"Welcome client : {websocket.client}")
+#     camera = cv2.VideoCapture(0,cv2.CAP_DSHOW)
     
-    while True:
-        success, image = camera.read() # 웹캠 읽어오는 코드 -> while 문안에 있어야 동영상으로 보임
-        if not success:
-            await websocket.send_text(f"WebCame Connect Fail : {websocket.client}")
-            break
-        else :
-            ret, buffer = cv2.imencode('.jpg', image)
-            # frame을 byte로 변경 후 특정 식??으로 변환 후에
-            # yield로 하나씩 넘겨준다.
-            # frame = buffer.tobytes()
-            # yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
-            #    bytearray(buffer) + b'\r\n')
+#     while True:
+#         success, image = camera.read() # 웹캠 읽어오는 코드 -> while 문안에 있어야 동영상으로 보임
+#         if not success:
+#             await websocket.send_text(f"WebCame Connect Fail : {websocket.client}")
+#             break
+#         else :
+#             ret, buffer = cv2.imencode('.jpg', image)
+#             # frame을 byte로 변경 후 특정 식??으로 변환 후에
+#             # yield로 하나씩 넘겨준다.
+#             # frame = buffer.tobytes()
+#             # yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
+#             #    bytearray(buffer) + b'\r\n')
 
-            # Display the user feed
-            # cv2.imshow('User Window', image_1) # 기존 코드
-            await websocket.send_bytes(bytearray(buffer))  # client 에 메시지 전달
+#             # Display the user feed
+#             # cv2.imshow('User Window', image_1) # 기존 코드
+#             await websocket.send_bytes(bytearray(buffer))  # client 에 메시지 전달
 
 
 ########################################################################################
@@ -95,11 +95,13 @@ async def websocket_endpoint(websocket: WebSocket):
         # FPS = 1
         cnt = 0
         while True:
-            cnt+=1
-            print(cnt)
-            if cnt>=len(keyp_list): break
+            if cnt>=len(keyp_list): 
+                await websocket.close()
+                break
 
             data = await websocket.receive_text()
+            print(cnt)
+            cnt+=1
             img = cv2.imdecode(np.fromstring(base64.b64decode(data.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
             image_1 = img
             e_d=0
@@ -180,7 +182,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 from fastapi.responses import StreamingResponse
 
-some_file_path = "dance_video/dancer.mp4"
+some_file_path = "dance_video/soojin.mp4"
 
 
 @app.get("/game/dancer")

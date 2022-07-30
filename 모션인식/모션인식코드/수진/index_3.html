@@ -7,7 +7,7 @@
 <body>
 	<video id="videoInput" style="display:none"></video>
   <img id="my_video" width="200" src="">
-  <video id="dancer_video" width="200" controls muted="muted">
+  <video id="dancer_video" width="700" controls muted="muted">
     <source src="http://localhost:8000/game/dancer" type="video/mp4"/>
 </video>
   <canvas id="videoOutput"></canvas>
@@ -15,9 +15,11 @@
 </body>
 <script>
   var w = 320, h = 240;
-	var url = "ws://localhost:8000/client"
-	var ws = new WebSocket(url);
-  var FPS = 5;
+    var url = "ws://localhost:8000/client"
+    var ws = new WebSocket(url);
+    var FPS=5;
+    let interval;
+
   ws.binaryType = "arraybuffer";
 
   // websocket 연결
@@ -25,7 +27,9 @@
 		console.log("Websocket is connected.");
 	}
 
-  // 서버에서 데이터가 전송될 대
+
+
+  
 	ws.onmessage = function(msg){
 		// console.log(msg.data);
     var arrayBufferView = new Uint8Array( msg.data);
@@ -37,29 +41,23 @@
 	}
 
 
+    ws.onclose = function(event) {
+        if (event.wasClean) {
+            clearInterval(interval);
+            alert(`[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`);
+        } else {
+            // 예시: 프로세스가 죽거나 네트워크에 장애가 있는 경우
+            // event.code가 1006이 됩니다.
+            alert('[close] 커넥션이 죽었습니다.');
+        }
+    };
+
 
 	navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
   var constraints = {audio: false, video: true};
   var video = document.getElementById("videoInput");
   video.width = w;
   video.height = h;
-  navigator.getUserMedia(constraints, successCallback, errorCallback);
-	var canvas = document.getElementById("videoOutput");
-  // let interval;
-  canvas.width = w;
-  canvas.height = h;
-
-  ws.onclose = function(event) {
-  if (event.wasClean) {
-    alert(`[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`);
-  } else {
-    // 예시: 프로세스가 죽거나 네트워크에 장애가 있는 경우
-    // event.code가 1006이 됩니다.
-    alert('[close] 커넥션이 죽었습니다.');
-  }
-};
-
-
   function successCallback(stream){
   	video.srcObject = stream;
   	video.play();
@@ -68,28 +66,33 @@
   function errorCallback(error){
    	console.log(error);
   }
-
-
+  navigator.getUserMedia(constraints, successCallback, errorCallback);
+	var canvas = document.getElementById("videoOutput");
+  canvas.width = w;
+  canvas.height = h;
   var ctx = canvas.getContext("2d");
+
   function processImage(){
         ctx.drawImage(video, 0, 0, w, h);
-        stream();
+        setTimeout(processImage, 1);
   }
+
   processImage();
 
-
-  function stream() {
+  function stream(){
     document.getElementById("dancer_video").play();
 
-    // interval = setInterval(sendImage, 1000/FPS);
-    setInterval(sendImage, 1000/FPS);
+    interval = setInterval(sendImage, 1000/FPS);
   }
-
 
   function sendImage(){
     var rawData = canvas.toDataURL("image/jpeg", 0.5);
     ws.send(rawData);
   }
+
+
+ 
+/* later */
 
 
 </script>
