@@ -1,14 +1,13 @@
 import React from 'react';
-// import styled from 'styled-components';
 import SideBar from '../../components/SideBar';
 
-const ProfilePage = () => {
+const changeProfilePage = () => {
   return (
     <div>
       <SideBar />
-      <h1>MY Shorts</h1>
+      setting page
     </div>
   );
 };
 
-export default ProfilePage;
+export default changeProfilePage;

@@ -9,6 +9,9 @@ import LoginPage from './pages/accounts/LoginPage';
 import LogoutPage from './pages/accounts/LogoutPage';
 import SignUpPage from './pages/accounts/SignUpPage';
 import ProfilePage from './pages/accounts/ProfilePage';
+import MyListPage from './pages/accounts/MyListPage';
+import changeProfilePage from './pages/accounts/changeProfilePage';
+
 // lectures
 import LecturesPage from './pages/lectures/LecturesPage';
 import LivePage from './pages/lectures/LivePage';
@@ -18,7 +21,6 @@ import SnacksPage from './pages/snacks/SnacksPage';
 import GamesPage from './pages/games/GamesPage';
 // notfount
 import NotFound from './pages/NotFound';
-
 const App = () => {
   return (
     <div className="App">
@@ -33,6 +35,8 @@ const App = () => {
           <Route path="logout" element={<LogoutPage />} />
           <Route path="signup" element={<SignUpPage />} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="mylist" element={<MyListPage />} />
+          <Route path="change" element={<changeProfilePage />} />
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
