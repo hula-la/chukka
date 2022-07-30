@@ -38,7 +38,7 @@ const Dropdown = ({ submenus, dropdown }) => {
       <ul className={`dropdown ${dropdown ? 'show' : ''}`}>
         {submenus.map((submenu, index) => (
           <li key={index} className="menu-items">
-            <NavLink to={`/lectures/live`}>{submenu.title}</NavLink>
+            <NavLink to={submenu.url}>{submenu.title}</NavLink>
           </li>
         ))}
       </ul>

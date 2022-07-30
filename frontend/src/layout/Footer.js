@@ -3,15 +3,14 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   width: 100%;
   height: 150px;
-  position: absolute;
-  bottom: 0px;
+  position: relative;
+  transform: translateY(-100%);
   display: flex;
   justify-content: center;
 `;
 
 const FooterDiv = styled.div`
   width: 100%;
-  max-width: 1200px;
   border-top: 2px solid #ff2c55;
   padding-top: 1rem;
 `;
