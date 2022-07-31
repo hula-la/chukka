@@ -6,11 +6,11 @@
 </head>
 <body>
 	<video id="videoInput" style="display:none"></video>
-  <img id="my_video" width="200" src="">
+  <img id="my_video" width="400" src="">
   <video id="dancer_video" width="700" controls muted="muted">
     <source src="http://localhost:8000/game/dancer" type="video/mp4"/>
 </video>
-  <canvas id="videoOutput"></canvas>
+  <canvas id="videoOutput" width="500"></canvas>
   <button onclick=stream()>Send</button>
 </body>
 <script>

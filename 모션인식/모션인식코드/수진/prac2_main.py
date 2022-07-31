@@ -155,8 +155,11 @@ async def websocket_endpoint(websocket: WebSocket):
             cv2.putText(image_1, str(min_), (10, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
             # If the disctance is below the threshold
-            if min_<0.10:
-                cv2.putText(image_1, "CORRECT STEPS", (120, 700),
+            if min_<0.15:
+                cv2.putText(image_1, "Perfect STEPS", (120, 700),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 100, 0), 2)
+            elif min_<0.22:
+                cv2.putText(image_1, "Great STEPS", (120, 700),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             else:
                 cv2.putText(image_1,  "NOT CORRECT STEPS", (80, 700),
@@ -180,15 +183,16 @@ async def websocket_endpoint(websocket: WebSocket):
 
 
 
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse,FileResponse
 
 some_file_path = "dance_video/soojin.mp4"
 
 
 @app.get("/game/dancer")
-def main():
-    def iterfile():  # 
-        with open(some_file_path, mode="rb") as file_like:  # 
-            yield from file_like  # 
+async def main():
+    # def iterfile():  # 
+    #     with open(some_file_path, mode="rb") as file_like:  # 
+    #         yield from file_like  # 
 
-    return StreamingResponse(iterfile(), media_type="video/mp4")
+    # return StreamingResponse(iterfile(), media_type="video/mp4")
+    return FileResponse(some_file_path)
