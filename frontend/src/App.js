@@ -10,7 +10,7 @@ import LogoutPage from './pages/user/LogoutPage';
 import SignUpPage from './pages/user/SignUpPage';
 import ProfilePage from './pages/user/ProfilePage';
 import MyListPage from './pages/user/MyListPage';
-import changeProfilePage from './pages/user/changeProfilePage';
+import ChangeProfilePage from './pages/user/ChangeProfilePage';
 
 // lectures
 import LecturesPage from './pages/lecture/LecturesPage';
@@ -36,7 +36,7 @@ const App = () => {
           <Route path="signup" element={<SignUpPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="mylist" element={<MyListPage />} />
-          <Route path="change" element={<changeProfilePage />} />
+          <Route path="change" element={<ChangeProfilePage />} />
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
