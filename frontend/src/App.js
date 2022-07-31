@@ -5,6 +5,7 @@ import './App.css';
 import Layout from './layout/Layout';
 // user
 import IndexPage from './pages/IndexPage';
+<<<<<<< HEAD
 import LoginPage from './pages/user/LoginPage';
 import LogoutPage from './pages/user/LogoutPage';
 import SignUpPage from './pages/user/SignUpPage';
@@ -12,6 +13,12 @@ import ProfilePage from './pages/user/ProfilePage';
 import MyListPage from './pages/user/MyListPage';
 import ChangeProfilePage from './pages/user/ChangeProfilePage';
 
+=======
+import LoginPage from './pages/accounts/LoginPage';
+import LogoutPage from './pages/accounts/LogoutPage';
+import SignUpPage from './pages/accounts/SignUpPage';
+import ProfilePage from './pages/accounts/ProfilePage';
+>>>>>>> profile
 // lectures
 import LecturesPage from './pages/lecture/LecturesPage';
 import LivePage from './pages/lecture/LivePage';
@@ -35,8 +42,11 @@ const App = () => {
           <Route path="logout" element={<LogoutPage />} />
           <Route path="signup" element={<SignUpPage />} />
           <Route path="profile" element={<ProfilePage />} />
+<<<<<<< HEAD
           <Route path="mylist" element={<MyListPage />} />
           <Route path="change" element={<ChangeProfilePage />} />
+=======
+>>>>>>> profile
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
