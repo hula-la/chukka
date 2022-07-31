@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Lectures_2 = styled.div`
+const Lectures2 = styled.div`
   display: flex;
   justify-content: space-between;
   /* flex-wrap: nowrap;
@@ -44,23 +44,23 @@ const LecturesPage = () => {
     <Wrapper>
       <div>
         <h1>인기 강의</h1>
-        <Lectures_2>
+        <Lectures2>
           {dummy.map((lecture, index) => (
             <Lecture props={lecture} key={index} />
           ))}
           {/* <Lecture props={dummy[0]} />
           <Lecture props={dummy[1]} /> */}
-        </Lectures_2>
+        </Lectures2>
       </div>
       <div>
         <h1>20대 여성 인기</h1>
-        <Lectures_2>
+        <Lectures2>
           {dummy.map((lecture, index) => (
             <Lecture props={lecture} key={index} />
           ))}
           {/* <Lecture props={dummy[0]} />
         <Lecture props={dummy[1]} /> */}
-        </Lectures_2>
+        </Lectures2>
       </div>
     </Wrapper>
   );

@@ -1,7 +1,6 @@
 import LevelBadge from './LevelBadge';
 import CategoryBadge from './CategoryBadge';
 import styled from 'styled-components';
-import thumbnail1 from '../img/pop.jpeg';
 
 const Wrapper = styled.div`
   display: flex;

@@ -47,6 +47,10 @@ const NavItems = styled.li`
   & .nav-link:hover:before {
     transform: scale3d(1, 1, 1);
   }
+  & .nav-link {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+  }
 `;
 
 const MenuItems = ({ items }) => {
@@ -59,14 +63,13 @@ const MenuItems = ({ items }) => {
           onMouseOver={() => setDropdown(true)}
           onMouseOut={() => setDropdown(false)}
         >
-          <a
-            type="button"
+          <button
             aria-haspopup="menu"
             aria-expanded={dropdown ? 'true' : 'false'}
-            className="nav-link"
+            className="nav-link button-menu"
           >
             {items.title}{' '}
-          </a>
+          </button>
           <Dropdown submenus={items.submenu} dropdown={dropdown} />
         </div>
       ) : (
