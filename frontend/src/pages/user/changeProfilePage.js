@@ -1,13 +1,20 @@
 import React from 'react';
 import SideBar from '../../components/SideBar';
+import styled from 'styled-components';
 
-const changeProfilePage = () => {
+const ChangeProfileBlock = styled.div`
+  display: flex;
+  flex-direction: row;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const ChangeProfilePage = () => {
   return (
-    <div>
+    <ChangeProfileBlock>
       <SideBar />
-      setting page
-    </div>
+    </ChangeProfileBlock>
   );
 };
 
-export default changeProfilePage;
+export default ChangeProfilePage;

@@ -3,36 +3,41 @@ import styled from 'styled-components';
 
 const Side = styled.div`
   display: flex;
-  border-right: 1px solid #e0e0e0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 20%;
+  width: 15%;
+  margin-right: 3rem;
   .line {
     border: 0;
-    height: 2px;
+    height: 5px;
     background: #ff2c55;
     width: 100%;
     margin-bottom: 0.5rem;
   }
+  & p {
+    margin-bottom: 2.5rem;
+  }
 `;
 const Profile = styled.img`
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   border-radius: 100%;
   margin-top: 2rem;
   margin-bottom: 2.5rem;
 `;
 const Menu = styled.div`
   margin-top: 30px;
-  width: 200px;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 function SideBar() {
   const menus = [
-    { name: 'Shorts', path: '/accounts/profile' },
+    { name: 'Snacks', path: '/accounts/profile' },
     { name: '나의 강의 목록', path: '/accounts/mylist' },
     { name: '프로필 설정', path: '/accounts/change' },
   ];
@@ -40,22 +45,27 @@ function SideBar() {
     <Side>
       <hr className="line" />
       <Profile src="/img/login.png"></Profile>
+      <p>이름</p>
       <hr className="line" />
       <Menu>
         {menus.map((menu, index) => {
           return (
             <NavLink
               exact
-              style={{ color: 'gray', textDecoration: 'none' }}
+              style={{
+                color: 'white',
+                textDecoration: 'none',
+                marginBottom: '1.5rem',
+              }}
               to={menu.path}
               key={index}
-              activeStyle={{ color: 'white' }}
             >
               <div menu={menu}>{menu.name}</div>
             </NavLink>
           );
         })}
       </Menu>
+      <hr className="line" style={{ marginTop: '1rem' }} />
     </Side>
   );
 }
