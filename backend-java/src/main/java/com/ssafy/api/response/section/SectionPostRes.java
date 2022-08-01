@@ -24,17 +24,13 @@ public class SectionPostRes extends BaseResponseBody {
     @ApiModelProperty(name = "섹션 내용", example = "솰라솰라 배워보아요~")
     String secContents;
 
-    public static SectionPostRes of(Integer statusCode,
-                                    String message,
-                                    int secId,
+    public static SectionPostRes of(int secId,
                                     Lecture lecture,
                                     Instructor instructor,
                                     String secTitle,
                                     String secContents
                                     ) {
         SectionPostRes res = new SectionPostRes();
-        res.setStatusCode(statusCode);
-        res.setMessage(message);
         res.setSecId(secId);
         res.setLecture(lecture);
         res.setInstructor(instructor);

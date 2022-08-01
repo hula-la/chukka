@@ -21,15 +21,11 @@ public class SectionUpdateRes extends BaseResponseBody {
     @ApiModelProperty(name = "섹션 내용",example = "section_contents")
     String secContents;
 
-    public static SectionUpdateRes of(Integer statusCode,
-                                      String message,
-                                      int secId,
+    public static SectionUpdateRes of(int secId,
                                       Instructor instructor,
                                       String secTitle,
                                       String secContents) {
         SectionUpdateRes res = new SectionUpdateRes();
-        res.setStatusCode(statusCode);
-        res.setMessage(message);
         res.setSecId(secId);
         res.setInstructor(instructor);
         res.setSecTitle(secTitle);

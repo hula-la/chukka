@@ -38,13 +38,8 @@ public class LectureUpdateRes extends BaseResponseBody {
     @ApiModelProperty(name = "춤 장르", example = "힙합, 팝..")
     String lecGenre;
 
-    public static LectureUpdateRes of(Integer statusCode,
-                                      String message,
-                                      Lecture lecture
-                                      ) {
+    public static LectureUpdateRes of(Lecture lecture) {
         LectureUpdateRes res = new LectureUpdateRes();
-        res.setStatusCode(statusCode);
-        res.setMessage(message);
         res.setLecId(lecture.getLecId());
         res.setThumbnail(lecture.getThumbnail());
         res.setLecTitle(lecture.getLecTitle());

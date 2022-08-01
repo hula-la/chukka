@@ -41,9 +41,7 @@ public class LecturePostRes extends BaseResponseBody {
     @ApiModelProperty(name = "춤 장르", example = "1,2")
     String lecGenre;
 
-    public static LecturePostRes of(Integer statusCode,
-                                    String message,
-                                    int lecId,
+    public static LecturePostRes of(int lecId,
                                     Instructor instructor,
                                     String thumbnail,
                                     String lecTitle,
@@ -58,8 +56,6 @@ public class LecturePostRes extends BaseResponseBody {
                                     String lecGenre
                                     ) {
         LecturePostRes res = new LecturePostRes();
-        res.setStatusCode(statusCode);
-        res.setMessage(message);
         res.setLecId(lecId);
         res.setInstructor(instructor);
         res.setThumbnail(thumbnail);

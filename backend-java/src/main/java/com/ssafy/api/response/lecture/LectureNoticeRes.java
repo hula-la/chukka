@@ -15,10 +15,8 @@ public class LectureNoticeRes extends BaseResponseBody {
     @ApiModelProperty(name = "수정할 공지사항", example = "modify by this description")
     String lecNotice;
 
-    public static LectureNoticeRes of(Integer statusCode, String message, int lecId, String lecNotice) {
+    public static LectureNoticeRes of(int lecId, String lecNotice) {
         LectureNoticeRes res = new LectureNoticeRes();
-        res.setStatusCode(statusCode);
-        res.setMessage(message);
         res.setLecId(lecId);
         res.setLecNotice(lecNotice);
         return res;

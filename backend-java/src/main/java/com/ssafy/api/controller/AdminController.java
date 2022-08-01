@@ -87,7 +87,7 @@ public class AdminController {
 			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> getLectures(@PathVariable Pageable pageable) {
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.of(lectureService.findAll())));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.of(lectureService.findAll(pageable))));
 	}
 
 	// 강의 추가 ========================================================================================================
@@ -119,7 +119,7 @@ public class AdminController {
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<BaseResponseBody> deleteLecture(@PathVariable @ApiParam(value = "강의 Id", required = true) int lecId) {
-		lectureService.deleteByLecId(lecId);
+		lectureService.delete(lecId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 

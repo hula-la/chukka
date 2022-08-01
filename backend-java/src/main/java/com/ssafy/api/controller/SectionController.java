@@ -29,10 +29,10 @@ public class SectionController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success")
     })
-    public ResponseEntity<? extends BaseResponseBody> createSection (
+    public ResponseEntity<BaseResponseBody> createSection (
             @RequestBody @ApiParam(value = "섹션 생성 시 필요한 정보", required = true) SectionPostReq sectionPostReq) {
         Section section = sectionService.createSection(sectionPostReq);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
     }
 
     // 강의별 섹션 조회 ==================================================================================================
@@ -50,14 +50,14 @@ public class SectionController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success")
     })
-    public ResponseEntity<SectionUpdateRes> updateSection(@RequestBody @ApiParam(value = "섹션 수정", required = true) SectionUpdateReq sectionUpdateReq) {
+    public ResponseEntity<BaseResponseBody> updateSection(@RequestBody @ApiParam(value = "섹션 수정", required = true) SectionUpdateReq sectionUpdateReq) {
         int secId = sectionUpdateReq.getSecId();
         Section section = sectionService.updateSection(secId, sectionUpdateReq);
-        return ResponseEntity.status(200).body(SectionUpdateRes.of(200,
-                "Success", section.getSecId(),
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200,
+                "Success", SectionUpdateRes.of(section.getSecId(),
                 section.getInstructor(),
                 section.getSecTitle(),
-                section.getSecContents()));
+                section.getSecContents())));
     }
 
     @DeleteMapping("/")
@@ -65,8 +65,8 @@ public class SectionController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공")
     })
-    public ResponseEntity<?> deleteBySecId(@RequestBody @ApiParam(value = "삭제할 섹션 ID", required = true) int secId) {
-
-        return ResponseEntity.ok(sectionService.deleteBySecId(secId));
+    public ResponseEntity<BaseResponseBody> deleteBySecId(@RequestBody @ApiParam(value = "삭제할 섹션 ID", required = true) int secId) {
+        sectionService.deleteBySecId(secId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
     }
 }

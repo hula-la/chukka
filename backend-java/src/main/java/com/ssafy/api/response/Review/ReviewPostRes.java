@@ -23,17 +23,13 @@ public class ReviewPostRes extends BaseResponseBody {
     @ApiModelProperty(name = "리뷰내용", example = "이 강의 진짜 좋네요")
     String reviewContents;
 
-    public static ReviewPostRes of(Integer statusCode,
-                                   String message,
-                                   int reviewId,
+    public static ReviewPostRes of(int reviewId,
                                    Lecture lecture,
                                    User user,
                                    int reviewScore,
                                    String reviewContents) {
 
         ReviewPostRes res = new ReviewPostRes();
-        res.setStatusCode(statusCode);
-        res.setMessage(message);
         res.setReviewId(reviewId);
         res.setLecture(lecture);
         res.setUser(user);

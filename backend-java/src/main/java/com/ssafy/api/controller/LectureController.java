@@ -31,20 +31,9 @@ public class LectureController {
     @Autowired
     LectureService lectureService;
 
-    // 강의 생성하기 =====================================================================================================
-    @PostMapping("/")
-    @ApiOperation(value = "강의 생성", notes = "제공받은 정보(pdf 등)을 통해 강의페이지를 생성한다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success")
-    })
-    public ResponseEntity<? extends BaseResponseBody> createLecture(
-            @RequestBody @ApiParam(value="강의 상세 정보", required = true) LecturePostReq lectureInfo) {
-        Lecture lecture = lectureService.createLecture(lectureInfo);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success"));
-    }
-
     // 전체 강의 목록 ====================================================================================================
-
+    // 수정 필요
+    // 최신순/인기순/유저별
     @GetMapping("/")
     @ApiOperation(value = "전체 강의 목록", notes = "전체 게시글을 불러온다.")
     @ApiResponses({
@@ -55,40 +44,16 @@ public class LectureController {
         return ResponseEntity.ok(lectureService.findAll(pageable));
     }
 
-    // 강의 내용 수정 ====================================================================================================
-    @PutMapping("/{lecId}")
-    @ApiOperation(value = "강의 수정" , notes = "강의 ID를 통해 해당 강의 내용을 수정한다")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공")
-    })
-    public ResponseEntity<BaseResponseBody> updateLecture(@RequestBody @ApiParam(value = "수정할 강의 내용", required = true) LectureUpdateReq lectureUpdateReq) {
-        int lecId = lectureUpdateReq.getLecId();
-        lectureService.updateLecture(lecId, lectureUpdateReq);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success"));
-    }
-
-
     // 공지사항 수정 =====================================================================================================
-
+    // 강사 userType == 1 권한 주기
     @PutMapping("/")
     @ApiOperation(value = "공지사항", notes = "공지사항을 업데이트한다.")
-    public ResponseEntity<LectureNoticeRes> updateLecNotice(@RequestBody @ApiParam(value = "수정할 공지사항", required = true) LectureNoticeReq updateInfo) {
+    public ResponseEntity<BaseResponseBody> updateLecNotice(@RequestBody @ApiParam(value = "수정할 공지사항", required = true) LectureNoticeReq updateInfo) {
 
         String lecNotice = updateInfo.getLecNotice();
         int lecId = updateInfo.getLecId();
 
-        return ResponseEntity.status(200).body(LectureNoticeRes.of(200,"Success", lecId, lecNotice));
-    }
-
-    // 강의 삭제하기
-    @DeleteMapping("/")
-    @ApiOperation(value = "강의 삭제", notes = "강의 ID에 해당하는 강의를 삭제한다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공")
-    })
-    public ResponseEntity<?> deleteByLecId(@RequestBody @ApiParam(value = "삭제할 강의 ID", required = true) int lecId) {
-        lectureService.delete(lecId);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success", LectureNoticeRes.of(lecId, lecNotice)));
     }
 }
 

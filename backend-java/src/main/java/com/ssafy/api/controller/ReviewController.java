@@ -26,18 +26,18 @@ public class ReviewController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공")
     })
-    public ResponseEntity<? extends BaseResponseBody> createReview(
+    public ResponseEntity<BaseResponseBody> createReview(
             @RequestBody @ApiParam(value = "댓글 작성 정보", required = true) ReviewPostReq reviewPostReq) {
         Review review = reviewService.createReview(reviewPostReq);
 
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
     }
 
     // 강의별 리뷰 조회 ==================================================================================================
     @GetMapping("/")
     @ApiOperation(value = "리뷰 조회", notes = "강의별 전체 리뷰를 조회한다.")
-    public ResponseEntity<List<Review>> findByLectureOrderByReviewId(Lecture lecture) {
-        return ResponseEntity.ok(reviewService.findByLectureOrderByReviewId(lecture));
+    public ResponseEntity<BaseResponseBody> findByLectureOrderByReviewId(Lecture lecture) {
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", reviewService.findByLectureOrderByReviewId(lecture)));
     }
 
     @DeleteMapping("/")
@@ -45,8 +45,8 @@ public class ReviewController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공")
     })
-    public ResponseEntity<?> deleteByReviewId(@RequestBody @ApiParam(value = "삭제할 댓글 ID", required = true) int reviewId) {
+    public ResponseEntity<BaseResponseBody> deleteByReviewId(@RequestBody @ApiParam(value = "삭제할 댓글 ID", required = true) int reviewId) {
 
-        return ResponseEntity.ok(reviewService.deleteByReviewId(reviewId));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", reviewService.deleteByReviewId(reviewId)));
     }
 }
