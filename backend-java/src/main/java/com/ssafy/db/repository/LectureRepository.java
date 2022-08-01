@@ -5,6 +5,7 @@ import com.ssafy.api.response.lecture.LectureNoticeRes;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.api.response.user.UserMyLectureRes;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,11 +17,22 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface LectureRepository extends JpaRepository<Lecture, String> {
+public interface LectureRepository extends JpaRepository<Lecture, Integer> {
 
 
-    // 전체 강의 목록 조회
-    List<Lecture> findAll();
+    // 존재하는 강의 중 학생 수가 많은 순서대로
+    @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre " +
+            "from Enroll e, Lecture lec " +
+            "where e.lecture = lec and current_date < lec.lecEndDate" +
+            "group by lec.lecId " +
+            "order by count(lec.lecId) desc", nativeQuery = true)
+    Page<Lecture> getMostPopularLecture(Pageable pageable);
+
+    // 존재하는 강의 / 연령대 / 성별 기준으로
+    @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre " +
+            "from Enroll e, Lecture lec, User u " +
+            "where e.lecture = lec and current_date < lec.lecEndDate and u.userGender = :userGender and u")
+    Page<Lecture> getMostPopularLectureByYourBirthAndGender(Pageable pageable);
 
     // 공지사항 수정
     @Modifying(clearAutomatically = true)
@@ -30,7 +42,7 @@ public interface LectureRepository extends JpaRepository<Lecture, String> {
     // 강의 수정
     @Modifying(clearAutomatically = true)
     @Query(value = "update Lecture lec " +
-            "set lec.lecId = :lecId" +
+            "set lec.lecId = :lecId +" +
             "lec.thumbnail = :thumbnail, " +
             "lec.lecTitle = :lecTitle, " +
             "lec.lecContents = :lecContents, " +
@@ -56,10 +68,7 @@ public interface LectureRepository extends JpaRepository<Lecture, String> {
                                     int lecLimit,
                                     String lecGenre);
 
-    // 강의 삭제
-    Optional<Integer> deleteByLecId(int lecId);
-
-
+    // 본인이 수강중인 강의 조회
     @Query(value = "select l.lecId, l.lecTitle, l.instructor.ins_name, l.thumbnail from Lecture l join Enroll e on l.lecId = e.lecture.lecId where e.user.userId = :userId order by e.enroll_id desc", nativeQuery = true)
     List<UserMyLectureRes> findLecturesByUserId(String userId, Pageable pageable);
 

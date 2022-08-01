@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<Review, String> {
+public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
     // 리뷰 조회하기 - 강의 id 기반
     List<Review> findByLectureOrderByReviewId(Lecture lecture);

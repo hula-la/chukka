@@ -7,9 +7,14 @@ import com.ssafy.api.response.lecture.LectureNoticeRes;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.LectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -20,8 +25,10 @@ public class LectureServiceImpl implements LectureService {
     LectureRepository lectureRepository;
 
     @Override
-    public List<Lecture> findAll() {
-        return lectureRepository.findAll();
+    public Page<Lecture> findAll(Pageable pageable) {
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lecStudent"));
+        Page<Lecture> page = lectureRepository.findAll(pageRequest);
+        return page;
     }
 
     @Override
@@ -51,15 +58,12 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public Lecture updateLecNotice(int lecId, String lecNotice) {
+    public void updateLecNotice(int lecId, String lecNotice) {
         lectureRepository.updateLecNotice(lecId, lecNotice);
-        return null;
-
     }
 
     @Override
-    public Integer deleteByLecId(int lecId) {
-        lectureRepository.deleteByLecId(lecId);
-        return null;
+    public void delete(int lecId) {
+        lectureRepository.deleteById(lecId);
     }
 }

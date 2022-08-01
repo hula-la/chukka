@@ -4,6 +4,8 @@ import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
 
 import com.ssafy.db.entity.Lecture;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ public interface LectureService {
 
     // Read ============================================================================================================
     // 전체 강의 조회
-  	List<Lecture> findAll();
+  	Page<Lecture> findAll(Pageable pageable);
 
     // 결제한 강의 조회
 
@@ -25,9 +27,9 @@ public interface LectureService {
     // 강의 수정
     Lecture updateLecture(int lecId, LectureUpdateReq lectureUpdateReq);
     // 공지사항 수정
-    Lecture updateLecNotice(int lecId, String lecNotice);
+    void updateLecNotice(int lecId, String lecNotice);
 
     // Delete ==========================================================================================================
-    Integer deleteByLecId(int lecId);
+    void delete(int lecId);
 
 }
