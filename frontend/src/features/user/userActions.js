@@ -33,7 +33,7 @@ export const userLogin = createAsyncThunk(
       };
 
       const { data } = await axios.post(
-        `${BASE_URL}accounts/signup`,
+        `${BASE_URL}/accounts/signup`,
         { userId, userPassword },
         config,
       );
@@ -42,6 +42,25 @@ export const userLogin = createAsyncThunk(
       localStorage.setItem('userToken', data.userToken);
 
       return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const changeProfile = createAsyncThunk(
+  'user/changeProfile',
+  async (data, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {},
+      };
+
+      await axios.put(`${BASE_URL}/accounts/`, data, config);
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
