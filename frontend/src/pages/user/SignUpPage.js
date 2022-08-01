@@ -71,15 +71,28 @@ const SignupBox = styled.div`
 
 const SignUpPage = () => {
   const dispatch = useDispatch();
-
+  /* {
+  "userBirth": "2022-01-01",
+  "userEmail": "abcd@ssafy.com",
+  "userGender": 1,
+  "userId": "your_id",
+  "userName": "your_name",
+  "userNickname": "your_nickname",
+  "userPhone": "010-1234-5678",
+  "userProfile": "img/profile.png",
+  "userPw": "your_password"
+} */
   const [signUpInputs, setSignUpInputs] = useState({
     userId: '',
-    nickName: '',
-    password: '',
-    passwordConfirm: '',
-    email: '',
-    phoneNumber: '',
-    birthDay: '',
+    userName: '',
+    userNickname: '',
+    userPw: '',
+    userPwConfirm: '',
+    userEmail: '',
+    userPhone: '',
+    userBirth: '',
+    userGender: 0,
+    userProfile: 'img/profile.png',
   });
 
   const onChange = (e) => {
@@ -89,7 +102,6 @@ const SignUpPage = () => {
       [name]: value,
     };
     setSignUpInputs(nextInputs);
-    console.log(signUpInputs);
   };
   const onSubmit = (e) => {
     e.preventDefault();
@@ -112,12 +124,12 @@ const SignUpPage = () => {
           </div>
           <div>
             <StyledLabel>닉네임</StyledLabel>
-            <StyledInput name="nickName" onChange={onChange} required />
+            <StyledInput name="userName" onChange={onChange} required />
           </div>
           <div>
             <StyledLabel>비밀번호</StyledLabel>
             <StyledInput
-              name="password"
+              name="userPw"
               type="password"
               onChange={onChange}
               required
@@ -126,7 +138,7 @@ const SignUpPage = () => {
           <div>
             <StyledLabel>비밀번호 확인</StyledLabel>
             <StyledInput
-              name="passwordConfirm"
+              name="userPwConfirm"
               type="password"
               onChange={onChange}
               required
@@ -135,7 +147,7 @@ const SignUpPage = () => {
           <div>
             <StyledLabel>이메일</StyledLabel>
             <StyledInput
-              name="email"
+              name="userEmail"
               type="email"
               onChange={onChange}
               required
@@ -143,16 +155,23 @@ const SignUpPage = () => {
           </div>
           <div>
             <StyledLabel>휴대폰 번호</StyledLabel>
-            <StyledInput name="phoneNumber" onChange={onChange} required />
+            <StyledInput name="userPhone" onChange={onChange} required />
           </div>
           <div>
             <StyledLabel>생년 월일</StyledLabel>
             <StyledInput
-              name="birthDay"
+              name="userBirth"
               type="date"
               onChange={onChange}
               required
             />
+          </div>
+          <div>
+            <StyledLabel>성별</StyledLabel>
+            <select name="gender">
+              <option value="1">남성</option>
+              <option value="0">여성</option>
+            </select>
           </div>
           <StyledButton>회원가입</StyledButton>
         </form>

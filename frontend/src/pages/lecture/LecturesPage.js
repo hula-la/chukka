@@ -1,4 +1,5 @@
 import Lecture from '../../components/Lecture';
+import LectureSmall from '../../components/LectureSmall';
 import styled from 'styled-components';
 import thumbnail1 from '../../img/pop.jpeg';
 import thumbnail2 from '../../img/images.jpeg';
@@ -15,6 +16,15 @@ const Wrapper = styled.div`
 const Lectures2 = styled.div`
   display: flex;
   justify-content: space-between;
+  /* flex-wrap: nowrap;
+  flex: 0 0 90%;
+  overflow-x: scroll; */
+`;
+
+const Lectures3 = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
   /* flex-wrap: nowrap;
   flex: 0 0 90%;
   overflow-x: scroll; */
@@ -61,6 +71,33 @@ const LecturesPage = () => {
           {/* <Lecture props={dummy[0]} />
         <Lecture props={dummy[1]} /> */}
         </Lectures2>
+      </div>
+      <div>
+        <h1>강의 목록</h1>
+        <Lectures3>
+          {dummy.map((lecture, index) => (
+            <LectureSmall props={lecture} key={index} />
+          ))}
+          <LectureSmall props={dummy[0]} />
+        </Lectures3>
+        <Lectures3>
+          {dummy.map((lecture, index) => (
+            <LectureSmall props={lecture} key={index} />
+          ))}
+          <LectureSmall props={dummy[0]} />
+        </Lectures3>
+        <Lectures3>
+          {dummy.map((lecture, index) => (
+            <LectureSmall props={lecture} key={index} />
+          ))}
+          <LectureSmall props={dummy[0]} />
+        </Lectures3>
+        <Lectures3>
+          {dummy.map((lecture, index) => (
+            <LectureSmall props={lecture} key={index} />
+          ))}
+          <LectureSmall props={dummy[0]} />
+        </Lectures3>
       </div>
     </Wrapper>
   );
