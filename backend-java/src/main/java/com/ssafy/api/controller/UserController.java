@@ -1,7 +1,6 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.user.UserModifyReq;
-import com.ssafy.api.response.user.UserModifyRes;
 import com.ssafy.api.response.user.UserYourRes;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,10 +8,7 @@ import com.ssafy.api.request.user.*;
 import com.ssafy.api.response.user.*;
 import com.ssafy.common.util.MailUtil;
 import com.ssafy.db.entity.Pay;
-import com.ssafy.db.entity.PayList;
 import com.ssafy.db.entity.Snacks;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.http.ResponseEntity;
@@ -37,9 +33,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -66,49 +66,49 @@ public class UserController {
 
 	// 회원 가입 ========================================================================================================
 	@PostMapping("/signup/")
-	@ApiOperation(value = "회원 가입", notes = "<strong>아이디, 패스워드, 이름, 핸드폰 번호, 이메일, 성별, 나이, 닉네임, 그리고 프로필</strong>을 통해 회원가입한다.")
+	@ApiOperation(value = "회원 가입", notes = "<strong>아이디, 패스워드, 이름, 핸드폰 번호, 이메일, 성별, 나이, 그리고 닉네임</strong>을 통해 회원가입한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success")
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<? extends BaseResponseBody> register(
+	public ResponseEntity<BaseResponseBody> register(
 			@RequestBody @ApiParam(value="회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
 
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 		User user = userService.createUser(registerInfo);
 
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 
 	// 아이디 중복 검사 ===================================================================================================
 	@GetMapping("/checkid/{userId}")
 	@ApiOperation(value = "아이디 중복 검사", notes = "<strong>아이디</strong>를 통해 중복된 아이디인지 검사한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success"),
-			@ApiResponse(code = 401, message = "Invalid")
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "Invalid", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<? extends BaseResponseBody> checkId(
+	public ResponseEntity<BaseResponseBody> checkId(
 			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId) {
 		User user = userService.getUserByUserId(userId);
 		if(user == null) {
-			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 		}
-		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid"));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid", null));
 	}
 
 	// 닉네임 중복 검사 ===================================================================================================
 	@GetMapping("/checkNick/{userNickname}")
 	@ApiOperation(value = "닉네임 중복 검사", notes = "<strong>닉네임</strong>을 통해 중복된 닉네임인지 검사한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success"),
-			@ApiResponse(code = 401, message = "Invalid")
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "Invalid", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<? extends BaseResponseBody> checkNickname(
+	public ResponseEntity<BaseResponseBody> checkNickname(
 			@PathVariable @ApiParam(value="유저 닉네임", required = true) String userNickname) {
 		User user = userService.getUserByUserNickname(userNickname);
 		if(user == null) {
-			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 		}
-		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid"));
+		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid", null));
 	}
 
 	// 로그인 ===========================================================================================================
@@ -118,25 +118,25 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = UserLoginPostRes.class),
 			@ApiResponse(code = 401, message = "Invalid User", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<? extends BaseResponseBody> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginPostReq loginInfo) {
+	public ResponseEntity<BaseResponseBody> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginPostReq loginInfo) {
 		String userId = loginInfo.getUserId();
 		String password = loginInfo.getUserPw();
 		User user = userService.getUserByUserId(userId);
 		if(user == null) {
-			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid User"));
+			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid User", null));
 		}
 		// 로그인 요청한 유저로부터 입력된 패스워드와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
 		if(passwordEncoder.matches(password, user.getUserPw())) {
 			// 유효한 패스워드가 맞는 경우
 			String accessToken = JwtTokenUtil.getToken(userId);
 			String refreshToken = JwtTokenUtil.getRefreshToken(userId, 5);
-			// accessToken DB에 넣기
-			userService.updateUserToken(userId, refreshToken);
+			// refreshToken DB에 넣기
+			userService.updateUserRefreshToken(userId, refreshToken);
 			// 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", accessToken, refreshToken, user.getUserNickname(), user.getUserProfile()));
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserLoginPostRes.of(accessToken, refreshToken, user.getUserNickname(), user.getUserProfile(), user.getUserType(), user.getUserId())));
 		}
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid User"));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid User", null));
 	}
 
 	// 로그아웃 =========================================================================================================
@@ -147,7 +147,7 @@ public class UserController {
 	})
 	public ResponseEntity<BaseResponseBody> logout(@RequestBody @ApiParam(value="회원 아이디", required = true) String userId) {
 		userService.logout(userId);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 
 	// 회원 정보 조회 ====================================================================================================
@@ -159,7 +159,7 @@ public class UserController {
         @ApiResponse(code = 401, message = "Invalid Nickname", response = BaseResponseBody.class),
 		@ApiResponse(code = 403, message = "Invalid User", response = BaseResponseBody.class)
     })
-	public ResponseEntity<?> getUserInfo(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="회원 닉네임", required = true) String userNickname) {
+	public ResponseEntity<BaseResponseBody> getUserInfo(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="회원 닉네임", required = true) String userNickname) {
 		/**
 		 * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
 		 * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
@@ -167,23 +167,23 @@ public class UserController {
 		// 로그인
 		User user = userService.getUserByUserNickname(userNickname);
 		if(user == null) {
-			return ResponseEntity.status(401).body(new BaseResponseBody(401, "Invalid Nickname"));
+			return ResponseEntity.status(401).body(new BaseResponseBody(401, "Invalid Nickname", null));
 		}
 		if(authentication != null) {
 			SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 			String loginUserId = userDetails.getUsername();
 			User loginUser = userService.getUserByUserId(loginUserId);
 			if(user.getUserId().equals(loginUserId)) {
-				return ResponseEntity.status(200).body(UserMyRes.of(200, "MySuccess", loginUser));
+				return ResponseEntity.status(200).body(BaseResponseBody.of(200, "MySuccess", UserMyRes.of(loginUser)));
 			} else {
-				return ResponseEntity.status(200).body(UserYourRes.of(201, "YourSuccess", user));
+				return ResponseEntity.status(200).body(BaseResponseBody.of(201, "YourSuccess", UserYourRes.of(user)));
 			}
 		// 비로그인
 		} else if(authentication.getPrincipal().equals("")) {
-			return ResponseEntity.status(200).body(UserYourRes.of(201, "YourSuccess", user));
+			return ResponseEntity.status(200).body(BaseResponseBody.of(201, "YourSuccess", UserYourRes.of(user)));
 		// 토큰 만료
 		} else {
-			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Invalid User"));
+			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Invalid User", null));
 		}
 	}
 
@@ -193,11 +193,16 @@ public class UserController {
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = UserMyRes.class)
 	})
-	public ResponseEntity<UserMyRes> modifyProfile(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo) {
+	public ResponseEntity<BaseResponseBody> modifyProfile(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo, HttpServletRequest req) throws IOException {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		User user = userService.updateUser(loginUserId, modifyInfo);
-		return ResponseEntity.status(200).body(UserMyRes.of(200, "Success", user));
+		// 프로필 이미지 파일 저장
+		MultipartFile file = modifyInfo.getUserProfile();
+		if(!file.isEmpty()) {
+			file.transferTo(new File(req.getServletContext().getRealPath("/img/profile/" + loginUserId + ".png")));
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyRes.of(user)));
 	}
 
 	// 비밀번호 수정 ====================================================================================================
@@ -207,15 +212,15 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "Invalid Password", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<? extends BaseResponseBody> modifyPw(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="비밀번호 정보", required = true) UserPasswordModifyReq pwInfo) {
+	public ResponseEntity<BaseResponseBody> modifyPw(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="비밀번호 정보", required = true) UserPasswordModifyReq pwInfo) {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		User user = userService.getUserByUserId(loginUserId);
 		if(passwordEncoder.matches(pwInfo.getNowPassword(), user.getUserPw())) {
 			userService.updatePw(loginUserId, pwInfo.getNewPassword());
-			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 		}
-		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Password"));
+		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Password", null));
 	}
 
 	// 비밀번호 찾기 ====================================================================================================
@@ -225,7 +230,7 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "Invalid Email", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<? extends BaseResponseBody> searchPw(@RequestBody @ApiParam(value="회원 아이디 및 이메일", required = true) UserPasswordSearchReq info) {
+	public ResponseEntity<BaseResponseBody> searchPw(@RequestBody @ApiParam(value="회원 아이디 및 이메일", required = true) UserPasswordSearchReq info) {
 		String userId = info.getUserId();
 		String userEmail = info.getUserEmail();
 		User user = userService.getUserByUserId(userId);
@@ -248,9 +253,9 @@ public class UserController {
 			mail.setContent("변경된 비밀번호는 다음과 같습니다 : " + newPw);
 			mail.setAddress(userEmail);
 			userService.sendPw(mail);
-			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 		}
-		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Email"));
+		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Email", null));
 	}
 
 	// 수정 필요 ********************************************************************************************************
@@ -260,13 +265,13 @@ public class UserController {
 	@GetMapping("/{userId}/lectures/")
 	@ApiOperation(value = "나의 수강 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 수강 강의 목록을 반환한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success")
+			@ApiResponse(code = 200, message = "Success", response = UserMyLectureListRes.class)
 	})
-	public ResponseEntity<UserMyLectureListRes> getMyLecture(
+	public ResponseEntity<BaseResponseBody> getMyLecture(
 			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
 		// 강의 아이디, 강의 썸네일, 강의명, 강사명 조회하기
 		List<UserMyLectureRes> list = userService.getLecturesByUserId(userId, pageable);
-		return ResponseEntity.status(200).body(UserMyLectureListRes.of(200, "Success", list));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyLectureListRes.of(list)));
 	}
 
 	// 수정 필요 ********************************************************************************************************
@@ -276,12 +281,12 @@ public class UserController {
 	@GetMapping("/{userId}/snacks/")
 	@ApiOperation(value = "나의 스낵스 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 업로드 스낵스 목록을 반환한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success")
+			@ApiResponse(code = 200, message = "Success", response = UserMySnacksListRes.class)
 	})
-	public ResponseEntity<UserMySnacksListRes> getMySnacks(
+	public ResponseEntity<BaseResponseBody> getMySnacks(
 			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
 		List<Snacks> list = userService.getSnacksByUserId(userId, pageable);
-		return ResponseEntity.status(200).body(UserMySnacksListRes.of(200, "Success", list));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMySnacksListRes.of(list)));
 	}
 
 	// 수정 필요 ********************************************************************************************************
@@ -292,11 +297,47 @@ public class UserController {
 	@GetMapping("/{userId}/orders/")
 	@ApiOperation(value = "나의 결제 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 결제 목록을 반환한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success")
+			@ApiResponse(code = 200, message = "Success", response = UserMyPayListRes.class)
 	})
-	public ResponseEntity<UserMyPayListRes> getMyOrders(
+	public ResponseEntity<BaseResponseBody> getMyOrders(
 			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
 		List<Pay> list = userService.getPaysByUserId(userId, pageable);
-		return ResponseEntity.status(200).body(UserMyPayListRes.of(200, "Success", list));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyPayListRes.of(list)));
+	}
+
+	// 회원 탈퇴 ========================================================================================================
+	@PostMapping("/quit/")
+	@ApiOperation(value = "회원 탈퇴", notes = "<strong>비밀번호</strong>를 받아 확인한 후 현재 로그인한 회원의 계정을 삭제한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "Invalid Password", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<BaseResponseBody> quit(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="비밀번호 정보", required = true) String password) {
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String loginUserId = userDetails.getUsername();
+		User user = userService.getUserByUserId(loginUserId);
+		if(passwordEncoder.matches(password, user.getUserPw())) {
+			userService.quit(loginUserId);
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+		}
+		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Password", null));
+	}
+
+	// 리프레시 토큰으로 어세스 토큰 발급 ===================================================================================
+	@PostMapping("/refresh/")
+	@ApiOperation(value = "토큰 재발급", notes = "<strong>리프레시 토큰</strong>을 통해 어세스 토큰을 재발급한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = UserReAuthRes.class),
+			@ApiResponse(code = 401, message = "Invalid Token", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<? extends BaseResponseBody> reauth(@RequestBody @ApiParam(value="유저 아이디", required = true) String userId, HttpServletRequest req) {
+		String refreshToken = req.getHeader("refresh-token");
+		User user = userService.getUserByRefreshToken(refreshToken);
+		if(user.getUserId().equals(userId)) {
+			String accessToken = JwtTokenUtil.getToken(userId);
+			userService.updateUserAccessToken(userId, accessToken);
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserReAuthRes.of(accessToken)));
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid Token", null));
 	}
 }

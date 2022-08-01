@@ -61,10 +61,10 @@ public class LectureController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공")
     })
-    public ResponseEntity<LectureUpdateRes> updateLecture(@RequestBody @ApiParam(value = "수정할 강의 내용", required = true) LectureUpdateReq lectureUpdateReq) {
+    public ResponseEntity<BaseResponseBody> updateLecture(@RequestBody @ApiParam(value = "수정할 강의 내용", required = true) LectureUpdateReq lectureUpdateReq) {
         int lecId = lectureUpdateReq.getLecId();
-        Lecture lecture = lectureService.updateLecture(lecId, lectureUpdateReq);
-        return ResponseEntity.status(200).body(LectureUpdateRes.of(200,"Success", lecture));
+        lectureService.updateLecture(lecId, lectureUpdateReq);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success"));
     }
 
 

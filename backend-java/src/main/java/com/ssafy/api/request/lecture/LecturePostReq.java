@@ -13,10 +13,8 @@ import java.util.Date;
 @ApiModel("LecturePostRequest")
 public class LecturePostReq {
 
-    @ApiModelProperty(name = "강의 ID", example = "1,2")
-    int lecId;
-    @ApiModelProperty(name = "강사 정보", example = "instructor")
-    Instructor instructor;
+    @ApiModelProperty(name = "강사 아이디", example = "instructor")
+    String insId;
     @ApiModelProperty(name = "썸네일", example = "ssafy/img/thumbnail.jpg")
     String thumbnail;
     @ApiModelProperty(name = "강의 제목", example = "aenergy (Coachella Ver.)")

@@ -19,10 +19,8 @@ public class UserMyLectureListRes extends BaseResponseBody{
 	@ApiModelProperty(name="강의 정보", example="{lecThumb, lecTitle, instructor}")
 	List<UserMyLectureRes> lectureInfo;
 	
-	public static UserMyLectureListRes of(Integer statusCode, String message, List<UserMyLectureRes> lectureInfo) {
+	public static UserMyLectureListRes of(List<UserMyLectureRes> lectureInfo) {
 		UserMyLectureListRes res = new UserMyLectureListRes();
-		res.setStatusCode(statusCode);
-		res.setMessage(message);
 		res.setLectureInfo(lectureInfo);
 		return res;
 	}

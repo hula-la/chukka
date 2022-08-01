@@ -8,9 +8,7 @@ import com.ssafy.db.entity.User;
 import com.ssafy.api.response.user.UserMyLectureRes;
 import com.ssafy.common.util.MailUtil;
 import com.ssafy.db.entity.Pay;
-import com.ssafy.db.entity.PayList;
 import com.ssafy.db.entity.Snacks;
-import com.ssafy.db.entity.User;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -23,7 +21,8 @@ public interface UserService {
 	User createUser(UserRegisterPostReq userRegisterInfo);
 	User getUserByUserId(String userId);
 	User getUserByUserNickname(String userNickname);
-	void updateUserToken(String userId, String userAccessToken);
+	void updateUserRefreshToken(String userId, String userAccessToken);
+	void updateUserAccessToken(String userId, String userAccessToken);
 	User updateUser(String userId, UserModifyReq modifyInfo);
 	Integer updatePw(String userId, String userPw);
 	void sendPw(MailUtil mail);
@@ -32,4 +31,9 @@ public interface UserService {
 	List<Pay> getPaysByUserId(String userId, Pageable pageable);
 	User getUserByRefreshToken(String refreshToken);
 	void logout(String userId);
+	List<User> getUsers(Pageable pageable);
+	List<User> getCertainUsers(String category, String keyword);
+	void quit(String userId);
+	void createInstructor(String userId);
+
 }

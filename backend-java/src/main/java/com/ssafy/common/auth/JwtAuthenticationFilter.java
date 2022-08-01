@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         String header = request.getHeader(JwtTokenUtil.HEADER_STRING);
 
         // If header does not contain BEARER or is null delegate to Spring impl and exit
-        if (header == null || !header.startsWith(JwtTokenUtil.TOKEN_PREFIX) || !header.startsWith(JwtTokenUtil.REFRESH_TOKEN_PREFIX)) {
+        if (header == null || !header.startsWith(JwtTokenUtil.TOKEN_PREFIX)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -77,8 +77,6 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             JwtTokenUtil.handleError(token);
             DecodedJWT decodedJWT = verifier.verify(token.replace(JwtTokenUtil.TOKEN_PREFIX, ""));
             String userId = decodedJWT.getSubject();
-            String refreshToken = token.replace(JwtTokenUtil.REFRESH_TOKEN_PREFIX, "");
-            
             // Search in the DB if we find the user by token subject (username)
             // If so, then grab user details and create spring auth token using username, pass, authorities/roles
             if (userId != null) {

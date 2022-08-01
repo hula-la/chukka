@@ -27,8 +27,6 @@ public class UserRegisterPostReq {
 	String userEmail;
 	@ApiModelProperty(name="유저 Gender", example="1")
 	int userGender;
-	@ApiModelProperty(name="유저 Age", example="20")
-	int userAge;
 	@ApiModelProperty(name="유저 Name", example="img/profile.png")
 	String userProfile;
 

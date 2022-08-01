@@ -36,10 +36,8 @@ public class UserYourRes extends BaseResponseBody {
 	@ApiModelProperty(name="User Game Level", example="500")
 	private int userLvGame;
 
-	public static UserYourRes of(Integer statusCode, String message, User user) {
+	public static UserYourRes of(User user) {
 		UserYourRes res = new UserYourRes();
-		res.setStatusCode(statusCode);
-		res.setMessage(message);
 		res.setUserId(user.getUserId());
 		res.setUserName(user.getUserName());
 		res.setUserPhone(user.getUserPhone());

@@ -88,13 +88,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void updateUserToken(String userId, String userAccessToken) {
-		userRepository.updateUserRefreshToken(userId, userAccessToken);
+	public void updateUserRefreshToken(String userId, String userRefreshToken) {
+		userRepository.updateUserRefreshToken(userId, userRefreshToken);
 	}
 
 	@Override
 	public User updateUser(String userId, UserModifyReq modifyInfo) {
-		userRepository.updateUser(userId, modifyInfo.getUserPhone(), modifyInfo.getUserEmail(), modifyInfo.getUserGender(), modifyInfo.getUserBirth(), modifyInfo.getUserNickname(), modifyInfo.getUserProfile());
+		userRepository.updateUser(userId, modifyInfo.getUserPhone(), modifyInfo.getUserEmail(), modifyInfo.getUserGender(), modifyInfo.getUserBirth(), modifyInfo.getUserNickname());
 		User user = userRepository.findByUserId(userId).get();
 		return user;
 	}
@@ -143,6 +143,38 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void logout(String userId) {
 		userRepository.updateRefreshToken(userId);
+	}
+
+	@Override
+	public List<User> getUsers(Pageable pageable) {
+		return userRepository.getUsers(pageable);
+	}
+
+	@Override
+	public List<User> getCertainUsers(String category, String keyword) {
+		switch(category) {
+			case "userId":
+				return userRepository.getUsersByUserId(keyword);
+			case "userName":
+				return userRepository.getUsersByUserName(keyword);
+			case "userNickname":
+				return userRepository.getUsersByUserNickname(keyword);
+			case "userEmail":
+				return userRepository.getUsersByUserEmail(keyword);
+			case "userPhone":
+				return userRepository.getUsersByUserPhone(keyword);
+		}
+		return null;
+	}
+
+	@Override
+	public void quit(String userId) {
+		userRepository.deleteById(userId);
+	}
+
+	@Override
+	public void createInstructor(String userId) {
+		userRepository.updateUserType(userId);
 	}
 
 }

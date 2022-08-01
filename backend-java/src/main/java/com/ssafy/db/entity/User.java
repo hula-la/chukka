@@ -32,7 +32,6 @@ public class User{
     private String userPhone;
     private String userEmail;
     private String userNickname;
-    private String userAccessToken;
 
     // 경험치 관련
     private Integer userLvLec;
@@ -80,7 +79,7 @@ public class User{
     @PrePersist
     public void prePersist() {
         this.userPoint = this.userPoint == null ? 0 : this.userPoint;
-        this.userProfile = this.userProfile == null ? "default.png" : this.userProfile;
+        this.userProfile = this.userProfile == null ? this.userId : this.userProfile;
         this.userType = this.userType == null ? 0 : this.userType;
         this.userLvLec = this.userLvLec == null ? 0 : this.userLvLec;
         this.userLvSnacks = this.userLvSnacks == null ? 0 : this.userLvSnacks;
