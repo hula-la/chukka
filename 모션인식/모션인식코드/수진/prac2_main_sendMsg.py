@@ -155,20 +155,9 @@ async def websocket_endpoint(websocket: WebSocket):
             cv2.putText(image_1, str(min_), (10, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
             # If the disctance is below the threshold
-            if min_<0.15:
-                cv2.putText(image_1, "PERFECT", (120, 700),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            elif min_<0.22:
-                cv2.putText(image_1, "GREAT", (120, 700),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            else:
-                cv2.putText(image_1,  "BAD", (80, 700),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-            cv2.putText(image_1, "FPS: %f" % (1.0 / (time.time() - prev_time)), (10, 50),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            
 
-            ret, buffer = cv2.imencode('.jpg', image_1)
-            await websocket.send_bytes(bytearray(buffer))  # client 에 메시지 전달
+            await websocket.send_text(str(min_))  # client 에 메시지 전달
             # frame = buffer.tobytes()
         
             prev_time = time.time()
