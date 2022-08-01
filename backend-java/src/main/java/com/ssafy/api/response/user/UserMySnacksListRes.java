@@ -19,10 +19,8 @@ public class UserMySnacksListRes extends BaseResponseBody{
 	@ApiModelProperty(name="스낵스 정보")
 	List<Snacks> snacksInfo;
 	
-	public static UserMySnacksListRes of(Integer statusCode, String message, List<Snacks> snacksInfo) {
+	public static UserMySnacksListRes of(List<Snacks> snacksInfo) {
 		UserMySnacksListRes res = new UserMySnacksListRes();
-		res.setStatusCode(statusCode);
-		res.setMessage(message);
 		res.setSnacksInfo(snacksInfo);
 		return res;
 	}

@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -28,5 +29,5 @@ public class UserModifyReq {
 	@ApiModelProperty(name="유저 Nickname", example="your_nickname")
 	String userNickname;
 	@ApiModelProperty(name="유저 Profile", example="img/profile.png")
-	String userProfile;
+	MultipartFile userProfile;
 }

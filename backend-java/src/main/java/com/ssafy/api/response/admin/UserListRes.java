@@ -19,10 +19,8 @@ public class UserListRes extends BaseResponseBody{
 	@ApiModelProperty(name="유저 목록")
 	List<User> userList;
 
-	public static UserListRes of(Integer statusCode, String message, List<User> userList) {
+	public static UserListRes of(List<User> userList) {
 		UserListRes res = new UserListRes();
-		res.setStatusCode(statusCode);
-		res.setMessage(message);
 		res.setUserList(userList);
 		return res;
 	}

@@ -30,16 +30,17 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Transactional
 //    @Modifying(clearAutomatically = true)
     @Modifying
-    @Query(value = "update User u set u.userAccessToken = :userAccessToken where u.userId = :userId", nativeQuery = true)
+    @Query(value = "update User u set u.user_access_token = :userAccessToken where u.user_id = :userId", nativeQuery = true)
     Optional<Integer> updateUserAccessToken(String userId, String userAccessToken);
-
+    @Transactional
+    @Modifying
     @Query(value = "update User u set u.user_refresh_token = :userRefreshToken where u.user_id = :userId", nativeQuery = true)
     Optional<Integer> updateUserRefreshToken(String userId, String userRefreshToken);
 
     @Transactional
     @Modifying
-    @Query(value = "update User u set u.user_phone = :userPhone, u.user_email = :userEmail, u.user_gender = :userGender, u.user_birth = :userBirth, u.user_nickname = :userNickname, u.user_profile = :userProfile where u.user_id = :userId", nativeQuery = true)
-    Optional<Integer> updateUser(String userId, String userPhone, String userEmail, int userGender, Date userBirth, String userNickname, String userProfile);
+    @Query(value = "update User u set u.user_phone = :userPhone, u.user_email = :userEmail, u.user_gender = :userGender, u.user_birth = :userBirth, u.user_nickname = :userNickname where u.user_id = :userId", nativeQuery = true)
+    Optional<Integer> updateUser(String userId, String userPhone, String userEmail, int userGender, Date userBirth, String userNickname);
 
     @Transactional
     @Modifying
@@ -53,25 +54,25 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query(value = "update User u set u.user_refresh_token = '' where u.user_id = :userId", nativeQuery = true)
     void updateRefreshToken(String userId);
 
-    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u")
+    @Query(value = "select u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u", nativeQuery = true)
     List<User> getUsers(Pageable pageable);
 
-    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u where u.userId like :userId")
+    @Query(value = "select u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u where u.user_id like :userId", nativeQuery = true)
     List<User> getUsersByUserId(String userId);
 
-    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u where u.userName like :userName")
+    @Query(value = "select  u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u where u.user_name like :userName", nativeQuery = true)
     List<User> getUsersByUserName(String userName);
 
-    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u where u.userNickname like :userNickname")
+    @Query(value = "select  u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u where u.user_nickname like :userNickname", nativeQuery = true)
     List<User> getUsersByUserNickname(String userNickname);
 
-    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u where u.userEmail like :userEmail")
+    @Query(value = "select u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u where u.user_email like :userEmail", nativeQuery = true)
     List<User> getUsersByUserEmail(String userEmail);
 
-    @Query("select u.userId, u.userName, u.userPhone, u.userEmail, u.userNickname, u.userGender, u.userBirth, u.userType from User u where u.userPhone like :userPhone")
+    @Query(value = "select  u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u where u.user_phone like :userPhone", nativeQuery = true)
     List<User> getUsersByUserPhone(String userPhone);
 
-    @Query(value = "update User u set u.userType = 1 where u.userId = :userId", nativeQuery = true)
+    @Query(value = "update User u set u.user_type = 1 where u.user_id = :userId", nativeQuery = true)
     void updateUserType(String userId);
 
 }

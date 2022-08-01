@@ -7,7 +7,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.Date;
 /**
  * 회원 본인 정보 조회 API ([GET] /api/v1/users/me) 요청에 대한 응답값 정의.
@@ -34,7 +36,7 @@ public class UserMyRes extends BaseResponseBody {
 	@ApiModelProperty(name="User Nickname", example="your_nickname")
 	private String userNickname;
 	@ApiModelProperty(name="User Profile", example="img/profile.png")
-	private String userProfile;
+	private MultipartFile userProfile;
 	@ApiModelProperty(name="User Lecture Level", example="500")
 	private int userLvLec;
 	@ApiModelProperty(name="User Snacks Level", example="500")
@@ -42,10 +44,8 @@ public class UserMyRes extends BaseResponseBody {
 	@ApiModelProperty(name="User Game Level", example="500")
 	private int userLvGame;
 
-	public static UserMyRes of(Integer statusCode, String message, User user) {
+	public static UserMyRes of(User user) {
 		UserMyRes res = new UserMyRes();
-		res.setStatusCode(statusCode);
-		res.setMessage(message);
 		res.setUserId(user.getUserId());
 		res.setUserName(user.getUserName());
 		res.setUserPhone(user.getUserPhone());
@@ -54,7 +54,7 @@ public class UserMyRes extends BaseResponseBody {
 		res.setUserPoint(user.getUserPoint());
 		res.setUserBirth(user.getUserBirth());
 		res.setUserNickname(user.getUserNickname());
-		res.setUserProfile(user.getUserProfile());
+//		res.setUserProfile(new File(user.getUserId()));
 		res.setUserLvLec(user.getUserLvLec());
 		res.setUserLvSnacks(user.getUserLvSnacks());
 		res.setUserLvGame(user.getUserLvGame());

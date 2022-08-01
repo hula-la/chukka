@@ -20,10 +20,8 @@ public class LectureListRes extends BaseResponseBody{
 	@ApiModelProperty(name="강의 목록")
 	List<Lecture> lectureList;
 
-	public static LectureListRes of(Integer statusCode, String message, List<Lecture> lectureList) {
+	public static LectureListRes of(List<Lecture> lectureList) {
 		LectureListRes res = new LectureListRes();
-		res.setStatusCode(statusCode);
-		res.setMessage(message);
 		res.setLectureList(lectureList);
 		return res;
 	}

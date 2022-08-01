@@ -18,6 +18,8 @@ public class BaseResponseBody {
 	String message = null;
 	@ApiModelProperty(name="응답 코드", example = "200")
 	Integer statusCode = null;
+	@ApiModelProperty(name="data", example = "{property1: value1, property2: value2}")
+	Object data = null;
 	
 	public BaseResponseBody() {}
 	
@@ -25,15 +27,17 @@ public class BaseResponseBody {
 		this.statusCode = statusCode;
 	}
 	
-	public BaseResponseBody(Integer statusCode, String message){
+	public BaseResponseBody(Integer statusCode, String message, Object data){
 		this.statusCode = statusCode;
 		this.message = message;
+		this.data = data;
 	}
 	
-	public static BaseResponseBody of(Integer statusCode, String message) {
+	public static BaseResponseBody of(Integer statusCode, String message, Object data) {
 		BaseResponseBody body = new BaseResponseBody();
 		body.message = message;
 		body.statusCode = statusCode;
+		body.data = data;
 		return body;
 	}
 }

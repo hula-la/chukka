@@ -19,7 +19,7 @@ import java.util.Optional;
 @Repository
 public interface InstructorRepository extends JpaRepository<Instructor, String> {
 
-    @Query(value = "update Instructor i set i.insName = :insName, i.insEmail = :insEmail, i.insIntroduce = :insIntroduce, i.insProfile = :insProfile where i.insId = :insId", nativeQuery = true)
+    @Query(value = "update Instructor i set i.ins_name = :insName, i.ins_email = :insEmail, i.ins_introduce = :insIntroduce, i.ins_profile = :insProfile where i.ins_id = :insId", nativeQuery = true)
     void updateInstructor(String insId, String insName, String insEmail, String insIntroduce, String insProfile);
 
 }

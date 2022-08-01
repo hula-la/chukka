@@ -88,13 +88,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void updateUserToken(String userId, String userAccessToken) {
-		userRepository.updateUserRefreshToken(userId, userAccessToken);
+	public void updateUserRefreshToken(String userId, String userRefreshToken) {
+		userRepository.updateUserRefreshToken(userId, userRefreshToken);
 	}
 
 	@Override
 	public User updateUser(String userId, UserModifyReq modifyInfo) {
-		userRepository.updateUser(userId, modifyInfo.getUserPhone(), modifyInfo.getUserEmail(), modifyInfo.getUserGender(), modifyInfo.getUserBirth(), modifyInfo.getUserNickname(), modifyInfo.getUserProfile());
+		userRepository.updateUser(userId, modifyInfo.getUserPhone(), modifyInfo.getUserEmail(), modifyInfo.getUserGender(), modifyInfo.getUserBirth(), modifyInfo.getUserNickname());
 		User user = userRepository.findByUserId(userId).get();
 		return user;
 	}

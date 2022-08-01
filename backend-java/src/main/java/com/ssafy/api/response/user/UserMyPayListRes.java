@@ -20,10 +20,8 @@ public class UserMyPayListRes extends BaseResponseBody{
 	@ApiModelProperty(name="결제 정보")
 	List<Pay> payInfo;
 	
-	public static UserMyPayListRes of(Integer statusCode, String message, List<Pay> payInfo) {
+	public static UserMyPayListRes of(List<Pay> payInfo) {
 		UserMyPayListRes res = new UserMyPayListRes();
-		res.setStatusCode(statusCode);
-		res.setMessage(message);
 		res.setPayInfo(payInfo);
 		return res;
 	}

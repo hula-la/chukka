@@ -21,7 +21,8 @@ public interface UserService {
 	User createUser(UserRegisterPostReq userRegisterInfo);
 	User getUserByUserId(String userId);
 	User getUserByUserNickname(String userNickname);
-	void updateUserToken(String userId, String userAccessToken);
+	void updateUserRefreshToken(String userId, String userAccessToken);
+	void updateUserAccessToken(String userId, String userAccessToken);
 	User updateUser(String userId, UserModifyReq modifyInfo);
 	Integer updatePw(String userId, String userPw);
 	void sendPw(MailUtil mail);
