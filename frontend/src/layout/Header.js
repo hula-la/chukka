@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '../components/Button';
 import MenuItems from '../components/MenuItems';
+import { useSelector } from 'react-redux';
 
 const NavBar = styled.div`
   color: #ffffff;
@@ -30,6 +31,7 @@ const NavBar = styled.div`
 `;
 
 const Header = () => {
+  const { userInfo } = useSelector((state) => state.user);
   const menuItems = [
     {
       title: 'Lectures',
@@ -62,9 +64,18 @@ const Header = () => {
         })}
       </ul>
       <div>
-        <NavLink to="/accounts/login">
-          <Button content="Sign In" />
-        </NavLink>
+        {!userInfo ? (
+          <NavLink to="/accounts/login">
+            <Button content="Sign In" />
+          </NavLink>
+        ) : (
+          <NavLink to="/">
+            <div>
+              <img src={userInfo.userProfile} alt="" />
+              <div>Hi, {userInfo.userNickname}!</div>
+            </div>
+          </NavLink>
+        )}
       </div>
     </NavBar>
   );

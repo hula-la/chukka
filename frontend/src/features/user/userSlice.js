@@ -2,14 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 import { registerUser, userLogin } from './userActions';
 
 // initialize userToken from local storage
-const userToken = localStorage.getItem('userToken')
-  ? localStorage.getItem('userToken')
+const accessToken = localStorage.getItem('accessToken')
+  ? localStorage.getItem('accessToken')
   : null;
 
 const initialState = {
   loading: false,
   userInfo: null,
-  userToken,
+  accessToken,
   error: null,
   success: false,
 };
@@ -19,7 +19,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      localStorage.removeItem('userToken'); // delete token from storage
+      localStorage.removeItem('accessToken'); // delete token from storage
       state.loading = false;
       state.userInfo = null;
       state.userToken = null;
@@ -29,6 +29,7 @@ const userSlice = createSlice({
   extraReducers: {
     // 유저 로그인
     [userLogin.pending]: (state) => {
+      console.log('pending!');
       // 액션 디스패치
       state.loading = true;
       state.error = null;
@@ -38,9 +39,11 @@ const userSlice = createSlice({
       state.loading = false;
       state.userInfo = payload;
       state.userToken = payload.userToken;
+      console.log(payload);
     },
     [userLogin.rejected]: (state, { payload }) => {
       // 요청 실패
+      console.log('login rejected');
       state.loading = false;
       state.error = payload;
     },
