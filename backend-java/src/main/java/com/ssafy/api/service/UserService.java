@@ -34,4 +34,5 @@ public interface UserService {
 	List<User> getCertainUsers(String category, String keyword);
 	void quit(String userId);
 	void createInstructor(String userId);
+
 }

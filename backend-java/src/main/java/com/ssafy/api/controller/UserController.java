@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,6 +41,7 @@ import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Random;
 
@@ -130,7 +132,7 @@ public class UserController {
 			// 유효한 패스워드가 맞는 경우
 			String accessToken = JwtTokenUtil.getToken(userId);
 			String refreshToken = JwtTokenUtil.getRefreshToken(userId, 5);
-			// accessToken DB에 넣기
+			// refreshToken DB에 넣기
 			userService.updateUserToken(userId, refreshToken);
 			// 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
 			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", accessToken, refreshToken, user.getUserNickname(), user.getUserProfile(), user.getUserType()));
@@ -316,5 +318,22 @@ public class UserController {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 		}
 		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Password"));
+	}
+
+	// 리프레시 토큰으로 어세스 토큰 발급 ===================================================================================
+	@PostMapping("/refresh/")
+	@ApiOperation(value = "토큰 재발급", notes = "<strong>리프레시 토큰</strong>을 통해 어세스 토큰을 재발급한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = UserReAuthRes.class),
+			@ApiResponse(code = 401, message = "Invalid Token", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<? extends BaseResponseBody> reauth(@RequestBody @ApiParam(value="유저 아이디", required = true) String userId, HttpServletRequest req) {
+		String refreshToken = req.getHeader("refresh-token");
+		User user = userService.getUserByRefreshToken(refreshToken);
+		if(user.getUserId().equals(userId)) {
+			String accessToken = JwtTokenUtil.getToken(userId);
+			return ResponseEntity.status(200).body(UserReAuthRes.of(200, "Success", accessToken));
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid Token"));
 	}
 }

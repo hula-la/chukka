@@ -32,7 +32,6 @@ public class User{
     private String userPhone;
     private String userEmail;
     private String userNickname;
-    private String userAccessToken;
 
     // 경험치 관련
     private Integer userLvLec;
