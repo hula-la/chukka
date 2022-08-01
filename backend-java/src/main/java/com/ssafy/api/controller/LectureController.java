@@ -13,6 +13,8 @@ import com.ssafy.db.entity.Lecture;
 import io.swagger.annotations.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,8 +51,8 @@ public class LectureController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<List<Lecture>> lectureList() {
-        return ResponseEntity.ok(lectureService.findAll());
+    public ResponseEntity<Page<Lecture>> lectureList(Pageable pageable) {
+        return ResponseEntity.ok(lectureService.findAll(pageable));
     }
 
     // 강의 내용 수정 ====================================================================================================
@@ -78,14 +80,15 @@ public class LectureController {
         return ResponseEntity.status(200).body(LectureNoticeRes.of(200,"Success", lecId, lecNotice));
     }
 
+    // 강의 삭제하기
     @DeleteMapping("/")
-    @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제한다.")
+    @ApiOperation(value = "강의 삭제", notes = "강의 ID에 해당하는 강의를 삭제한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공")
     })
     public ResponseEntity<?> deleteByLecId(@RequestBody @ApiParam(value = "삭제할 강의 ID", required = true) int lecId) {
-
-        return ResponseEntity.ok(lectureService.deleteByLecId(lecId));
+        lectureService.delete(lecId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 }
 
