@@ -12,7 +12,7 @@ export const registerUser = createAsyncThunk(
           // 'Content-Type': 'application/json',
         },
       };
-
+      console.log(data);
       await axios.post(`${BASE_URL}/accounts/signup/`, data, config);
     } catch (error) {
       if (error.response && error.response.data.message) {
@@ -26,20 +26,20 @@ export const registerUser = createAsyncThunk(
 
 export const userLogin = createAsyncThunk(
   'user/login',
-  async ({ userId, userPassword }, { rejectWithValue }) => {
+  async ({ userId, userPw }, { rejectWithValue }) => {
     try {
       const config = {
         headers: {},
       };
 
       const { data } = await axios.post(
-        `${BASE_URL}accounts/signup`,
-        { userId, userPassword },
+        `${BASE_URL}/accounts/login/`,
+        { userId, userPw },
         config,
       );
 
       // 로컬스토리지에 Token 저장
-      localStorage.setItem('userToken', data.userToken);
+      // localStorage.setItem('userToken', data.userToken);
 
       return data;
     } catch (error) {

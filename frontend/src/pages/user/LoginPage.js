@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from '../../features/user/userActions';
 
 const LoginTemplateBlock = styled.div`
@@ -80,11 +80,19 @@ const LoginTemplate = ({ children }) => {
 };
 
 const LoginForm = () => {
+  const { userInfo } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (userInfo) {
+      console.log(userInfo);
+      navigate('/');
+    }
+  }, [navigate, userInfo]);
 
   const [loginInputs, setLoginInputs] = useState({
     userId: '',
-    userPassword: '',
+    userPw: '',
   });
 
   const onChange = (e) => {
@@ -109,7 +117,7 @@ const LoginForm = () => {
         </div>
         <div>
           <label>비밀번호</label>
-          <input name="userPassword" type="password" onChange={onChange} />
+          <input name="userPw" type="password" onChange={onChange} />
         </div>
         <div>
           <p>Remember me?</p>
