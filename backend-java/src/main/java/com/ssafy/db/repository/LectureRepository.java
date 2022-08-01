@@ -31,7 +31,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     // 존재하는 강의 / 연령대 / 성별 기준으로
     @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre " +
             "from Enroll e, Lecture lec, User u " +
-            "where e.lecture = lec and current_date < lec.lecEndDate and u.userGender = :userGender and u")
+            "where e.lecture = lec and current_date < lec.lecEndDate and u.userGender = :userGender")
     Page<Lecture> getMostPopularLectureByYourBirthAndGender(Pageable pageable);
 
     // 공지사항 수정
