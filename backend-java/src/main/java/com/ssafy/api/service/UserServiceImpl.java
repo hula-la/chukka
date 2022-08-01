@@ -93,6 +93,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void updateUserAccessToken(String userId, String userAccessToken) {
+		userRepository.updateUserAccessToken(userId, userAccessToken);
+	}
+
+	@Override
 	public User updateUser(String userId, UserModifyReq modifyInfo) {
 		userRepository.updateUser(userId, modifyInfo.getUserPhone(), modifyInfo.getUserEmail(), modifyInfo.getUserGender(), modifyInfo.getUserBirth(), modifyInfo.getUserNickname());
 		User user = userRepository.findByUserId(userId).get();
