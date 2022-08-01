@@ -207,7 +207,7 @@ def get_position(video_path= r'dance_video/correct30.mp4',showBG = True):
     return data,keyp_list
 
 
-data,keyp_list=get_position(video_path= r'dance_video/soojin.mp4')
+data,keyp_list=get_position(video_path= r'dance_video/dancer.mp4')
 data.to_csv("dancer_keyp_list.csv", index=False, header=False)
 data = pd.read_csv("dancer_keyp_list.csv",delimiter=",")
 print(data)
