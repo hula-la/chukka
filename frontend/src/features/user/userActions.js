@@ -51,3 +51,22 @@ export const userLogin = createAsyncThunk(
     }
   },
 );
+
+export const changeProfile = createAsyncThunk(
+  'user/changeProfile',
+  async (data, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {},
+      };
+
+      await axios.put(`${BASE_URL}/accounts/`, data, config);
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
