@@ -54,23 +54,11 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query(value = "update User u set u.user_refresh_token = '' where u.user_id = :userId", nativeQuery = true)
     void updateRefreshToken(String userId);
 
-    @Query(value = "select u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u", nativeQuery = true)
-    List<User> getUsers(Pageable pageable);
-
-    @Query(value = "select u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u where u.user_id like :userId", nativeQuery = true)
-    List<User> getUsersByUserId(String userId);
-
-    @Query(value = "select  u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u where u.user_name like :userName", nativeQuery = true)
-    List<User> getUsersByUserName(String userName);
-
-    @Query(value = "select  u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u where u.user_nickname like :userNickname", nativeQuery = true)
-    List<User> getUsersByUserNickname(String userNickname);
-
-    @Query(value = "select u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u where u.user_email like :userEmail", nativeQuery = true)
-    List<User> getUsersByUserEmail(String userEmail);
-
-    @Query(value = "select  u.user_id, u.user_name, u.user_phone, u.user_email, u.user_nickname, u.user_gender, u.user_birth, u.user_type from User u where u.user_phone like :userPhone", nativeQuery = true)
-    List<User> getUsersByUserPhone(String userPhone);
+    List<User> findByUserIdContaining(String keyword);
+    List<User> findByUserNameContaining(String keyword);
+    List<User> findByUserNicknameContaining(String keyword);
+    List<User> findByUserEmailContaining(String keyword);
+    List<User> findByUserPhoneContaining(String keyword);
 
     @Query(value = "update User u set u.user_type = 1 where u.user_id = :userId", nativeQuery = true)
     void updateUserType(String userId);

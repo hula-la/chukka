@@ -17,7 +17,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ApiModel("UserMyResponse")
-public class UserMyRes extends BaseResponseBody {
+public class UserMyRes{
 
 	@ApiModelProperty(name="User ID", example="your_id")
 	String userId;
@@ -54,7 +54,6 @@ public class UserMyRes extends BaseResponseBody {
 		res.setUserPoint(user.getUserPoint());
 		res.setUserBirth(user.getUserBirth());
 		res.setUserNickname(user.getUserNickname());
-//		res.setUserProfile(new File(user.getUserId()));
 		res.setUserLvLec(user.getUserLvLec());
 		res.setUserLvSnacks(user.getUserLvSnacks());
 		res.setUserLvGame(user.getUserLvGame());

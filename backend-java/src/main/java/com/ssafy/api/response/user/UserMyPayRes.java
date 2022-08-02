@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @ApiModel("UserMyPayResponse")
-public class UserMyPayRes extends BaseResponseBody{
+public class UserMyPayRes{
 	// 결제 번호, 결제 날짜, 결제 강의 수, 결제 수단, 결제 강의 리스트
 	@ApiModelProperty(name="강의 아이디", example="1")
 	int payId;
@@ -30,10 +30,8 @@ public class UserMyPayRes extends BaseResponseBody{
 	@ApiModelProperty(name="강사명", example="Kim")
 	List<PayList> payList;
 	
-	public static UserMyPayRes of(Integer statusCode, String message, Pay pay) {
+	public static UserMyPayRes of(Pay pay) {
 		UserMyPayRes res = new UserMyPayRes();
-		res.setStatusCode(statusCode);
-		res.setMessage(message);
 		res.setPayId(pay.getPayId());
 		res.setPayDate(pay.getPayDate());
 		res.setPayAmount(pay.getPayAmount());

@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @ApiModel("LectureListResponse")
-public class LectureListRes extends BaseResponseBody{
+public class LectureListRes{
 	@ApiModelProperty(name="강의 목록")
 	Page<Lecture> lectureList;
 

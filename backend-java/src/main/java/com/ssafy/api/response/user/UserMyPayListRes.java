@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @ApiModel("UserMyPayListResponse")
-public class UserMyPayListRes extends BaseResponseBody{
+public class UserMyPayListRes{
 	@ApiModelProperty(name="결제 정보")
 	List<Pay> payInfo;
 	

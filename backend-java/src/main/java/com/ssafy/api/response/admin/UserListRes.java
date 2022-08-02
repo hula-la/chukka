@@ -15,11 +15,11 @@ import java.util.List;
 @Getter
 @Setter
 @ApiModel("UserListResponse")
-public class UserListRes extends BaseResponseBody{
+public class UserListRes{
 	@ApiModelProperty(name="유저 목록")
-	List<User> userList;
+	List<UserRes> userList;
 
-	public static UserListRes of(List<User> userList) {
+	public static UserListRes of(List<UserRes> userList) {
 		UserListRes res = new UserListRes();
 		res.setUserList(userList);
 		return res;

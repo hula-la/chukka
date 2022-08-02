@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("UserMyLectureResponse")
-public class UserMyLectureRes extends BaseResponseBody{
+public class UserMyLectureRes{
 	// 강의 썸네일, 강의명, 강사명 정도
 	@ApiModelProperty(name="강의 아이디", example="1")
 	int lecId;
@@ -23,10 +23,8 @@ public class UserMyLectureRes extends BaseResponseBody{
 	@ApiModelProperty(name="강사명", example="Kim")
 	String instructor;
 	
-	public static UserMyLectureRes of(Integer statusCode, String message, int lecId, String lecThumb, String lecTitle, String instructor) {
+	public static UserMyLectureRes of(int lecId, String lecThumb, String lecTitle, String instructor) {
 		UserMyLectureRes res = new UserMyLectureRes();
-		res.setStatusCode(statusCode);
-		res.setMessage(message);
 		res.setLecId(lecId);
 		res.setLecThumb(lecThumb);
 		res.setLecTitle(lecTitle);

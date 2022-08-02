@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -16,7 +17,7 @@ public class LecturePostReq {
     @ApiModelProperty(name = "강사 아이디", example = "instructor")
     String insId;
     @ApiModelProperty(name = "썸네일", example = "ssafy/img/thumbnail.jpg")
-    String thumbnail;
+    MultipartFile thumbnail;
     @ApiModelProperty(name = "강의 제목", example = "aenergy (Coachella Ver.)")
     String lecTitle;
     @ApiModelProperty(name = "강의내용", example = "누구의 춤 솰라솰라")

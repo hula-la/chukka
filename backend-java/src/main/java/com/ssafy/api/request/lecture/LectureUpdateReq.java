@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -15,7 +16,7 @@ public class LectureUpdateReq {
     @ApiModelProperty(name = "강의 ID", example = "lecture_id")
     int lecId;
     @ApiModelProperty(name = "강의 썸네일", example = "img/thumbnail.jpg")
-    String thumbnail;
+    MultipartFile thumbnail;
     @ApiModelProperty(name = "강의 제목", example = "lec_title")
     String lecTitle;
     @ApiModelProperty(name = "강의 내용", example = "lec_contents")

@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.user.UserModifyReq;
+import com.ssafy.api.response.admin.UserRes;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ssafy.api.response.user.UserMyLectureRes;
@@ -22,6 +23,7 @@ import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -151,23 +153,51 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> getUsers(Pageable pageable) {
-		return userRepository.getUsers(pageable);
+	public List<UserRes> getUsers() {
+		List<User> list = userRepository.findAll();
+		List<UserRes> users = new ArrayList<>();
+		for (int i = 0; i < list.size(); i++) {
+			users.add(UserRes.of(list.get(i)));
+		}
+		return users;
 	}
 
 	@Override
-	public List<User> getCertainUsers(String category, String keyword) {
+	public List<UserRes> getCertainUsers(String category, String keyword) {
+		List<User> list;
+		List<UserRes> users = new ArrayList<>();
 		switch(category) {
 			case "userId":
-				return userRepository.getUsersByUserId(keyword);
+				list = userRepository.findByUserIdContaining(keyword);
+				System.out.println(list.size());
+				for (int i = 0; i < list.size(); i++) {
+					users.add(UserRes.of(list.get(i)));
+				}
+				return users;
 			case "userName":
-				return userRepository.getUsersByUserName(keyword);
+				list = userRepository.findByUserNameContaining(keyword);
+				for (int i = 0; i < list.size(); i++) {
+					users.add(UserRes.of(list.get(i)));
+				}
+				return users;
 			case "userNickname":
-				return userRepository.getUsersByUserNickname(keyword);
+				list = userRepository.findByUserNicknameContaining(keyword);
+				for (int i = 0; i < list.size(); i++) {
+					users.add(UserRes.of(list.get(i)));
+				}
+				return users;
 			case "userEmail":
-				return userRepository.getUsersByUserEmail(keyword);
+				list = userRepository.findByUserEmailContaining(keyword);
+				for (int i = 0; i < list.size(); i++) {
+					users.add(UserRes.of(list.get(i)));
+				}
+				return users;
 			case "userPhone":
-				return userRepository.getUsersByUserPhone(keyword);
+				list = userRepository.findByUserPhoneContaining(keyword);
+				for (int i = 0; i < list.size(); i++) {
+					users.add(UserRes.of(list.get(i)));
+				}
+				return users;
 		}
 		return null;
 	}

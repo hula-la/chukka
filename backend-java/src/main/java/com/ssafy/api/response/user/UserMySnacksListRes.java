@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @ApiModel("UserMySnacksListResponse")
-public class UserMySnacksListRes extends BaseResponseBody{
+public class UserMySnacksListRes{
 	@ApiModelProperty(name="스낵스 정보")
 	List<Snacks> snacksInfo;
 	

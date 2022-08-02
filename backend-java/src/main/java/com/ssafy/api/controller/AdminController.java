@@ -9,12 +9,18 @@ import com.ssafy.api.service.InstructorService;
 import com.ssafy.api.service.LectureService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.common.util.S3Uploader;
+import com.ssafy.db.entity.Lecture;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import retrofit2.http.Path;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 /**
  * 관리자 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -30,6 +36,8 @@ public class AdminController {
 	LectureService lectureService;
 	@Autowired
 	InstructorService instructorService;
+	@Autowired
+	S3Uploader s3Uploader;
 
 	// 회원 목록 조회 ====================================================================================================
 	@GetMapping("/accounts/")
@@ -37,8 +45,8 @@ public class AdminController {
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> getUsers(@PathVariable Pageable pageable) {
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserListRes.of(userService.getUsers(pageable))));
+	public ResponseEntity<BaseResponseBody> getUsers() {
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserListRes.of(userService.getUsers())));
 	}
 
 	// 강사 권한 수정 ========================================================================================================
@@ -90,25 +98,66 @@ public class AdminController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.of(lectureService.findAll(pageable))));
 	}
 
+	// 수정 필요 ********************************************************************************************************
+	// - Pageable *****************************************************************************************************
+	// 전체 섹션 목록 조회 ================================================================================================
+	@GetMapping("/sections/{lecId}")
+	@ApiOperation(value = "섹션 목록 조회", notes = "특정 강의의 모든 섹션 목록을 반환한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
+	})
+	public ResponseEntity<BaseResponseBody> getSections(@PathVariable int lecId, @PathVariable Pageable pageable) {
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.of(lectureService.findAll(pageable))));
+	}
+
 	// 강의 추가 ========================================================================================================
 	@PostMapping("/lectures/")
 	@ApiOperation(value = "강의 추가", notes = "<strong>강사 아이디, 썸네일, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 시작일, 강의 종료일, 카테고리(라이브 / 녹화), 난이도, 제한인원, 그리고 장르</strong>를 받아 강의를 추가한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> registerLecture(@RequestBody @ApiParam(value="강의 정보", required = true) LecturePostReq lectureInfo) {
-		lectureService.createLecture(lectureInfo);
+	public ResponseEntity<BaseResponseBody> registerLecture(@RequestBody @ApiParam(value="강의 정보", required = true) LecturePostReq lectureInfo, HttpServletRequest req) throws IOException {
+		Lecture lecture = lectureService.createLecture(lectureInfo);
+		MultipartFile thumbnail = lectureInfo.getThumbnail();
+		if(!thumbnail.isEmpty()) {
+			s3Uploader.uploadFiles(thumbnail, "img/lecture/thumbnail", req.getServletContext().getRealPath("/img/lecture/thumbnail/"), Integer.toString(lecture.getLecId()));
+		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 
+	/**
+	 * @Id
+	 *     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	 *     @Column(name = "sec_id")
+	 *     private int secId;
+	 *
+	 *     @ManyToOne
+	 *     @JoinColumn(name = "lec_id")
+	 *     private Lecture lecture;
+	 *
+	 *     @ManyToOne
+	 *     @JoinColumn(name = "ins_id")
+	 *     private Instructor instructor;
+	 *
+	 *     private String secTitle;
+	 *     private String secContents;
+	 *
+	 *     @Temporal(TemporalType.DATE)
+	 *     @CreatedDate
+	 *     private Date secRegdate;
+	 * */
 	// 강의 수정 ========================================================================================================
 	@PutMapping("/lectures/")
 	@ApiOperation(value = "강의 수정", notes = "<strong>강사 아이디, 썸네일, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 시작일, 강의 종료일, 카테고리(라이브 / 녹화), 난이도, 제한인원, 그리고 장르</strong>를 받아 특정 강의의 정보를 수정한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> modifyLecture(@RequestBody @ApiParam(value = "수정할 강의 내용", required = true) LectureUpdateReq lectureInfo) {
+	public ResponseEntity<BaseResponseBody> modifyLecture(@RequestBody @ApiParam(value = "수정할 강의 내용", required = true) LectureUpdateReq lectureInfo, HttpServletRequest req) throws IOException {
 		lectureService.updateLecture(lectureInfo.getLecId(), lectureInfo);
+		MultipartFile thumbnail = lectureInfo.getThumbnail();
+		if(!thumbnail.isEmpty()) {
+			s3Uploader.uploadFiles(thumbnail, "img/lecture/thumbnail", req.getServletContext().getRealPath("/img/lecture/thumbnail/"), Integer.toString(lectureInfo.getLecId()));
+		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 
@@ -129,8 +178,12 @@ public class AdminController {
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> registerInstructorInfo(@RequestBody @ApiParam(value="강사 정보", required = true) InstructorPostReq insInfo) {
+	public ResponseEntity<BaseResponseBody> registerInstructorInfo(@RequestBody @ApiParam(value="강사 정보", required = true) InstructorPostReq insInfo, HttpServletRequest req) throws IOException {
 		instructorService.createInstructor(insInfo);
+		MultipartFile profile = insInfo.getInsProfile();
+		if(!profile.isEmpty()) {
+			s3Uploader.uploadFiles(profile, "img/instructor/profile", req.getServletContext().getRealPath("/img/instructor/profile/"), insInfo.getInsId());
+		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 
@@ -140,8 +193,12 @@ public class AdminController {
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> modifyInstructorInfo(@RequestBody @ApiParam(value = "수정할 강의 내용", required = true) InstructorPostReq insInfo) {
+	public ResponseEntity<BaseResponseBody> modifyInstructorInfo(@RequestBody @ApiParam(value = "수정할 강의 내용", required = true) InstructorPostReq insInfo, HttpServletRequest req) throws IOException {
 		instructorService.updateInstructor(insInfo);
+		MultipartFile profile = insInfo.getInsProfile();
+		if(!profile.isEmpty()) {
+			s3Uploader.uploadFiles(profile, "img/instructor/profile", req.getServletContext().getRealPath("/img/instructor/profile/"), insInfo.getInsId());
+		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 

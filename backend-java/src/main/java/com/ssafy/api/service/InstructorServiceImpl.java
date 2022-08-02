@@ -28,12 +28,11 @@ public class InstructorServiceImpl implements InstructorService {
         ins.setInsEmail(insInfo.getInsEmail());
         ins.setInsIntroduce(insInfo.getInsIntroduce());
         ins.setInsName(insInfo.getInsName());
-        ins.setInsProfile(insInfo.getInsProfile());
         return instructorRepository.save(ins);
     }
 
     @Override
     public void updateInstructor(InstructorPostReq insInfo) {
-        instructorRepository.updateInstructor(insInfo.getInsId(), insInfo.getInsName(), insInfo.getInsEmail(), insInfo.getInsIntroduce(), insInfo.getInsProfile());
+        instructorRepository.updateInstructor(insInfo.getInsId(), insInfo.getInsName(), insInfo.getInsEmail(), insInfo.getInsIntroduce());
     }
 }

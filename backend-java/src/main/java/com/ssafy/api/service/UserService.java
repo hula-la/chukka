@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.request.user.UserRegisterPostReq;
 
+import com.ssafy.api.response.admin.UserRes;
 import com.ssafy.db.entity.User;
 
 import com.ssafy.api.response.user.UserMyLectureRes;
@@ -31,8 +32,8 @@ public interface UserService {
 	List<Pay> getPaysByUserId(String userId, Pageable pageable);
 	User getUserByRefreshToken(String refreshToken);
 	void logout(String userId);
-	List<User> getUsers(Pageable pageable);
-	List<User> getCertainUsers(String category, String keyword);
+	List<UserRes> getUsers();
+	List<UserRes> getCertainUsers(String category, String keyword);
 	void quit(String userId);
 	void createInstructor(String userId);
 

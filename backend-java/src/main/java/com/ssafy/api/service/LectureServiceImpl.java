@@ -38,7 +38,6 @@ public class LectureServiceImpl implements LectureService {
         Instructor instructor = new Instructor();
         instructor.setInsId(lecturePostReq.getInsId());
         lecture.setInstructor(instructor);
-        lecture.setThumbnail(lecturePostReq.getThumbnail());
         lecture.setLecTitle(lecturePostReq.getLecTitle());
         lecture.setLecContents(lecturePostReq.getLecContents());
         lecture.setLecPrice(lecture.getLecPrice());
@@ -57,7 +56,6 @@ public class LectureServiceImpl implements LectureService {
 
         int lecInfo = lecId;
         lectureRepository.updateLecture(lecInfo,
-                lectureUpdateReq.getThumbnail(),
                 lectureUpdateReq.getLecTitle(),
                 lectureUpdateReq.getLecContents(),
                 lectureUpdateReq.getLecPrice(),

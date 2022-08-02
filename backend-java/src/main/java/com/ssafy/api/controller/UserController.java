@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.response.user.UserYourRes;
+import com.ssafy.common.util.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ssafy.api.request.user.*;
@@ -56,6 +57,8 @@ public class UserController {
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	S3Uploader s3Uploader;
 
 	/**
 	 * Optional 부분 .get 메서드 쓴 곳 수정 (.get()은 null을 반환하지 않고 Exception을 유발함)
@@ -197,10 +200,10 @@ public class UserController {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		User user = userService.updateUser(loginUserId, modifyInfo);
-		// 프로필 이미지 파일 저장
+		// 프로필 이미지 파일 업로드
 		MultipartFile file = modifyInfo.getUserProfile();
 		if(!file.isEmpty()) {
-			file.transferTo(new File(req.getServletContext().getRealPath("/img/profile/" + loginUserId + ".png")));
+			s3Uploader.uploadFiles(file, "img/profile", req.getServletContext().getRealPath("/img/profile/"), user.getUserId());
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyRes.of(user)));
 	}

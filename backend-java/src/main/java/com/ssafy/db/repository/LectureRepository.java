@@ -29,18 +29,18 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     Page<Lecture> getMostPopularLecture(Pageable pageable);
 
     // 존재하는 강의 / 연령대 / 성별 기준으로
-    @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre, u.userGender, " +
-            "case " +
-            "when age < 20 then '10대' " +
-            "when age < 30 then '20대' " +
-            "when age < 40 then '30대' " +
-            "when age < 50 then '40대'" +
-            "end as age_group " +
-            "from Enroll e, Lecture lec, User u , (select *, floor(date_format(now(), '%y')-substring(userBirth,1,4)) as age from User) a" +
-            "where e.lecture = lec and current_date < lec.lecEndDate and u.userGender = :userGender " +
-            "group by lec.lecId " +
-            "order by count(age_group)")
-    Page<Lecture> getMostPopularLectureByYourBirthAndGender(Pageable pageable);
+//    @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre, u.userGender, " +
+//            "case " +
+//            "when age < 20 then '10대' " +
+//            "when age < 30 then '20대' " +
+//            "when age < 40 then '30대' " +
+//            "when age < 50 then '40대'" +
+//            "end as age_group " +
+//            "from Enroll e, Lecture lec, User u , (select *, floor(date_format(now(), '%y')-substring(userBirth,1,4)) as age from User) a" +
+//            "where e.lecture = lec and current_date < lec.lecEndDate and u.userGender = :userGender " +
+//            "group by lec.lecId " +
+//            "order by count(age_group)")
+//    Page<Lecture> getMostPopularLectureByYourBirthAndGender(Pageable pageable);
 
     // 공지사항 수정
     @Modifying(clearAutomatically = true)
@@ -51,7 +51,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     @Modifying(clearAutomatically = true)
     @Query(value = "update Lecture lec " +
             "set lec.lecId = :lecId +" +
-            "lec.thumbnail = :thumbnail, " +
             "lec.lecTitle = :lecTitle, " +
             "lec.lecContents = :lecContents, " +
             "lec.lecPrice = :lecPrice, " +
@@ -64,7 +63,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
             "lec.lecGenre = :lecGenre " +
             "where lec.lecId = :lecId", nativeQuery = true)
     Optional<Integer> updateLecture(int lecId,
-                                    String thumbnail,
                                     String lecTitle,
                                     String lecContents,
                                     int lecPrice,

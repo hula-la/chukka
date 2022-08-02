@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @ApiModel("UserMyLectureListResponse")
-public class UserMyLectureListRes extends BaseResponseBody{
+public class UserMyLectureListRes{
 	// 강의 썸네일, 강의명, 강사명 정도
 	@ApiModelProperty(name="강의 정보", example="{lecThumb, lecTitle, instructor}")
 	List<UserMyLectureRes> lectureInfo;
