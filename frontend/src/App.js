@@ -11,6 +11,7 @@ import SignUpPage from './pages/user/SignUpPage';
 import ProfilePage from './pages/user/ProfilePage';
 import MyListPage from './pages/user/MyListPage';
 import ChangeProfilePage from './pages/user/ChangeProfilePage';
+import PasswordPage from './pages/user/PasswordPage';
 
 // lectures
 import LecturesPage from './pages/lecture/LecturesPage';
@@ -19,6 +20,8 @@ import LivePage from './pages/lecture/LivePage';
 import SnacksPage from './pages/snacks/SnacksPage';
 // games
 import GamesPage from './pages/game/GamesPage';
+// admin
+import AdminPage from './pages/admin/AdminPage';
 // notfount
 import NotFound from './pages/NotFound';
 const App = () => {
@@ -37,6 +40,7 @@ const App = () => {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="mylist" element={<MyListPage />} />
           <Route path="change" element={<ChangeProfilePage />} />
+          <Route path="password" element={<PasswordPage />} />
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
@@ -50,6 +54,10 @@ const App = () => {
         {/* games */}
         <Route path="games" element={<Layout />}>
           <Route path="" element={<GamesPage />} />
+        </Route>
+        {/* admin */}
+        <Route path="admin" element={<Layout />}>
+          <Route path="" element={<AdminPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

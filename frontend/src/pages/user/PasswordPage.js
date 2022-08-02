@@ -1,6 +1,6 @@
 import React from 'react';
-import SideBar from '../../components/SideBar';
 import styled from 'styled-components';
+import SideBar from '../../components/SideBar';
 
 const ChangeProfileBlock = styled.div`
   display: flex;
@@ -8,7 +8,7 @@ const ChangeProfileBlock = styled.div`
   max-width: 1200px;
 `;
 
-const ChangeProfilePage = () => {
+const PasswordPage = () => {
   return (
     <ChangeProfileBlock>
       <SideBar />
@@ -17,4 +17,4 @@ const ChangeProfilePage = () => {
   );
 };
 
-export default ChangeProfilePage;
+export default PasswordPage;
