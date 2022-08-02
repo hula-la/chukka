@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("ReviewPostResponse")
-public class ReviewPostRes extends BaseResponseBody {
+public class ReviewPostRes {
     @ApiModelProperty(name = "리뷰 ID", example = "review_id")
     int reviewId;
     @ApiModelProperty(name = "강의 ID", example = "lec_id")
