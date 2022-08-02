@@ -40,6 +40,7 @@ function SideBar() {
     { name: 'Snacks', path: '/accounts/profile' },
     { name: '나의 강의 목록', path: '/accounts/mylist' },
     { name: '프로필 설정', path: '/accounts/change' },
+    { name: '비밀번호 변경', path: '/accounts/password' },
   ];
   return (
     <Side>

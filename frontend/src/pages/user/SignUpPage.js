@@ -106,7 +106,7 @@ const SignUpPage = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     // 회원가입 form Submit -> 유효성 검사 하고 dispatch
-    if (signUpInputs.password === signUpInputs.passwordConfirm) {
+    if (signUpInputs.userPw === signUpInputs.userPwConfirm) {
       dispatch(registerUser(signUpInputs));
     } else {
       alert('패스워드가 다릅니다!');
@@ -124,7 +124,7 @@ const SignUpPage = () => {
           </div>
           <div>
             <StyledLabel>닉네임</StyledLabel>
-            <StyledInput name="userName" onChange={onChange} required />
+            <StyledInput name="userNickname" onChange={onChange} required />
           </div>
           <div>
             <StyledLabel>비밀번호</StyledLabel>
@@ -143,6 +143,10 @@ const SignUpPage = () => {
               onChange={onChange}
               required
             />
+          </div>
+          <div>
+            <StyledLabel>이름</StyledLabel>
+            <StyledInput name="userName" onChange={onChange} required />
           </div>
           <div>
             <StyledLabel>이메일</StyledLabel>
