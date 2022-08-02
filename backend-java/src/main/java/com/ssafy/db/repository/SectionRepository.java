@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface SectionRepository extends JpaRepository<Section, String> {
 
     // 소강의 불러오기
-    List<Section> findByLectureOrderBySecId(Lecture lecture);
+    List<Section> findByLecture_LecIdOrderBySecId(int lecId);
 
     // 소강의 수정하기
     @Modifying(clearAutomatically = true)
@@ -21,9 +21,8 @@ public interface SectionRepository extends JpaRepository<Section, String> {
             "set sec.secId = :secId," +
             "sec.Instructor = :instructor," +
             "sec.secTitle = :secTitle," +
-            "sec.secContents = :secContents " +
             "where sec.secId = :secId", nativeQuery = true)
-    Optional<Integer> updateSection(int secId, Instructor instructor, String secTitle, String secContents);
+    Optional<Integer> updateSection(int secId, Instructor instructor, String secTitle);
 
     // 소강의 삭제하기
     Optional<Integer> deleteBySecId(int secId);

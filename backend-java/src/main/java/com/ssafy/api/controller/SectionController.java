@@ -42,22 +42,7 @@ public class SectionController {
             @ApiResponse(code = 200, message = "Success")
     })
     public ResponseEntity<List<Section>> findByLectureOrderBySecId(Lecture lecture) {
-        return ResponseEntity.ok(sectionService.findByLectureOrderBySecId(lecture));
-    }
-
-    @PutMapping("/")
-    @ApiOperation(value = "섹션 수정", notes = "해당하는 섹션의 내용을 수정한다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success")
-    })
-    public ResponseEntity<BaseResponseBody> updateSection(@RequestBody @ApiParam(value = "섹션 수정", required = true) SectionUpdateReq sectionUpdateReq) {
-        int secId = sectionUpdateReq.getSecId();
-        Section section = sectionService.updateSection(secId, sectionUpdateReq);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200,
-                "Success", SectionUpdateRes.of(section.getSecId(),
-                section.getInstructor(),
-                section.getSecTitle(),
-                section.getSecContents())));
+        return ResponseEntity.ok(sectionService.getSectionsByLectureId(lecture.getLecId()));
     }
 
     @DeleteMapping("/")

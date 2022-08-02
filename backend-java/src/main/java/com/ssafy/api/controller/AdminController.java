@@ -3,14 +3,17 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.instructor.InstructorPostReq;
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
+import com.ssafy.api.request.section.SectionPostReq;
 import com.ssafy.api.response.admin.LectureListRes;
 import com.ssafy.api.response.admin.UserListRes;
 import com.ssafy.api.service.InstructorService;
 import com.ssafy.api.service.LectureService;
+import com.ssafy.api.service.SectionService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.S3Uploader;
 import com.ssafy.db.entity.Lecture;
+import com.ssafy.db.entity.Section;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +37,9 @@ public class AdminController {
 	UserService userService;
 	@Autowired
 	LectureService lectureService;
+
+	@Autowired
+	SectionService sectionService;
 	@Autowired
 	InstructorService instructorService;
 	@Autowired
@@ -104,19 +110,19 @@ public class AdminController {
 	@GetMapping("/sections/{lecId}")
 	@ApiOperation(value = "섹션 목록 조회", notes = "특정 강의의 모든 섹션 목록을 반환한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> getSections(@PathVariable int lecId, @PathVariable Pageable pageable) {
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.of(lectureService.findAll(pageable))));
+	public ResponseEntity<BaseResponseBody> getSections(@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId) {
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionsByLectureId(lecId)));
 	}
 
 	// 강의 추가 ========================================================================================================
 	@PostMapping("/lectures/")
-	@ApiOperation(value = "강의 추가", notes = "<strong>강사 아이디, 썸네일, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 시작일, 강의 종료일, 카테고리(라이브 / 녹화), 난이도, 제한인원, 그리고 장르</strong>를 받아 강의를 추가한다.")
+	@ApiOperation(value = "강의 추가", notes = "")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> registerLecture(@RequestBody @ApiParam(value="강의 정보", required = true) LecturePostReq lectureInfo, HttpServletRequest req) throws IOException {
+	public ResponseEntity<BaseResponseBody> registerLecture(@RequestBody @ApiParam(value="섹션 정보", required = true) LecturePostReq lectureInfo, HttpServletRequest req) throws IOException {
 		Lecture lecture = lectureService.createLecture(lectureInfo);
 		MultipartFile thumbnail = lectureInfo.getThumbnail();
 		if(!thumbnail.isEmpty()) {
@@ -125,27 +131,21 @@ public class AdminController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 
-	/**
-	 * @Id
-	 *     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	 *     @Column(name = "sec_id")
-	 *     private int secId;
-	 *
-	 *     @ManyToOne
-	 *     @JoinColumn(name = "lec_id")
-	 *     private Lecture lecture;
-	 *
-	 *     @ManyToOne
-	 *     @JoinColumn(name = "ins_id")
-	 *     private Instructor instructor;
-	 *
-	 *     private String secTitle;
-	 *     private String secContents;
-	 *
-	 *     @Temporal(TemporalType.DATE)
-	 *     @CreatedDate
-	 *     private Date secRegdate;
-	 * */
+	// 섹션 추가 ========================================================================================================
+	@PostMapping("/sections/")
+	@ApiOperation(value = "섹션 추가", notes = "")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<BaseResponseBody> registerSection(@RequestBody @ApiParam(value="강의 정보", required = true) SectionPostReq sectionInfo, HttpServletRequest req) throws IOException {
+		Section section = sectionService.createSection(sectionInfo);
+		MultipartFile contents = sectionInfo.getSecContents();
+		if(!contents.isEmpty()) {
+			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/vid/section/contents/"), Integer.toString(sectionInfo.getSecId()));
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+	}
+
 	// 강의 수정 ========================================================================================================
 	@PutMapping("/lectures/")
 	@ApiOperation(value = "강의 수정", notes = "<strong>강사 아이디, 썸네일, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 시작일, 강의 종료일, 카테고리(라이브 / 녹화), 난이도, 제한인원, 그리고 장르</strong>를 받아 특정 강의의 정보를 수정한다.")
@@ -161,6 +161,21 @@ public class AdminController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 
+	// 섹션 수정 ========================================================================================================
+	@PutMapping("/sections/")
+	@ApiOperation(value = "섹션 수정", notes = "")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<BaseResponseBody> modifySection(@RequestBody @ApiParam(value = "수정할 섹션 내용", required = true) SectionPostReq sectionInfo, HttpServletRequest req) throws IOException {
+		sectionService.updateSection(sectionInfo.getLecId(), sectionInfo);
+		MultipartFile contents = sectionInfo.getSecContents();
+		if(!contents.isEmpty()) {
+			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/vid/section/contents/"), Integer.toString(sectionInfo.getSecId()));
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+	}
+
 	// 강의 삭제 ========================================================================================================
 	@DeleteMapping("/lectures/{lecId}")
 	@ApiOperation(value = "강의 삭제", notes = "<strong>강의 아이디</strong>를 받아 해당 강의를 삭제한다.")
@@ -169,6 +184,17 @@ public class AdminController {
 	})
 	public ResponseEntity<BaseResponseBody> deleteLecture(@PathVariable @ApiParam(value = "강의 Id", required = true) int lecId) {
 		lectureService.delete(lecId);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+	}
+
+	// 섹션 삭제 ========================================================================================================
+	@DeleteMapping("/sections/{sectionId}")
+	@ApiOperation(value = "섹션 삭제", notes = "")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<BaseResponseBody> deleteSection(@PathVariable @ApiParam(value = "섹션 Id", required = true) int sectionId) {
+		sectionService.deleteBySecId(sectionId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 

@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,5 +38,10 @@ public class Section{
 
     @OneToMany(mappedBy = "section")
     private List<SectionLike> sectionLikes = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        this.secRegdate = this.secRegdate == null ? Calendar.getInstance().getTime() : this.secRegdate;
+    }
 
 }

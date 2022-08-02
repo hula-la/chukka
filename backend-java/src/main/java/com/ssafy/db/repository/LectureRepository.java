@@ -78,4 +78,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     @Query(value = "select l.lecId, l.lecTitle, l.instructor.ins_name, l.thumbnail from Lecture l join Enroll e on l.lecId = e.lecture.lecId where e.user.userId = :userId order by e.enroll_id desc", nativeQuery = true)
     List<UserMyLectureRes> findLecturesByUserId(String userId, Pageable pageable);
 
+    Lecture findByLecId(int lecId);
+
 }

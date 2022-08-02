@@ -15,11 +15,11 @@ public interface SectionService {
 
     // Read
     // 대강의별 소강의 불러오기
-    List<Section> findByLectureOrderBySecId(Lecture lecture);
+    List<Section> getSectionsByLectureId(int lecId);
 
     // Update
     // 소강의 내용 수정하기
-     Section updateSection(int secId, SectionUpdateReq sectionUpdateReq);
+     Section updateSection(int secId, SectionPostReq sectionInfo);
 
     // Delete
     // 소강의 삭제하기
