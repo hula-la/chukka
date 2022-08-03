@@ -78,13 +78,13 @@ public class AdminController {
 	}
 
 	// 특정 회원 탈퇴 ====================================================================================================
-	@PostMapping("/accounts/{userId}")
+	@DeleteMapping("/accounts/{userId}")
 	@ApiOperation(value = "회원 강제 탈퇴", notes = "<strong>유저 아이디</strong>를 통해 해당 유저의 계정을 삭제한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "Invalid Id", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> quitCertainUser(@RequestBody @ApiParam(value="유저 아이디", required = true) String userId) {
+	public ResponseEntity<BaseResponseBody> quitCertainUser(@PathVariable @ApiParam(value="유저 아이디", required = true) String userId) {
 		if(userService.getUserByUserId(userId) == null) {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid Id", null));
 		}
