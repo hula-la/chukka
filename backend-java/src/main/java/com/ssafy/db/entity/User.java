@@ -58,8 +58,9 @@ public class User{
     @OneToMany(mappedBy = "user")
     private List<SnacksLike> likeUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Cart> carts = new ArrayList<>();
+    @OneToOne
+    @JoinColumn(name = "cartId")
+    private Cart cart;
 
     @OneToMany(mappedBy = "user")
     private List<Enroll> enrolls = new ArrayList<>();
