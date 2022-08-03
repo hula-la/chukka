@@ -19,5 +19,5 @@ import java.util.List;
  */
 public interface InstructorService {
 	Instructor createInstructor(InstructorPostReq insInfo);
-	void updateInstructor(InstructorPostReq insInfo);
+	Instructor updateInstructor(InstructorPostReq insInfo);
 }

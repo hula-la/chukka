@@ -34,45 +34,39 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepository userRepository;
-	
 	@Autowired
 	UserRepositorySupport userRepositorySupport;
-	
 	@Autowired
 	PasswordEncoder passwordEncoder;
-
 	@Autowired
 	LectureRepository lectureRepository;
 	@Autowired
 	SnacksRepository snacksRepository;
 	@Autowired
 	PayRepository payRepository;
-
-
-//	@Autowired
 	private JavaMailSender emailSender;
 	@Value("${spring.mail.username}")
 	private String email;
 
 
+	// 회원 생성
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
-		User user = new User();
-		user.setUserId(userRegisterInfo.getUserId());
-		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-		user.setUserPw(passwordEncoder.encode(userRegisterInfo.getUserPw()));
-		user.setUserName(userRegisterInfo.getUserName());
-		user.setUserPhone(userRegisterInfo.getUserPhone());
-		user.setUserEmail(userRegisterInfo.getUserEmail());
-		user.setUserGender(userRegisterInfo.getUserGender());
-		user.setUserBirth(userRegisterInfo.getUserBirth());
-		user.setUserNickname(userRegisterInfo.getUserNickname());
+		User user = User.builder().userId(userRegisterInfo.getUserId())
+				.userPw(passwordEncoder.encode(userRegisterInfo.getUserPw()))
+				.userName(userRegisterInfo.getUserName())
+				.userPhone(userRegisterInfo.getUserPhone())
+				.userEmail(userRegisterInfo.getUserEmail())
+				.userGender(userRegisterInfo.getUserGender())
+				.userBirth(userRegisterInfo.getUserBirth())
+				.userNickname(userRegisterInfo.getUserNickname())
+				.build();
 		return userRepository.save(user);
 	}
 
+	// 아이디를 통한 유저 조회
 	@Override
 	public User getUserByUserId(String userId) {
-		// 디비에 유저 정보 조회 (userId 를 통한 조회).
 		Optional<User> user = userRepository.findByUserId(userId);
 		if(user.isPresent()) {
 			return user.get();
@@ -80,6 +74,7 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
+	// 닉네임을 통한 유저 조회
 	@Override
 	public User getUserByUserNickname(String userNickname) {
 		Optional<User> user = userRepository.findByUserNickname(userNickname);
@@ -89,30 +84,51 @@ public class UserServiceImpl implements UserService {
 		return user.get();
 	}
 
+	// (로그인 시) 유저 리프레시 토큰 저장
 	@Override
-	public void updateUserRefreshToken(String userId, String userRefreshToken) {
-		userRepository.updateUserRefreshToken(userId, userRefreshToken);
+	public int updateUserRefreshToken(String userId, String userRefreshToken) {
+		if(userRepository.findByUserId(userId).isPresent()) {
+			return userRepository.updateUserRefreshToken(userId, userRefreshToken);
+		}
+		return 0;
 	}
 
-	@Override
-	public void updateUserAccessToken(String userId, String userAccessToken) {
-		userRepository.updateUserAccessToken(userId, userAccessToken);
-	}
-
+	// 유저 정보 수정
 	@Override
 	public User updateUser(String userId, UserModifyReq modifyInfo) {
-		userRepository.updateUser(userId, modifyInfo.getUserPhone(), modifyInfo.getUserEmail(), modifyInfo.getUserGender(), modifyInfo.getUserBirth(), modifyInfo.getUserNickname());
-		User user = userRepository.findByUserId(userId).get();
-		return user;
-	}
-
-	@Override
-	public Integer updatePw(String userId, String userPw) {
-		String password = passwordEncoder.encode(userPw);
-		userRepository.updatePassword(userId, password);
+		if (userRepository.findByUserId(userId).isPresent()) {
+			User now = userRepository.findByUserId(userId).get();
+			User user = User.builder().userId(userId)
+					.userName(modifyInfo.getUserName())
+					.userPhone(modifyInfo.getUserPhone())
+					.userEmail(modifyInfo.getUserEmail())
+					.userNickname(modifyInfo.getUserNickname())
+					.userLvLec(now.getUserLvLec())
+					.userLvSnacks(now.getUserLvSnacks())
+					.userLvGame(now.getUserLvGame())
+					.userGender(modifyInfo.getUserGender())
+					.userRefreshToken(now.getUserRefreshToken())
+					.userBirth(modifyInfo.getUserBirth())
+					.userPoint(now.getUserPoint())
+					.userType(now.getUserType())
+					.userPw(now.getUserPw())
+					.build();
+			return userRepository.save(user);
+		}
 		return null;
 	}
 
+	// 비밀번호 수정
+	@Override
+	public int updatePw(String userId, String userPw) {
+		String password = passwordEncoder.encode(userPw);
+		if(userRepository.findByUserId(userId).isPresent()) {
+			return userRepository.updatePassword(userId, password);
+		}
+		return 0;
+	}
+
+	// 임의 생성 랜덤 비밀번호 메일 전송
 	@Override
 	public void sendPw(MailUtil mail) {
 		SimpleMailMessage message = new SimpleMailMessage();
@@ -123,21 +139,25 @@ public class UserServiceImpl implements UserService {
 		emailSender.send(message);
 	}
 
+	// 유저 아이디로 수강 강의 목록 조회
 	@Override
-	public List<UserMyLectureRes> getLecturesByUserId(String userId, Pageable pageable) {
-		return lectureRepository.findLecturesByUserId(userId, pageable);
+	public List<UserMyLectureRes> getLecturesByUserId(String userId) {
+		return lectureRepository.findLecturesByUserId(userId);
 	}
 
+	// 유저 아이디로 스낵스 목록 조회
 	@Override
-	public List<Snacks> getSnacksByUserId(String userId, Pageable pageable) {
-		return snacksRepository.findSnacksByUserUserIdOrderBySnacksIdDesc(userId, pageable);
+	public List<Snacks> getSnacksByUserId(String userId) {
+		return snacksRepository.findSnacksByUserUserIdOrderBySnacksIdDesc(userId);
 	}
 
+	// 유저 아이디로 결제 목록 조회
 	@Override
-	public List<Pay> getPaysByUserId(String userId, Pageable pageable) {
-		return payRepository.findPaylistUsingFetchJoin(userId, pageable);
+	public List<Pay> getPaysByUserId(String userId) {
+		return payRepository.findPaylistUsingFetchJoin(userId);
 	}
 
+	// 리프레시 토큰으로 유저 조회
 	@Override
 	public User getUserByRefreshToken(String refreshToken) {
 		Optional<User> user = userRepository.findUserByUserRefreshToken(refreshToken);
@@ -147,11 +167,16 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 
+	// 로그아웃
 	@Override
-	public void logout(String userId) {
-		userRepository.updateRefreshToken(userId);
+	public int logout(String userId) {
+		if(userRepository.findByUserId(userId).isPresent()) {
+			return userRepository.updateRefreshToken(userId);
+		}
+		return 0;
 	}
 
+	// 모든 회원 목록 조회
 	@Override
 	public List<UserRes> getUsers() {
 		List<User> list = userRepository.findAll();
@@ -162,6 +187,7 @@ public class UserServiceImpl implements UserService {
 		return users;
 	}
 
+	// 검색된 회원 목록 조회
 	@Override
 	public List<UserRes> getCertainUsers(String category, String keyword) {
 		List<User> list;
@@ -169,44 +195,44 @@ public class UserServiceImpl implements UserService {
 		switch(category) {
 			case "userId":
 				list = userRepository.findByUserIdContaining(keyword);
-				System.out.println(list.size());
 				for (int i = 0; i < list.size(); i++) {
 					users.add(UserRes.of(list.get(i)));
 				}
-				return users;
 			case "userName":
 				list = userRepository.findByUserNameContaining(keyword);
 				for (int i = 0; i < list.size(); i++) {
 					users.add(UserRes.of(list.get(i)));
 				}
-				return users;
 			case "userNickname":
 				list = userRepository.findByUserNicknameContaining(keyword);
 				for (int i = 0; i < list.size(); i++) {
 					users.add(UserRes.of(list.get(i)));
 				}
-				return users;
 			case "userEmail":
 				list = userRepository.findByUserEmailContaining(keyword);
 				for (int i = 0; i < list.size(); i++) {
 					users.add(UserRes.of(list.get(i)));
 				}
-				return users;
 			case "userPhone":
 				list = userRepository.findByUserPhoneContaining(keyword);
 				for (int i = 0; i < list.size(); i++) {
 					users.add(UserRes.of(list.get(i)));
 				}
-				return users;
 		}
-		return null;
+		return users;
 	}
 
+	// 회원 삭제
 	@Override
-	public void quit(String userId) {
-		userRepository.deleteById(userId);
+	public boolean quit(String userId) {
+		if(userRepository.findByUserId(userId).isPresent()) {
+			userRepository.delete(User.builder().userId(userId).build());
+			return true;
+		}
+		return false;
 	}
 
+	// 강사 권한 변경
 	@Override
 	public void createInstructor(String userId) {
 		userRepository.updateUserType(userId);

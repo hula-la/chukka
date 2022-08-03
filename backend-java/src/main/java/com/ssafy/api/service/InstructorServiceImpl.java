@@ -23,16 +23,22 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public Instructor createInstructor(InstructorPostReq insInfo) {
-        Instructor ins = new Instructor();
-        ins.setInsId(insInfo.getInsId());
-        ins.setInsEmail(insInfo.getInsEmail());
-        ins.setInsIntroduce(insInfo.getInsIntroduce());
-        ins.setInsName(insInfo.getInsName());
+        Instructor ins = Instructor.builder().insId(insInfo.getInsId())
+                        .insName(insInfo.getInsName())
+                        .insEmail(insInfo.getInsEmail())
+                        .insIntroduce(insInfo.getInsIntroduce()).build();
         return instructorRepository.save(ins);
     }
 
     @Override
-    public void updateInstructor(InstructorPostReq insInfo) {
-        instructorRepository.updateInstructor(insInfo.getInsId(), insInfo.getInsName(), insInfo.getInsEmail(), insInfo.getInsIntroduce());
+    public Instructor updateInstructor(InstructorPostReq insInfo) {
+        if(instructorRepository.findById(insInfo.getInsId()).isPresent()) {
+            Instructor ins = Instructor.builder().insId(insInfo.getInsId())
+                    .insName(insInfo.getInsName())
+                    .insEmail(insInfo.getInsEmail())
+                    .insIntroduce(insInfo.getInsIntroduce()).build();
+            return instructorRepository.save(ins);
+        }
+        return null;
     }
 }

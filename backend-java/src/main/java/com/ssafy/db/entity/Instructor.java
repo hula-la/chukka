@@ -1,15 +1,16 @@
 package com.ssafy.db.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter @Setter
 public class Instructor{
 
     @Id
@@ -18,7 +19,6 @@ public class Instructor{
 
     private String insName;
     private String insEmail;
-    private String insProfile;
     private String insIntroduce;
 
     @OneToMany(mappedBy = "instructor")

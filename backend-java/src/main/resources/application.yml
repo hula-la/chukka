@@ -31,6 +31,13 @@ logging:
         web: DEBUG
       apache:
         tiles: INFO
+      hibernate:
+        SQL:
+          DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
     root: INFO
     com:
       samsung:
