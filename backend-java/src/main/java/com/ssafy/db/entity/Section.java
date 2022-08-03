@@ -19,11 +19,11 @@ public class Section{
     @Column(name = "sec_id")
     private int secId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lec_id")
     private Lecture lecture;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ins_id")
     private Instructor instructor;
 
@@ -32,7 +32,7 @@ public class Section{
 
     @Temporal(TemporalType.DATE)
     @CreatedDate
-    private Date secRegdate;
+    private Date secRegDate;
 
 
     @OneToMany(mappedBy = "section")

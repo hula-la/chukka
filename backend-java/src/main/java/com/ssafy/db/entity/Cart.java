@@ -17,11 +17,11 @@ public class Cart{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cart_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lec_id")
 //    @JoinColumn(name = "ins_id")
     private Lecture lecture;

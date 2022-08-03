@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ApiModel("LecturePostResponse")
-public class LecturePostRes extends BaseResponseBody {
+public class LecturePostRes {
 
     @ApiModelProperty(name = "강의 ID", example = "1,2")
     int lecId;

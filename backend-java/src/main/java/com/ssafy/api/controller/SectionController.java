@@ -31,7 +31,7 @@ public class SectionController {
     })
     public ResponseEntity<BaseResponseBody> createSection (
             @RequestBody @ApiParam(value = "섹션 생성 시 필요한 정보", required = true) SectionPostReq sectionPostReq) {
-        Section section = sectionService.createSection(sectionPostReq);
+        sectionService.createSection(sectionPostReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
     }
 
@@ -41,8 +41,8 @@ public class SectionController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success")
     })
-    public ResponseEntity<List<Section>> findByLectureOrderBySecId(Lecture lecture) {
-        return ResponseEntity.ok(sectionService.findByLectureOrderBySecId(lecture));
+    public ResponseEntity<BaseResponseBody> findByLecId(@RequestBody @ApiParam(value = "섹션 조회", required = true) int lecId) {
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId)));
     }
 
     @PutMapping("/")
