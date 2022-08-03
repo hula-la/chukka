@@ -41,7 +41,7 @@ public class Lecture {
     private String lecGenre;
 
     @OneToMany(mappedBy = "lecture")
-    private List<Cart> carts = new ArrayList<>();
+    private List<CartItem> cartItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "lecture")
     private List<Enroll> enrolls = new ArrayList<>();
