@@ -88,4 +88,9 @@ public class LectureServiceImpl implements LectureService {
     public void delete(int lecId) {
         lectureRepository.deleteById(lecId);
     }
+
+    @Override
+    public Lecture findLectureByLecId(int ledId) {
+        return lectureRepository.findLectureByLecId(ledId);
+    }
 }

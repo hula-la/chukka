@@ -22,10 +22,6 @@ public interface SectionRepository extends JpaRepository<Section, Integer> {
             "order by s.secId")
     List<SectionGetRes> getSectionByLecId(int lecId);
 
-    // 해당 섹션 하나만 가져오기
-    @Query(value = "select * from Section where secId = :secId", nativeQuery = true)
-    Section findById(int secId);
-
     // 소강의 수정하기
     @Modifying(clearAutomatically = true)
     @Query(value = "update Section sec " +

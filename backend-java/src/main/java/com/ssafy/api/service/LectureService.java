@@ -35,4 +35,6 @@ public interface LectureService {
     // Delete ==========================================================================================================
     void delete(int lecId);
 
+    Lecture findLectureByLecId(int ledId);
+
 }

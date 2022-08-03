@@ -42,7 +42,7 @@ public class Section{
 
     @PrePersist
     public void prePersist() {
-        this.secRegdate = this.secRegdate == null ? Calendar.getInstance().getTime() : this.secRegdate;
+        this.secRegDate = this.secRegDate == null ? Calendar.getInstance().getTime() : this.secRegDate;
     }
 
 }
