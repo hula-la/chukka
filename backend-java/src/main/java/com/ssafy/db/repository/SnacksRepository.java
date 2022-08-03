@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SnacksRepository extends JpaRepository<Snacks, String> {
+public interface SnacksRepository extends JpaRepository<Snacks, Long> {
 
     List<Snacks> findSnacksByUserUserIdOrderBySnacksIdDesc(String userId, Pageable pageable);
 
