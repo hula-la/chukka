@@ -45,6 +45,13 @@ const Menu = styled.div`
   align-items: center;
 `;
 
+const SideBarButton = styled.button`
+  background-color: #0b0b0b;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  cursor: pointer;
+`;
+
 // 나의 강의 목록
 const LectureBox = styled.div`
   & h3 {
@@ -176,10 +183,12 @@ const ProfilePage = () => {
         <p>이름</p>
         <hr className="line" />
         <Menu>
-          <button onClick={onClickSnacks}>스낵스</button>
-          <button onClick={onClickMyList}>나의 강의 목록</button>
-          <button onClick={onClickChangeProfile}>프로필 수정</button>
-          <button onClick={onClickPassword}>비밀번호 변경</button>
+          <SideBarButton onClick={onClickSnacks}>스낵스</SideBarButton>
+          <SideBarButton onClick={onClickMyList}>나의 강의 목록</SideBarButton>
+          <SideBarButton onClick={onClickChangeProfile}>
+            프로필 수정
+          </SideBarButton>
+          <SideBarButton onClick={onClickPassword}>비밀번호 변경</SideBarButton>
         </Menu>
         <hr className="line" style={{ marginTop: '1rem' }} />
       </Side>

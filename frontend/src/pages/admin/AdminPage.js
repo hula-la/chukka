@@ -16,7 +16,9 @@ const AdminPage = () => {
   return (
     <div>
       {userList.map((user, idx) => (
-        <span key={idx}>{user.userId}</span>
+        <p key={idx}>
+          {user.userId} | {user.userEmail}
+        </p>
       ))}
     </div>
   );
