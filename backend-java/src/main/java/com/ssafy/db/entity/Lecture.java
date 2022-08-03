@@ -34,7 +34,7 @@ public class Lecture {
 
     @Temporal(TemporalType.DATE)
     private Date lecEndDate;
-
+    // 0. 라이브 1. 녹화
     private int lecCategory;
     private int lecLevel;
     private int lecLimit;
@@ -42,8 +42,7 @@ public class Lecture {
     private String lecGenre;
 
     @OneToMany(mappedBy = "lecture")
-    @JsonIgnore
-    private List<Cart> carts = new ArrayList<>();
+    private List<CartItem> cartItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "lecture")
     @JsonIgnore

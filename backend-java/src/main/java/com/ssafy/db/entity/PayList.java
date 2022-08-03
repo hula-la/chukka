@@ -17,15 +17,15 @@ public class PayList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int paylist_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pay_id")
     private Pay pay;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lec_id")
     private Lecture lecture;
 

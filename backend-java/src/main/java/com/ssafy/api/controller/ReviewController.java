@@ -36,8 +36,8 @@ public class ReviewController {
     // 강의별 리뷰 조회 ==================================================================================================
     @GetMapping("/")
     @ApiOperation(value = "리뷰 조회", notes = "강의별 전체 리뷰를 조회한다.")
-    public ResponseEntity<BaseResponseBody> findByLectureOrderByReviewId(Lecture lecture) {
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", reviewService.findByLectureOrderByReviewId(lecture)));
+    public ResponseEntity<BaseResponseBody> findByLecId(int lecId) {
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", reviewService.findByLecId(lecId)));
     }
 
     @DeleteMapping("/")

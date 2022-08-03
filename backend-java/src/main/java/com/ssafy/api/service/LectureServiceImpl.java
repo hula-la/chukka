@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,16 @@ import java.util.Optional;
 public class LectureServiceImpl implements LectureService {
     @Autowired
     LectureRepository lectureRepository;
+
+//    @Override
+//    public Page<Lecture> getMostPopularLecture(Pageable pageable) {
+//        List<Lecture> list = lectureRepository.getMostPopularLecture(pageable);
+//        List<Lecture> lectures = new ArrayList<>();
+//        for (int i = 0; i < list.size(); i++) {
+//            lectures.add(LectureRes.of(list.get(i)));
+//        }
+//        return lectures;
+//    }
 
     @Override
     public Page<Lecture> findAll(Pageable pageable) {

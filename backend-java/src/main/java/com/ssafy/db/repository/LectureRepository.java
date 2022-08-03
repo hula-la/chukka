@@ -28,6 +28,13 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
             "order by count(lec.lecId) desc", nativeQuery = true)
     Page<Lecture> getMostPopularLecture(Pageable pageable);
 
+    // 존재하는 강의 중 최신순으로
+    @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre " +
+            "from Lecture lec " +
+            "where current_date < lec.lecEndDate " +
+            "order by lec.lecEndDate desc")
+    Page<Lecture> getLecturesByMostLatest(Pageable pageable);
+
     // 존재하는 강의 / 연령대 / 성별 기준으로
 //    @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre, u.userGender, " +
 //            "case " +

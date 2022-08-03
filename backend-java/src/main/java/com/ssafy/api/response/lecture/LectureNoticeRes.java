@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("LectureUpdateNoticeResponse")
-public class LectureNoticeRes extends BaseResponseBody {
+public class LectureNoticeRes {
     @ApiModelProperty(name = "강의 ID", example = "lecture_id")
     int lecId;
     @ApiModelProperty(name = "수정할 공지사항", example = "modify by this description")

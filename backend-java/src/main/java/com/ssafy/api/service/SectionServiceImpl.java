@@ -2,7 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.section.SectionPostReq;
 import com.ssafy.api.request.section.SectionUpdateReq;
-import com.ssafy.db.entity.Instructor;
+import com.ssafy.api.response.section.SectionGetRes;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.Section;
 import com.ssafy.db.repository.InstructorRepository;
@@ -11,6 +11,7 @@ import com.ssafy.db.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,8 +43,13 @@ public class SectionServiceImpl implements SectionService{
 
     // 강의 아이디로 섹션 목록 조회
     @Override
-    public List<Section> getSectionsByLectureId(int lecId) {
-        return sectionRepository.findByLecture_LecIdOrderBySecId(lecId);
+    public List<SectionGetRes> getSectionByLecId(int lecId) {
+        List<Section> list = sectionRepository.findAll();
+        List<SectionGetRes> sections = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            sections.add(SectionGetRes.of(list.get(i)));
+        }
+        return sections;
     }
 
     // 섹션 수정 (해당 강의 아이디, 강사 아이디, 섹션 아이디가 없을 때 null 반환 그 외 수정된 섹션 객체 반환)
@@ -66,11 +72,9 @@ public class SectionServiceImpl implements SectionService{
     }
 
     @Override
-    public boolean deleteBySecId(int secId) {
-        if(sectionRepository.findById(secId).isPresent()) {
-            sectionRepository.delete(Section.builder().secId(secId).build());
-            return true;
-        }
-        return false;
+    public Integer deleteBySecId(int secId) {
+        Section section = sectionRepository.findById(secId);
+        sectionRepository.delete(section);
+        return null;
     }
 }

@@ -20,7 +20,7 @@ public class Pay{
     @Column(name = "pay_id")
     private int payId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 

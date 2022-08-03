@@ -18,6 +18,9 @@ public interface LectureService {
     Lecture createLecture(LecturePostReq lecturePostReq);
 
     // Read ============================================================================================================
+    // 전체 강의 중 가장 인기 있는 강의
+//    Page<Lecture> getMostPopularLecture(Pageable pageable);
+
     // 전체 강의 조회
   	Page<Lecture> findAll(Pageable pageable);
 

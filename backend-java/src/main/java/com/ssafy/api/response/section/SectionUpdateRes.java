@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("SectionUpdateResponse")
-public class SectionUpdateRes extends BaseResponseBody {
+public class SectionUpdateRes {
 
     @ApiModelProperty(name = "섹션 ID",example = "section_id")
     int secId;

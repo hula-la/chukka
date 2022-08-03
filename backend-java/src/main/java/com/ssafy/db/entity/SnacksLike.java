@@ -14,8 +14,11 @@ public class SnacksLike{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int snackslike_id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "snacks_id")
     Snacks snacks;
 

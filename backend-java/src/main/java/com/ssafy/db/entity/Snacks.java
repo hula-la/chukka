@@ -27,6 +27,9 @@ public class Snacks{
     @Temporal(TemporalType.DATE)
     private Date snacksRegdate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private User user;
 
     // Snacks 좋아요!
     @OneToMany(mappedBy = "snacks")
