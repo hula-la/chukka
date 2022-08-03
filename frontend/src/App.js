@@ -9,9 +9,6 @@ import LoginPage from './pages/user/LoginPage';
 import LogoutPage from './pages/user/LogoutPage';
 import SignUpPage from './pages/user/SignUpPage';
 import ProfilePage from './pages/user/ProfilePage';
-import MyListPage from './pages/user/MyListPage';
-import ChangeProfilePage from './pages/user/ChangeProfilePage';
-import PasswordPage from './pages/user/PasswordPage';
 
 // lectures
 import LecturesPage from './pages/lecture/LecturesPage';
@@ -38,9 +35,6 @@ const App = () => {
           <Route path="logout" element={<LogoutPage />} />
           <Route path="signup" element={<SignUpPage />} />
           <Route path="profile" element={<ProfilePage />} />
-          <Route path="mylist" element={<MyListPage />} />
-          <Route path="change" element={<ChangeProfilePage />} />
-          <Route path="password" element={<PasswordPage />} />
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>

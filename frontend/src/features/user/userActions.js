@@ -37,9 +37,10 @@ export const userLogin = createAsyncThunk(
         { userId, userPw },
         config,
       );
+      console.log(data.data.accessToken);
 
       // 로컬스토리지에 Token 저장
-      // localStorage.setItem('userToken', data.userToken);
+      localStorage.setItem('userToken', data.data.accessToken);
 
       return data;
     } catch (error) {
