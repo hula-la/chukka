@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../features/user/userActions';
 
 const StyledInput = styled.input`
@@ -70,7 +71,14 @@ const SignupBox = styled.div`
 `;
 
 const SignUpPage = () => {
+  const { userInfo } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/');
+    }
+  }, [navigate, userInfo]);
   /* {
   "userBirth": "2022-01-01",
   "userEmail": "abcd@ssafy.com",

@@ -12,7 +12,6 @@ export const registerUser = createAsyncThunk(
           // 'Content-Type': 'application/json',
         },
       };
-      console.log(data);
       await axios.post(`${BASE_URL}/accounts/signup/`, data, config);
     } catch (error) {
       if (error.response && error.response.data.message) {
@@ -28,19 +27,23 @@ export const userLogin = createAsyncThunk(
   'user/login',
   async ({ userId, userPw }, { rejectWithValue }) => {
     try {
-      const config = {
-        headers: {},
-      };
+      const config = {};
 
       const { data } = await axios.post(
         `${BASE_URL}/accounts/login/`,
         { userId, userPw },
         config,
       );
-      console.log(data.data.accessToken);
 
       // 로컬스토리지에 Token 저장
-      localStorage.setItem('userToken', data.data.accessToken);
+      // localStorage.setItem('accessToken', data.data.accessToken);
+      const { userNickname, userProfile } = data.data;
+      localStorage.setItem('userInfo', {
+        userNickname,
+        userProfile,
+        userId,
+      });
+      localStorage.setItem('refreshToken', data.data.refreshToken);
 
       return data;
     } catch (error) {
@@ -68,6 +71,29 @@ export const changeProfile = createAsyncThunk(
       } else {
         return rejectWithValue(error.message);
       }
+    }
+  },
+);
+
+export const fetchAccessToken = createAsyncThunk(
+  'user/getAccessToken',
+  async ({ refreshToken, userInfo }) => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        `${BASE_URL}/accounts/refresh/`,
+        userInfo,
+        config,
+      );
+
+      return data;
+    } catch (error) {
+      console.log(error);
     }
   },
 );

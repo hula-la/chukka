@@ -1,15 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { registerUser, userLogin } from './userActions';
+import { registerUser, userLogin, fetchAccessToken } from './userActions';
 
 // initialize userToken from local storage
-const accessToken = localStorage.getItem('accessToken')
-  ? localStorage.getItem('accessToken')
+// const accessToken = localStorage.getItem('accessToken')
+//   ? localStorage.getItem('accessToken')
+//   : null;
+
+const userInfo = localStorage.getItem('userInfo')
+  ? localStorage.getItem('userInfo')
   : null;
 
 const initialState = {
   loading: false,
-  userInfo: null,
-  accessToken,
+  userInfo,
+  accessToken: null,
   error: null,
   success: false,
 };
@@ -19,10 +23,11 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      localStorage.removeItem('accessToken'); // delete token from storage
+      localStorage.removeItem('refreshToken'); // delete token from storage
+      localStorage.removeItem('userInfo');
       state.loading = false;
       state.userInfo = null;
-      state.userToken = null;
+      state.accessToken = null;
       state.error = null;
     },
   },
@@ -61,9 +66,14 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = payload;
     },
+
+    // AccessToken 가져오기
+    [fetchAccessToken]: (state, { payload }) => {
+      state.accessToken = payload.accessToken;
+    },
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, getAccessToken } = userSlice.actions;
 
 export default userSlice.reducer;
