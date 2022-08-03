@@ -33,7 +33,7 @@ public class Lecture {
 
     @Temporal(TemporalType.DATE)
     private Date lecEndDate;
-
+    // 0. 라이브 1. 녹화
     private int lecCategory;
     private int lecLevel;
     private int lecLimit;

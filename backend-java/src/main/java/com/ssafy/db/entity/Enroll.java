@@ -17,11 +17,11 @@ public class Enroll {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int enroll_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lec_id")
     private Lecture lecture;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 

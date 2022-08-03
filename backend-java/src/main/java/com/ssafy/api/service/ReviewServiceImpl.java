@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.request.review.ReviewPostReq;
+import com.ssafy.api.response.Review.ReviewGetRes;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.Review;
 import com.ssafy.db.entity.User;
@@ -25,8 +26,8 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public List<Review> findByLectureOrderByReviewId(Lecture lecture) {
-        return reviewRepository.findByLectureOrderByReviewId(lecture);
+    public List<ReviewGetRes> findByLecId(int lecId) {
+        return reviewRepository.findByLecId(lecId);
     }
 
     @Override

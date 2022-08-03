@@ -2,12 +2,14 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.section.SectionPostReq;
 import com.ssafy.api.request.section.SectionUpdateReq;
+import com.ssafy.api.response.section.SectionGetRes;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.Section;
 import com.ssafy.db.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("SectionService")
@@ -24,8 +26,13 @@ public class SectionServiceImpl implements SectionService{
     }
 
     @Override
-    public List<Section> findByLectureOrderBySecId(Lecture lecture) {
-        return sectionRepository.findByLectureOrderBySecId(lecture);
+    public List<SectionGetRes> getSectionByLecId(int lecId) {
+        List<Section> list = sectionRepository.findAll();
+        List<SectionGetRes> sections = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            sections.add(SectionGetRes.of(list.get(i)));
+        }
+        return sections;
     }
 
     @Override
@@ -36,7 +43,8 @@ public class SectionServiceImpl implements SectionService{
 
     @Override
     public Integer deleteBySecId(int secId) {
-        sectionRepository.deleteBySecId(secId);
+        Section section = sectionRepository.findById(secId);
+        sectionRepository.delete(section);
         return null;
     }
 }

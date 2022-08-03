@@ -36,19 +36,19 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     Page<Lecture> getLecturesByMostLatest(Pageable pageable);
 
     // 존재하는 강의 / 연령대 / 성별 기준으로
-    @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre, u.userGender, " +
-            "case " +
-            "when a.age < 20 then '10대' " +
-            "when a.age < 30 then '20대' " +
-            "when a.age < 40 then '30대' " +
-            "when a.age < 50 then '40대'" +
-            "end as age_group " +
-            "from Enroll e, Lecture lec, User u , (select *, floor(date_format(now(), '%y')-substring(userBirth,1,4)) as age from User) a " +
-            "where e.lecture = lec and current_date < lec.lecEndDate and u.userGender = :userGender " +
-            "group by lec.lecId " +
-            "order by count(age_group)" +
-            "limit 10", nativeQuery = true)
-    List<Lecture> getMostPopularLectureByYourBirthAndGender(String userId);
+//    @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre, u.userGender, " +
+//            "case " +
+//            "when a.age < 20 then '10대' " +
+//            "when a.age < 30 then '20대' " +
+//            "when a.age < 40 then '30대' " +
+//            "when a.age < 50 then '40대'" +
+//            "end as age_group " +
+//            "from Enroll e, Lecture lec, User u , (select *, floor(date_format(now(), '%y')-substring(userBirth,1,4)) as age from User) a " +
+//            "where e.lecture = lec and current_date < lec.lecEndDate and u.userGender = :userGender " +
+//            "group by lec.lecId " +
+//            "order by count(age_group)" +
+//            "limit 10", nativeQuery = true)
+//    List<Lecture> getMostPopularLectureByYourBirthAndGender(String userId);
 
     // 공지사항 수정
     @Modifying(clearAutomatically = true)

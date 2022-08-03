@@ -17,11 +17,11 @@ public class SectionLike{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int like_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sec_id")
     private Section section;
 

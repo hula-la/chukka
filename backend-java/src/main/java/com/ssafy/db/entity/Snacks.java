@@ -27,7 +27,7 @@ public class Snacks{
     @Temporal(TemporalType.DATE)
     private Date snacks_regdate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
