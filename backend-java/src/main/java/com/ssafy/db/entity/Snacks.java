@@ -19,20 +19,18 @@ public class Snacks{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int snacksId;
 
-    private String snacks_title;
-    private String snacks_contents;
-    private int snacks_views;
-    private int snacks_likes;
+    private String snacksTitle;
+    private String snacksContents;
+    private int snacksViews;
+//    private int snacksLikes;
 
     @Temporal(TemporalType.DATE)
-    private Date snacks_regdate;
+    private Date snacksRegdate;
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
 
     // Snacks 좋아요!
     @OneToMany(mappedBy = "snacks")
     private List<SnacksLike> snacksLikes = new ArrayList<>();
+
 
 }

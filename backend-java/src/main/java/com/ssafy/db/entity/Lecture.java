@@ -1,5 +1,6 @@
 package com.ssafy.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -41,18 +42,23 @@ public class Lecture {
     private String lecGenre;
 
     @OneToMany(mappedBy = "lecture")
+    @JsonIgnore
     private List<Cart> carts = new ArrayList<>();
 
     @OneToMany(mappedBy = "lecture")
+    @JsonIgnore
     private List<Enroll> enrolls = new ArrayList<>();
 
     @OneToMany(mappedBy = "lecture")
+    @JsonIgnore
     private List<PayList> payLists = new ArrayList<>();
 
     @OneToMany(mappedBy = "lecture")
+    @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "lecture")
+    @JsonIgnore
     private List<Section> sections = new ArrayList<>();
 
     @PrePersist

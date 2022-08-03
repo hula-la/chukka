@@ -4,21 +4,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Getter @Setter
-public class SnacksLike{
+public class SnacksTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int snackslike_id;
-
+    private int SnacksTagId;
 
     @ManyToOne
     @JoinColumn(name = "snacks_id")
     Snacks snacks;
 
-    @Temporal(TemporalType.DATE)
-    Date like_snacks_reg;
+
 }
