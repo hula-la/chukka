@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PayListRepository extends JpaRepository<PayList, String> {
+public interface PayListRepository extends JpaRepository<PayList, Integer> {
 
     List<PayList> findPayListsByPay_PayId(int payId, Pageable pageable);
 

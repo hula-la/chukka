@@ -141,7 +141,7 @@ public class AdminController {
 		Section section = sectionService.createSection(sectionInfo);
 		MultipartFile contents = sectionInfo.getSecContents();
 		if(!contents.isEmpty()) {
-			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/vid/section/contents/"), Integer.toString(sectionInfo.getSecId()));
+			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/vid/section/contents/"), Integer.toString(section.getSecId()));
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
@@ -168,10 +168,10 @@ public class AdminController {
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<BaseResponseBody> modifySection(@RequestBody @ApiParam(value = "수정할 섹션 내용", required = true) SectionPostReq sectionInfo, HttpServletRequest req) throws IOException {
-		sectionService.updateSection(sectionInfo.getLecId(), sectionInfo);
+		Section section = sectionService.updateSection(sectionInfo.getLecId(), sectionInfo);
 		MultipartFile contents = sectionInfo.getSecContents();
 		if(!contents.isEmpty()) {
-			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/vid/section/contents/"), Integer.toString(sectionInfo.getSecId()));
+			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/vid/section/contents/"), Integer.toString(section.getSecId()));
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}

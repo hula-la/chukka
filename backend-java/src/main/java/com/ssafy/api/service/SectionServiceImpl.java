@@ -24,38 +24,53 @@ public class SectionServiceImpl implements SectionService{
     @Autowired
     InstructorRepository instructorRepository;
 
+    // 섹션 생성
     @Override
     public Section createSection(SectionPostReq sectionPostReq) {
-        Section section = new Section();
-        section.setSecId(sectionPostReq.getSecId());
+        Optional<Lecture> lec = lectureRepository.findById(sectionPostReq.getLecId());
         Optional<Instructor> ins = instructorRepository.findById(sectionPostReq.getInsId());
-        if(ins.isPresent()) {
-            section.setInstructor(ins.get());
+        if(!lec.isPresent() || !ins.isPresent()) {
+            return null;
         }
-        section.setLecture(lectureRepository.findByLecId(sectionPostReq.getLecId()));
-        section.setSecTitle(sectionPostReq.getSecTitle());
+        Section section = Section.builder()
+                    .lecture(lec.get())
+                    .instructor(ins.get())
+                    .secTitle(sectionPostReq.getSecTitle())
+                    .build();
         return sectionRepository.save(section);
     }
 
+    // 강의 아이디로 섹션 목록 조회
     @Override
     public List<Section> getSectionsByLectureId(int lecId) {
         return sectionRepository.findByLecture_LecIdOrderBySecId(lecId);
     }
 
+    // 섹션 수정 (해당 강의 아이디, 강사 아이디, 섹션 아이디가 없을 때 null 반환 그 외 수정된 섹션 객체 반환)
     @Override
     public Section updateSection(int secId, SectionPostReq sectionInfo) {
+        Optional<Lecture> lec = lectureRepository.findById(sectionInfo.getLecId());
         Optional<Instructor> ins = instructorRepository.findById(sectionInfo.getInsId());
-        Instructor instructor = null;
-        if(ins.isPresent()) {
-            instructor = ins.get();
+        if(!lec.isPresent() || !ins.isPresent()) {
+            return null;
         }
-        sectionRepository.updateSection(secId, instructor, sectionInfo.getSecTitle());
+        if(sectionRepository.findById(secId).isPresent()) {
+            Section section = Section.builder().secId(secId)
+                    .lecture(lec.get())
+                    .instructor(ins.get())
+                    .secTitle(sectionInfo.getSecTitle())
+                    .build();
+            return sectionRepository.save(section);
+        }
         return null;
     }
 
     @Override
-    public Integer deleteBySecId(int secId) {
-        sectionRepository.deleteBySecId(secId);
-        return null;
+    public boolean deleteBySecId(int secId) {
+        if(sectionRepository.findById(secId).isPresent()) {
+            sectionRepository.delete(Section.builder().secId(secId).build());
+            return true;
+        }
+        return false;
     }
 }

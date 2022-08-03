@@ -22,19 +22,18 @@ public interface UserService {
 	User createUser(UserRegisterPostReq userRegisterInfo);
 	User getUserByUserId(String userId);
 	User getUserByUserNickname(String userNickname);
-	void updateUserRefreshToken(String userId, String userAccessToken);
-	void updateUserAccessToken(String userId, String userAccessToken);
+	int updateUserRefreshToken(String userId, String userAccessToken);
 	User updateUser(String userId, UserModifyReq modifyInfo);
-	Integer updatePw(String userId, String userPw);
+	int updatePw(String userId, String userPw);
 	void sendPw(MailUtil mail);
-	List<UserMyLectureRes> getLecturesByUserId(String userId, Pageable pageable);
-	List<Snacks> getSnacksByUserId(String UserId, Pageable pageable);
-	List<Pay> getPaysByUserId(String userId, Pageable pageable);
+	List<UserMyLectureRes> getLecturesByUserId(String userId);
+	List<Snacks> getSnacksByUserId(String UserId);
+	List<Pay> getPaysByUserId(String userId);
 	User getUserByRefreshToken(String refreshToken);
-	void logout(String userId);
+	int logout(String userId);
 	List<UserRes> getUsers();
 	List<UserRes> getCertainUsers(String category, String keyword);
-	void quit(String userId);
+	boolean quit(String userId);
 	void createInstructor(String userId);
 
 }

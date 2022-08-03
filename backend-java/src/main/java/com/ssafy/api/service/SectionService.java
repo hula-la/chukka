@@ -23,5 +23,5 @@ public interface SectionService {
 
     // Delete
     // 소강의 삭제하기
-     Integer deleteBySecId(int secId);
+     boolean deleteBySecId(int secId);
 }

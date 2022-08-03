@@ -3,8 +3,7 @@ package com.ssafy.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 import javax.persistence.Column;
@@ -21,6 +20,9 @@ import java.util.List;
  * 유저 모델 정의.
  */
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter @Setter
 public class User{
 

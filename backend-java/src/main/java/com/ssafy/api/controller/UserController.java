@@ -271,9 +271,9 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = UserMyLectureListRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> getMyLecture(
-			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
+			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId) {
 		// 강의 아이디, 강의 썸네일, 강의명, 강사명 조회하기
-		List<UserMyLectureRes> list = userService.getLecturesByUserId(userId, pageable);
+		List<UserMyLectureRes> list = userService.getLecturesByUserId(userId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyLectureListRes.of(list)));
 	}
 
@@ -287,8 +287,8 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = UserMySnacksListRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> getMySnacks(
-			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
-		List<Snacks> list = userService.getSnacksByUserId(userId, pageable);
+			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId) {
+		List<Snacks> list = userService.getSnacksByUserId(userId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMySnacksListRes.of(list)));
 	}
 
@@ -303,8 +303,8 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = UserMyPayListRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> getMyOrders(
-			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId, @PathVariable Pageable pageable) {
-		List<Pay> list = userService.getPaysByUserId(userId, pageable);
+			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId) {
+		List<Pay> list = userService.getPaysByUserId(userId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyPayListRes.of(list)));
 	}
 
@@ -338,7 +338,6 @@ public class UserController {
 		User user = userService.getUserByRefreshToken(refreshToken);
 		if(user.getUserId().equals(userId)) {
 			String accessToken = JwtTokenUtil.getToken(userId);
-			userService.updateUserAccessToken(userId, accessToken);
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserReAuthRes.of(accessToken)));
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid Token", null));

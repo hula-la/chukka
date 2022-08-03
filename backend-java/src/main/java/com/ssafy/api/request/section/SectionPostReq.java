@@ -13,8 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 @ApiModel("SectionPostRequest")
 public class SectionPostReq {
 
-    @ApiModelProperty(name = "섹션 ID", example = "1, 2 ..")
-    int secId;
     @ApiModelProperty(name = "lecture 아이디", example = "1")
     int lecId;
     @ApiModelProperty(name = "강사 아이디", example = "instructor_id")

@@ -28,31 +28,21 @@ public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByUserNickname(String userNickname);
 
     @Transactional
-//    @Modifying(clearAutomatically = true)
-    @Modifying
-    @Query(value = "update User u set u.user_access_token = :userAccessToken where u.user_id = :userId", nativeQuery = true)
-    Optional<Integer> updateUserAccessToken(String userId, String userAccessToken);
-    @Transactional
     @Modifying
     @Query(value = "update User u set u.user_refresh_token = :userRefreshToken where u.user_id = :userId", nativeQuery = true)
-    Optional<Integer> updateUserRefreshToken(String userId, String userRefreshToken);
-
-    @Transactional
-    @Modifying
-    @Query(value = "update User u set u.user_phone = :userPhone, u.user_email = :userEmail, u.user_gender = :userGender, u.user_birth = :userBirth, u.user_nickname = :userNickname where u.user_id = :userId", nativeQuery = true)
-    Optional<Integer> updateUser(String userId, String userPhone, String userEmail, int userGender, Date userBirth, String userNickname);
+    int updateUserRefreshToken(String userId, String userRefreshToken);
 
     @Transactional
     @Modifying
     @Query(value = "update User u set u.user_pw = :userPw where u.user_id = :userId", nativeQuery = true)
-    void updatePassword(String userId, String userPw);
+    int updatePassword(String userId, String userPw);
 
     Optional<User> findUserByUserRefreshToken(String userRefreshToken);
 
     @Transactional
     @Modifying
     @Query(value = "update User u set u.user_refresh_token = '' where u.user_id = :userId", nativeQuery = true)
-    void updateRefreshToken(String userId);
+    int updateRefreshToken(String userId);
 
     List<User> findByUserIdContaining(String keyword);
     List<User> findByUserNameContaining(String keyword);
@@ -61,6 +51,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     List<User> findByUserPhoneContaining(String keyword);
 
     @Query(value = "update User u set u.user_type = 1 where u.user_id = :userId", nativeQuery = true)
-    void updateUserType(String userId);
+    int updateUserType(String userId);
 
 }
