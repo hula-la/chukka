@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.request.section.SectionPostReq;
 import com.ssafy.api.request.section.SectionUpdateReq;
 import com.ssafy.api.response.section.SectionGetRes;
+import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.Section;
 import com.ssafy.db.repository.InstructorRepository;
@@ -72,9 +73,11 @@ public class SectionServiceImpl implements SectionService{
     }
 
     @Override
-    public Integer deleteBySecId(int secId) {
-        Section section = sectionRepository.findById(secId);
-        sectionRepository.delete(section);
-        return null;
+    public boolean deleteBySecId(int secId) {
+        if(sectionRepository.findById(secId).isPresent()) {
+            sectionRepository.delete(Section.builder().secId(secId).build());
+            return true;
+        }
+        return false;
     }
 }

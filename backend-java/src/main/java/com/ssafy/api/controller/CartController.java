@@ -37,11 +37,12 @@ public class CartController {
 
         // userId가 유효한 userId 인지 확인해야함 (로그인 했는지 확인)
         Cart cart = cartService.findCartByUser(cartPostReq.getUserId());
+        User user = userService.getUserByUserId(cartPostReq.getUserId());
         if(cart == null){
-            cart = cartService.createCart(userService.getUserByUserId(cartPostReq.getUserId()));
+            cart = cartService.createCart(user);
         }
 
-        Lecture lecture = lectureService.findByLecId(cartPostReq.getLecId());
+        Lecture lecture = lectureService.findLectureByLecId(cartPostReq.getLecId());
         cartService.createCartItem(cart, lecture);
 
 

@@ -113,7 +113,7 @@ public class AdminController {
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<BaseResponseBody> getSections(@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId) {
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionsByLectureId(lecId)));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId)));
 	}
 
 	// 강의 추가 ========================================================================================================
