@@ -20,10 +20,18 @@ import java.util.List;
 public class LectureListRes{
 	@ApiModelProperty(name="강의 목록")
 	Page<Lecture> lectureList;
+	@ApiModelProperty(name="강의 리스트")
+	List<Lecture> lecturelist;
 
 	public static LectureListRes of(Page<Lecture> lectureList) {
 		LectureListRes res = new LectureListRes();
 		res.setLectureList(lectureList);
+		return res;
+	}
+
+	public static LectureListRes off(List<Lecture> lecturelist) {
+		LectureListRes res = new LectureListRes();
+		res.setLecturelist(lecturelist);
 		return res;
 	}
 }

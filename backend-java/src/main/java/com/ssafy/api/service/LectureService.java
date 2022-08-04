@@ -24,6 +24,8 @@ public interface LectureService {
     // 전체 강의 조회
   	Page<Lecture> findAll(Pageable pageable);
 
+    List<Lecture> findAll();
+
     // 결제한 강의 조회
 
     // Update ==========================================================================================================

@@ -50,7 +50,7 @@ public interface UserRepository extends JpaRepository<User, String> {
     List<User> findByUserEmailContaining(String keyword);
     List<User> findByUserPhoneContaining(String keyword);
 
-    @Query(value = "update User u set u.user_type = 1 where u.user_id = :userId", nativeQuery = true)
-    int updateUserType(String userId);
+    @Query(value = "update User u set u.user_type = :userType where u.user_id = :userId", nativeQuery = true)
+    int updateUserType(String userId, int userType);
 
 }

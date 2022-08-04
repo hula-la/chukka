@@ -44,6 +44,11 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
+    public List<Lecture> findAll() {
+        return lectureRepository.findAll();
+    }
+
+    @Override
     public Lecture createLecture(LecturePostReq lecturePostReq) {
         Lecture lecture = new Lecture();
         Instructor instructor = new Instructor();
