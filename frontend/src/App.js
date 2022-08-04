@@ -12,6 +12,7 @@ import LoginPage from './pages/user/LoginPage';
 import LogoutPage from './pages/user/LogoutPage';
 import SignUpPage from './pages/user/SignUpPage';
 import ProfilePage from './pages/user/ProfilePage';
+import CartPage from './pages/user/Cartpage';
 
 // lectures
 import LecturesPage from './pages/lecture/LecturesPage';
@@ -46,7 +47,8 @@ const App = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="logout" element={<LogoutPage />} />
           <Route path="signup" element={<SignUpPage />} />
-          <Route path="profile" element={<ProfilePage />} />
+          <Route path="profile/:nickname" element={<ProfilePage />} />
+          <Route path="cart" element={<CartPage />} />
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>

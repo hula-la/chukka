@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 // 페이지 블락
@@ -175,6 +175,7 @@ const ProfilePage = () => {
   const onClickMyList = () => setpageNum('2');
   const onClickChangeProfile = () => setpageNum('3');
   const onClickPassword = () => setpageNum('4');
+  x``;
   return (
     <ProfilePageBlock>
       <Side>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -11,7 +11,6 @@ import {
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import BuildIcon from '@mui/icons-material/Build';
-import { useState } from 'react';
 
 const AdminPageBlock = styled.div`
   .table {
@@ -20,18 +19,46 @@ const AdminPageBlock = styled.div`
   }
 `;
 
+const InsBox = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const ProfileForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const StyledButton = styled.button`
+  border: none;
+  border-radius: 4px;
+  font-size: small;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  background-color: #ff2c55;
+  color: #ffffff;
+  outline: none;
+  cursor: pointer;
+`;
+
 const AdminPage = () => {
   const dispatch = useDispatch();
 
   const [pageNum, setpageNum] = useState('1');
   const onClickUser = () => setpageNum('1');
-  const onClickInst = () => setpageNum('2');
+  const onClickInst = (e) => {
+    setpageNum('2');
+    e.preventDefault();
+    dispatch(fetchInstList());
+  };
   const onClickLecture = () => setpageNum('3');
 
   // 최초에 유저, 강사 정보 불러오기
   useEffect(() => {
     dispatch(fetchUserList());
-    dispatch(fetchInstList());
+    // dispatch(fetchInstList());
   }, [dispatch]);
 
   // 스토어에 유저, 강사 리스트 불러오기
@@ -168,14 +195,22 @@ const AdminPage = () => {
       )}
       {/* 강사 관리 탭 */}
       {pageNum === '2' && (
-        <div style={{ height: 1000, width: '100%' }}>
-          <DataGrid
-            className="table"
-            rows={instList}
-            columns={columnsInst}
-            getRowId={(row) => row.insId}
-          />
-        </div>
+        <InsBox>
+          <div style={{ height: 1000, width: '80%' }}>
+            <DataGrid
+              className="table"
+              rows={instList}
+              columns={columnsInst}
+              getRowId={(row) => row.insId}
+            />
+          </div>
+          <ProfileForm action="">
+            <p>프로필 사진</p>
+            <hr />
+            <input type="file" />
+            <StyledButton>제출</StyledButton>
+          </ProfileForm>
+        </InsBox>
       )}
     </AdminPageBlock>
   );
