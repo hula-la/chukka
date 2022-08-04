@@ -23,6 +23,7 @@ public class Lecture {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "insId")
     private Instructor instructor;
+
     private String thumbnail;
     private String lecTitle;
     private String lecContents;

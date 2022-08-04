@@ -21,10 +21,10 @@ public class Instructor{
     private String insEmail;
     private String insIntroduce;
 
-    @OneToMany(mappedBy = "instructor", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
     private List<Lecture> lectures = new ArrayList<>();
 
-    @OneToMany(mappedBy = "instructor")
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
     private List<Section> sections = new ArrayList<>();
 
 }
