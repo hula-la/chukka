@@ -2,9 +2,10 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
-
 import com.ssafy.api.response.lecture.LecturePopularRes;
+import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.db.entity.Lecture;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,6 +25,8 @@ public interface LectureService {
 
     // 전체 강의 조회
   	Page<Lecture> findAll(Pageable pageable);
+
+    List<LectureRes> findAll();
 
     // 결제한 강의 조회
 

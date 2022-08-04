@@ -1,5 +1,8 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.request.lecture.LecturePostReq;
+import com.ssafy.api.response.cart.CartLecGetRes;
+import com.ssafy.api.response.lecture.LecturePostRes;
 import com.ssafy.db.entity.Cart;
 import com.ssafy.db.entity.CartItem;
 import com.ssafy.db.entity.Lecture;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service("CartService")
@@ -18,6 +22,7 @@ public class CartServiceImpl implements CartService{
 
     @Autowired
     CartRepository cartRepository;
+    @Autowired
     CartItemRepository cartItemRepository;
 
     public Cart createCart(User user){
@@ -28,34 +33,63 @@ public class CartServiceImpl implements CartService{
         return cart;
     }
 
-    public Cart createCartItem(Cart cart, Lecture lecture){
+    public CartItem createCartItem(Cart cart, Lecture lecture) {
+
         CartItem cartItem = new CartItem();
         cartItem.setCart(cart);
         cartItem.setLecture(lecture);
         // cart에 add 안해도 되는지
-        System.out.println(cartItem.toString());
         cartItemRepository.save(cartItem);
-        return cart;
+        cart.setCount(cart.getCount() + 1);
+        cartRepository.save(cart);
+        return cartItem;
+
     }
 
     @Override
     public Cart findCartByUser(String userId) {
-        return cartRepository.findCartByUser_UserId(userId);
+        Optional<Cart> cart = cartRepository.findByUser_UserId(userId);
+        if(cart.isPresent()) {
+            return cart.get();
+        }
+        return null;
     }
 
     @Override
-    public List<CartItem> findCartItemsByCartId(Cart cart) {
-        List<CartItem> cartItems = cartItemRepository.findCartItemsByCartId(cart);
-        return cartItems;
+    public List<CartLecGetRes> findCartItemsByCartId(String userId) {
+        Optional<Cart> findCart = cartRepository.findByUser_UserId(userId);
+        if(findCart.isPresent()){
+            Cart cart = findCart.get();
+            List<CartItem> cartItems = cartItemRepository.findAllByCart_Id(cart.getId());
+            List<CartLecGetRes> cartLecGetRes = new ArrayList<>();
+            for(CartItem item : cartItems){
+                cartLecGetRes.add(new CartLecGetRes(item.getLecture()));
+            }
+
+            return cartLecGetRes;
+        }
+
+        return null;
     }
 
     @Override
-    public void deleteCartItemById(int cartItemId) {
-        cartItemRepository.deleteCartItemByCartItemId(cartItemId);
+    public void deleteByCartItemId(int cartItemId) {
+        cartItemRepository.deleteById(cartItemId);
+
     }
 
     @Override
     public Cart updateCart(int cartId, int cnt) {
+        return null;
+    }
+
+    @Override
+    public CartItem findCartItem(int lecId, int cartId) {
+        Optional<CartItem> cartItem = cartItemRepository.findByLecture_LecIdAndCart_Id(lecId, cartId);
+
+        if(cartItem.isPresent()) {
+            return cartItem.get();
+        }
         return null;
     }
 

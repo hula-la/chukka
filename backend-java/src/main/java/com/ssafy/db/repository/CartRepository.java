@@ -9,10 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer> {
 
-    Cart findCartByUser_UserId(String userId);
+    Optional<Cart> findByUser_UserId(String userId);
+    void
 
 }

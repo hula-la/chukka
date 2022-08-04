@@ -39,6 +39,10 @@ public class LecturePostRes {
     @ApiModelProperty(name = "춤 장르", example = "1,2")
     String lecGenre;
 
+    @ApiModelProperty(name = "춤 장르", example = "1,2")
+    int lecStudent;
+
+
     public static LecturePostRes of(int lecId,
                                     Instructor instructor,
                                     String lecTitle,
@@ -50,7 +54,8 @@ public class LecturePostRes {
                                     int lecCategory,
                                     int lecLevel,
                                     int lecLimit,
-                                    String lecGenre
+                                    String lecGenre,
+                                    int lecStudent
                                     ) {
         LecturePostRes res = new LecturePostRes();
         res.setLecId(lecId);
@@ -65,6 +70,7 @@ public class LecturePostRes {
         res.setLecLevel(lecLevel);
         res.setLecLimit(lecLimit);
         res.setLecGenre(lecGenre);
+        res.setLecStudent(lecStudent);
         return res;
     }
 }
