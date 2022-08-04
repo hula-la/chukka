@@ -1,8 +1,7 @@
 package com.ssafy.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -11,6 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class Lecture {
@@ -23,10 +25,10 @@ public class Lecture {
     @ManyToOne
     @JoinColumn(name = "ins_id")
     private Instructor instructor;
-    private String thumbnail;
     private String lecTitle;
     private String lecContents;
     private int lecPrice;
+
     private String lecNotice;
 
     @Temporal(TemporalType.DATE)
@@ -60,8 +62,4 @@ public class Lecture {
     @JsonIgnore
     private List<Section> sections = new ArrayList<>();
 
-    @PrePersist
-    public void prePersist() {
-        this.lecStudent = this.lecStudent == null ? 0 : this.lecStudent;
-    }
 }

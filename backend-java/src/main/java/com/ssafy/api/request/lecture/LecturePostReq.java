@@ -16,8 +16,6 @@ public class LecturePostReq {
 
     @ApiModelProperty(name = "강사 아이디", example = "instructor")
     String insId;
-    @ApiModelProperty(name = "썸네일", example = "ssafy/img/thumbnail.jpg")
-    MultipartFile thumbnail;
     @ApiModelProperty(name = "강의 제목", example = "aenergy (Coachella Ver.)")
     String lecTitle;
     @ApiModelProperty(name = "강의내용", example = "누구의 춤 솰라솰라")

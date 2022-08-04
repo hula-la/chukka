@@ -4,6 +4,7 @@ import com.ssafy.api.request.lecture.LectureNoticeReq;
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
 import com.ssafy.api.response.lecture.LectureNoticeRes;
+import com.ssafy.api.response.lecture.LecturePopularRes;
 import com.ssafy.api.response.lecture.LectureUpdateRes;
 import com.ssafy.api.service.LectureService;
 
@@ -37,12 +38,24 @@ public class LectureController {
     @GetMapping("/")
     @ApiOperation(value = "전체 강의 목록", notes = "전체 게시글을 불러온다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 200, message = "성공", response = LecturePopularRes.class),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Page<Lecture>> lectureList(Pageable pageable) {
-        return ResponseEntity.ok(lectureService.findAll(pageable));
+    public ResponseEntity<BaseResponseBody> getMostPopularLecture(Pageable pageable) {
+        Page<LecturePopularRes> popular = lectureService.getMostPopularLecture(pageable);
+
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", popular));
     }
+
+//    @GetMapping("/")
+//    @ApiOperation(value = "전체 강의 목록", notes = "전체 게시글을 불러온다.")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "성공"),
+//            @ApiResponse(code = 500, message = "서버 오류")
+//    })
+//    public ResponseEntity<Page<Lecture>> lectureList(Pageable pageable) {
+//        return ResponseEntity.ok(lectureService.findAll(pageable));
+//    }
 
     // 공지사항 수정 =====================================================================================================
     // 강사 userType == 1 권한 주기
