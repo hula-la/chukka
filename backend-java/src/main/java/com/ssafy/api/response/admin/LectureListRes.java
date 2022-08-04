@@ -21,7 +21,7 @@ public class LectureListRes{
 	@ApiModelProperty(name="강의 목록")
 	Page<Lecture> lectureList;
 	@ApiModelProperty(name="강의 리스트")
-	List<Lecture> lecturelist;
+	List<Lecture> list;
 
 	public static LectureListRes of(Page<Lecture> lectureList) {
 		LectureListRes res = new LectureListRes();
@@ -29,9 +29,9 @@ public class LectureListRes{
 		return res;
 	}
 
-	public static LectureListRes off(List<Lecture> lecturelist) {
+	public static LectureListRes off(List<Lecture> list) {
 		LectureListRes res = new LectureListRes();
-		res.setLecturelist(lecturelist);
+		res.setList(list);
 		return res;
 	}
 }
