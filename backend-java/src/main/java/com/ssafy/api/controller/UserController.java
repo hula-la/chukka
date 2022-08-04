@@ -136,7 +136,7 @@ public class UserController {
 			// refreshToken DB에 넣기
 			userService.updateUserRefreshToken(userId, refreshToken);
 			// 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserLoginPostRes.of(accessToken, refreshToken, user.getUserNickname(), user.getUserProfile(), user.getUserType(), user.getUserId())));
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserLoginPostRes.of(accessToken, refreshToken, user.getUserNickname(), user.getUserType(), user.getUserId())));
 		}
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
 		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid User", null));

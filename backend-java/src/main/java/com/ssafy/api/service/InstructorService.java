@@ -19,7 +19,7 @@ import java.util.List;
  *	강사 관련 비즈니스 로직 처리를 위한 서비스 인터페이스 정의.
  */
 public interface InstructorService {
-	Instructor createInstructor(InstructorPostReq insInfo);
+	Instructor createInstructor(String insId);
 	Instructor updateInstructor(InstructorPostReq insInfo);
 	List<InstructorRes> findAll();
 }

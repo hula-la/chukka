@@ -24,11 +24,8 @@ public class InstructorServiceImpl implements InstructorService {
     InstructorRepository instructorRepository;
 
     @Override
-    public Instructor createInstructor(InstructorPostReq insInfo) {
-        Instructor ins = Instructor.builder().insId(insInfo.getInsId())
-                        .insName(insInfo.getInsName())
-                        .insEmail(insInfo.getInsEmail())
-                        .insIntroduce(insInfo.getInsIntroduce()).build();
+    public Instructor createInstructor(String insId) {
+        Instructor ins = Instructor.builder().insId(insId).build();
         return instructorRepository.save(ins);
     }
 

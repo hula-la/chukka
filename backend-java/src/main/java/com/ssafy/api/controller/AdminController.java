@@ -65,6 +65,9 @@ public class AdminController {
 	})
 	public ResponseEntity<BaseResponseBody> registerInstructor(@PathVariable String userId, @PathVariable int userType) {
 		userService.createInstructor(userId, userType);
+		if(userType == 1) {
+			instructorService.createInstructor(userId);
+		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserListRes.of(userService.getUsers())));
 	}
 
@@ -211,19 +214,19 @@ public class AdminController {
 	}
 
 	// 강사 정보 추가 ====================================================================================================
-	@PostMapping("/instructors/")
-	@ApiOperation(value = "강사 정보 추가", notes = "<strong>강사 아이디, 이름, 이메일, 프로필, 그리고 소개</strong>를 받아 강사를 추가한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
-	})
-	public ResponseEntity<BaseResponseBody> registerInstructorInfo(@RequestBody @ApiParam(value="강사 정보", required = true) InstructorPostReq insInfo, HttpServletRequest req) throws IOException {
-		instructorService.createInstructor(insInfo);
-		MultipartFile profile = insInfo.getInsProfile();
-		if(!profile.isEmpty()) {
-			s3Uploader.uploadFiles(profile, "img/instructor/profile", req.getServletContext().getRealPath("/img/instructor/profile/"), insInfo.getInsId());
-		}
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
-	}
+//	@PostMapping("/instructors/")
+//	@ApiOperation(value = "강사 정보 추가", notes = "<strong>강사 아이디, 이름, 이메일, 프로필, 그리고 소개</strong>를 받아 강사를 추가한다.")
+//	@ApiResponses({
+//			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
+//	})
+//	public ResponseEntity<BaseResponseBody> registerInstructorInfo(@RequestBody @ApiParam(value="강사 정보", required = true) InstructorPostReq insInfo, HttpServletRequest req) throws IOException {
+//		instructorService.createInstructor(insInfo);
+//		MultipartFile profile = insInfo.getInsProfile();
+//		if(!profile.isEmpty()) {
+//			s3Uploader.uploadFiles(profile, "img/instructor/profile", req.getServletContext().getRealPath("/img/instructor/profile/"), insInfo.getInsId());
+//		}
+//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+//	}
 
 	// 강사 정보 수정 ====================================================================================================
 	@PutMapping("/instructors/")
@@ -241,7 +244,7 @@ public class AdminController {
 	}
 
 	// 강사 삭제 ====================================================================================================
-	@GetMapping("/instructors/{insId}")
+	@DeleteMapping("/instructors/{insId}")
 	@ApiOperation(value = "강사 삭제", notes = "<strong>강사 아이디</strong>를 통해 해당 강사의 정보를 삭제한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
