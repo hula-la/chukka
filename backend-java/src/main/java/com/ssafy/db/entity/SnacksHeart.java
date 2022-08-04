@@ -12,7 +12,7 @@ public class SnacksLike{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int snackslike_id;
+    private int snacksLikeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
@@ -23,5 +23,5 @@ public class SnacksLike{
     Snacks snacks;
 
     @Temporal(TemporalType.DATE)
-    Date like_snacks_reg;
+    Date likeSnacksReg;
 }
