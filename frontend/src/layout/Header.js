@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import Button from '../components/Button';
 import MenuItems from '../components/MenuItems';
 import { useSelector } from 'react-redux';
+import { logout } from '../features/user/userSlice';
+import { useDispatch } from 'react-redux';
 
 const NavBar = styled.div`
   color: #ffffff;
@@ -28,10 +30,14 @@ const NavBar = styled.div`
     display: flex;
     list-style: none;
   }
+  & .user-div {
+    display: flex;
+  }
 `;
 
 const Header = () => {
   const { userInfo } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const menuItems = [
     {
       title: 'Lectures',
@@ -70,9 +76,16 @@ const Header = () => {
           </NavLink>
         ) : (
           <NavLink to="/">
-            <div>
-              <img src={userInfo.userProfile} alt="" />
+            <div className="user-div">
+              {/* <img src={userInfo.userProfile} alt="" /> */}
               <div>Hi, {userInfo.userNickname}!</div>
+              <button
+                onClick={() => {
+                  dispatch(logout());
+                }}
+              >
+                Logout
+              </button>
             </div>
           </NavLink>
         )}

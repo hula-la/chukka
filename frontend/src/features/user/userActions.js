@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { login, register, getToken } from '../../api/user';
 
 const BASE_URL = 'http://127.0.0.1:8080';
 
@@ -7,13 +8,7 @@ export const registerUser = createAsyncThunk(
   'user/register',
   async (data, { rejectWithValue }) => {
     try {
-      const config = {
-        headers: {
-          // 'Content-Type': 'application/json',
-        },
-      };
-      console.log(data);
-      await axios.post(`${BASE_URL}/accounts/signup/`, data, config);
+      await register(data);
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
@@ -28,21 +23,20 @@ export const userLogin = createAsyncThunk(
   'user/login',
   async ({ userId, userPw }, { rejectWithValue }) => {
     try {
-      const config = {
-        headers: {},
+      const { data } = await login({ userId, userPw });
+
+      const { accessToken, refreshToken, userNickname, userProfile, userType } =
+        data.data;
+      const userInfo = {
+        userId,
+        userNickname,
+        userProfile,
+        userType,
       };
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+      localStorage.setItem('refreshToken', refreshToken);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/accounts/login/`,
-        { userId, userPw },
-        config,
-      );
-      console.log(data.data.accessToken);
-
-      // 로컬스토리지에 Token 저장
-      localStorage.setItem('userToken', data.data.accessToken);
-
-      return data;
+      return { userInfo, accessToken };
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
@@ -57,17 +51,28 @@ export const changeProfile = createAsyncThunk(
   'user/changeProfile',
   async (data, { rejectWithValue }) => {
     try {
-      const config = {
-        headers: {},
-      };
-
-      await axios.put(`${BASE_URL}/accounts/`, data, config);
+      await axios.put(`${BASE_URL}/accounts/`, data);
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
       } else {
         return rejectWithValue(error.message);
       }
+    }
+  },
+);
+
+export const fetchAccessToken = createAsyncThunk(
+  'user/getAccessToken',
+  async ({ refreshToken, userInfo }) => {
+    try {
+      const { userId } = userInfo;
+
+      const { data } = await getToken(userId, refreshToken);
+
+      return data;
+    } catch (error) {
+      console.log(error);
     }
   },
 );

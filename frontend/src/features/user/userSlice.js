@@ -1,15 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { registerUser, userLogin } from './userActions';
+import { registerUser, userLogin, fetchAccessToken } from './userActions';
 
 // initialize userToken from local storage
-const accessToken = localStorage.getItem('accessToken')
-  ? localStorage.getItem('accessToken')
+// const accessToken = localStorage.getItem('accessToken')
+//   ? localStorage.getItem('accessToken')
+//   : null;
+
+const userInfo = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
   : null;
 
 const initialState = {
   loading: false,
-  userInfo: null,
-  accessToken,
+  userInfo,
+  accessToken: null,
   error: null,
   success: false,
 };
@@ -19,17 +23,17 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      localStorage.removeItem('accessToken'); // delete token from storage
+      localStorage.removeItem('refreshToken'); // delete token from storage
+      localStorage.removeItem('userInfo');
       state.loading = false;
       state.userInfo = null;
-      state.userToken = null;
+      state.accessToken = null;
       state.error = null;
     },
   },
   extraReducers: {
     // 유저 로그인
     [userLogin.pending]: (state) => {
-      console.log('pending!');
       // 액션 디스패치
       state.loading = true;
       state.error = null;
@@ -37,12 +41,12 @@ const userSlice = createSlice({
     [userLogin.fulfilled]: (state, { payload }) => {
       // 요청 성공
       state.loading = false;
-      state.userInfo = payload;
-      state.userToken = payload.userToken;
-      console.log(payload);
+      state.userInfo = payload.userInfo;
+      state.accessToken = payload.accessToken;
     },
     [userLogin.rejected]: (state, { payload }) => {
       // 요청 실패
+      alert('로그인 실패!');
       console.log('login rejected');
       state.loading = false;
       state.error = payload;
@@ -52,18 +56,26 @@ const userSlice = createSlice({
     [registerUser.pending]: (state) => {
       state.loading = true;
       state.error = null;
+      console.log('register done');
     },
     [registerUser.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.success = true;
+      console.log('register fulfill');
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
+      console.log('register rejected');
+    },
+
+    // AccessToken 가져오기
+    [fetchAccessToken.fulfilled]: (state, { payload }) => {
+      state.accessToken = payload.accessToken;
     },
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, getAccessToken } = userSlice.actions;
 
 export default userSlice.reducer;
