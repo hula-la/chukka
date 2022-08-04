@@ -13,11 +13,7 @@ import java.util.Optional;
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
     // 리뷰 조회하기 - 강의 id 기반
-    @Query(value = "select r.reviewId, r.user.userNickname, r.reviewRegdate, r.reviewScore, r.reviewContents " +
-            "from Review r " +
-            "where r.lecture.lecId = :lecId " +
-            "order by r.reviewId")
-    List<ReviewGetRes> findByLecId(int lecId);
+    List<Review> findByLecture_LecId(int lecId);
 
     Optional<Integer> deleteByReviewId(int reviewId);
 

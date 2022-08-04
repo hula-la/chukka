@@ -124,10 +124,6 @@ public class AdminController {
 	})
 	public ResponseEntity<BaseResponseBody> registerLecture(@RequestBody @ApiParam(value="섹션 정보", required = true) LecturePostReq lectureInfo, HttpServletRequest req) throws IOException {
 		Lecture lecture = lectureService.createLecture(lectureInfo);
-		MultipartFile thumbnail = lectureInfo.getThumbnail();
-		if(!thumbnail.isEmpty()) {
-			s3Uploader.uploadFiles(thumbnail, "img/lecture/thumbnail", req.getServletContext().getRealPath("/img/lecture/thumbnail/"), Integer.toString(lecture.getLecId()));
-		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 
