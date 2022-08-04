@@ -21,7 +21,7 @@ public class Instructor{
     private String insEmail;
     private String insIntroduce;
 
-    @OneToMany(mappedBy = "instructor")
+    @OneToMany(mappedBy = "instructor", fetch = FetchType.LAZY)
     private List<Lecture> lectures = new ArrayList<>();
 
     @OneToMany(mappedBy = "instructor")

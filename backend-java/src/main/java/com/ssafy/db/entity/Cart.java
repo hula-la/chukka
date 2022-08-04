@@ -26,10 +26,11 @@ public class Cart{
 
     private int count;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "cartItemId", fetch = FetchType.LAZY)
     private List<CartItem> cartItems = new ArrayList<>();
 
-    public void addCartItem(CartItem cartItem){
+
+    private void addCartItem(CartItem cartItem){
         cartItems.add(cartItem);
     }
 
