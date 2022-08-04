@@ -22,4 +22,5 @@ public interface InstructorService {
 	Instructor createInstructor(String insId);
 	Instructor updateInstructor(InstructorPostReq insInfo);
 	List<InstructorRes> findAll();
+	boolean deleteInstructor(String insId);
 }

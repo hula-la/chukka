@@ -51,5 +51,14 @@ public class InstructorServiceImpl implements InstructorService {
         return list;
     }
 
+    @Override
+    public boolean deleteInstructor(String insId) {
+        if(instructorRepository.findById(insId).isPresent()) {
+            instructorRepository.delete(Instructor.builder().insId(insId).build());
+            return true;
+        }
+        return false;
+    }
+
 
 }

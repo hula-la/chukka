@@ -67,6 +67,8 @@ public class AdminController {
 		userService.createInstructor(userId, userType);
 		if(userType == 1) {
 			instructorService.createInstructor(userId);
+		} else {
+			instructorService.deleteInstructor(userId);
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserListRes.of(userService.getUsers())));
 	}
