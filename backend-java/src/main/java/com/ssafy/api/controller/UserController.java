@@ -336,7 +336,7 @@ public class UserController {
 	public ResponseEntity<? extends BaseResponseBody> reauth(@RequestBody @ApiParam(value="유저 아이디", required = true) String userId, HttpServletRequest req) {
 		String refreshToken = req.getHeader("refresh-token");
 		User user = userService.getUserByRefreshToken(refreshToken);
-		if(user.getUserId().equals(userId)) {
+		if(('"' + user.getUserId() + '"').equals(userId)) {
 			String accessToken = JwtTokenUtil.getToken(userId);
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserReAuthRes.of(accessToken)));
 		}

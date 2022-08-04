@@ -49,7 +49,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     List<User> findByUserNicknameContaining(String keyword);
     List<User> findByUserEmailContaining(String keyword);
     List<User> findByUserPhoneContaining(String keyword);
-
+    @Transactional
+    @Modifying
     @Query(value = "update User u set u.user_type = :userType where u.user_id = :userId", nativeQuery = true)
     int updateUserType(String userId, int userType);
 
