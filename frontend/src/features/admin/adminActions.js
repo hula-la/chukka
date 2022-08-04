@@ -8,7 +8,17 @@ export const fetchUserList = createAsyncThunk('adimin/fetch', async () => {
   return data;
 });
 
-export const deleteUser = createAsyncThunk('admin/delete', async (data) => {
-  await axios.delete(`${BASE_URL}/admin/accounts/${data}`);
-  return await axios.get(`${BASE_URL}/admin/accounts/`);
+export const deleteUser = createAsyncThunk('admin/delete', async (userId) => {
+  const { data } = await axios.delete(`${BASE_URL}/admin/accounts/${userId}`);
+  return data;
 });
+
+export const changeUser = createAsyncThunk(
+  'admin/change',
+  async ({ userId, userType }) => {
+    const { data } = await axios.put(
+      `${BASE_URL}/admin/accounts/${userId}/${userType}`,
+    );
+    return data;
+  },
+);

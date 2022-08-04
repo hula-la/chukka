@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchUserList } from './adminActions';
-import { deleteUser } from './adminActions';
+import { deleteUser, changeUser, fetchUserList } from './adminActions';
 
 const initialState = {
   userList: [],
+  lectureList: [],
   error: null,
 };
 
@@ -27,14 +27,27 @@ const adminSlice = createSlice({
       state.error = payload;
     },
 
+    // 유저 강제 탈퇴
     [deleteUser.pending]: () => {
       console.log('pending!');
     },
     [deleteUser.fulfilled]: (state, { payload }) => {
       console.log('delete!');
-      state.userList = payload.data.data.userList;
+      state.userList = payload.data.userList;
     },
     [deleteUser.rejected]: () => {
+      console.log('rejected!');
+    },
+
+    // 유저 권한 바꾸기
+    [changeUser.pending]: () => {
+      console.log('pending!');
+    },
+    [changeUser.fulfilled]: (state, { payload }) => {
+      console.log('change!');
+      state.userList = payload.data.userList;
+    },
+    [changeUser.rejected]: () => {
       console.log('rejected!');
     },
   },
