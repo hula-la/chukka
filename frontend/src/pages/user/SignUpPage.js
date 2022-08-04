@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../features/user/userActions';
+import { idCheck, nickCheck } from '../../api/user';
 
 const StyledInput = styled.input`
   font-size: 1rem;
@@ -79,17 +80,7 @@ const SignUpPage = () => {
       navigate('/');
     }
   }, [navigate, userInfo]);
-  /* {
-  "userBirth": "2022-01-01",
-  "userEmail": "abcd@ssafy.com",
-  "userGender": 1,
-  "userId": "your_id",
-  "userName": "your_name",
-  "userNickname": "your_nickname",
-  "userPhone": "010-1234-5678",
-  "userProfile": "img/profile.png",
-  "userPw": "your_password"
-} */
+
   const [signUpInputs, setSignUpInputs] = useState({
     userId: '',
     userName: '',
@@ -102,6 +93,8 @@ const SignUpPage = () => {
     userGender: 0,
     userProfile: 'img/profile.png',
   });
+  const [isIdChecked, setIsIdChecked] = useState(false);
+  const [isNickChecked, setIsNickChecked] = useState(false);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -109,13 +102,23 @@ const SignUpPage = () => {
       ...signUpInputs,
       [name]: value,
     };
+    if (name === 'userNickname') {
+      setIsNickChecked(false);
+    } else if (name === 'userId') {
+      setIsIdChecked(false);
+    }
     setSignUpInputs(nextInputs);
   };
   const onSubmit = (e) => {
     e.preventDefault();
     // 회원가입 form Submit -> 유효성 검사 하고 dispatch
     if (signUpInputs.userPw === signUpInputs.userPwConfirm) {
-      dispatch(registerUser(signUpInputs));
+      try {
+        dispatch(registerUser(signUpInputs));
+        navigate('/');
+      } catch (e) {
+        console.log(e);
+      }
     } else {
       alert('패스워드가 다릅니다!');
     }
@@ -129,10 +132,43 @@ const SignUpPage = () => {
           <div>
             <StyledLabel>아이디</StyledLabel>
             <StyledInput name="userId" onChange={onChange} required />
+            <button
+              onClick={async (e) => {
+                e.preventDefault();
+                const { statusCode } = await idCheck(signUpInputs.userId);
+                if (statusCode === 200) {
+                  alert('굿!');
+                  setIsIdChecked(true);
+                } else if (statusCode === 401) {
+                  alert('아이디 중복!');
+                  setIsIdChecked(false);
+                }
+              }}
+            >
+              중복검사
+            </button>
           </div>
           <div>
             <StyledLabel>닉네임</StyledLabel>
             <StyledInput name="userNickname" onChange={onChange} required />
+            <button
+              onClick={async (e) => {
+                e.preventDefault();
+                const { statusCode } = await nickCheck(
+                  signUpInputs.userNickname,
+                );
+                console.log(statusCode);
+                if (statusCode === 200) {
+                  alert('굿!');
+                  setIsNickChecked(true);
+                } else if (statusCode === 401) {
+                  alert('닉네임 중복!');
+                  setIsNickChecked(false);
+                }
+              }}
+            >
+              중복검사
+            </button>
           </div>
           <div>
             <StyledLabel>비밀번호</StyledLabel>
@@ -185,7 +221,9 @@ const SignUpPage = () => {
               <option value="0">여성</option>
             </select>
           </div>
-          <StyledButton>회원가입</StyledButton>
+          <StyledButton disabled={!isIdChecked || !isNickChecked}>
+            회원가입
+          </StyledButton>
         </form>
       </SignupBox>
     </SignupTemplateBlock>

@@ -28,11 +28,11 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const refreshToken = localStorage.getItem('refreshToken');
-    const userInfo = localStorage.getItem('userInfo');
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     if (refreshToken && userInfo) {
       dispatch(fetchAccessToken({ refreshToken, userInfo }));
     }
-  }, []);
+  }, [dispatch]);
   return (
     <div className="App">
       <Routes>

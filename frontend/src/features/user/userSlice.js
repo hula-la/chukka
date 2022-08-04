@@ -7,7 +7,7 @@ import { registerUser, userLogin, fetchAccessToken } from './userActions';
 //   : null;
 
 const userInfo = localStorage.getItem('userInfo')
-  ? localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
   : null;
 
 const initialState = {
@@ -34,7 +34,6 @@ const userSlice = createSlice({
   extraReducers: {
     // 유저 로그인
     [userLogin.pending]: (state) => {
-      console.log('pending!');
       // 액션 디스패치
       state.loading = true;
       state.error = null;
@@ -42,12 +41,12 @@ const userSlice = createSlice({
     [userLogin.fulfilled]: (state, { payload }) => {
       // 요청 성공
       state.loading = false;
-      state.userInfo = payload;
-      state.userToken = payload.userToken;
-      console.log(payload);
+      state.userInfo = payload.userInfo;
+      state.accessToken = payload.accessToken;
     },
     [userLogin.rejected]: (state, { payload }) => {
       // 요청 실패
+      alert('로그인 실패!');
       console.log('login rejected');
       state.loading = false;
       state.error = payload;
@@ -57,18 +56,21 @@ const userSlice = createSlice({
     [registerUser.pending]: (state) => {
       state.loading = true;
       state.error = null;
+      console.log('register done');
     },
     [registerUser.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.success = true;
+      console.log('register fulfill');
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
+      console.log('register rejected');
     },
 
     // AccessToken 가져오기
-    [fetchAccessToken]: (state, { payload }) => {
+    [fetchAccessToken.fulfilled]: (state, { payload }) => {
       state.accessToken = payload.accessToken;
     },
   },
