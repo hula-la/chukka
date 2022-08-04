@@ -23,6 +23,7 @@ public class Lecture {
     @ManyToOne
     @JoinColumn(name = "ins_id")
     private Instructor instructor;
+
     private String thumbnail;
     private String lecTitle;
     private String lecContents;
@@ -41,22 +42,22 @@ public class Lecture {
     private Integer lecStudent;
     private String lecGenre;
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     private List<CartItem> cartItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Enroll> enrolls = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<PayList> payLists = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Section> sections = new ArrayList<>();
 

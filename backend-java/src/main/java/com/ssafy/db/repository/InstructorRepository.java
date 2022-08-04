@@ -1,5 +1,6 @@
 package com.ssafy.db.repository;
 
+import com.ssafy.api.response.admin.InstructorRes;
 import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.User;
 import org.springframework.data.domain.Pageable;

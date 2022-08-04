@@ -27,8 +27,6 @@ public class UserYourRes{
 	int userGender;
 	@ApiModelProperty(name="User Nickname", example="your_nickname")
 	String userNickname;
-	@ApiModelProperty(name="User Profile", example="img/profile.png")
-	String userProfile;
 	@ApiModelProperty(name="User Lecture Level", example="500")
 	private int userLvLec;
 	@ApiModelProperty(name="User Snacks Level", example="500")
@@ -45,7 +43,6 @@ public class UserYourRes{
 		res.setUserName(user.getUserName());
 		res.setUserGender(user.getUserGender());
 		res.setUserNickname(user.getUserNickname());
-		res.setUserProfile(user.getUserProfile());
 		res.setUserLvLec(user.getUserLvLec());
 		res.setUserLvSnacks(user.getUserLvSnacks());
 		res.setUserLvGame(user.getUserLvGame());

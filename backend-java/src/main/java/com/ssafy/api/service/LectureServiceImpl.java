@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
+import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.api.response.lecture.LectureNoticeRes;
 import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
@@ -41,6 +42,16 @@ public class LectureServiceImpl implements LectureService {
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lecStudent"));
         Page<Lecture> page = lectureRepository.findAll(pageRequest);
         return page;
+    }
+
+    @Override
+    public List<LectureRes> findAll() {
+        List<Lecture> lectures = lectureRepository.findAll();
+        List<LectureRes> list = new ArrayList<>();
+        for (int i = 0; i < lectures.size(); i++) {
+            list.add(LectureRes.of(lectures.get(i)));
+        }
+        return list;
     }
 
     @Override

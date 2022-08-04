@@ -34,6 +34,6 @@ public interface UserService {
 	List<UserRes> getUsers();
 	List<UserRes> getCertainUsers(String category, String keyword);
 	boolean quit(String userId);
-	void createInstructor(String userId);
+	void createInstructor(String userId, int userType);
 
 }
