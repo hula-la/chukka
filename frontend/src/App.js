@@ -24,6 +24,7 @@ import GamesPage from './pages/game/GamesPage';
 import AdminPage from './pages/admin/AdminPage';
 // notfount
 import NotFound from './pages/NotFound';
+import LectureDetailpage from './pages/lecture/LectureDetailpage';
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -51,6 +52,7 @@ const App = () => {
         <Route path="lectures" element={<Layout />}>
           <Route path="" element={<LecturesPage />} />
           <Route path="live" element={<LivePage />} />
+          <Route path=":lectureId" element={<LectureDetailpage />} />
         </Route>
         {/* snacks */}
         <Route path="snacks" element={<Layout />}>

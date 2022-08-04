@@ -50,6 +50,7 @@ const LecturesPage = () => {
       category: '녹화',
     },
   ];
+
   return (
     <Wrapper>
       <div>
