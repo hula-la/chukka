@@ -1,8 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { deleteUser, changeUser, fetchUserList } from './adminActions';
+import {
+  deleteUser,
+  changeUser,
+  fetchUserList,
+  fetchInstList,
+  changeInsInfo,
+} from './adminActions';
 
 const initialState = {
   userList: [],
+  instList: [],
   lectureList: [],
   error: null,
 };
@@ -48,6 +55,30 @@ const adminSlice = createSlice({
       state.userList = payload.data.userList;
     },
     [changeUser.rejected]: () => {
+      console.log('rejected!');
+    },
+
+    // 강사 목록 불러오기
+    [fetchInstList.pending]: () => {
+      console.log('pending!');
+    },
+    [fetchInstList.fulfilled]: (state, { payload }) => {
+      console.log('fetch!');
+      state.instList = payload.data;
+    },
+    [fetchInstList.rejected]: () => {
+      console.log('rejected!');
+    },
+
+    // 강사 정보 수정
+    [changeInsInfo.pending]: () => {
+      console.log('pending!');
+    },
+    [changeInsInfo.fulfilled]: (state, { payload }) => {
+      console.log('change!');
+      state.instList = payload.data;
+    },
+    [changeInsInfo.rejected]: () => {
       console.log('rejected!');
     },
   },
