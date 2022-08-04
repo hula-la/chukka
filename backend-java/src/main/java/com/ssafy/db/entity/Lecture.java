@@ -23,6 +23,7 @@ public class Lecture {
     @ManyToOne
     @JoinColumn(name = "ins_id")
     private Instructor instructor;
+
     private String thumbnail;
     private String lecTitle;
     private String lecContents;

@@ -4,6 +4,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.request.instructor.InstructorPostReq;
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
+import com.ssafy.api.response.admin.InstructorRes;
 import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.InstructorRepository;
@@ -11,6 +12,7 @@ import com.ssafy.db.repository.LectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,4 +43,16 @@ public class InstructorServiceImpl implements InstructorService {
         }
         return null;
     }
+
+    @Override
+    public List<InstructorRes> findAll() {
+        List<Instructor> instructors = instructorRepository.findAll();
+        List<InstructorRes> list = new ArrayList<>();
+        for (int i = 0; i < instructors.size(); i++) {
+            list.add(InstructorRes.of(instructors.get(i)));
+        }
+        return list;
+    }
+
+
 }

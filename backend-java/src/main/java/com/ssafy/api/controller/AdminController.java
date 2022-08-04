@@ -1,10 +1,12 @@
 package com.ssafy.api.controller;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.ssafy.api.request.instructor.InstructorPostReq;
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
 import com.ssafy.api.request.section.SectionPostReq;
 import com.ssafy.api.response.admin.LectureListRes;
+import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.api.response.admin.UserListRes;
 import com.ssafy.api.service.InstructorService;
 import com.ssafy.api.service.LectureService;
@@ -198,7 +200,15 @@ public class AdminController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success",  sectionService.getSectionByLecId(lecId)));
 	}
 
-	// 강사 목록 조회 및 삭제 구현 =========================================================================================
+	// 강사 목록 조회 ====================================================================================================
+	@GetMapping("/instructors/")
+	@ApiOperation(value = "강사 목록 조회", notes = "강사로 정보가 등록된 모든 강사의 목록을 반환한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<BaseResponseBody> getInstructors() throws IOException {
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", instructorService.findAll()));
+	}
 
 	// 강사 정보 추가 ====================================================================================================
 	@PostMapping("/instructors/")
@@ -228,6 +238,16 @@ public class AdminController {
 			s3Uploader.uploadFiles(profile, "img/instructor/profile", req.getServletContext().getRealPath("/img/instructor/profile/"), insInfo.getInsId());
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+	}
+
+	// 강사 삭제 ====================================================================================================
+	@GetMapping("/instructors/{insId}")
+	@ApiOperation(value = "강사 삭제", notes = "<strong>강사 아이디</strong>를 통해 해당 강사의 정보를 삭제한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
+	})
+	public ResponseEntity<BaseResponseBody> deleteInstructor(@PathVariable @ApiParam(value="강사 아이디", required = true) int insId) throws IOException {
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", instructorService.findAll()));
 	}
 
 }

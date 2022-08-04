@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.request.instructor.InstructorPostReq;
 import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.request.user.UserRegisterPostReq;
+import com.ssafy.api.response.admin.InstructorRes;
 import com.ssafy.api.response.user.UserMyLectureRes;
 import com.ssafy.common.util.MailUtil;
 import com.ssafy.db.entity.Instructor;
@@ -20,4 +21,5 @@ import java.util.List;
 public interface InstructorService {
 	Instructor createInstructor(InstructorPostReq insInfo);
 	Instructor updateInstructor(InstructorPostReq insInfo);
+	List<InstructorRes> findAll();
 }
