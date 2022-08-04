@@ -20,8 +20,8 @@ public class Lecture {
     @Column(name = "lec_id")
     private int lecId;
 
-    @ManyToOne
-    @JoinColumn(name = "ins_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "insId")
     private Instructor instructor;
 
     private String thumbnail;
@@ -61,8 +61,5 @@ public class Lecture {
     @JsonIgnore
     private List<Section> sections = new ArrayList<>();
 
-    @PrePersist
-    public void prePersist() {
-        this.lecStudent = this.lecStudent == null ? 0 : this.lecStudent;
-    }
+
 }
