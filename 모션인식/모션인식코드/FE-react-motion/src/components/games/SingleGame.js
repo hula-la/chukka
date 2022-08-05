@@ -21,6 +21,9 @@ const SingleMode = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
+  // 동영상 재생을 위한 변수
+  const [playVideo, setPlayVideo] = useState(null);
+
   const getWebcam = (callback) => {
     try {
       const constraints = {
@@ -152,7 +155,8 @@ const SingleMode = () => {
     const url = "ws://localhost:8000/client"
     const ws = new WebSocket(url);
     // var FPS = 5;
-    setFPS(0.5);
+    setFPS(2);
+    setGameEF("img/game_effect/perfect.png");
 
     ws.onopen = (event) => {
       console.log("ws.open");
@@ -162,6 +166,10 @@ const SingleMode = () => {
       console.log(">>>>>>>>>>>>>>>>");
       console.log(e.data+" "+typeof(e.data));
       let similarity = e.data;
+
+
+      // document.getElementById("dancer_video").play();
+      setPlayVideo(true);
       
       // const ctx = document.getElementById('canvas').getContext('2d');
       // const img = new Image();

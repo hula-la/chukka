@@ -434,6 +434,27 @@ class TfPoseEstimator:
 
         return npimg
 
+    @staticmethod
+    def sj_draw_humans(npimg, humans, imgcopy=False):
+        if imgcopy:
+            npimg = np.copy(npimg)
+        image_h, image_w = npimg.shape[:2]
+
+        i=0
+        while(i<humans.size):
+            # draw point
+            if(humans[i]!=0 or humans[i]!=0):
+                print([humans[i],humans[i+1]])
+                cv2.circle(npimg, (int(humans[i]),int(humans[i+1])), 3, common.CocoColors[i//2], thickness=3, lineType=8, shift=0)
+            i+=2
+
+            # draw line
+
+        # for pair_order, pair in enumerate(common.CocoPairsRender):
+        #     cv2.line(npimg, (int(humans[pair[0]*2]),int(humans[pair[0]*2+1])), (int(humans[pair[1]*2]),int(humans[pair[1]*2+1])), common.CocoColors[pair_order], 3)
+        
+        return npimg
+
     def _get_scaled_img(self, npimg, scale):
         get_base_scale = lambda s, w, h: max(self.target_size[0] / float(h), self.target_size[1] / float(w)) * s
         img_h, img_w = npimg.shape[:2]

@@ -91,17 +91,26 @@ async def websocket_endpoint(websocket: WebSocket):
         # trainer_video = r'dance_video/dancer.mp4'
         keyp_list = np.genfromtxt("dancer_keyp_list.csv", delimiter=",")
 
-        dim = (420, 720)
+        dim=(420,720)
         prev_time = 0
         # FPS = 1
         cnt = 0
         while True:
             if cnt >= len(keyp_list):
+                cv2.destroyAllWindows()
                 await websocket.close()
                 break
 
             data = await websocket.receive_text()
             print(cnt)
+
+# 댄서 영상 스켈레톤 매핑 후 클라이언트한테 전달
+            dancer_image = np.zeros(dim)
+            dancer_image = TfPoseEstimator.sj_draw_humans(dancer_image, keyp_list[cnt], imgcopy=False)
+            cv2.imshow('Dancer', dancer_image)
+
+
+
             cnt += 1
             img = cv2.imdecode(np.fromstring(base64.b64decode(
                 data.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
@@ -116,7 +125,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 w > 0 and h > 0), upsample_size=4.0)
             # Dancer keypoints and normalization
             transformer = Normalizer().fit(keyp_list)
-            keyp_list = transformer.transform(keyp_list)
+            t_keyp_list = transformer.transform(keyp_list)
             # Getting User keypoints, normalization and comparing also plotting the keypoints and lines to the image
             image_1 = TfPoseEstimator.draw_humans(
                 image_1, humans_2, imgcopy=False)  # 선 표시하는 코드
@@ -151,7 +160,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 features = transformer.transform([features])
                 min_ = 100  # Intializing a value to get minimum cosine similarity score from the dancer array list with the user
 
-                sim_score = findCosineSimilarity_1(keyp_list[cnt], features[0])
+                sim_score = findCosineSimilarity_1(t_keyp_list[cnt], features[0])
                 # Getting the minimum Cosine Similarity Score
                 if min_ > sim_score:
                     min_ = sim_score
