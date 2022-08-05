@@ -18,7 +18,7 @@ public class SectionGetRes extends BaseResponseBody {
     private int secId;
     @ApiModelProperty(value = "섹션 제목", example = "sec_title")
     private String secTitle;
-    @ApiModelProperty(value = "섹션 내용", example = "sec_contents")
+    @ApiModelProperty(value = "섹션 내용", example = "http://chukka/section/contents/section_id")
     private String secContents;
     @ApiModelProperty(value = "섹션 등록일", example = "sec_reg_date")
     private Date secRegDate;

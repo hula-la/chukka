@@ -246,13 +246,12 @@ public class AdminController {
 
 	// 강사 정보 수정 ====================================================================================================
 	@PutMapping("/instructors/")
-	@ApiOperation(value = "강사 정보 수정", notes = "<strong>강사 아이디, 이름, 이메일, 프로필, 그리고 소개</strong>를 받아 특정 강사의 정보를 수정한다.")
+	@ApiOperation(value = "강사 정보 수정", notes = "<strong>강사 아이디, 이름, 이메일, 그리고 소개</strong>를 받아 특정 강사의 정보를 수정한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<BaseResponseBody> modifyInstructorInfo(
-			@RequestBody @ApiParam(value = "수정할 강사 정보", required = true) InstructorPostReq insInfo,
-			HttpServletRequest req) throws IOException {
+			@RequestBody @ApiParam(value = "수정할 강사 정보", required = true) InstructorPostReq insInfo) {
 		instructorService.updateInstructor(insInfo);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}

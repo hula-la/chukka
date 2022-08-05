@@ -8,9 +8,7 @@ import java.util.List;
 
 public interface SnacksTagRepository extends JpaRepository<SnacksTag,Long> {
 
-    @Query(value = "select s.snacks_tag_content from snacks_tag s" +
-            "group by s.snacks_tag_content order by count(s.snacks_tag_id) desc" +
-            "limit 10", nativeQuery = true)
+    @Query(value = "select s.snacks_tag_content from snacks_tag s where DATEDIFF(now(), s.snacks_regdate) <= 7 group by s.snacks_tag_content order by count(s.snacks_tag_id) limit 10;", nativeQuery = true)
     List<String> findSnacksPopularTags();
 
 }

@@ -3,6 +3,7 @@ package com.ssafy.db.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Getter @Setter
@@ -20,5 +21,8 @@ public class SnacksTag {
     Snacks snacks;
 
     String snacksTagContent;
+
+    @Temporal(TemporalType.DATE)
+    Date snacksRegdate;
 
 }

@@ -27,6 +27,8 @@ public class UserMyRes{
 	String userPhone;
 	@ApiModelProperty(name="User Email", example="abcd@ssafy.com")
 	String userEmail;
+	@ApiModelProperty(name="User Profile", example="https://chukka/user/profile/user_id")
+	String userProfile;
 	@ApiModelProperty(name="User Gender", example="1")
 	private int userGender;
 	@ApiModelProperty(name="User Point", example="500")
@@ -35,8 +37,6 @@ public class UserMyRes{
 	private Date userBirth;
 	@ApiModelProperty(name="User Nickname", example="your_nickname")
 	private String userNickname;
-	@ApiModelProperty(name="User Profile", example="img/profile.png")
-	private MultipartFile userProfile;
 	@ApiModelProperty(name="User Lecture Level", example="500")
 	private int userLvLec;
 	@ApiModelProperty(name="User Snacks Level", example="500")
@@ -57,6 +57,7 @@ public class UserMyRes{
 		res.setUserLvLec(user.getUserLvLec());
 		res.setUserLvSnacks(user.getUserLvSnacks());
 		res.setUserLvGame(user.getUserLvGame());
+		res.setUserProfile(user.getUserProfile());
 		return res;
 	}
 }

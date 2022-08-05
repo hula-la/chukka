@@ -19,12 +19,13 @@ public class Snacks{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "snacksId", columnDefinition="bigint")
     private Long snacksId;
 
     private String snacksTitle;
     private String snacksContents;
-//    private int snacksViews;
-//    private int snacksLikes;
+    @Builder.Default
+    private Long snacksLikeCnt = 0L;
 
     @Temporal(TemporalType.DATE)
     private Date snacksRegdate;
@@ -34,15 +35,15 @@ public class Snacks{
     private User user;
 
     @Builder.Default
-    @OneToMany(mappedBy = "snacks")
+    @OneToMany(mappedBy = "snacks", cascade = CascadeType.ALL)
     private List<SnacksLike> snacksLikes = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "snacks")
+    @OneToMany(mappedBy = "snacks", cascade = CascadeType.ALL)
     private List<SnacksTag> snacksTags = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "snacks")
+    @OneToMany(mappedBy = "snacks", cascade = CascadeType.ALL)
     private List<SnacksReply> snacksReplies = new ArrayList<>();
 
 }

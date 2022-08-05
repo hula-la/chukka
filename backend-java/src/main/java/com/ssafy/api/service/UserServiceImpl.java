@@ -46,6 +46,11 @@ public class UserServiceImpl implements UserService {
 	private JavaMailSender emailSender;
 	@Value("${spring.mail.username}")
 	private String email;
+	@Value("${cloud.aws.s3.bucket}")
+	private String bucket;
+	@Value("${cloud.aws.region.static}")
+	private String region;
+	private String PATH = "https://" + bucket + ".s3." + region + ".amazonaws.com/";
 
 
 	// 회원 생성
@@ -111,6 +116,7 @@ public class UserServiceImpl implements UserService {
 					.userPoint(now.getUserPoint())
 					.userType(now.getUserType())
 					.userPw(now.getUserPw())
+					.userProfile(PATH + userId)
 					.build();
 			return userRepository.save(user);
 		}

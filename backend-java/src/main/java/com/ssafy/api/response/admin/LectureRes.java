@@ -43,6 +43,8 @@ public class LectureRes {
 	int lecStudent;
 	@ApiModelProperty(name="강의 장르")
 	String lecGenre;
+	@ApiModelProperty(name="강의 썸네일")
+	String lecThumb;
 
 
 	public static LectureRes of(Lecture lecture) {
@@ -60,6 +62,7 @@ public class LectureRes {
 		res.setLecLimit(lecture.getLecLimit());
 		res.setLecStudent(lecture.getLecStudent());
 		res.setLecGenre(lecture.getLecGenre());
+		res.setLecThumb(lecture.getLecThumb());
 		return res;
 	}
 }

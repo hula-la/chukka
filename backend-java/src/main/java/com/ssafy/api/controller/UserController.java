@@ -164,14 +164,14 @@ public class UserController {
 			return ResponseEntity.status(401).body(new BaseResponseBody(401, "Invalid Nickname", null));
 		}
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-		// 토큰이 없을 때
-		if (userDetails.getUser() == null) {
+		// 토큰이 없을 때 (비로그인)
+		if(authentication == null) {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(201, "YourSuccess", UserYourRes.of(user)));
 		}
 		// 토큰이 만료됐을 때
-		if (userDetails.isAccountNonExpired()) {
-			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Invalid User", null));
-		}
+//		if (userDetails.isAccountNonExpired()) {
+//			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Invalid User", null));
+//		}
 		// 정상 로그인 유저가 정상 닉네임 유저를 찾아갈 때
 		String loginUserId = userDetails.getUsername();
 		User loginUser = userService.getUserByUserId(loginUserId);

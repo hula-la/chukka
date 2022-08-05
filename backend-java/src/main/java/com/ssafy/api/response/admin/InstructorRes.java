@@ -21,6 +21,8 @@ public class InstructorRes {
 	String insEmail;
 	@ApiModelProperty(name="강의 소개")
 	String insIntroduce;
+	@ApiModelProperty(name="강의 프로필")
+	String insProfile;
 
 	public static InstructorRes of(Instructor instructor) {
 		InstructorRes res = new InstructorRes();
@@ -28,6 +30,7 @@ public class InstructorRes {
 		res.setInsName(instructor.getInsName());
 		res.setInsEmail(instructor.getInsEmail());
 		res.setInsIntroduce(instructor.getInsIntroduce());
+		res.setInsProfile(instructor.getInsProfile());
 		return res;
 	}
 

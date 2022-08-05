@@ -16,6 +16,11 @@ public class SnacksReply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int replyId;
 
+    @Temporal(TemporalType.DATE)
+    Date replyRegdate;
+
+    private String contents;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     User user;
@@ -24,9 +29,4 @@ public class SnacksReply {
     @JoinColumn(name = "snacksId")
     Snacks snacks;
 
-    @Temporal(TemporalType.DATE)
-    Date replyRegdate;
-
-    private String contents;
-    
 }

@@ -10,6 +10,7 @@ import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.InstructorRepository;
 import com.ssafy.db.repository.LectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,10 +23,15 @@ import java.util.List;
 public class InstructorServiceImpl implements InstructorService {
     @Autowired
     InstructorRepository instructorRepository;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+    @Value("${cloud.aws.region.static}")
+    private String region;
+    private String PATH = "https://" + bucket + ".s3." + region + ".amazonaws.com/";
 
     @Override
     public Instructor createInstructor(String insId) {
-        Instructor ins = Instructor.builder().insId(insId).build();
+        Instructor ins = Instructor.builder().insId(insId).insProfile(PATH + insId).build();
         return instructorRepository.save(ins);
     }
 

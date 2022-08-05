@@ -20,6 +20,7 @@ public class Instructor{
     private String insName;
     private String insEmail;
     private String insIntroduce;
+    private String insProfile;
 
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
     private List<Lecture> lectures = new ArrayList<>();

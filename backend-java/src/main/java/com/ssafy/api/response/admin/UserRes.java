@@ -34,6 +34,8 @@ public class UserRes{
 	Date userBirth;
 	@ApiModelProperty(name="유저 타입")
 	int userType;
+	@ApiModelProperty(name="https://chukka/img/profile/user_id")
+	String userProfile;
 
 	public static UserRes of(User user) {
 		UserRes res = new UserRes();
@@ -45,6 +47,7 @@ public class UserRes{
 		res.setUserGender(user.getUserGender());
 		res.setUserBirth(user.getUserBirth());
 		res.setUserType(user.getUserType());
+		res.setUserPhone(user.getUserProfile());
 		return res;
 	}
 }
