@@ -1,7 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.lecture.LectureNoticeReq;
-import com.ssafy.api.response.lecture.LectureGetRes;
+import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.lecture.LectureNoticeRes;
 import com.ssafy.api.service.LectureService;
 
@@ -29,13 +29,13 @@ public class LectureController {
     // 전체 강의 목록 ====================================================================================================
     // 인기순
     @GetMapping("/")
-    @ApiOperation(value = "인기순", notes = "전체 게시글을 불러온다.", response = LectureGetRes.class)
+    @ApiOperation(value = "인기순", notes = "전체 게시글을 불러온다.", response = LectureGetForListRes.class)
     @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = LectureGetRes.class),
+            @ApiResponse(code = 200, message = "성공", response = LectureGetForListRes.class),
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<BaseResponseBody> getMostPopularLecture(Pageable pageable) {
-        Page<LectureGetRes> popular = lectureService.getMostPopularLecture(pageable);
+        Page<LectureGetForListRes> popular = lectureService.getMostPopularLecture(pageable);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", popular));
     }
