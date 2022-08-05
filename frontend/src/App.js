@@ -53,9 +53,9 @@ const App = () => {
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
           <Route path="" element={<LecturesPage />} />
-          <Route path="live" element={<LivePage />} />
           <Route path=":lectureId" element={<LectureDetailpage />} />
         </Route>
+        <Route path="lectures/live" element={<LivePage />} />
         {/* snacks */}
         <Route path="snacks" element={<Layout />}>
           <Route path="" element={<SnacksPage />} />
