@@ -2,7 +2,6 @@ package com.ssafy.db.repository;
 
 
 import com.ssafy.api.response.lecture.LectureNoticeRes;
-import com.ssafy.api.response.lecture.LecturePopularRes;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.api.response.user.UserMyLectureRes;
 
@@ -26,7 +25,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
             "where e.lecture.lecId = lec.lecId and current_date < lec.lecEndDate " +
             "group by lec.lecId " +
             "order by count(e.enrollId) desc")
-    Page<LecturePopularRes> getMostPopularLecture(Pageable pageable);
+    Page<Lecture> getMostPopularLecture(Pageable pageable);
 
     // 존재하는 강의 중 최신순으로(최신순)
     @Query(value = "select lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre " +
@@ -51,7 +50,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     // 강의 수정
     @Modifying(clearAutomatically = true)
     @Query(value = "update Lecture lec " +
-            "set lec.lecId = :lecId +" +
+            "set lec.lecId = :lecId, " +
             "lec.lecTitle = :lecTitle, " +
             "lec.lecContents = :lecContents, " +
             "lec.lecPrice = :lecPrice, " +
@@ -66,6 +65,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     Optional<Integer> updateLecture(int lecId,
                                     String lecTitle,
                                     String lecContents,
+
                                     int lecPrice,
                                     String lecNotice,
                                     Date lecStartDate,

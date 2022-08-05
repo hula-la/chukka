@@ -57,7 +57,7 @@ public class User{
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<SnacksLike> likeUsers = new ArrayList<>();
+    private List<SnacksHeart> likeUsers = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "cartId")

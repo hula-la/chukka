@@ -4,8 +4,7 @@ package com.ssafy.api.service;
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
 import com.ssafy.api.response.admin.LectureRes;
-import com.ssafy.api.response.lecture.LectureNoticeRes;
-import com.ssafy.api.response.lecture.LecturePopularRes;
+import com.ssafy.api.response.lecture.LectureGetRes;
 import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.InstructorRepository;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,18 +30,31 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     InstructorRepository instructorRepository;
 
+    // 인기순
     @Override
-    public Page<LecturePopularRes> getMostPopularLecture(Pageable pageable) {
+    public Page<LectureGetRes> getMostPopularLecture(Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        Page<LecturePopularRes> page = lectureRepository.getMostPopularLecture(pageRequest);
-        return page;
+        Page<Lecture> page = lectureRepository.getMostPopularLecture(pageRequest);
+        Page<LectureGetRes> dtoPage = page.map(m -> new LectureGetRes());
+        return dtoPage;
     }
 
+    // 최신순
     @Override
-    public Page<Lecture> findAll(Pageable pageable) {
+    public Page<LectureGetRes> getLecturesByMostLatest(Pageable pageable) {
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        Page<Lecture> page = lectureRepository.getLecturesByMostLatest(pageRequest);
+        Page<LectureGetRes> dtoPage = page.map(m -> new LectureGetRes());
+        return dtoPage;
+    }
+
+    // 전부다
+    @Override
+    public Page<LectureGetRes> findAll(Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
         Page<Lecture> page = lectureRepository.findAll(pageRequest);
-        return page;
+        Page<LectureGetRes> dtoPage = page.map(m -> new LectureGetRes());
+        return dtoPage;
     }
 
     @Override

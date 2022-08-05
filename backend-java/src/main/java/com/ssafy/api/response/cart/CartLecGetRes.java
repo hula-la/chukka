@@ -42,7 +42,6 @@ public class CartLecGetRes {
 
     public CartLecGetRes(Lecture lecture){
         this.insId = lecture.getInstructor().getInsId();
-        this.thumbnail = lecture.getThumbnail();
         this.lecTitle = lecture.getLecTitle();
         this.lecContents = lecture.getLecContents();
         this.lecPrice = lecture.getLecPrice();
