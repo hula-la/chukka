@@ -21,6 +21,10 @@ const SingleMode = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
+  // 미리보기
+  const previewRef = useRef(null);
+
+
   // 동영상 재생을 위한 변수
   const [playVideo, setPlayVideo] = useState(null);
 
@@ -155,37 +159,68 @@ const SingleMode = () => {
     const url = "ws://localhost:8000/client"
     const ws = new WebSocket(url);
     // var FPS = 5;
-    setFPS(2);
+    setFPS(1);
     setGameEF("img/game_effect/perfect.png");
 
     ws.onopen = (event) => {
       console.log("ws.open");
 
     // recieve message every start page
-    ws.onmessage = (e) => {
-      console.log(">>>>>>>>>>>>>>>>");
-      console.log(e.data+" "+typeof(e.data));
-      let similarity = e.data;
+      ws.onmessage = (e) => {
+        if (typeof (e.data) === "string") {
+          console.log(">>>>>>>>>>>>>>>>");
+          console.log(e.data+" "+typeof(e.data));
+          let similarity = e.data;
+    
+    
+          // document.getElementById("dancer_video").play();
+          setPlayVideo(true);
+          
+          // const ctx = document.getElementById('canvas').getContext('2d');
+          // const img = new Image();
+          if (similarity < 0.15) {
+            setGameEF("img/game_effect/perfect.png");
+            console.log("perfect:"+gameEF)
+            // img.src = 'img/game_effect/perfect.png';
+          } else if (similarity < 0.22) {
+            setGameEF("img/game_effect/Good.png");
+            console.log("Good:"+gameEF)
+            // img.src = 'img/game_effect/Good.png';
+          }else {
+            setGameEF("img/game_effect/bad.png");
+            console.log("bad:"+gameEF)
+            // img.src = 'img/game_effect/bad.png';
+          }
+        
+        } else {
+          try {
+            var arrayBufferView = new Uint8Array(e.data);
+            console.log("이미지"+e.data)
+            console.log(e)
+            console.log(e.data)
+            
+            var blob = new Blob( [ arrayBufferView ], { type: "multipart/x-mixed-replace" } );
 
+            const prectx = previewRef.current.getContext('2d');
+            // previewRef.current.width = videoRef.current.videoWidth;
+            // previewRef.current.height = videoRef.current.videoHeight;
+            // prectx.scale(-1, 1);
+            var urlCreator = window.URL || window.webkitURL;
+            var imageUrl = urlCreator.createObjectURL(blob);
+            
+            const previewImage = new Image();
+            previewImage.src = imageUrl;
+            
+            if (previewImage && previewImage !== null) {
+                prectx.drawImage(previewImage, 0, 0);
+                // prectx.setTransform(1, 0, 0, 1, 0, 0);
 
-      // document.getElementById("dancer_video").play();
-      setPlayVideo(true);
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        }
       
-      // const ctx = document.getElementById('canvas').getContext('2d');
-      // const img = new Image();
-      if (similarity < 0.15) {
-        setGameEF("img/game_effect/perfect.png");
-        console.log("perfect:"+gameEF)
-        // img.src = 'img/game_effect/perfect.png';
-      } else if (similarity < 0.22) {
-        setGameEF("img/game_effect/Good.png");
-        console.log("Good:"+gameEF)
-        // img.src = 'img/game_effect/Good.png';
-      }else {
-        setGameEF("img/game_effect/bad.png");
-        console.log("bad:"+gameEF)
-        // img.src = 'img/game_effect/bad.png';
-      }
       // img.onload = function() {
       //   ctx.drawImage(img, 30, 0);
       //   // ctx.beginPath();
@@ -235,6 +270,7 @@ const SingleMode = () => {
         <div id="canvasDiv" style={Styles.Video}>
           <video ref={videoRef} autoPlay style={Styles.None} />
           <canvas id="canvas" ref={canvasRef} style={Styles.Canvas} />
+          <canvas ref={previewRef} style={Styles.Canvas} />
         </div>
 
       </div>

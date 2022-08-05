@@ -121,7 +121,7 @@ def dance_video_processing(video_path= r'dance_video/correct30.mp4',showBG = Tru
 
     # prev_time = 0 -> 맨처음 시간 초기화 수정
     prev_time = time.time()
-    FPS = 2/3
+    FPS = 1/3
     keypoints_list=[]
     
     while True:

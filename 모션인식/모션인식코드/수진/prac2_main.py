@@ -1,3 +1,19 @@
+# 연의꺼 추가
+import os
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"  # or even "-1"
+import tensorflow as tf
+from tensorflow.python.client import device_lib
+
+print(device_lib.list_local_devices())
+if tf.test.gpu_device_name():
+    print('GPU found')
+else:
+    print("No GPU found")
+
+print("==========================================================")
+
+
 from fastapi.responses import StreamingResponse, FileResponse
 import warnings
 from sklearn.preprocessing import Normalizer
@@ -19,6 +35,8 @@ import json
 
 from requests import get
 app = FastAPI()
+
+
 
 
 # @app.websocket("/ws")
@@ -109,6 +127,9 @@ async def websocket_endpoint(websocket: WebSocket):
             dancer_image = TfPoseEstimator.sj_draw_humans(dancer_image, keyp_list[cnt], imgcopy=False)
             cv2.imshow('Dancer', dancer_image)
 
+            ret, buffer = cv2.imencode('.jpg', dancer_image)
+            await websocket.send_bytes(bytearray(buffer))
+
 
 
             cnt += 1
@@ -119,7 +140,8 @@ async def websocket_endpoint(websocket: WebSocket):
             # current_time = time.time() - prev_time
             # if img is not None  :
             # resizing the images
-            image_1 = cv2.flip(image_1, 1)
+            
+            # [수정] image_1 = cv2.flip(image_1, 1)
             image_1 = cv2.resize(image_1, dim, interpolation=cv2.INTER_AREA)
             humans_2 = e.inference(image_1, resize_to_default=(
                 w > 0 and h > 0), upsample_size=4.0)
@@ -183,6 +205,8 @@ async def websocket_endpoint(websocket: WebSocket):
             ret, buffer = cv2.imencode('.jpg', image_1)
             await websocket.send_text(str(min_))  # client 에 메시지 전달
             # frame = buffer.tobytes()
+            # ret, buffer = cv2.imencode('.jpg', dancer_image)
+            await websocket.send_bytes(bytearray(buffer))
 
             prev_time = time.time()
             if cv2.waitKey(1) & 0xFF == ord('q'):
