@@ -1,7 +1,6 @@
 package com.ssafy.db.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +12,9 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Snacks{
 
     @Id
@@ -21,7 +23,7 @@ public class Snacks{
 
     private String snacksTitle;
     private String snacksContents;
-    private int snacksViews;
+//    private int snacksViews;
 //    private int snacksLikes;
 
     @Temporal(TemporalType.DATE)
@@ -33,7 +35,10 @@ public class Snacks{
 
     // Snacks 좋아요!
     @OneToMany(mappedBy = "snacks")
-    private List<SnacksLike> snacksLikes = new ArrayList<>();
+    private List<SnacksHeart> snacksLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "snacks")
+    private List<SnacksTag> snacksTag = new ArrayList<>();
 
 
 }
