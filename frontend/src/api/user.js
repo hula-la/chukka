@@ -30,3 +30,9 @@ export const nickCheck = async (userNickname) => {
   console.log(res);
   return res.data;
 };
+
+export const fetchPro = async (data) => {
+  console.log(data);
+  const res = await client.post(`accounts/`, data);
+  return res;
+};

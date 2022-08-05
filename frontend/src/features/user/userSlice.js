@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { registerUser, userLogin, fetchAccessToken } from './userActions';
+import {
+  registerUser,
+  userLogin,
+  fetchAccessToken,
+  fetchProfile,
+} from './userActions';
 
 // initialize userToken from local storage
 // const accessToken = localStorage.getItem('accessToken')
@@ -16,6 +21,7 @@ const initialState = {
   accessToken: null,
   error: null,
   success: false,
+  userProInfo: [],
 };
 
 const userSlice = createSlice({
@@ -72,6 +78,16 @@ const userSlice = createSlice({
     // AccessToken 가져오기
     [fetchAccessToken.fulfilled]: (state, { payload }) => {
       state.accessToken = payload.accessToken;
+    },
+
+    // 프로필 정보 가져오기
+    [fetchProfile.fulfilled]: (state, { payload }) => {
+      // state.userProInfo =
+      console.log(payload);
+    },
+    [fetchProfile.rejected]: (state, { payload }) => {
+      state.error = payload;
+      console.log(payload);
     },
   },
 });

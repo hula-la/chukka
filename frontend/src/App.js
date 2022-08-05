@@ -47,7 +47,7 @@ const App = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="logout" element={<LogoutPage />} />
           <Route path="signup" element={<SignUpPage />} />
-          <Route path="profile/:nickname" element={<ProfilePage />} />
+          <Route path="profile/:nickName" element={<ProfilePage />} />
           {/* <Route path="cart" element={<CartPage />} /> */}
         </Route>
         {/* lectures */}
