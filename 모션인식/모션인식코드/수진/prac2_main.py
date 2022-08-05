@@ -91,7 +91,7 @@ async def websocket_endpoint(websocket: WebSocket):
         # trainer_video = r'dance_video/dancer.mp4'
         keyp_list = np.genfromtxt("dancer_keyp_list.csv", delimiter=",")
 
-        dim=(420,720)
+        dim=(1000,1000)
         prev_time = 0
         # FPS = 1
         cnt = 0

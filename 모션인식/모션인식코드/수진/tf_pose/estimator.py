@@ -443,15 +443,19 @@ class TfPoseEstimator:
         i=0
         while(i<humans.size):
             # draw point
+            print([humans[i],humans[i+1]])
             if(humans[i]!=0 or humans[i]!=0):
-                print([humans[i],humans[i+1]])
-                cv2.circle(npimg, (int(humans[i]),int(humans[i+1])), 3, common.CocoColors[i//2], thickness=3, lineType=8, shift=0)
+                print(f'그려짐  {i//2}')
+                cv2.circle(npimg, (int(humans[i]),int(humans[i+1])), 3, (255,255,255), thickness=3, lineType=8, shift=0)
+                # cv2.circle(npimg, (int(humans[i]),int(humans[i+1])), 3, common.CocoColors[i//2], thickness=3, lineType=8, shift=0)
             i+=2
 
             # draw line
 
-        # for pair_order, pair in enumerate(common.CocoPairsRender):
-        #     cv2.line(npimg, (int(humans[pair[0]*2]),int(humans[pair[0]*2+1])), (int(humans[pair[1]*2]),int(humans[pair[1]*2+1])), common.CocoColors[pair_order], 3)
+        for pair_order, pair in enumerate(common.CocoPairsRender):
+            if ((humans[pair[0]*2]!=0 or humans[pair[0]*2+1]) and (humans[pair[1]*2]!=0 or humans[pair[1]*2+1]!=0)):
+                cv2.line(npimg, (int(humans[pair[0]*2]),int(humans[pair[0]*2+1])), (int(humans[pair[1]*2]),int(humans[pair[1]*2+1])), (255,255,255), 3)
+            # cv2.line(npimg, (int(humans[pair[0]*2]),int(humans[pair[0]*2+1])), (int(humans[pair[1]*2]),int(humans[pair[1]*2+1])), common.CocoColors[pair_order], 3)
         
         return npimg
 

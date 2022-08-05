@@ -131,14 +131,14 @@ def dance_video_processing(video_path= r'dance_video/correct30.mp4',showBG = Tru
         if (ret_val is True) and (current_time > 1./FPS) :
             a = time.time()    
 
-            # image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
+            image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
             humans = e.inference(image,
                                  resize_to_default=(w > 0 and h > 0),
                                  upsample_size=4.0)
             if not showBG:
                 image = np.zeros(image.shape)
 
-            # image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
+            image = TfPoseEstimator.draw_humans(image, humans, imgcopy=False)
             npimg = np.copy(image)
             image_h, image_w = npimg.shape[:2]
             centers = {}
@@ -158,10 +158,10 @@ def dance_video_processing(video_path= r'dance_video/correct30.mp4',showBG = Tru
                     # print(centers)
                     keypoints_list.append(centers)
 
-            # cv2.putText(image, "FPS: %f" % (1.0 / (time.time() - prev_time)), (10, 10),
-            #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            cv2.putText(image, "FPS: %f" % (1.0 / (time.time() - prev_time)), (10, 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
             
-            # cv2.imshow('Dancer', image) 
+            cv2.imshow('Dancer', image) 
 
             prev_time = time.time() 
             
@@ -182,7 +182,7 @@ def dance_video_processing(video_path= r'dance_video/correct30.mp4',showBG = Tru
         else:
             # cv2.waitKey(1) => 데이터 분석 안할 때는 delay 초 만큼 지연되도록 수정
             image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
-            # cv2.imshow('Dancer', image) 
+            cv2.imshow('Dancer', image) 
             cv2.waitKey(delay)
             
     print(len(keypoints_list))
