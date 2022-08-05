@@ -82,7 +82,7 @@ public class SnacksController {
         Snacks snacks = snacksService.uploadSnacks(snacksInfo, user);
         // 스낵스 영상 파일 업로드
         MultipartFile file = snacksInfo.getSnacksVideo();
-        if(!file.isEmpty()) {
+        if(file != null) {
             s3Uploader.uploadFiles(file, "vid/snacks", req.getServletContext().getRealPath("/vid/snacks/"), String.valueOf(snacks.getSnacksId()));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));

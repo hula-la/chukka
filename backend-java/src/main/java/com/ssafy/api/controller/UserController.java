@@ -197,7 +197,7 @@ public class UserController {
 		User user = userService.updateUser(loginUserId, modifyInfo);
 		// 프로필 이미지 파일 업로드
 		MultipartFile file = modifyInfo.getUserProfile();
-		if(!file.isEmpty()) {
+		if(file != null) {
 			s3Uploader.uploadFiles(file, "img/profile", req.getServletContext().getRealPath("/img/profile/"), user.getUserId());
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyRes.of(user)));
