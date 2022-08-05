@@ -1,16 +1,14 @@
-import LevelBadge from './LevelBadge';
-import CategoryBadge from './CategoryBadge';
+import LevelBadge from '../LevelBadge';
+import CategoryBadge from '../CategoryBadge';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 48%;
+  width: 32%;
 `;
 const Thumbnail = styled.div`
   position: relative;
-  cursor: pointer;
 
   &:before {
     content: '';
@@ -23,7 +21,7 @@ const Thumbnail = styled.div`
   }
   & img {
     width: 100%;
-    height: 320px;
+    height: 220px;
     object-fit: cover;
   }
   & .lecture-info {
@@ -41,12 +39,11 @@ const BadgeDiv = styled.div`
   }
 `;
 
-const Lecture = ({ props }) => {
-  const navigate = useNavigate();
+const LectureSmall = ({ props }) => {
   const { title, content, thumbnail, level, genre, category } = props;
   return (
     <Wrapper>
-      <Thumbnail onClick={() => navigate(`/lectures/1`)}>
+      <Thumbnail>
         <img src={thumbnail} alt="" />
         <div className="lecture-info">
           <h1>{title}</h1>
@@ -62,4 +59,4 @@ const Lecture = ({ props }) => {
   );
 };
 
-export default Lecture;
+export default LectureSmall;

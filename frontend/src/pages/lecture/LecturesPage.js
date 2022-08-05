@@ -1,5 +1,5 @@
-import Lecture from '../../components/Lecture';
-import LectureSmall from '../../components/LectureSmall';
+import Lecture from '../../components/lectures/Lecture';
+import LectureSmall from '../../components/lectures/LectureSmall';
 import styled from 'styled-components';
 import thumbnail1 from '../../img/pop.jpeg';
 import thumbnail2 from '../../img/images.jpeg';
