@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class User{
 
     // Snacks 좋아요!
     @OneToMany(mappedBy = "user")
-    private List<SnacksLike> likeUsers = new ArrayList<>();
+    private List<SnacksHeart> likeUsers = new ArrayList<>();
 
     @OneToOne
     @JoinColumn(name = "cartId")
