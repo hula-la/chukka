@@ -6,8 +6,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
-@Data
+
 @Entity
 @Getter
 @Setter
@@ -22,18 +23,8 @@ public class CartItem{
     private Cart cart;
 
 
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="lecId")
+    @JoinColumn(name="lec_id")
     private Lecture lecture;
 
-
-    @Override
-    public String toString() {
-        return "CartItem{" +
-                "cartItemId=" + cartItemId +
-                ", cart=" + cart +
-                ", lecture=" + lecture +
-                '}';
-    }
 }

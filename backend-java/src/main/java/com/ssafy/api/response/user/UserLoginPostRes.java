@@ -20,19 +20,16 @@ public class UserLoginPostRes{
 	String refreshToken;
 	@ApiModelProperty(name="유저 Nickname", example="your_nickname")
 	String userNickname;
-	@ApiModelProperty(name="유저 Profile", example="img/profile.png")
-	String userProfile;
 	@ApiModelProperty(name="유저 Type", example="0")
 	int userType;
 	@ApiModelProperty(name="유저 Id", example="your_id")
 	String userId;
 
-	public static UserLoginPostRes of(String accessToken, String refreshToken, String userNickname, String userProfile, int userType, String userId) {
+	public static UserLoginPostRes of(String accessToken, String refreshToken, String userNickname, int userType, String userId) {
 		UserLoginPostRes res = new UserLoginPostRes();
 		res.setAccessToken(accessToken);
 		res.setRefreshToken(refreshToken);
 		res.setUserNickname(userNickname);
-		res.setUserProfile(userProfile);
 		res.setUserType(userType);
 		res.setUserId(userId);
 		return res;

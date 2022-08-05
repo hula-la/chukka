@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.review.ReviewPostReq;
+import com.ssafy.api.response.Review.ReviewGetRes;
 import com.ssafy.api.service.ReviewService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Lecture;
@@ -36,11 +37,15 @@ public class ReviewController {
     // 강의별 리뷰 조회 ==================================================================================================
     @GetMapping("/")
     @ApiOperation(value = "리뷰 조회", notes = "강의별 전체 리뷰를 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = ReviewGetRes.class)
+    })
     public ResponseEntity<BaseResponseBody> findByLecId(int lecId) {
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", reviewService.findByLecId(lecId)));
+        List<ReviewGetRes> review = reviewService.findByLecId(lecId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", review));
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("/{reviewId}")
     @ApiOperation(value = "댓글 삭제", notes = "댓글을 삭제한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공")

@@ -2,6 +2,7 @@ package com.ssafy.db.repository;
 
 
 import com.ssafy.api.response.lecture.LectureNoticeRes;
+import com.ssafy.api.response.lecture.LecturePopularRes;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.api.response.user.UserMyLectureRes;
 
@@ -19,35 +20,28 @@ import java.util.Optional;
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, Integer> {
 
-
-    // 존재하는 강의 중 학생 수가 많은 순서대로
-    @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre " +
+    // 존재하는 강의 중 학생 수가 많은 순서대로(인기순)
+    @Query(value = "select lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre " +
             "from Enroll e, Lecture lec " +
-            "where e.lecture = lec and current_date < lec.lecEndDate " +
+            "where e.lecture.lecId = lec.lecId and current_date < lec.lecEndDate " +
             "group by lec.lecId " +
-            "order by count(lec.lecId) desc", nativeQuery = true)
-    Page<Lecture> getMostPopularLecture(Pageable pageable);
+            "order by count(e.enrollId) desc")
+    Page<LecturePopularRes> getMostPopularLecture(Pageable pageable);
 
-    // 존재하는 강의 중 최신순으로
-    @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre " +
+    // 존재하는 강의 중 최신순으로(최신순)
+    @Query(value = "select lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre " +
             "from Lecture lec " +
             "where current_date < lec.lecEndDate " +
             "order by lec.lecEndDate desc")
     Page<Lecture> getLecturesByMostLatest(Pageable pageable);
 
     // 존재하는 강의 / 연령대 / 성별 기준으로
-//    @Query(value = "select lec.thumbnail, lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre, u.userGender, " +
-//            "case " +
-//            "when age < 20 then '10대' " +
-//            "when age < 30 then '20대' " +
-//            "when age < 40 then '30대' " +
-//            "when age < 50 then '40대'" +
-//            "end as age_group " +
-//            "from Enroll e, Lecture lec, User u , (select *, floor(date_format(now(), '%y')-substring(userBirth,1,4)) as age from User) a" +
-//            "where e.lecture = lec and current_date < lec.lecEndDate and u.userGender = :userGender " +
-//            "group by lec.lecId " +
-//            "order by count(age_group)")
-//    Page<Lecture> getMostPopularLectureByYourBirthAndGender(Pageable pageable);
+    @Query(value = "select lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre, u.userGender " +
+            "from Enroll e, Lecture lec, User u " +
+            "where e.lecture = lec and current_date < lec.lecEndDate and u.userGender = :userGender " +
+            "partition by lec.lecId , :userGender, ((extract(year from current_date) - extract(year from u.userBirth) + 1) - ((extract(year from current_date) - extract(year from u.userBirth) + 1) % 10) as age_group) " +
+            "order by count(e.enrollId)", nativeQuery = true)
+    Page<Lecture> getMostPopularLectureByYourBirthAndGender(Pageable pageable);
 
     // 공지사항 수정
     @Modifying(clearAutomatically = true)

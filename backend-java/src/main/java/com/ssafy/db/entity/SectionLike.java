@@ -1,21 +1,22 @@
 package com.ssafy.db.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class SectionLike{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int like_id;
+    private int likeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")

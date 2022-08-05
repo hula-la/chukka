@@ -3,9 +3,12 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
+import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.api.response.lecture.LectureNoticeRes;
+import com.ssafy.api.response.lecture.LecturePopularRes;
 import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
+import com.ssafy.db.repository.InstructorRepository;
 import com.ssafy.db.repository.LectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,57 +29,74 @@ public class LectureServiceImpl implements LectureService {
     @Autowired
     LectureRepository lectureRepository;
 
-//    @Override
-//    public Page<Lecture> getMostPopularLecture(Pageable pageable) {
-//        List<Lecture> list = lectureRepository.getMostPopularLecture(pageable);
-//        List<Lecture> lectures = new ArrayList<>();
-//        for (int i = 0; i < list.size(); i++) {
-//            lectures.add(LectureRes.of(list.get(i)));
-//        }
-//        return lectures;
-//    }
+    @Autowired
+    InstructorRepository instructorRepository;
+
+    @Override
+    public Page<LecturePopularRes> getMostPopularLecture(Pageable pageable) {
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        Page<LecturePopularRes> page = lectureRepository.getMostPopularLecture(pageRequest);
+        return page;
+    }
 
     @Override
     public Page<Lecture> findAll(Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "lecStudent"));
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
         Page<Lecture> page = lectureRepository.findAll(pageRequest);
         return page;
     }
 
     @Override
+    public List<LectureRes> findAll() {
+        List<Lecture> lectures = lectureRepository.findAll();
+        List<LectureRes> list = new ArrayList<>();
+        for (int i = 0; i < lectures.size(); i++) {
+            list.add(LectureRes.of(lectures.get(i)));
+        }
+        return list;
+    }
+
+    @Override
     public Lecture createLecture(LecturePostReq lecturePostReq) {
-        Lecture lecture = new Lecture();
-        Instructor instructor = new Instructor();
-        instructor.setInsId(lecturePostReq.getInsId());
-        lecture.setInstructor(instructor);
-        lecture.setLecTitle(lecturePostReq.getLecTitle());
-        lecture.setLecContents(lecturePostReq.getLecContents());
-        lecture.setLecPrice(lecture.getLecPrice());
-        lecture.setLecNotice(lecturePostReq.getLecNotice());
-        lecture.setLecStartDate(lecturePostReq.getLecStartDate());
-        lecture.setLecEndDate(lecturePostReq.getLecEndDate());
-        lecture.setLecCategory(lecturePostReq.getLecCategory());
-        lecture.setLecLevel(lecturePostReq.getLecLevel());
-        lecture.setLecLimit(lecturePostReq.getLecLimit());
-        lecture.setLecGenre(lecturePostReq.getLecGenre());
+        Optional<Instructor> ins = instructorRepository.findById(lecturePostReq.getInsId());
+        if (!ins.isPresent()) {
+            return null;
+        }
+        Lecture lecture = Lecture.builder()
+                .instructor(ins.get())
+                .lecTitle(lecturePostReq.getLecTitle())
+                .lecContents(lecturePostReq.getLecContents())
+                .lecPrice(lecturePostReq.getLecPrice())
+                .lecNotice(lecturePostReq.getLecNotice())
+                .lecStartDate(lecturePostReq.getLecStartDate())
+                .lecEndDate(lecturePostReq.getLecEndDate())
+                .lecCategory(lecturePostReq.getLecCategory())
+                .lecLevel(lecturePostReq.getLecLevel())
+                .lecLimit(lecturePostReq.getLecLimit())
+                .lecGenre(lecturePostReq.getLecGenre())
+                .build();
         return lectureRepository.save(lecture);
     }
 
     @Override
-    public void updateLecture(int lecId, LectureUpdateReq lectureUpdateReq) {
+    public Lecture updateLecture(int lecId, LectureUpdateReq lectureUpdateReq) {
+        if (lectureRepository.findById(lecId).isPresent()) {
+            Lecture lecture = Lecture.builder().lecId(lecId)
+                    .lecTitle(lectureUpdateReq.getLecTitle())
+                    .lecContents(lectureUpdateReq.getLecContents())
+                    .lecPrice(lectureUpdateReq.getLecPrice())
+                    .lecNotice(lectureUpdateReq.getLecNotice())
+                    .lecStartDate(lectureUpdateReq.getLecStartDate())
+                    .lecEndDate(lectureUpdateReq.getLecEndDate())
+                    .lecCategory(lectureUpdateReq.getLecCategory())
+                    .lecLevel(lectureUpdateReq.getLecLevel())
+                    .lecLimit(lectureUpdateReq.getLecLimit())
+                    .lecGenre(lectureUpdateReq.getLecGenre())
+                    .build();
+            return lectureRepository.save(lecture);
 
-        int lecInfo = lecId;
-        lectureRepository.updateLecture(lecInfo,
-                lectureUpdateReq.getLecTitle(),
-                lectureUpdateReq.getLecContents(),
-                lectureUpdateReq.getLecPrice(),
-                lectureUpdateReq.getLecNotice(),
-                lectureUpdateReq.getLecStartDate(),
-                lectureUpdateReq.getLecEndDate(),
-                lectureUpdateReq.getLecCategory(),
-                lectureUpdateReq.getLecLevel(),
-                lectureUpdateReq.getLecLimit(),
-                lectureUpdateReq.getLecGenre());
+        }
+        return null;
     }
 
     @Override

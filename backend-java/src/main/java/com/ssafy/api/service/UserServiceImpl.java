@@ -234,8 +234,8 @@ public class UserServiceImpl implements UserService {
 
 	// 강사 권한 변경
 	@Override
-	public void createInstructor(String userId) {
-		userRepository.updateUserType(userId);
+	public void createInstructor(String userId, int userType) {
+		userRepository.updateUserType(userId, userType);
 	}
 
 }

@@ -2,8 +2,10 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
-
+import com.ssafy.api.response.lecture.LecturePopularRes;
+import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.db.entity.Lecture;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,17 +20,19 @@ public interface LectureService {
     Lecture createLecture(LecturePostReq lecturePostReq);
 
     // Read ============================================================================================================
-    // 전체 강의 중 가장 인기 있는 강의
-//    Page<Lecture> getMostPopularLecture(Pageable pageable);
+//     전체 강의 중 가장 인기 있는 강의
+    Page<LecturePopularRes> getMostPopularLecture(Pageable pageable);
 
     // 전체 강의 조회
   	Page<Lecture> findAll(Pageable pageable);
+
+    List<LectureRes> findAll();
 
     // 결제한 강의 조회
 
     // Update ==========================================================================================================
     // 강의 수정
-    void updateLecture(int lecId, LectureUpdateReq lectureUpdateReq);
+    Lecture updateLecture(int lecId, LectureUpdateReq lectureUpdateReq);
     // 공지사항 수정
     void updateLecNotice(int lecId, String lecNotice);
 

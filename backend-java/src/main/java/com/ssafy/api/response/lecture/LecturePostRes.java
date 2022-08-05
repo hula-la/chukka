@@ -18,8 +18,6 @@ public class LecturePostRes {
     int lecId;
     @ApiModelProperty(name = "강사 정보", example = "instructor")
     Instructor instructor;
-    @ApiModelProperty(name = "썸네일", example = "ssafy/img/thumbnail.jpg")
-    String thumbnail;
     @ApiModelProperty(name = "강의 제목", example = "aenergy (Coachella Ver.)")
     String lecTitle;
     @ApiModelProperty(name = "강의내용", example = "누구의 춤 솰라솰라")
@@ -41,9 +39,12 @@ public class LecturePostRes {
     @ApiModelProperty(name = "춤 장르", example = "1,2")
     String lecGenre;
 
+    @ApiModelProperty(name = "춤 장르", example = "1,2")
+    int lecStudent;
+
+
     public static LecturePostRes of(int lecId,
                                     Instructor instructor,
-                                    String thumbnail,
                                     String lecTitle,
                                     String lecContents,
                                     int lecPrice,
@@ -53,12 +54,12 @@ public class LecturePostRes {
                                     int lecCategory,
                                     int lecLevel,
                                     int lecLimit,
-                                    String lecGenre
+                                    String lecGenre,
+                                    int lecStudent
                                     ) {
         LecturePostRes res = new LecturePostRes();
         res.setLecId(lecId);
         res.setInstructor(instructor);
-        res.setThumbnail(thumbnail);
         res.setLecTitle(lecTitle);
         res.setLecContents(lecContents);
         res.setLecPrice(lecPrice);
@@ -69,6 +70,7 @@ public class LecturePostRes {
         res.setLecLevel(lecLevel);
         res.setLecLimit(lecLimit);
         res.setLecGenre(lecGenre);
+        res.setLecStudent(lecStudent);
         return res;
     }
 }

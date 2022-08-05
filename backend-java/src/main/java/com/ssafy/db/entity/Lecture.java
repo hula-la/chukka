@@ -1,8 +1,7 @@
 package com.ssafy.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -11,6 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class Lecture {
@@ -20,13 +22,13 @@ public class Lecture {
     @Column(name = "lec_id")
     private int lecId;
 
-    @ManyToOne
-    @JoinColumn(name = "ins_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "insId")
     private Instructor instructor;
-    private String thumbnail;
     private String lecTitle;
     private String lecContents;
     private int lecPrice;
+
     private String lecNotice;
 
     @Temporal(TemporalType.DATE)
@@ -41,27 +43,23 @@ public class Lecture {
     private Integer lecStudent;
     private String lecGenre;
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     private List<CartItem> cartItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Enroll> enrolls = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<PayList> payLists = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "lecture")
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Section> sections = new ArrayList<>();
 
-    @PrePersist
-    public void prePersist() {
-        this.lecStudent = this.lecStudent == null ? 0 : this.lecStudent;
-    }
 }

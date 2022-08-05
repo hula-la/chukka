@@ -1,5 +1,8 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.request.lecture.LecturePostReq;
+import com.ssafy.api.response.cart.CartLecGetRes;
+import com.ssafy.api.response.lecture.LecturePostRes;
 import com.ssafy.db.entity.Cart;
 import com.ssafy.db.entity.CartItem;
 import com.ssafy.db.entity.Lecture;
@@ -14,19 +17,22 @@ public interface CartService {
     Cart createCart(User user);
 
     //장바구니 목록 추가
-    Cart createCartItem(Cart cart, Lecture lecture);
+    CartItem createCartItem(Cart cart, Lecture lecture);
 
     //장바구니 조회
     Cart findCartByUser(String userId);
 
     //장바구니 목록 조회
-    List<CartItem> findCartItemsByCartId(Cart cart);
+    List<CartLecGetRes> findCartItemsByCartId(String cartId);
 
     //장바구니 삭제
-    void deleteCartItemById(int cartItemId);
+    void deleteByCartItemId(int cartItemId);
 
     //장바구니 수정 ( 수량 업데이트 )
     Cart updateCart(int cartId, int cnt);
+
+    // 장바구니 중복 확인
+    CartItem findCartItem(int lecId, int cartId);
 
 
 }

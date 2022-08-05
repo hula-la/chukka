@@ -15,8 +15,6 @@ import java.util.Date;
 public class LectureUpdateRes {
     @ApiModelProperty(name = "강의 ID", example = "lecture_id")
     int lecId;
-    @ApiModelProperty(name = "강의 썸네일", example = "img/thumbnail.jpg")
-    String thumbnail;
     @ApiModelProperty(name = "강의 제목", example = "lec_title")
     String lecTitle;
     @ApiModelProperty(name = "강의 내용", example = "lec_contents")
@@ -41,7 +39,6 @@ public class LectureUpdateRes {
     public static LectureUpdateRes of(Lecture lecture) {
         LectureUpdateRes res = new LectureUpdateRes();
         res.setLecId(lecture.getLecId());
-        res.setThumbnail(lecture.getThumbnail());
         res.setLecTitle(lecture.getLecTitle());
         res.setLecContents(lecture.getLecContents());
         res.setLecPrice(lecture.getLecPrice());
