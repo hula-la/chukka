@@ -1,29 +1,26 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.request.snacks.SnacksReplyPostReq;
 import com.ssafy.api.request.snacks.SnacksUploadReq;
-import com.ssafy.api.response.snacks.SnacksDto;
-import com.ssafy.db.entity.Snacks;
-import com.ssafy.db.entity.SnacksHeart;
-import com.ssafy.db.entity.SnacksTag;
-import com.ssafy.db.repository.SnacksHeartRepository;
-import com.ssafy.db.repository.SnacksRepository;
-import com.ssafy.db.repository.SnacksTagRepository;
-import com.ssafy.db.repository.UserRepository;
+import com.ssafy.db.entity.*;
+import com.ssafy.db.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class SnacksServiceImpl implements SnacksService{
 
-    private final SnacksHeartRepository snacksHeartRepository;
-
+    private final SnacksLikeRepository snacksLikeRepository;
     private final SnacksRepository snacksRepository;
     private final SnacksTagRepository snacksTagRepository;
-
+    private final SnacksReplyRepository snacksReplyRepository;
     private final UserRepository userRepository;
 
 
@@ -32,72 +29,86 @@ public class SnacksServiceImpl implements SnacksService{
 //    }
 
     @Override
-    public Snacks createSnacks(SnacksUploadReq snacksUploadReq) {
+    public Page<Snacks> findAll(Pageable pageable) {
         return null;
     }
 
     @Override
-    public void likeSnacks(String userId, int snacksId) {
-        Optional<SnacksHeart> heartOpt = findHeartWithUserIdAndSnacksId(userId, snacksId);
-
-        // 이미 좋아요 된 캠페인일 경우 409 에러러
-       if (heartOpt.isPresent()){
-           return;
-       }
-
-       long miliseconds = System.currentTimeMillis();
-       Date date = new Date(miliseconds);
-
-       SnacksHeart snacksHeart = SnacksHeart.builder()
-               .user(userRepository.findByUserId(userId).get())
-               .snacks(snacksRepository.findBySnacksId(snacksId).get())
-               .likeSnacksReg(date)
-               .build();
-       snacksHeartRepository.save(snacksHeart);
+    public Snacks getCertainSnacks(Long snacksId) {
+        Optional<Snacks> snacks = snacksRepository.findBySnacksId(snacksId);
+        if(snacks.isPresent()) {
+            return snacks.get();
+        }
+        return null;
     }
 
     @Override
-    public void unlikeSnacks(String userId, int snacksId) {
-        Optional<SnacksHeart> heartOpt = findHeartWithUserIdAndSnacksId(userId, snacksId);
-
-        if (!heartOpt.isPresent()) {
-            return;
+    public String likeSnacks(User user, Long snacksId) {
+        Optional<SnacksLike> like = snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(user.getUserId(), snacksId);
+        Optional<Snacks> snacks = snacksRepository.findBySnacksId(snacksId);
+        // 스낵스 유무 판별
+        if(!snacks.isPresent()) {
+            return "Invalid Snacks";
         }
-
-        snacksHeartRepository.delete(heartOpt.get());
+        // 이미 좋아요를 누른 스낵스의 경우 좋아요 취소
+       if (like.isPresent()){
+           SnacksLike snacksLike = SnacksLike.builder().snacksLikeId(like.get().getSnacksLikeId()).build();
+           snacksLikeRepository.delete(snacksLike);
+           return "dislike";
+       }
+       long miliseconds = System.currentTimeMillis();
+       Date date = new Date(miliseconds);
+       SnacksLike snacksLike = SnacksLike.builder()
+               .user(user)
+               .snacks(snacksRepository.findBySnacksId(snacksId).get())
+               .likeSnacksReg(date)
+               .build();
+       snacksLikeRepository.save(snacksLike);
+       return "like";
     }
 
-
-    public Optional<SnacksHeart> findHeartWithUserIdAndSnacksId(String userId, int snacksId) {
-        return snacksHeartRepository.findByUser_UserIdAndSnacks_SnacksId(userId,snacksId);
-
-    }
-
-    public Snacks uploadSnacks(SnacksDto snacksDto){
+    @Override
+    public SnacksReply createReply(SnacksReplyPostReq replyInfo, User user) {
+        Optional<Snacks> snacks = snacksRepository.findBySnacksId(replyInfo.getSnacksId());
         long miliseconds = System.currentTimeMillis();
         Date date = new Date(miliseconds);
+        if(snacks.isPresent()) {
+            SnacksReply reply = SnacksReply.builder()
+                        .user(user)
+                        .snacks(snacks.get())
+                        .replyRegdate(date)
+                        .contents(replyInfo.getContents())
+                        .build();
+            return snacksReplyRepository.save(reply);
+        }
+        return null;
+    }
 
+    public Snacks uploadSnacks(SnacksUploadReq snacksInfo, User user){
+        long miliseconds = System.currentTimeMillis();
+        Date date = new Date(miliseconds);
         Snacks snacks = Snacks.builder()
-                .snacksTitle(snacksDto.getSnacksTitle())
-                .snacksContents(snacksDto.getSnacksContents())
+                .snacksTitle(snacksInfo.getSnacksTitle())
                 .snacksRegdate(date)
-                .user(userRepository.findByUserId(snacksDto.getUserId()).get())
+                .user(user)
                 .build();
-
-        snacksRepository.save(snacks);
-
-        uploadTags(snacksDto);
-
+        Snacks snack = snacksRepository.save(snacks);
+        // 태그 추가
+        uploadTags(snacksInfo, snack);
         return snacks;
 
     }
 
-    public void uploadTags(SnacksDto snacksDto){
-        String[] snacksTags = snacksDto.getSnacksTag().split(",");
+    @Override
+    public List<String> getPopularTags() {
+        return snacksTagRepository.findSnacksPopularTags();
+    }
 
+    public void uploadTags(SnacksUploadReq snacksInfo, Snacks snack){
+        String[] snacksTags = snacksInfo.getSnacksTag().split(",");
         for (String tag:snacksTags) {
             SnacksTag snacksTag = SnacksTag.builder()
-                    .snacks(snacksRepository.findBySnacksId(snacksDto.getSnacksId()).get())
+                    .snacks(snack)
                     .snacksTagContent(tag)
                     .build();
             snacksTagRepository.save(snacksTag);
