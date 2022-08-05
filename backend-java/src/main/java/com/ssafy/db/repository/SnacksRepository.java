@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface SnacksRepository extends JpaRepository<Snacks, Long> {
 //    Page<Snacks> findAll(Pageable pageable);
 
-    Optional<Snacks> findBySnacksId(int snacksId);
+    Optional<Snacks> findBySnacksId(Long snacksId);
 
     List<Snacks> findSnacksByUserUserIdOrderBySnacksIdDesc(String userId);
 

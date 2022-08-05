@@ -10,7 +10,6 @@ import com.ssafy.db.entity.Pay;
 import com.ssafy.db.entity.Snacks;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -78,10 +77,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getUserByUserNickname(String userNickname) {
 		Optional<User> user = userRepository.findByUserNickname(userNickname);
-		if(user == null) {
-			return null;
+		if(user.isPresent()) {
+			return user.get();
 		}
-		return user.get();
+		return null;
 	}
 
 	// (로그인 시) 유저 리프레시 토큰 저장

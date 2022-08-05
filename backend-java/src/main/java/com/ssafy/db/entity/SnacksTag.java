@@ -19,8 +19,6 @@ public class SnacksTag {
     @JoinColumn(name = "snacks_id")
     Snacks snacks;
 
-
     String snacksTagContent;
-
 
 }

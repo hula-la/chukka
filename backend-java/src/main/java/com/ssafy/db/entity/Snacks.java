@@ -19,7 +19,7 @@ public class Snacks{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int snacksId;
+    private Long snacksId;
 
     private String snacksTitle;
     private String snacksContents;
@@ -33,12 +33,16 @@ public class Snacks{
     @JoinColumn(name = "userId")
     private User user;
 
-    // Snacks 좋아요!
+    @Builder.Default
     @OneToMany(mappedBy = "snacks")
-    private List<SnacksHeart> snacksLikes = new ArrayList<>();
+    private List<SnacksLike> snacksLikes = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "snacks")
-    private List<SnacksTag> snacksTag = new ArrayList<>();
+    private List<SnacksTag> snacksTags = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "snacks")
+    private List<SnacksReply> snacksReplies = new ArrayList<>();
 
 }

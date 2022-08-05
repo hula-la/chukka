@@ -10,13 +10,11 @@ import com.ssafy.api.response.user.*;
 import com.ssafy.common.util.MailUtil;
 import com.ssafy.db.entity.Pay;
 import com.ssafy.db.entity.Snacks;
-import org.springframework.data.domain.Pageable;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 
 import com.ssafy.api.request.user.UserLoginPostReq;
 import com.ssafy.api.request.user.UserRegisterPostReq;
@@ -37,11 +35,10 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
-
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -60,13 +57,6 @@ public class UserController {
 	@Autowired
 	S3Uploader s3Uploader;
 
-	/**
-	 * Optional 부분 .get 메서드 쓴 곳 수정 (.get()은 null을 반환하지 않고 Exception을 유발함)
-	 * JWT 공부
-	 * Authentication / Authorization 공부
-	**/
-
-
 	// 회원 가입 ========================================================================================================
 	@PostMapping("/signup/")
 	@ApiOperation(value = "회원 가입", notes = "<strong>아이디, 패스워드, 이름, 핸드폰 번호, 이메일, 성별, 나이, 그리고 닉네임</strong>을 통해 회원가입한다.")
@@ -75,10 +65,7 @@ public class UserController {
 	})
 	public ResponseEntity<BaseResponseBody> register(
 			@RequestBody @ApiParam(value="회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
-
-		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
-		User user = userService.createUser(registerInfo);
-
+		userService.createUser(registerInfo);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
 
@@ -121,7 +108,8 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = UserLoginPostRes.class),
 			@ApiResponse(code = 401, message = "Invalid User", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginPostReq loginInfo) {
+	public ResponseEntity<BaseResponseBody> login(
+			@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginPostReq loginInfo) {
 		String userId = loginInfo.getUserId();
 		String password = loginInfo.getUserPw();
 		User user = userService.getUserByUserId(userId);
@@ -148,7 +136,8 @@ public class UserController {
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
 	})
-	public ResponseEntity<BaseResponseBody> logout(@RequestBody @ApiParam(value="회원 아이디", required = true) String userId) {
+	public ResponseEntity<BaseResponseBody> logout(
+			@RequestBody @ApiParam(value="회원 아이디", required = true) String userId) {
 		userService.logout(userId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
@@ -162,31 +151,34 @@ public class UserController {
         @ApiResponse(code = 401, message = "Invalid Nickname", response = BaseResponseBody.class),
 		@ApiResponse(code = 403, message = "Invalid User", response = BaseResponseBody.class)
     })
-	public ResponseEntity<BaseResponseBody> getUserInfo(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="회원 닉네임", required = true) String userNickname) {
+	public ResponseEntity<BaseResponseBody> getUserInfo(
+			@ApiIgnore Authentication authentication,
+			@RequestBody @ApiParam(value="회원 닉네임", required = true) Map<String, String> data) {
 		/**
 		 * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
 		 * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
 		 */
-		// 로그인
-		User user = userService.getUserByUserNickname(userNickname);
+		User user = userService.getUserByUserNickname(data.get("data"));
+		// 해당 닉네임의 유저 없음
 		if(user == null) {
 			return ResponseEntity.status(401).body(new BaseResponseBody(401, "Invalid Nickname", null));
 		}
-		if(authentication != null) {
-			SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-			String loginUserId = userDetails.getUsername();
-			User loginUser = userService.getUserByUserId(loginUserId);
-			if(user.getUserId().equals(loginUserId)) {
-				return ResponseEntity.status(200).body(BaseResponseBody.of(200, "MySuccess", UserMyRes.of(loginUser)));
-			} else {
-				return ResponseEntity.status(200).body(BaseResponseBody.of(201, "YourSuccess", UserYourRes.of(user)));
-			}
-		// 비로그인
-		} else if(authentication.getPrincipal().equals("")) {
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		// 토큰이 없을 때
+		if (userDetails.getUser() == null) {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(201, "YourSuccess", UserYourRes.of(user)));
-		// 토큰 만료
-		} else {
+		}
+		// 토큰이 만료됐을 때
+		if (userDetails.isAccountNonExpired()) {
 			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Invalid User", null));
+		}
+		// 정상 로그인 유저가 정상 닉네임 유저를 찾아갈 때
+		String loginUserId = userDetails.getUsername();
+		User loginUser = userService.getUserByUserId(loginUserId);
+		if(user.getUserId().equals(loginUserId)) {
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "MySuccess", UserMyRes.of(loginUser)));
+		} else {
+			return ResponseEntity.status(200).body(BaseResponseBody.of(201, "YourSuccess", UserYourRes.of(user)));
 		}
 	}
 
@@ -196,7 +188,10 @@ public class UserController {
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = UserMyRes.class)
 	})
-	public ResponseEntity<BaseResponseBody> modifyProfile(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo, HttpServletRequest req) throws IOException {
+	public ResponseEntity<BaseResponseBody> modifyProfile(
+			@ApiIgnore Authentication authentication,
+			@RequestBody @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo,
+			HttpServletRequest req) throws IOException {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		User user = userService.updateUser(loginUserId, modifyInfo);
@@ -215,7 +210,9 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "Invalid Password", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> modifyPw(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="비밀번호 정보", required = true) UserPasswordModifyReq pwInfo) {
+	public ResponseEntity<BaseResponseBody> modifyPw(
+			@ApiIgnore Authentication authentication,
+			@RequestBody @ApiParam(value="비밀번호 정보", required = true) UserPasswordModifyReq pwInfo) {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		User user = userService.getUserByUserId(loginUserId);
@@ -233,7 +230,8 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "Invalid Email", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> searchPw(@RequestBody @ApiParam(value="회원 아이디 및 이메일", required = true) UserPasswordSearchReq info) {
+	public ResponseEntity<BaseResponseBody> searchPw(
+			@RequestBody @ApiParam(value="회원 아이디 및 이메일", required = true) UserPasswordSearchReq info) {
 		String userId = info.getUserId();
 		String userEmail = info.getUserEmail();
 		User user = userService.getUserByUserId(userId);
@@ -272,7 +270,6 @@ public class UserController {
 	})
 	public ResponseEntity<BaseResponseBody> getMyLecture(
 			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId) {
-		// 강의 아이디, 강의 썸네일, 강의명, 강사명 조회하기
 		List<UserMyLectureRes> list = userService.getLecturesByUserId(userId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyLectureListRes.of(list)));
 	}
@@ -315,7 +312,9 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "Invalid Password", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<BaseResponseBody> quit(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="비밀번호 정보", required = true) String password) {
+	public ResponseEntity<BaseResponseBody> quit(
+			@ApiIgnore Authentication authentication,
+			@RequestBody @ApiParam(value="비밀번호 정보", required = true) String password) {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		User user = userService.getUserByUserId(loginUserId);
@@ -333,7 +332,9 @@ public class UserController {
 			@ApiResponse(code = 200, message = "Success", response = UserReAuthRes.class),
 			@ApiResponse(code = 401, message = "Invalid Token", response = BaseResponseBody.class)
 	})
-	public ResponseEntity<? extends BaseResponseBody> reauth(@RequestBody @ApiParam(value="유저 아이디", required = true) String userId, HttpServletRequest req) {
+	public ResponseEntity<? extends BaseResponseBody> reauth(
+			@RequestBody @ApiParam(value="유저 아이디", required = true) String userId,
+			HttpServletRequest req) {
 		String refreshToken = req.getHeader("refresh-token");
 		User user = userService.getUserByRefreshToken(refreshToken);
 		if(('"' + user.getUserId() + '"').equals(userId)) {
