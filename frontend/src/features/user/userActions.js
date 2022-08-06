@@ -1,4 +1,5 @@
 import axios from 'axios';
+// import client from '../../api/client';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { login, register, getToken, fetchPro } from '../../api/user';
 
@@ -85,7 +86,6 @@ export const fetchAccessToken = createAsyncThunk(
       const { userId } = userInfo;
 
       const { data } = await getToken(userId, refreshToken);
-
       return data;
     } catch (error) {
       console.log(error);

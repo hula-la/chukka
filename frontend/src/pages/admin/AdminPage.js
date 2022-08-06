@@ -7,6 +7,7 @@ import {
   changeUser,
   fetchInstList,
   changeInsInfo,
+  submitPicture,
 } from '../../features/admin/adminActions';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -28,6 +29,14 @@ const ProfileForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
+  .line {
+    border: 0;
+    height: 1px;
+    background: #ff2c55;
+    width: 100%;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const StyledButton = styled.button`
@@ -83,18 +92,9 @@ const AdminPage = () => {
   };
 
   // 강사 정보 수정
-  const onClickInsInfo = (
-    insId,
-    insEmail,
-    insIntroduce,
-    insName,
-    insProfile,
-    e,
-  ) => {
+  const onClickInsInfo = (insId, insEmail, insIntroduce, insName, e) => {
     e.preventDefault();
-    dispatch(
-      changeInsInfo({ insId, insEmail, insIntroduce, insName, insProfile }),
-    );
+    dispatch(changeInsInfo({ insId, insEmail, insIntroduce, insName }));
   };
 
   // 회원 관리 테이블 열
@@ -163,10 +163,9 @@ const AdminPage = () => {
           onClick={(e) =>
             onClickInsInfo(
               params.id,
-              params.row.insemail,
-              params.row.insintoduce,
+              params.row.insEmail,
+              params.row.insIntroduce,
               params.row.insName,
-              params.row.insProfile,
               e,
             )
           }
@@ -174,6 +173,25 @@ const AdminPage = () => {
       ],
     },
   ];
+
+  // 프로필 사진 s3에 제출하기
+  const [profileInsId, setProfileInsId] = useState('');
+
+  const [insProfile, setProfile] = useState(null);
+
+  const onChangeId = (e) => {
+    console.log(e.target.value);
+    setProfileInsId(e.target.value);
+  };
+
+  const onChangeProfile = (e) => {
+    setProfile(e.target.files[0]);
+  };
+
+  const onSubmitPicture = (e) => {
+    e.preventDefault();
+    dispatch(submitPicture({ profileInsId, insProfile }));
+  };
 
   return (
     <AdminPageBlock>
@@ -204,10 +222,14 @@ const AdminPage = () => {
               getRowId={(row) => row.insId}
             />
           </div>
-          <ProfileForm action="">
+          <ProfileForm onSubmit={onSubmitPicture}>
             <p>프로필 사진</p>
-            <hr />
-            <input type="file" />
+            <hr className="line" />
+            <div>
+              <label>아이디</label>
+              <input onChange={onChangeId} required />
+            </div>
+            <input onChange={onChangeProfile} type="file" />
             <StyledButton>제출</StyledButton>
           </ProfileForm>
         </InsBox>

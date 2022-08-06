@@ -193,10 +193,17 @@ const ProfilePage = () => {
   }, []);
 
   // 프로필 정보 받아오기
-  useEffect(() => {
-    console.log(params.nickName);
-    dispatch(fetchProfile(params.nickName));
-  }, [dispatch]);
+  // const token = useSelector((state) => {
+  //   return state.user.accessToken;
+  // });
+
+  // useEffect(() => {
+  //   dispatch(fetchProfile({ paramsNickname, token }));
+  // }, []);
+
+  const userProInfo = useSelector((state) => {
+    return state.user.userProInfo;
+  });
 
   // 컴포넌트 바꾸기 용
   const [pageNum, setpageNum] = useState('1');
@@ -261,11 +268,11 @@ const ProfilePage = () => {
             <input type="file" />
             <div>
               <StyledLabel>아이디</StyledLabel>
-              <TextBox>id</TextBox>
+              <TextBox>{userProInfo.userId}</TextBox>
             </div>
             <div>
               <StyledLabel>닉네임</StyledLabel>
-              <StyledInput />
+              <StyledInput value={userProInfo.userId} />
             </div>
             <div>
               <StyledLabel>이메일</StyledLabel>

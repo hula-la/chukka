@@ -35,6 +35,7 @@ const App = () => {
       dispatch(fetchAccessToken({ refreshToken, userInfo }));
     }
   }, [dispatch]);
+
   return (
     <div className="App">
       <Routes>

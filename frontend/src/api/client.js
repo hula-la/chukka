@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useSelector } from 'react-redux';
 
 const client = axios.create({
   baseURL: 'http://127.0.0.1:8080',
@@ -7,10 +6,6 @@ const client = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-const token = () => useSelector((state) => state.user.accessToken);
-
-client.defaults.headers.common['Autorization'] = `Bearer ${token}`;
 
 /*
   글로벌 설정 예시:

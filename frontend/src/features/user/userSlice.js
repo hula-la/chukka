@@ -82,8 +82,7 @@ const userSlice = createSlice({
 
     // 프로필 정보 가져오기
     [fetchProfile.fulfilled]: (state, { payload }) => {
-      // state.userProInfo =
-      console.log(payload);
+      state.userProInfo = payload.data;
     },
     [fetchProfile.rejected]: (state, { payload }) => {
       state.error = payload;
