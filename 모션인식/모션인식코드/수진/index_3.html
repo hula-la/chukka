@@ -36,6 +36,8 @@
     var blob = new Blob( [ arrayBufferView ], { type: "multipart/x-mixed-replace" } );
     var urlCreator = window.URL || window.webkitURL;
     var imageUrl = urlCreator.createObjectURL( blob );
+    console.log(imageUrl);
+
     var img = document.querySelector( "#my_video" );
     img.src = imageUrl;
 	}

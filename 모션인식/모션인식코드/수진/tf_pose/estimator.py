@@ -443,9 +443,7 @@ class TfPoseEstimator:
         i=0
         while(i<humans.size):
             # draw point
-            print([humans[i],humans[i+1]])
             if(humans[i]!=0 or humans[i]!=0):
-                print(f'그려짐  {i//2}')
                 cv2.circle(npimg, (int(humans[i]),int(humans[i+1])), 3, (255,255,255), thickness=3, lineType=8, shift=0)
                 # cv2.circle(npimg, (int(humans[i]),int(humans[i+1])), 3, common.CocoColors[i//2], thickness=3, lineType=8, shift=0)
             i+=2

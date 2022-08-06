@@ -109,7 +109,7 @@ async def websocket_endpoint(websocket: WebSocket):
         # trainer_video = r'dance_video/dancer.mp4'
         keyp_list = np.genfromtxt("dancer_keyp_list.csv", delimiter=",")
 
-        dim=(1000,1000)
+        dim=(500,500)
         prev_time = 0
         # FPS = 1
         cnt = 0
@@ -123,12 +123,13 @@ async def websocket_endpoint(websocket: WebSocket):
             print(cnt)
 
 # 댄서 영상 스켈레톤 매핑 후 클라이언트한테 전달
-            dancer_image = np.zeros(dim)
-            dancer_image = TfPoseEstimator.sj_draw_humans(dancer_image, keyp_list[cnt], imgcopy=False)
-            cv2.imshow('Dancer', dancer_image)
+            if (cnt+1<len(keyp_list)):
+                dancer_image = np.zeros(dim)
+                dancer_image = TfPoseEstimator.sj_draw_humans(dancer_image, keyp_list[cnt+1], imgcopy=False)
+                cv2.imshow('Dancer', dancer_image)
 
-            ret, buffer = cv2.imencode('.jpg', dancer_image)
-            await websocket.send_bytes(bytearray(buffer))
+                ret, buffer = cv2.imencode('.jpg', dancer_image)
+                await websocket.send_bytes(bytearray(buffer))
 
 
 
@@ -206,7 +207,7 @@ async def websocket_endpoint(websocket: WebSocket):
             await websocket.send_text(str(min_))  # client 에 메시지 전달
             # frame = buffer.tobytes()
             # ret, buffer = cv2.imencode('.jpg', dancer_image)
-            await websocket.send_bytes(bytearray(buffer))
+            # await websocket.send_bytes(bytearray(buffer))
 
             prev_time = time.time()
             if cv2.waitKey(1) & 0xFF == ord('q'):
