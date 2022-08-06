@@ -31,7 +31,9 @@ export const nickCheck = async (userNickname) => {
 };
 
 export const fetchPro = async (data) => {
-  const res = await client.post(`accounts/`, data.paramsNickname);
+  const userNickname = data.paramsNickname;
+  console.log(userNickname);
+  const res = await client.post(`accounts/`, { userNickname });
   console.log(res);
   return res;
 };
