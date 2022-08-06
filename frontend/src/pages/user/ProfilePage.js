@@ -181,7 +181,10 @@ const ProfilePage = () => {
   // 1이면 나의 프로필페이지, 2이면 남의 프로필
   const [isProfile, setIsProfile] = useState('1');
   const currentUser = useSelector((state) => {
-    return state.user.userInfo.userNickname;
+    const userNickname = state.user.userInfo
+      ? state.user.userInfo.userNickname
+      : '';
+    return userNickname;
   });
 
   useEffect(() => {
@@ -190,16 +193,18 @@ const ProfilePage = () => {
     } else {
       setIsProfile('2');
     }
-  }, []);
+  }, [currentUser, params]);
 
   // 프로필 정보 받아오기
   // const token = useSelector((state) => {
   //   return state.user.accessToken;
   // });
 
-  // useEffect(() => {
-  //   dispatch(fetchProfile({ paramsNickname, token }));
-  // }, []);
+  const paramsNickname = params.nickName;
+  useEffect(() => {
+    console.log('fetchProfile!');
+    dispatch(fetchProfile({ paramsNickname }));
+  }, [dispatch, paramsNickname]);
 
   const userProInfo = useSelector((state) => {
     return state.user.userProInfo;

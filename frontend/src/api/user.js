@@ -22,7 +22,6 @@ export const getToken = async (userId, refreshToken) => {
 
 export const idCheck = async (userId) => {
   const res = await client.get(`accounts/checkid/${userId}/`);
-  // console.log(res);
   return res.data;
 };
 export const nickCheck = async (userNickname) => {
@@ -32,7 +31,7 @@ export const nickCheck = async (userNickname) => {
 };
 
 export const fetchPro = async (data) => {
-  console.log(data);
-  const res = await client.post(`accounts/`);
+  const res = await client.post(`accounts/`, data.paramsNickname);
+  console.log(res);
   return res;
 };

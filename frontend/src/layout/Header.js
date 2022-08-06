@@ -75,19 +75,21 @@ const Header = () => {
             <Button content="Sign In" />
           </NavLink>
         ) : (
-          <NavLink to="/">
-            <div className="user-div">
-              {/* <img src={userInfo.userProfile} alt="" /> */}
-              <div>Hi, {userInfo.userNickname}!</div>
-              <button
-                onClick={() => {
-                  dispatch(logout());
-                }}
-              >
-                Logout
-              </button>
-            </div>
-          </NavLink>
+          <div>
+            <NavLink to={`/accounts/profile/${userInfo.userNickname}`}>
+              <div className="user-div">
+                {/* <img src={userInfo.userProfile} alt="" /> */}
+                <div>Hi, {userInfo.userNickname}!</div>
+              </div>
+            </NavLink>
+            <button
+              onClick={() => {
+                dispatch(logout());
+              }}
+            >
+              Logout
+            </button>
+          </div>
         )}
       </div>
     </NavBar>

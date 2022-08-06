@@ -21,7 +21,7 @@ const initialState = {
   accessToken: null,
   error: null,
   success: false,
-  userProInfo: [],
+  userProInfo: null,
 };
 
 const userSlice = createSlice({
@@ -86,7 +86,6 @@ const userSlice = createSlice({
     },
     [fetchProfile.rejected]: (state, { payload }) => {
       state.error = payload;
-      console.log(payload);
     },
   },
 });

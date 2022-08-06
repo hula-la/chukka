@@ -1,9 +1,5 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import { fetchAccessToken } from './features/user/userActions';
-
 // page
 import Layout from './layout/Layout';
 // user
@@ -27,15 +23,6 @@ import AdminPage from './pages/admin/AdminPage';
 import NotFound from './pages/NotFound';
 import LectureDetailpage from './pages/lecture/LectureDetailpage';
 const App = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    if (refreshToken && userInfo) {
-      dispatch(fetchAccessToken({ refreshToken, userInfo }));
-    }
-  }, [dispatch]);
-
   return (
     <div className="App">
       <Routes>
