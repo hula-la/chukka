@@ -238,7 +238,7 @@ public class AdminController {
 	public ResponseEntity<BaseResponseBody> modifyInstructorInfo(
 			@RequestBody @ApiParam(value = "수정할 강사 정보", required = true) InstructorPostReq insInfo) {
 		instructorService.updateInstructor(insInfo);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", instructorService.findAll()));
 	}
 
 	// 강사 프로필 수정 ====================================================================================================
@@ -254,7 +254,7 @@ public class AdminController {
 		if(profile != null) {
 			s3Uploader.uploadFiles(profile, "img/instructor/profile", req.getServletContext().getRealPath("/img/"), insId);
 		}
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", instructorService.findAll()));
 	}
 
 	// 강사 삭제 ====================================================================================================

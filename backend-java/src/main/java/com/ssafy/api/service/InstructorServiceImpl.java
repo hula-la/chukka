@@ -27,11 +27,10 @@ public class InstructorServiceImpl implements InstructorService {
     private String bucket;
     @Value("${cloud.aws.region.static}")
     private String region;
-    private String PATH = "https://" + bucket + ".s3." + region + ".amazonaws.com/";
 
     @Override
     public Instructor createInstructor(String insId) {
-        Instructor ins = Instructor.builder().insId(insId).insProfile(PATH + insId).build();
+        Instructor ins = Instructor.builder().insId(insId).insProfile("https://" + bucket + ".s3." + region + ".amazonaws.com/" + insId).build();
         return instructorRepository.save(ins);
     }
 

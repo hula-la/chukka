@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserService {
 	private String bucket;
 	@Value("${cloud.aws.region.static}")
 	private String region;
-	private String PATH = "https://" + bucket + ".s3." + region + ".amazonaws.com/";
 
 
 	// 회원 생성
@@ -116,7 +115,7 @@ public class UserServiceImpl implements UserService {
 					.userPoint(now.getUserPoint())
 					.userType(now.getUserType())
 					.userPw(now.getUserPw())
-					.userProfile(PATH + userId)
+					.userProfile("https://" + bucket + ".s3." + region + ".amazonaws.com/" + userId)
 					.build();
 			return userRepository.save(user);
 		}
