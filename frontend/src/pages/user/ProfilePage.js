@@ -175,7 +175,6 @@ const ProfilePage = () => {
   const onClickMyList = () => setpageNum('2');
   const onClickChangeProfile = () => setpageNum('3');
   const onClickPassword = () => setpageNum('4');
-
   return (
     <ProfilePageBlock>
       <Side>
