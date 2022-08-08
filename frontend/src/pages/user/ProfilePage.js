@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { fetchProfile } from '../../features/user/userActions';
 
 // 페이지 블락
 const ProfilePageBlock = styled.div`
@@ -169,13 +172,51 @@ const StyledButton = styled.button`
 `;
 
 const ProfilePage = () => {
+  // URL 뒤 파라미터 불러오기
+  const params = useParams();
+
+  const dispatch = useDispatch();
+
+  // 내 페이지인지 남의 페이지인지 구분
+  // 1이면 나의 프로필페이지, 2이면 남의 프로필
+  const [isProfile, setIsProfile] = useState('1');
+  const currentUser = useSelector((state) => {
+    const userNickname = state.user.userInfo
+      ? state.user.userInfo.userNickname
+      : '';
+    return userNickname;
+  });
+
+  useEffect(() => {
+    if (currentUser === params.nickName) {
+      setIsProfile('1');
+    } else {
+      setIsProfile('2');
+    }
+  }, [currentUser, params]);
+
+  // 프로필 정보 받아오기
+  // const token = useSelector((state) => {
+  //   return state.user.accessToken;
+  // });
+
+  const paramsNickname = params.nickName;
+  useEffect(() => {
+    dispatch(fetchProfile({ paramsNickname }));
+  }, [dispatch, paramsNickname]);
+
+  const userProInfo = useSelector((state) => {
+    return state.user.userProInfo;
+  });
+
+  // 컴포넌트 바꾸기 용
   const [pageNum, setpageNum] = useState('1');
 
   const onClickSnacks = () => setpageNum('1');
   const onClickMyList = () => setpageNum('2');
   const onClickChangeProfile = () => setpageNum('3');
   const onClickPassword = () => setpageNum('4');
-  x``;
+
   return (
     <ProfilePageBlock>
       <Side>
@@ -185,11 +226,21 @@ const ProfilePage = () => {
         <hr className="line" />
         <Menu>
           <SideBarButton onClick={onClickSnacks}>스낵스</SideBarButton>
-          <SideBarButton onClick={onClickMyList}>나의 강의 목록</SideBarButton>
-          <SideBarButton onClick={onClickChangeProfile}>
-            프로필 수정
-          </SideBarButton>
-          <SideBarButton onClick={onClickPassword}>비밀번호 변경</SideBarButton>
+          {isProfile === '1' && (
+            <SideBarButton onClick={onClickMyList}>
+              나의 강의 목록
+            </SideBarButton>
+          )}
+          {isProfile === '1' && (
+            <SideBarButton onClick={onClickChangeProfile}>
+              프로필 수정
+            </SideBarButton>
+          )}
+          {isProfile === '1' && (
+            <SideBarButton onClick={onClickPassword}>
+              비밀번호 변경
+            </SideBarButton>
+          )}
         </Menu>
         <hr className="line" style={{ marginTop: '1rem' }} />
       </Side>
@@ -221,11 +272,11 @@ const ProfilePage = () => {
             <input type="file" />
             <div>
               <StyledLabel>아이디</StyledLabel>
-              <TextBox>id</TextBox>
+              <TextBox>{userProInfo.userId}</TextBox>
             </div>
             <div>
               <StyledLabel>닉네임</StyledLabel>
-              <StyledInput />
+              <StyledInput value={userProInfo.userId} />
             </div>
             <div>
               <StyledLabel>이메일</StyledLabel>

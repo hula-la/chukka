@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { login, register, getToken } from '../../api/user';
+import { login, register, getToken, fetchPro } from '../../api/user';
+import client from '../../api/client';
 
 const BASE_URL = 'http://127.0.0.1:8080';
 
@@ -35,8 +36,25 @@ export const userLogin = createAsyncThunk(
       };
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('accessToken', accessToken);
 
       return { userInfo, accessToken };
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const fetchProfile = createAsyncThunk(
+  'user/fetchProfile',
+  async (userNickname, { rejectWithValue }) => {
+    try {
+      const { data } = await fetchPro(userNickname);
+      return data;
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
@@ -69,7 +87,6 @@ export const fetchAccessToken = createAsyncThunk(
       const { userId } = userInfo;
 
       const { data } = await getToken(userId, refreshToken);
-
       return data;
     } catch (error) {
       console.log(error);

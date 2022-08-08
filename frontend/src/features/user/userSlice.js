@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { registerUser, userLogin, fetchAccessToken } from './userActions';
+import {
+  registerUser,
+  userLogin,
+  fetchAccessToken,
+  fetchProfile,
+} from './userActions';
 
 // initialize userToken from local storage
 // const accessToken = localStorage.getItem('accessToken')
@@ -13,9 +18,9 @@ const userInfo = localStorage.getItem('userInfo')
 const initialState = {
   loading: false,
   userInfo,
-  accessToken: null,
   error: null,
   success: false,
+  userProInfo: null,
 };
 
 const userSlice = createSlice({
@@ -24,10 +29,10 @@ const userSlice = createSlice({
   reducers: {
     logout: (state) => {
       localStorage.removeItem('refreshToken'); // delete token from storage
+      localStorage.removeItem('accessToken');
       localStorage.removeItem('userInfo');
       state.loading = false;
       state.userInfo = null;
-      state.accessToken = null;
       state.error = null;
     },
   },
@@ -42,7 +47,6 @@ const userSlice = createSlice({
       // 요청 성공
       state.loading = false;
       state.userInfo = payload.userInfo;
-      state.accessToken = payload.accessToken;
     },
     [userLogin.rejected]: (state, { payload }) => {
       // 요청 실패
@@ -72,6 +76,14 @@ const userSlice = createSlice({
     // AccessToken 가져오기
     [fetchAccessToken.fulfilled]: (state, { payload }) => {
       state.accessToken = payload.accessToken;
+    },
+
+    // 프로필 정보 가져오기
+    [fetchProfile.fulfilled]: (state, { payload }) => {
+      state.userProInfo = payload.data;
+    },
+    [fetchProfile.rejected]: (state, { payload }) => {
+      state.error = payload;
     },
   },
 });
