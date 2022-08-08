@@ -7,15 +7,16 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   width: 100%;
   display: flex;
+  flex-direction: column;
 
-  & .container {
-    width: 80%;
-  }
-  & #main-video {
+  & .stream-div {
     width: 50%;
+    display: flex;
   }
-  & .stream-container {
-    width: 50%;
+
+  & .video-div {
+    display: flex;
+    width: 100%;
   }
 `;
 
@@ -95,7 +96,7 @@ const LivePage = () => {
             videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
             publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
             publishVideo: true, // Whether you want to start publishing with your video enabled or not
-            resolution: '640x960', // The resolution of your video
+            resolution: '400x500', // The resolution of your video
             frameRate: 30, // The frame rate of your video
             insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
             mirror: false, // Whether to mirror your local video or not
@@ -202,7 +203,6 @@ const LivePage = () => {
           },
         )
         .then((response) => {
-          console.log('TOKEN', response);
           resolve(response.data.token);
         })
         .catch((error) => reject(error));
@@ -211,68 +211,99 @@ const LivePage = () => {
 
   return (
     <Wrapper>
-      <div>
-        {session !== undefined ? (
+      {/* <UserVideoComponent streamManager={publisher} /> */}
+      {session !== undefined ? (
+        <>
           <div>
-            <div>
-              <h1 id="session-title">{mySessionId}</h1>
-              <input
-                type="button"
-                onClick={leaveSession}
-                value="Leave session"
-              />
-            </div>
-            <div>
-              {mainStreamManager !== undefined ? (
-                <div className="col-md-6">
-                  <UserVideoComponent streamManager={mainStreamManager} />
-                  {/* <input
-                className="btn btn-large btn-success"
-                type="button"
-                id="buttonSwitchCamera"
-                // onClick={switchCamera}
-                value="Switch Camera"
-              /> */}
-                </div>
-              ) : null}
-              <div>
-                {publisher !== undefined ? (
-                  <div
-                    className="stream-container col-md-6 col-xs-6"
-                    onClick={() => handleMainVideoStream(publisher)}
-                  >
-                    <UserVideoComponent streamManager={publisher} />
-                    <button
-                      onClick={() => {
-                        setVideoState(!videoState);
-                        publisher.publishVideo(videoState);
-                      }}
-                    >
-                      aaaaa
-                    </button>
-                  </div>
-                ) : null}
-                {subscribers.map((sub, i) => {
-                  const { clientData } = JSON.parse(sub.stream.connection.data);
-                  if (clientData !== myUserName) {
-                    return (
-                      <div
-                        key={i}
-                        className="stream-container col-md-6 col-xs-6"
-                        onClick={() => handleMainVideoStream(sub)}
-                      >
-                        <UserVideoComponent streamManager={sub} />
-                      </div>
-                    );
-                  }
-                })}
-              </div>
-            </div>
+            <h1>{mySessionId}</h1>
+            <input type="button" onClick={leaveSession} value="Leave session" />
           </div>
-        ) : null}
-      </div>
+          <div className="video-div">
+            <UserVideoComponent streamManager={mainStreamManager} />
+            <UserVideoComponent streamManager={mainStreamManager} />
+          </div>
+          {subscribers.map((sub, i) => {
+            const { clientData } = JSON.parse(sub.stream.connection.data);
+            if (clientData !== myUserName) {
+              return (
+                <div
+                  key={i}
+                  className="stream-container col-md-6 col-xs-6"
+                  onClick={() => handleMainVideoStream(sub)}
+                >
+                  <UserVideoComponent streamManager={sub} />
+                </div>
+              );
+            }
+          })}
+        </>
+      ) : null}
     </Wrapper>
   );
+  // return (
+  //   <Wrapper>
+  //     <div>
+  //       {session !== undefined ? (
+  //         <div>
+  //           <div>
+  //             <h1 id="session-title">{mySessionId}</h1>
+  //             <input
+  //               type="button"
+  //               onClick={leaveSession}
+  //               value="Leave session"
+  //             />
+  //           </div>
+  //           <div>
+  //             {mainStreamManager !== undefined ? (
+  //               <div className="col-md-6">
+  //                 <UserVideoComponent streamManager={mainStreamManager} />
+  //                 {/* <input
+  //               className="btn btn-large btn-success"
+  //               type="button"
+  //               id="buttonSwitchCamera"
+  //               // onClick={switchCamera}
+  //               value="Switch Camera"
+  //             /> */}
+  //               </div>
+  //             ) : null}
+  //             <div>
+  //               {publisher !== undefined ? (
+  //                 <div
+  //                   className="stream-container col-md-6 col-xs-6"
+  //                   onClick={() => handleMainVideoStream(publisher)}
+  //                 >
+  //                   <UserVideoComponent streamManager={publisher} />
+  //                   <button
+  //                     onClick={() => {
+  //                       setVideoState(!videoState);
+  //                       publisher.publishVideo(videoState);
+  //                     }}
+  //                   >
+  //                     aaaaa
+  //                   </button>
+  //                 </div>
+  //               ) : null}
+  //               {subscribers.map((sub, i) => {
+  //                 const { clientData } = JSON.parse(sub.stream.connection.data);
+  //                 if (clientData !== myUserName) {
+  //                   return (
+  //                     <div
+  //                       key={i}
+  //                       className="stream-container col-md-6 col-xs-6"
+  //                       onClick={() => handleMainVideoStream(sub)}
+  //                     >
+  //                       <UserVideoComponent streamManager={sub} />
+  //                     </div>
+  //                   );
+  //                 }
+  //               })}
+  //             </div>
+  //           </div>
+  //         </div>
+  //       ) : null}
+  //     </div>
+  //   </Wrapper>
+  // );
 };
 
 export default LivePage;

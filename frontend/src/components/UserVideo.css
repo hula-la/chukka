@@ -1,12 +1,12 @@
 video {
-  width: 100%;
-  height: auto;
-  float: left;
+  /* width: 100%; */
+  /* height: auto; */
+  /* float: left; */
   cursor: pointer;
 }
 .streamcomponent div {
-  position: absolute;
-  background: #f8f8f8;
+  /* position: absolute; */
+  /* background: #f8f8f8; */
   padding-left: 5px;
   padding-right: 5px;
   color: #777777;

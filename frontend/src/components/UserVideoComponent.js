@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import OpenViduVideoComponent from './OvVideo';
 import './UserVideo.css';
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+  width: 100%;
+`;
 
 export default class UserVideoComponent extends Component {
   getNicknameTag() {
@@ -10,17 +15,8 @@ export default class UserVideoComponent extends Component {
   }
 
   render() {
-    return (
-      <div>
-        {this.props.streamManager !== undefined ? (
-          <div className="streamcomponent">
-            <OpenViduVideoComponent streamManager={this.props.streamManager} />
-            <div>
-              <p>{this.getNicknameTag()}</p>
-            </div>
-          </div>
-        ) : null}
-      </div>
-    );
+    return this.props.streamManager !== undefined ? (
+      <OpenViduVideoComponent streamManager={this.props.streamManager} />
+    ) : null;
   }
 }
