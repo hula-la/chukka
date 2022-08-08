@@ -80,11 +80,8 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public List<LectureRes> findAll() {
-        List<Lecture> lectures = lectureRepository.findAll();
-        List<LectureRes> list = new ArrayList<>();
-        for (int i = 0; i < lectures.size(); i++) {
-            list.add(LectureRes.of(lectures.get(i)));
-        }
+        List<LectureRes> list = lectureRepository.findAll()
+                .stream().map(s -> LectureRes.of(s)).collect(Collectors.toList());
         return list;
     }
 

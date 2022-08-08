@@ -171,13 +171,11 @@ public class UserServiceImpl implements UserService {
 
 	// 유저 아이디로 결제 목록 조회
 	@Override
-	public List<Pay> getPaysByUserId(String userId) {
+	public List<UserMyPayRes> getPaysByUserId(String userId) {
 		List<UserMyPayRes> pay = payRepository.findPaylistUsingFetchJoin(userId)
-				.stream().map(s -> UserMyPayRes.of(s)).collect(Collectors.toList());
-//				.stream().map(s -> new UserMyPayRes(s.getPayId(), s.getUserId(), s.getPayDate(), s.getPayAmount(), s.getPayMethod(), s.getPayLists()
-//						.stream().map(ss-> UserPayListRes.of(ss)).collect(Collectors.toList()))).collect(Collectors.toList());
-//		payRepository.findPaylistUsingFetchJoin(userId).stream().map(s -> new);
-		return payRepository.findPaylistUsingFetchJoin(userId);
+				.stream().map(s -> new UserMyPayRes(s.getPayId(), s.getUser().getUserId(), s.getPayDate(), s.getPayAmount(), s.getPayMethod(), s.getPayLists()
+						.stream().map(ss-> UserPayListRes.of(ss)).collect(Collectors.toList()))).collect(Collectors.toList());
+		return pay;
 	}
 
 	// 리프레시 토큰으로 유저 조회
@@ -202,45 +200,30 @@ public class UserServiceImpl implements UserService {
 	// 모든 회원 목록 조회
 	@Override
 	public List<UserRes> getUsers() {
-		List<User> list = userRepository.findAll();
-		List<UserRes> users = new ArrayList<>();
-		for (int i = 0; i < list.size(); i++) {
-			users.add(UserRes.of(list.get(i)));
-		}
+		List<UserRes> users = userRepository.findAll().stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 		return users;
 	}
 
 	// 검색된 회원 목록 조회
 	@Override
 	public List<UserRes> getCertainUsers(String category, String keyword) {
-		List<User> list;
-		List<UserRes> users = new ArrayList<>();
+		List<UserRes> users = null;
 		switch(category) {
 			case "userId":
-				list = userRepository.findByUserIdContaining(keyword);
-				for (int i = 0; i < list.size(); i++) {
-					users.add(UserRes.of(list.get(i)));
-				}
+				users = userRepository.findByUserIdContaining(keyword)
+						.stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 			case "userName":
-				list = userRepository.findByUserNameContaining(keyword);
-				for (int i = 0; i < list.size(); i++) {
-					users.add(UserRes.of(list.get(i)));
-				}
+				users = userRepository.findByUserNameContaining(keyword)
+						.stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 			case "userNickname":
-				list = userRepository.findByUserNicknameContaining(keyword);
-				for (int i = 0; i < list.size(); i++) {
-					users.add(UserRes.of(list.get(i)));
-				}
+				users = userRepository.findByUserNicknameContaining(keyword)
+						.stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 			case "userEmail":
-				list = userRepository.findByUserEmailContaining(keyword);
-				for (int i = 0; i < list.size(); i++) {
-					users.add(UserRes.of(list.get(i)));
-				}
+				users = userRepository.findByUserEmailContaining(keyword)
+						.stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 			case "userPhone":
-				list = userRepository.findByUserPhoneContaining(keyword);
-				for (int i = 0; i < list.size(); i++) {
-					users.add(UserRes.of(list.get(i)));
-				}
+				users = userRepository.findByUserPhoneContaining(keyword)
+						.stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 		}
 		return users;
 	}

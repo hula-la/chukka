@@ -31,17 +31,6 @@ public class UserMyPayRes{
 	@ApiModelProperty(name="결제 수단", example="1")
 	int payMethod;
 	@ApiModelProperty(name="주문 목록")
-	List<PayList> payLists;
+	List<UserPayListRes> payLists;
 
-
-	public static UserMyPayRes of(Pay pay) {
-		UserMyPayRes res = new UserMyPayRes();
-		res.setPayId(pay.getPayId());
-		res.setUserId(pay.getUser().getUserId());
-		res.setPayDate(pay.getPayDate());
-		res.setPayAmount(pay.getPayAmount());
-		res.setPayMethod(pay.getPayMethod());
-		res.setPayLists(pay.getPayLists());
-		return res;
-	}
 }

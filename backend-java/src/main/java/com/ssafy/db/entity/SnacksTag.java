@@ -1,6 +1,7 @@
 package com.ssafy.db.entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,6 +24,7 @@ public class SnacksTag {
     String snacksTagContent;
 
     @Temporal(TemporalType.DATE)
+    @CreatedDate
     Date snacksRegdate;
 
 }

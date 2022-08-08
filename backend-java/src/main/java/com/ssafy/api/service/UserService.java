@@ -5,6 +5,7 @@ import com.ssafy.api.request.user.UserRegisterPostReq;
 
 import com.ssafy.api.response.admin.UserRes;
 import com.ssafy.api.response.snacks.SnacksRes;
+import com.ssafy.api.response.user.UserMyPayRes;
 import com.ssafy.db.entity.User;
 
 import com.ssafy.api.response.user.UserMyLectureRes;
@@ -30,7 +31,7 @@ public interface UserService {
 	void sendPw(MailUtil mail) throws MessagingException;
 	List<UserMyLectureRes> getLecturesByUserId(String userId);
 	List<SnacksRes> getSnacksByUserId(String UserId);
-	List<Pay> getPaysByUserId(String userId);
+	List<UserMyPayRes> getPaysByUserId(String userId);
 	User getUserByRefreshToken(String refreshToken);
 	int logout(String userId);
 	List<UserRes> getUsers();

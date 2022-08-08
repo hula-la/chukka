@@ -292,21 +292,18 @@ public class UserController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", list));
 	}
 
-	// 수정 필요 ********************************************************************************************************
-	// - fetch join 되는지 확인하기 ***************************************************************************************
 	// 마이페이지 결제 목록 ================================================================================================
 	@GetMapping("/myorders/")
 	@ApiOperation(value = "나의 결제 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 결제 목록을 반환한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success", response = String.class)
+			@ApiResponse(code = 200, message = "Success", response = UserMyPayRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> getMyOrders(
 			@ApiIgnore Authentication authentication) {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
-		List<Pay> list = userService.getPaysByUserId(loginUserId);
-//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyPayListRes.of(list)));
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+		List<UserMyPayRes> list = userService.getPaysByUserId(loginUserId);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", list));
 
 	}
 
