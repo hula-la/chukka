@@ -1,3 +1,19 @@
+# 연의꺼 추가
+import os
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"  # or even "-1"
+import tensorflow as tf
+from tensorflow.python.client import device_lib
+
+print(device_lib.list_local_devices())
+if tf.test.gpu_device_name():
+    print('GPU found')
+else:
+    print("No GPU found")
+
+print("==========================================================")
+
+
 from fastapi.responses import StreamingResponse, FileResponse
 import warnings
 from sklearn.preprocessing import Normalizer
@@ -19,6 +35,8 @@ import json
 
 from requests import get
 app = FastAPI()
+
+
 
 
 # @app.websocket("/ws")
@@ -88,20 +106,38 @@ def findCosineSimilarity_1(source_representation, test_representation):
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
+
         # trainer_video = r'dance_video/dancer.mp4'
         keyp_list = np.genfromtxt("dancer_keyp_list.csv", delimiter=",")
 
-        dim = (420, 720)
+        dim=(500,500)
         prev_time = 0
         # FPS = 1
         cnt = 0
         while True:
             if cnt >= len(keyp_list):
+                cv2.destroyAllWindows()
                 await websocket.close()
                 break
 
+            a_time = time.time()
+
             data = await websocket.receive_text()
             print(cnt)
+
+# 댄서 영상 스켈레톤 매핑 후 클라이언트한테 전달
+            if (cnt+1<len(keyp_list)):
+                dancer_image = np.zeros(dim)
+                dancer_image = TfPoseEstimator.sj_draw_humans(dancer_image, keyp_list[cnt+1], imgcopy=False)
+                cv2.imshow('Dancer', dancer_image)
+
+                ret, buffer = cv2.imencode('.jpg', dancer_image)
+                b_time = time.time()
+                print(f'댄서 영상 시간: {b_time-a_time}')
+                await websocket.send_bytes(bytearray(buffer))
+
+
+
             cnt += 1
             img = cv2.imdecode(np.fromstring(base64.b64decode(
                 data.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
@@ -110,13 +146,14 @@ async def websocket_endpoint(websocket: WebSocket):
             # current_time = time.time() - prev_time
             # if img is not None  :
             # resizing the images
-            image_1 = cv2.flip(image_1, 1)
+            
+            # [수정] image_1 = cv2.flip(image_1, 1)
             image_1 = cv2.resize(image_1, dim, interpolation=cv2.INTER_AREA)
             humans_2 = e.inference(image_1, resize_to_default=(
                 w > 0 and h > 0), upsample_size=4.0)
             # Dancer keypoints and normalization
             transformer = Normalizer().fit(keyp_list)
-            keyp_list = transformer.transform(keyp_list)
+            t_keyp_list = transformer.transform(keyp_list)
             # Getting User keypoints, normalization and comparing also plotting the keypoints and lines to the image
             image_1 = TfPoseEstimator.draw_humans(
                 image_1, humans_2, imgcopy=False)  # 선 표시하는 코드
@@ -151,7 +188,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 features = transformer.transform([features])
                 min_ = 100  # Intializing a value to get minimum cosine similarity score from the dancer array list with the user
 
-                sim_score = findCosineSimilarity_1(keyp_list[cnt], features[0])
+                sim_score = findCosineSimilarity_1(t_keyp_list[cnt], features[0])
                 # Getting the minimum Cosine Similarity Score
                 if min_ > sim_score:
                     min_ = sim_score
@@ -172,19 +209,30 @@ async def websocket_endpoint(websocket: WebSocket):
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
             ret, buffer = cv2.imencode('.jpg', image_1)
+
+            c_time = time.time()
+            print(f'댄서 영상 시간: {c_time-a_time}')
+
             await websocket.send_text(str(min_))  # client 에 메시지 전달
-            # frame = buffer.tobytes()
+
+            frame = buffer.tobytes()
+            ret, buffer = cv2.imencode('.jpg', dancer_image)
+            await websocket.send_bytes(bytearray(buffer))
 
             prev_time = time.time()
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
             # else:
+
+            # if 1000*(c_time-a_time)<1000:
+                # cv2.waitKey(round(1000-1000*(c_time-a_time)))
+            
             #     cv2.waitKey(1)
 
         # cv2.waitKey(1)
 
 
-some_file_path = "dance_video/dancer.mp4"
+some_file_path = "dance_video/soojin.mp4"
 
 
 @app.get("/game/dancer")

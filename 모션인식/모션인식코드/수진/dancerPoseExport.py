@@ -107,26 +107,35 @@ print('********* Model Ready *************')
 #     return keypoints_list
 
 
-def dance_video_processing(video_path= r'dance_video/correct30.mp4',showBG = True):
+def dance_video_processing(video_path= r'dance_video/dancer.mp4',showBG = True):
 
     cap = cv2.VideoCapture(video_path)
     video_fps = cap.get(cv2.CAP_PROP_FPS)
     # delay 추가, 실제 비디오 fps로 조절함
-    delay = int(1000/video_fps)
+    delay = round(3*1000/video_fps)
+    print(f'"delay" {delay}')
+    # delay = int(100)
+
 
     if cap.isOpened() is False:
         print("Error opening video stream or file")
 
     # prev_time = 0 -> 맨처음 시간 초기화 수정
-    prev_time = time.time()
-    FPS = 5
+    # prev_time = time.time()
+    prev_time = 0
+    img_prev_time = time.time()
+    FPS = 1/3
+    # FPS = 2/3
     keypoints_list=[]
     
     while True:
         ret_val, image = cap.read()
         current_time = time.time() - prev_time
+        # img_current_time = time.time() - img_prev_time
         dim = (368, 428)
         if (ret_val is True) and (current_time > 1./FPS) :
+            a = time.time()    
+
             image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
             humans = e.inference(image,
                                  resize_to_default=(w > 0 and h > 0),
@@ -139,9 +148,11 @@ def dance_video_processing(video_path= r'dance_video/correct30.mp4',showBG = Tru
             image_h, image_w = npimg.shape[:2]
             centers = {}
             
+            
             for human in humans:
                     for i in range(common.CocoPart.Background.value):
                             if i not in human.body_parts.keys():
+                                    # print(i)
                                     continue
                             body_part = human.body_parts[i]
                             x_axis=int(body_part.x * image_w + 0.5)
@@ -149,14 +160,25 @@ def dance_video_processing(video_path= r'dance_video/correct30.mp4',showBG = Tru
                             center=[x_axis,y_axis]
                             centers[i] = center
                     # 수정 : 한 묶음이 append 되도록 수정
+                    # print(centers)
                     keypoints_list.append(centers)
 
             cv2.putText(image, "FPS: %f" % (1.0 / (time.time() - prev_time)), (10, 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
             
-            cv2.imshow('Dancer', image) 
+            # cv2.imshow('Dancer', image) 
 
             prev_time = time.time() 
+            
+            b = time.time()
+
+            cv2.waitKey(delay)
+
+            # print("****************")
+            print(((b-a)*1000))
+            # print("****************")
+
+            # cv2.waitKey(int(delay-(b-a)*1000))
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -166,6 +188,8 @@ def dance_video_processing(video_path= r'dance_video/correct30.mp4',showBG = Tru
         else:
             # cv2.waitKey(1) => 데이터 분석 안할 때는 delay 초 만큼 지연되도록 수정
             image = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
+            cv2.putText(image, "FPS: %f" % (1.0 / (time.time() - prev_time)), (10, 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
             cv2.imshow('Dancer', image) 
             cv2.waitKey(delay)
             
@@ -184,7 +208,7 @@ def get_position(video_path= r'dance_video/correct30.mp4',showBG = True):
     # data = pd.read_csv("keypoints_list.csv",delimiter="\t")
 
     keyp_list=[]
-    print(len(keypoints_list))
+    # print(len(keypoints_list))
     # Preprocessing of the keypoints data
     for i in range(0, len(keypoints_list)):
         k=-2
@@ -207,8 +231,8 @@ def get_position(video_path= r'dance_video/correct30.mp4',showBG = True):
     return data,keyp_list
 
 
-data,keyp_list=get_position(video_path= r'dance_video/dancer.mp4')
+data,keyp_list=get_position(video_path= r'dance_video/soojin.mp4')
 data.to_csv("dancer_keyp_list.csv", index=False, header=False)
 data = pd.read_csv("dancer_keyp_list.csv",delimiter=",")
-print(data)
+# print(data)
 
