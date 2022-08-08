@@ -134,10 +134,11 @@ const SingleMode = () => {
     Video: { backgroundColor: 'gray', width: '50%', height: '50vh' },
     stream : {  height:'100%',  width:'100%'},
     Canvas: { width: "100%", height: "100%", background: 'rgba(245, 240, 215, 0.5)' },
-    ScoreBox: {position:'relative', zindex:"3" },
+    ScoreBox: {position:'relative', zIndex:"3" },
     Score: { position: 'absolute',  width: '50%', top:'10px', height: '10vh'},
+    Time: { position: 'absolute',  width: '50%', top:'10px', height: '10vh', zIndex: '5'},
     None: { display: 'none' },
-    previewImage: {position: 'absolute',height: '10vh'}
+    previewImage: {position: 'absolute',height: '15vh'}
   }
 
 
@@ -240,12 +241,12 @@ const SingleMode = () => {
         if (similarity == 0) {
           setGameEF("http://localhost:3000/img/game_effect/norecognize.png");
         }
-        else if (similarity < 0.05) {
+        else if (similarity < 0.03) {
           // scoreImage.src = "http://localhost:3000/img/game_effect/perfect.png";
           setGameEF("http://localhost:3000/img/game_effect/perfect.png");
           console.log("perfect:")
           // img.src = 'img/game_effect/perfect.png';
-        } else if (similarity < 0.15) {
+        } else if (similarity < 0.05) {
           // scoreImage.src = "http://localhost:3000/img/game_effect/Good.png";
           setGameEF("http://localhost:3000/img/game_effect/Good.png");
           console.log("Good:")
@@ -334,7 +335,7 @@ const SingleMode = () => {
       <div style={ Styles.gameBox}>
         <div style={Styles.Videobox}>
           <div style={Styles.previewImage}>
-            <div style={Styles.Score}>ms: { time }</div>
+            <div style={Styles.Time}>ms: { time }</div>
             <img id="previewImg" src={previewImage}  style={Styles.previewImage}/>
 
           </div>

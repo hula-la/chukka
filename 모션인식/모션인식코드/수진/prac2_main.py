@@ -106,6 +106,7 @@ def findCosineSimilarity_1(source_representation, test_representation):
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
+
         # trainer_video = r'dance_video/dancer.mp4'
         keyp_list = np.genfromtxt("dancer_keyp_list.csv", delimiter=",")
 
@@ -119,6 +120,8 @@ async def websocket_endpoint(websocket: WebSocket):
                 await websocket.close()
                 break
 
+            a_time = time.time()
+
             data = await websocket.receive_text()
             print(cnt)
 
@@ -129,6 +132,8 @@ async def websocket_endpoint(websocket: WebSocket):
                 cv2.imshow('Dancer', dancer_image)
 
                 ret, buffer = cv2.imencode('.jpg', dancer_image)
+                b_time = time.time()
+                print(f'댄서 영상 시간: {b_time-a_time}')
                 await websocket.send_bytes(bytearray(buffer))
 
 
@@ -204,21 +209,30 @@ async def websocket_endpoint(websocket: WebSocket):
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
             ret, buffer = cv2.imencode('.jpg', image_1)
+
+            c_time = time.time()
+            print(f'댄서 영상 시간: {c_time-a_time}')
+
             await websocket.send_text(str(min_))  # client 에 메시지 전달
-            # frame = buffer.tobytes()
-            # ret, buffer = cv2.imencode('.jpg', dancer_image)
-            # await websocket.send_bytes(bytearray(buffer))
+
+            frame = buffer.tobytes()
+            ret, buffer = cv2.imencode('.jpg', dancer_image)
+            await websocket.send_bytes(bytearray(buffer))
 
             prev_time = time.time()
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
             # else:
+
+            # if 1000*(c_time-a_time)<1000:
+                # cv2.waitKey(round(1000-1000*(c_time-a_time)))
+            
             #     cv2.waitKey(1)
 
         # cv2.waitKey(1)
 
 
-some_file_path = "dance_video/dancer.mp4"
+some_file_path = "dance_video/soojin.mp4"
 
 
 @app.get("/game/dancer")
