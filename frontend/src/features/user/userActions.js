@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { login, register, getToken, fetchPro } from '../../api/user';
-import client from '../../api/client';
+import { login, register, getToken, fetchPro, find } from '../../api/user';
 
 const BASE_URL = 'http://127.0.0.1:8080';
 
@@ -90,6 +89,23 @@ export const fetchAccessToken = createAsyncThunk(
       return data;
     } catch (error) {
       console.log(error);
+    }
+  },
+);
+
+export const findPw = createAsyncThunk(
+  'user/findPw',
+  async (input, { rejectWithValue }) => {
+    try {
+      console.log(input);
+      const { data } = await find(input);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
     }
   },
 );
