@@ -35,6 +35,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
@@ -231,7 +232,7 @@ public class UserController {
 			@ApiResponse(code = 401, message = "Invalid Email", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<BaseResponseBody> searchPw(
-			@RequestBody @ApiParam(value="회원 아이디 및 이메일", required = true) UserPasswordSearchReq info) {
+			@RequestBody @ApiParam(value="회원 아이디 및 이메일", required = true) UserPasswordSearchReq info) throws MessagingException {
 		String userId = info.getUserId();
 		String userEmail = info.getUserEmail();
 		User user = userService.getUserByUserId(userId);
@@ -333,11 +334,12 @@ public class UserController {
 			@ApiResponse(code = 401, message = "Invalid Token", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<? extends BaseResponseBody> reauth(
-			@RequestBody @ApiParam(value="유저 아이디", required = true) String userId,
+			@RequestBody @ApiParam(value="유저 아이디", required = true) Map<String, String> data,
 			HttpServletRequest req) {
 		String refreshToken = req.getHeader("refresh-token");
+		String userId = data.get("userId");
 		User user = userService.getUserByRefreshToken(refreshToken);
-		if(('"' + user.getUserId() + '"').equals(userId)) {
+		if(user.getUserId().equals(userId)) {
 			String accessToken = JwtTokenUtil.getToken(userId);
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserReAuthRes.of(accessToken)));
 		}
