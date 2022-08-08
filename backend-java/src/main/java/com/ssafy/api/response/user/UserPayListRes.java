@@ -1,5 +1,6 @@
 package com.ssafy.api.response.user;
 
+import com.ssafy.db.entity.PayList;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -12,24 +13,18 @@ import lombok.Setter;
 @Setter
 @ApiModel("UserPayListResponse")
 public class UserPayListRes {
-	@ApiModelProperty(name="JWT 인증 토큰", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN...")
-	String accessToken;
-	@ApiModelProperty(name="JWT 리프레쉬 토큰", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN...")
-	String refreshToken;
-	@ApiModelProperty(name="유저 Nickname", example="your_nickname")
-	String userNickname;
-	@ApiModelProperty(name="유저 Type", example="0")
-	int userType;
-	@ApiModelProperty(name="유저 Id", example="your_id")
-	String userId;
+	@ApiModelProperty(name="주문 목록 아이디", example="1")
+	int paylistId;
+	@ApiModelProperty(name="강의 아이디", example="1")
+	int lecId;
+	@ApiModelProperty(name="강의 아이디2", example="1")
+	int lecId2;
 
-	public static UserPayListRes of(String accessToken, String refreshToken, String userNickname, int userType, String userId) {
+
+	public static UserPayListRes of(PayList payList) {
 		UserPayListRes res = new UserPayListRes();
-		res.setAccessToken(accessToken);
-		res.setRefreshToken(refreshToken);
-		res.setUserNickname(userNickname);
-		res.setUserType(userType);
-		res.setUserId(userId);
+		res.setPaylistId(payList.getPaylistId());
+		res.setLecId(payList.getLecture().getLecId());
 		return res;
 	}
 }

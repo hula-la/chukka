@@ -2,6 +2,10 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.response.admin.UserRes;
+import com.ssafy.api.response.lecture.LectureGetForListRes;
+import com.ssafy.api.response.snacks.SnacksRes;
+import com.ssafy.api.response.user.UserMyPayRes;
+import com.ssafy.api.response.user.UserPayListRes;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ssafy.api.response.user.UserMyLectureRes;
@@ -10,6 +14,7 @@ import com.ssafy.db.entity.Pay;
 import com.ssafy.db.entity.Snacks;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -28,6 +33,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  *	유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -157,13 +163,19 @@ public class UserServiceImpl implements UserService {
 
 	// 유저 아이디로 스낵스 목록 조회
 	@Override
-	public List<Snacks> getSnacksByUserId(String userId) {
-		return snacksRepository.findSnacksByUserUserIdOrderBySnacksIdDesc(userId);
+	public List<SnacksRes> getSnacksByUserId(String userId) {
+		List<SnacksRes> snack = snacksRepository.findSnacksByUserUserIdOrderBySnacksIdDesc(userId)
+				.stream().map(s -> SnacksRes.of(s)).collect(Collectors.toList());
+		return snack;
 	}
 
 	// 유저 아이디로 결제 목록 조회
 	@Override
 	public List<Pay> getPaysByUserId(String userId) {
+		List<UserMyPayRes> pay = payRepository.findPaylistUsingFetchJoin(userId)
+				.stream().map(s -> UserMyPayRes.of(s)).collect(Collectors.toList());
+//				.stream().map(s -> new UserMyPayRes(s.getPayId(), s.getUserId(), s.getPayDate(), s.getPayAmount(), s.getPayMethod(), s.getPayLists()
+//						.stream().map(ss-> UserPayListRes.of(ss)).collect(Collectors.toList()))).collect(Collectors.toList());
 //		payRepository.findPaylistUsingFetchJoin(userId).stream().map(s -> new);
 		return payRepository.findPaylistUsingFetchJoin(userId);
 	}

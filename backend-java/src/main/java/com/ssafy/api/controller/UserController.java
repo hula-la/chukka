@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.user.UserModifyReq;
+import com.ssafy.api.response.snacks.SnacksRes;
 import com.ssafy.api.response.user.UserYourRes;
 import com.ssafy.common.util.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,13 +192,14 @@ public class UserController {
 	})
 	public ResponseEntity<BaseResponseBody> modifyProfile(
 			@ApiIgnore Authentication authentication,
-			@RequestPart @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo,
+			@RequestPart("data") @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo,
+			@RequestPart @ApiParam(value="수정 회원 프로필 파일") MultipartFile file,
 			HttpServletRequest req) throws IOException {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		User user = userService.updateUser(loginUserId, modifyInfo);
 		// 프로필 이미지 파일 업로드
-		MultipartFile file = modifyInfo.getUserProfile();
+//		MultipartFile file = modifyInfo.getUserProfile();
 		if(file != null) {
 			s3Uploader.uploadFiles(file, "img/profile", req.getServletContext().getRealPath("/img/"), user.getUserId());
 		}
@@ -261,49 +263,51 @@ public class UserController {
 	}
 
 	// 수정 필요 ********************************************************************************************************
-	// - userId를 그냥 authentication에서 가져오기 ************************************************************************
-	// - pageable parameter로 가져오기 ***********************************************************************************
+	// - 라이브 / 녹화 강의 모두 가져오기 ***********************************************************************************
 	// 마이페이지 수강 목록 ================================================================================================
-	@GetMapping("/{userId}/lectures/")
+	@GetMapping("/mylectures/")
 	@ApiOperation(value = "나의 수강 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 수강 강의 목록을 반환한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = UserMyLectureListRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> getMyLecture(
-			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId) {
-		List<UserMyLectureRes> list = userService.getLecturesByUserId(userId);
+			@ApiIgnore Authentication authentication) {
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String loginUserId = userDetails.getUsername();
+		List<UserMyLectureRes> list = userService.getLecturesByUserId(loginUserId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyLectureListRes.of(list)));
 	}
 
-	// 수정 필요 ********************************************************************************************************
-	// - userId를 그냥 authentication에서 가져오기 ************************************************************************
-	// - pageable parameter로 가져오기 ***********************************************************************************
-	// 마이페이지 스낵스 목록 ================================================================================================
-	@GetMapping("/{userId}/snacks/")
+	// 마이페이지 스낵스 목록 ==============================================================================================
+	@GetMapping("/mysnacks/")
 	@ApiOperation(value = "나의 스낵스 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 업로드 스낵스 목록을 반환한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success", response = UserMySnacksListRes.class)
+			@ApiResponse(code = 200, message = "Success", response = SnacksRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> getMySnacks(
-			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId) {
-		List<Snacks> list = userService.getSnacksByUserId(userId);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMySnacksListRes.of(list)));
+			@ApiIgnore Authentication authentication) {
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String loginUserId = userDetails.getUsername();
+		List<SnacksRes> list = userService.getSnacksByUserId(loginUserId);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", list));
 	}
 
 	// 수정 필요 ********************************************************************************************************
-	// - userId를 그냥 authentication에서 가져오기 ************************************************************************
-	// - pageable parameter로 가져오기 ***********************************************************************************
 	// - fetch join 되는지 확인하기 ***************************************************************************************
 	// 마이페이지 결제 목록 ================================================================================================
-	@GetMapping("/{userId}/orders/")
+	@GetMapping("/myorders/")
 	@ApiOperation(value = "나의 결제 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 결제 목록을 반환한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success", response = UserMyPayListRes.class)
+			@ApiResponse(code = 200, message = "Success", response = String.class)
 	})
 	public ResponseEntity<BaseResponseBody> getMyOrders(
-			@PathVariable @ApiParam(value="유저 아이디", required = true) String userId) {
-		List<Pay> list = userService.getPaysByUserId(userId);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyPayListRes.of(list)));
+			@ApiIgnore Authentication authentication) {
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String loginUserId = userDetails.getUsername();
+		List<Pay> list = userService.getPaysByUserId(loginUserId);
+//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyPayListRes.of(list)));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+
 	}
 
 	// 회원 탈퇴 ========================================================================================================
