@@ -74,7 +74,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         if (token != null) {
             // 비로그인
             if (token.equals("1")) {
-                return new UsernamePasswordAuthenticationToken("1", null);
+                return new UsernamePasswordAuthenticationToken("1", null, null);
             }
             // parse the token and validate it (decode)
             JWTVerifier verifier = JwtTokenUtil.getVerifier();
