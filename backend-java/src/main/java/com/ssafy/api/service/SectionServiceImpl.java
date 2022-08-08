@@ -1,0 +1,83 @@
+package com.ssafy.api.service;
+
+import com.ssafy.api.request.section.SectionPostReq;
+import com.ssafy.api.request.section.SectionUpdateReq;
+import com.ssafy.api.response.section.SectionGetRes;
+import com.ssafy.db.entity.Instructor;
+import com.ssafy.db.entity.Lecture;
+import com.ssafy.db.entity.Section;
+import com.ssafy.db.repository.InstructorRepository;
+import com.ssafy.db.repository.LectureRepository;
+import com.ssafy.db.repository.SectionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service("SectionService")
+public class SectionServiceImpl implements SectionService{
+
+    @Autowired
+    SectionRepository sectionRepository;
+    @Autowired
+    LectureRepository lectureRepository;
+    @Autowired
+    InstructorRepository instructorRepository;
+
+    // 섹션 생성
+    @Override
+    public Section createSection(SectionPostReq sectionPostReq) {
+        Optional<Lecture> lec = lectureRepository.findById(sectionPostReq.getLecId());
+        Optional<Instructor> ins = instructorRepository.findById(sectionPostReq.getInsId());
+        if(!lec.isPresent() || !ins.isPresent()) {
+            return null;
+        }
+        Section section = Section.builder()
+                    .lecture(lec.get())
+                    .instructor(ins.get())
+                    .secTitle(sectionPostReq.getSecTitle())
+                    .build();
+        return sectionRepository.save(section);
+    }
+
+    // 강의 아이디로 섹션 목록 조회
+    @Override
+    public List<SectionGetRes> getSectionByLecId(int lecId) {
+        List<Section> list = sectionRepository.findAll();
+        List<SectionGetRes> sections = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            sections.add(SectionGetRes.of(list.get(i)));
+        }
+        return sections;
+    }
+
+    // 섹션 수정 (해당 강의 아이디, 강사 아이디, 섹션 아이디가 없을 때 null 반환 그 외 수정된 섹션 객체 반환)
+    @Override
+    public Section updateSection(int secId, SectionPostReq sectionInfo) {
+        Optional<Lecture> lec = lectureRepository.findById(sectionInfo.getLecId());
+        Optional<Instructor> ins = instructorRepository.findById(sectionInfo.getInsId());
+        if(!lec.isPresent() || !ins.isPresent()) {
+            return null;
+        }
+        if(sectionRepository.findById(secId).isPresent()) {
+            Section section = Section.builder().secId(secId)
+                    .lecture(lec.get())
+                    .instructor(ins.get())
+                    .secTitle(sectionInfo.getSecTitle())
+                    .build();
+            return sectionRepository.save(section);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteBySecId(int secId) {
+        if(sectionRepository.findById(secId).isPresent()) {
+            sectionRepository.delete(Section.builder().secId(secId).build());
+            return true;
+        }
+        return false;
+    }
+}
