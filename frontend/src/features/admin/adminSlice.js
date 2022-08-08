@@ -5,6 +5,7 @@ import {
   fetchUserList,
   fetchInstList,
   changeInsInfo,
+  submitPicture,
 } from './adminActions';
 
 const initialState = {
@@ -76,10 +77,23 @@ const adminSlice = createSlice({
     },
     [changeInsInfo.fulfilled]: (state, { payload }) => {
       console.log('change!');
+      console.log(payload);
       state.instList = payload.data;
     },
     [changeInsInfo.rejected]: () => {
       console.log('rejected!');
+    },
+
+    // 강사 프로필 수정
+    [submitPicture.pending]: () => {
+      console.log('pending!');
+    },
+    [submitPicture.fulfilled]: (state, { payload }) => {
+      console.log(payload);
+    },
+    [submitPicture.rejected]: (state, { payload }) => {
+      console.log('rejected!');
+      console.log(payload);
     },
   },
 });

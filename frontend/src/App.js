@@ -1,9 +1,5 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import { fetchAccessToken } from './features/user/userActions';
-
 // page
 import Layout from './layout/Layout';
 // user
@@ -12,8 +8,8 @@ import LoginPage from './pages/user/LoginPage';
 import LogoutPage from './pages/user/LogoutPage';
 import SignUpPage from './pages/user/SignUpPage';
 import ProfilePage from './pages/user/ProfilePage';
-// import CartPage from './pages/user/Cartpage';
-
+import FindPwPage from './pages/user/FindPwPage';
+import CartPage from './pages/user/CartPage';
 // lectures
 import LecturesPage from './pages/lecture/LecturesPage';
 import LivePage from './pages/lecture/LivePage';
@@ -27,14 +23,6 @@ import AdminPage from './pages/admin/AdminPage';
 import NotFound from './pages/NotFound';
 import LectureDetailpage from './pages/lecture/LectureDetailpage';
 const App = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    if (refreshToken && userInfo) {
-      dispatch(fetchAccessToken({ refreshToken, userInfo }));
-    }
-  }, [dispatch]);
   return (
     <div className="App">
       <Routes>
@@ -47,8 +35,10 @@ const App = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="logout" element={<LogoutPage />} />
           <Route path="signup" element={<SignUpPage />} />
+          <Route path="profile/:nickName" element={<ProfilePage />} />
+          <Route path="password" element={<FindPwPage />} />
           <Route path="profile/:nickname" element={<ProfilePage />} />
-          {/* <Route path="cart" element={<CartPage />} /> */}
+          <Route path="cart" element={<CartPage />} />
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>

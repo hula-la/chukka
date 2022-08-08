@@ -21,6 +21,23 @@ export const fetchInst = async () => {
 };
 
 export const insInfo = async (data) => {
-  const res = await client.put('admin/instrutors/', data);
+  const res = await client.put('admin/instructors/', data);
+  return res;
+};
+
+export const picture = async (profileInsId, profile) => {
+  const formData = new FormData();
+  formData.append('profile', profile);
+
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  };
+  const res = await client.put(
+    `admin/instructors/${profileInsId}`,
+    formData,
+    config,
+  );
   return res;
 };
