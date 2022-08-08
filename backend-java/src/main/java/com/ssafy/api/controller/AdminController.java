@@ -149,12 +149,12 @@ public class AdminController {
 	})
 	public ResponseEntity<BaseResponseBody> registerSection(
 			@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId,
-			@RequestBody @ApiParam(value="강의 정보", required = true) SectionPostReq sectionInfo,
+			@RequestPart @ApiParam(value="강의 정보", required = true) SectionPostReq sectionInfo,
 			HttpServletRequest req) throws IOException {
 		Section section = sectionService.createSection(sectionInfo);
 		MultipartFile contents = sectionInfo.getSecContents();
-		if(!contents.isEmpty()) {
-			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/vid/section/contents/"), Integer.toString(section.getSecId()));
+		if(contents != null) {
+			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/img/"), Integer.toString(section.getSecId()));
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId)));
 	}
@@ -166,12 +166,12 @@ public class AdminController {
 			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> modifyLecture(
-			@RequestBody @ApiParam(value = "수정할 강의 내용", required = true) LectureUpdateReq lectureInfo,
+			@RequestPart @ApiParam(value = "수정할 강의 내용", required = true) LectureUpdateReq lectureInfo,
 			HttpServletRequest req) throws IOException {
 		lectureService.updateLecture(lectureInfo.getLecId(), lectureInfo);
 		MultipartFile thumbnail = lectureInfo.getThumbnail();
-		if(!thumbnail.isEmpty()) {
-			s3Uploader.uploadFiles(thumbnail, "img/lecture/thumbnail", req.getServletContext().getRealPath("/img/lecture/thumbnail/"), Integer.toString(lectureInfo.getLecId()));
+		if(thumbnail != null) {
+			s3Uploader.uploadFiles(thumbnail, "img/lecture/thumbnail", req.getServletContext().getRealPath("/img/"), Integer.toString(lectureInfo.getLecId()));
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
 	}
@@ -184,12 +184,12 @@ public class AdminController {
 	})
 	public ResponseEntity<BaseResponseBody> modifySection(
 			@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId,
-			@RequestBody @ApiParam(value = "수정할 섹션 내용", required = true) SectionPostReq sectionInfo,
+			@RequestPart @ApiParam(value = "수정할 섹션 내용", required = true) SectionPostReq sectionInfo,
 			HttpServletRequest req) throws IOException {
 		Section section = sectionService.updateSection(sectionInfo.getLecId(), sectionInfo);
 		MultipartFile contents = sectionInfo.getSecContents();
-		if(!contents.isEmpty()) {
-			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/vid/section/contents/"), Integer.toString(section.getSecId()));
+		if(contents != null) {
+			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/img/"), Integer.toString(section.getSecId()));
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId)));
 	}
@@ -229,32 +229,16 @@ public class AdminController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", instructorService.findAll()));
 	}
 
-	// 강사 정보 추가 ====================================================================================================
-//	@PostMapping("/instructors/")
-//	@ApiOperation(value = "강사 정보 추가", notes = "<strong>강사 아이디, 이름, 이메일, 프로필, 그리고 소개</strong>를 받아 강사를 추가한다.")
-//	@ApiResponses({
-//			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
-//	})
-//	public ResponseEntity<BaseResponseBody> registerInstructorInfo(@RequestBody @ApiParam(value="강사 정보", required = true) InstructorPostReq insInfo, HttpServletRequest req) throws IOException {
-//		instructorService.createInstructor(insInfo);
-//		MultipartFile profile = insInfo.getInsProfile();
-//		if(!profile.isEmpty()) {
-//			s3Uploader.uploadFiles(profile, "img/instructor/profile", req.getServletContext().getRealPath("/img/instructor/profile/"), insInfo.getInsId());
-//		}
-//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
-//	}
-
 	// 강사 정보 수정 ====================================================================================================
 	@PutMapping("/instructors/")
-	@ApiOperation(value = "강사 정보 수정", notes = "<strong>강사 아이디, 이름, 이메일, 프로필, 그리고 소개</strong>를 받아 특정 강사의 정보를 수정한다.")
+	@ApiOperation(value = "강사 정보 수정", notes = "<strong>강사 아이디, 이름, 이메일, 그리고 소개</strong>를 받아 특정 강사의 정보를 수정한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<BaseResponseBody> modifyInstructorInfo(
-			@RequestBody @ApiParam(value = "수정할 강사 정보", required = true) InstructorPostReq insInfo,
-			HttpServletRequest req) throws IOException {
+			@RequestBody @ApiParam(value = "수정할 강사 정보", required = true) InstructorPostReq insInfo) {
 		instructorService.updateInstructor(insInfo);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", instructorService.findAll()));
 	}
 
 	// 강사 프로필 수정 ====================================================================================================
@@ -265,12 +249,12 @@ public class AdminController {
 	})
 	public ResponseEntity<BaseResponseBody> modifyInstructorProfile(
 			@PathVariable @ApiParam(value="강사 아이디", required = true) String insId,
-			@RequestBody @ApiParam(value = "수정할 강사 정보", required = true) MultipartFile profile,
+			@RequestPart @ApiParam(value = "수정할 강사 정보", required = true) MultipartFile profile,
 			HttpServletRequest req) throws IOException {
-		if(!profile.isEmpty()) {
-			s3Uploader.uploadFiles(profile, "img/instructor/profile", req.getServletContext().getRealPath("/img/instructor/profile/"), insId);
+		if(profile != null) {
+			s3Uploader.uploadFiles(profile, "img/instructor/profile", req.getServletContext().getRealPath("/img/"), insId);
 		}
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", instructorService.findAll()));
 	}
 
 	// 강사 삭제 ====================================================================================================

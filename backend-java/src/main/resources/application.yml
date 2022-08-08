@@ -26,9 +26,9 @@ logging:
   level:
     org:
       springframework:
-        boot: DEBUG
-        security: DEBUG
-        web: DEBUG
+#        boot: DEBUG
+#        security: DEBUG
+#        web: DEBUG
       apache:
         tiles: INFO
       hibernate:

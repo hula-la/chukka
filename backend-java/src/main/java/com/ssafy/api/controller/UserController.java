@@ -127,7 +127,7 @@ public class UserController {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserLoginPostRes.of(accessToken, refreshToken, user.getUserNickname(), user.getUserType(), user.getUserId())));
 		}
 		// 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Invalid User", null));
+		return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid User", null));
 	}
 
 	// 로그아웃 =========================================================================================================
@@ -148,7 +148,7 @@ public class UserController {
     @ApiResponses({
         @ApiResponse(code = 200, message = "MySuccess", response = UserMyRes.class),
 		@ApiResponse(code = 201, message = "YourSuccess", response = UserYourRes.class),
-        @ApiResponse(code = 401, message = "Invalid Nickname", response = BaseResponseBody.class),
+        @ApiResponse(code = 404, message = "Invalid Nickname", response = BaseResponseBody.class),
 		@ApiResponse(code = 403, message = "Invalid User", response = BaseResponseBody.class)
     })
 	public ResponseEntity<BaseResponseBody> getUserInfo(
@@ -158,27 +158,27 @@ public class UserController {
 		 * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
 		 * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
 		 */
-		User user = userService.getUserByUserNickname(data.get("data"));
+		User user = userService.getUserByUserNickname(data.get("userNickname"));
 		// 해당 닉네임의 유저 없음
 		if(user == null) {
-			return ResponseEntity.status(401).body(new BaseResponseBody(401, "Invalid Nickname", null));
+			return ResponseEntity.status(404).body(new BaseResponseBody(404, "Invalid Nickname", null));
 		}
-		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-		// 토큰이 없을 때
-		if (userDetails.getUser() == null) {
-			return ResponseEntity.status(200).body(BaseResponseBody.of(201, "YourSuccess", UserYourRes.of(user)));
-		}
-		// 토큰이 만료됐을 때
-		if (userDetails.isAccountNonExpired()) {
+		// 토큰에 문제가 있을 때
+		if(authentication == null) {
 			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Invalid User", null));
 		}
+		// 비로그인 시
+		if(authentication.getPrincipal().equals("1")) {
+			return ResponseEntity.status(201).body(BaseResponseBody.of(201, "YourSuccess", UserYourRes.of(user)));
+		}
 		// 정상 로그인 유저가 정상 닉네임 유저를 찾아갈 때
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		User loginUser = userService.getUserByUserId(loginUserId);
 		if(user.getUserId().equals(loginUserId)) {
 			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "MySuccess", UserMyRes.of(loginUser)));
 		} else {
-			return ResponseEntity.status(200).body(BaseResponseBody.of(201, "YourSuccess", UserYourRes.of(user)));
+			return ResponseEntity.status(201).body(BaseResponseBody.of(201, "YourSuccess", UserYourRes.of(user)));
 		}
 	}
 
@@ -190,15 +190,15 @@ public class UserController {
 	})
 	public ResponseEntity<BaseResponseBody> modifyProfile(
 			@ApiIgnore Authentication authentication,
-			@RequestBody @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo,
+			@RequestPart @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo,
 			HttpServletRequest req) throws IOException {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		User user = userService.updateUser(loginUserId, modifyInfo);
 		// 프로필 이미지 파일 업로드
 		MultipartFile file = modifyInfo.getUserProfile();
-		if(!file.isEmpty()) {
-			s3Uploader.uploadFiles(file, "img/profile", req.getServletContext().getRealPath("/img/profile/"), user.getUserId());
+		if(file != null) {
+			s3Uploader.uploadFiles(file, "img/profile", req.getServletContext().getRealPath("/img/"), user.getUserId());
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyRes.of(user)));
 	}

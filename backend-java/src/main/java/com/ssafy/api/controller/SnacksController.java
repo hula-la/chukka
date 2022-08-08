@@ -22,7 +22,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "스낵스 API", tags = {"Snacks"})
@@ -83,7 +82,7 @@ public class SnacksController {
         Snacks snacks = snacksService.uploadSnacks(snacksInfo, user);
         // 스낵스 영상 파일 업로드
         MultipartFile file = snacksInfo.getSnacksVideo();
-        if(!file.isEmpty()) {
+        if(file != null) {
             s3Uploader.uploadFiles(file, "vid/snacks", req.getServletContext().getRealPath("/vid/snacks/"), String.valueOf(snacks.getSnacksId()));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
@@ -164,6 +163,7 @@ public class SnacksController {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
     }
 
+    // 인기 태그 조회 ====================================================================================================
     @GetMapping("/tag/popular")
     @ApiOperation(value = "인기 태그 조회", notes = "최근 가장 인기 있는 태그 상위 10개를 조회한다.")
     @ApiResponses({

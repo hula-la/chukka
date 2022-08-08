@@ -19,8 +19,6 @@ public class InstructorPostReq {
 	String insName;
 	@ApiModelProperty(name="강사 Email", example="abcd@ssafy.com")
 	String insEmail;
-	@ApiModelProperty(name="강사 프로필", example="img/profile.png")
-	MultipartFile insProfile;
 	@ApiModelProperty(name="강사 소개", example="your_introduce")
 	String insIntroduce;
 

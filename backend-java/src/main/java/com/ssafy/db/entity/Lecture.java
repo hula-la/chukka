@@ -42,6 +42,7 @@ public class Lecture {
     private int lecLimit;
     private int lecStudent;
     private String lecGenre;
+    private String lecThumb;
 
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     private List<CartItem> cartItems = new ArrayList<>();

@@ -5,6 +5,7 @@ import com.ssafy.api.request.snacks.SnacksUploadReq;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,12 @@ public class SnacksServiceImpl implements SnacksService{
     private final SnacksTagRepository snacksTagRepository;
     private final SnacksReplyRepository snacksReplyRepository;
     private final UserRepository userRepository;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+    @Value("${cloud.aws.region.static}")
+    private String region;
+    private String PATH = "https://" + bucket + ".s3." + region + ".amazonaws.com/";
+
 
 
 //    public Snacks createSnacks(SnacksUploadReq snacksUploadReq) {
@@ -54,6 +61,7 @@ public class SnacksServiceImpl implements SnacksService{
        if (like.isPresent()){
            SnacksLike snacksLike = SnacksLike.builder().snacksLikeId(like.get().getSnacksLikeId()).build();
            snacksLikeRepository.delete(snacksLike);
+           snacksRepository.dislikeSnacks(snacksId);
            return "dislike";
        }
        long miliseconds = System.currentTimeMillis();
@@ -64,6 +72,7 @@ public class SnacksServiceImpl implements SnacksService{
                .likeSnacksReg(date)
                .build();
        snacksLikeRepository.save(snacksLike);
+       snacksRepository.likeSnacks(snacksId);
        return "like";
     }
 
@@ -93,10 +102,17 @@ public class SnacksServiceImpl implements SnacksService{
                 .user(user)
                 .build();
         Snacks snack = snacksRepository.save(snacks);
+        Snacks snackss = Snacks.builder()
+                .snacksTitle(snack.getSnacksTitle())
+                .snacksId(snack.getSnacksId())
+                .snacksRegdate(snack.getSnacksRegdate())
+                .user(user)
+                .snacksContents(PATH + snack.getSnacksId())
+                .build();
+        snacksRepository.save(snackss);
         // 태그 추가
-        uploadTags(snacksInfo, snack);
-        return snacks;
-
+        uploadTags(snacksInfo, snackss);
+        return snackss;
     }
 
     @Override
@@ -105,11 +121,14 @@ public class SnacksServiceImpl implements SnacksService{
     }
 
     public void uploadTags(SnacksUploadReq snacksInfo, Snacks snack){
+        long miliseconds = System.currentTimeMillis();
+        Date date = new Date(miliseconds);
         String[] snacksTags = snacksInfo.getSnacksTag().split(",");
         for (String tag:snacksTags) {
             SnacksTag snacksTag = SnacksTag.builder()
                     .snacks(snack)
                     .snacksTagContent(tag)
+                    .snacksRegdate(date)
                     .build();
             snacksTagRepository.save(snacksTag);
         }

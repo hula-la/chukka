@@ -40,6 +40,7 @@ public class User{
     private Integer userLvGame = 0;
     private Integer userGender;
     private String userRefreshToken;
+    private String userProfile;
 
     @Temporal(TemporalType.DATE)
     private Date userBirth;

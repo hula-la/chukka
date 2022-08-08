@@ -23,6 +23,8 @@ public class UserYourRes{
 	String userPhone;
 	@ApiModelProperty(name="User Email")
 	String userEmail;
+	@ApiModelProperty(name="User Profile", example="https://chukka/user/profile/user_id")
+	String userProfile;
 	@ApiModelProperty(name="User Gender", example="1")
 	int userGender;
 	@ApiModelProperty(name="User Nickname", example="your_nickname")
@@ -46,6 +48,7 @@ public class UserYourRes{
 		res.setUserLvLec(user.getUserLvLec());
 		res.setUserLvSnacks(user.getUserLvSnacks());
 		res.setUserLvGame(user.getUserLvGame());
+		res.setUserProfile(user.getUserProfile());
 		return res;
 	}
 }
