@@ -65,7 +65,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     Optional<Integer> updateLecture(int lecId,
                                     String lecTitle,
                                     String lecContents,
-
                                     int lecPrice,
                                     String lecNotice,
                                     Date lecStartDate,
