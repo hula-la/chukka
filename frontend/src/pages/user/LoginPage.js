@@ -121,7 +121,7 @@ const LoginForm = () => {
         <div>
           <p>Remember me?</p>
           <input type="checkbox" />
-          <Link to="/">비밀번호 까먹음?</Link>
+          <Link to="/accounts/password">비밀번호 까먹음?</Link>
         </div>
         <button>로그인</button>
 

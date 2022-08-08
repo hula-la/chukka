@@ -18,7 +18,6 @@ const userInfo = localStorage.getItem('userInfo')
 const initialState = {
   loading: false,
   userInfo,
-  accessToken: null,
   error: null,
   success: false,
   userProInfo: null,
@@ -33,7 +32,6 @@ const userSlice = createSlice({
       localStorage.removeItem('userInfo');
       state.loading = false;
       state.userInfo = null;
-      state.accessToken = null;
       state.error = null;
     },
   },
@@ -48,7 +46,6 @@ const userSlice = createSlice({
       // 요청 성공
       state.loading = false;
       state.userInfo = payload.userInfo;
-      state.accessToken = payload.accessToken;
     },
     [userLogin.rejected]: (state, { payload }) => {
       // 요청 실패

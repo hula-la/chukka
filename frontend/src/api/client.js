@@ -7,10 +7,55 @@ const client = axios.create({
   },
 });
 
+client.defaults.headers.common['Authorization'] = `Bearer 1`;
+
 client.interceptors.request.use(
-  function (config) {
+  async function (config) {
     // 요청이 전달되기 전에 작업 수행
     console.log('// 요청이 전달되기 전에 작업 수행');
+    client.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnaHducyIsImlzcyI6InNzYWZ5LmNvbSIsImV4cCI6MTY2MTIyMzg4NSwiaWF0IjoxNjU5OTI3ODg1fQ.lCxJKFvgYvkpt_n1yoF7iiHzC8dA8ZZQ0zvQTtHIvvBhjbU6IlZbClHRSfXqE-2UhDab41FWg-JtfLoZPYW7bw`;
+    try {
+      const refreshToken = localStorage.getItem('refreshToken')
+        ? localStorage.getItem('refreshToken')
+        : null;
+      const userId = localStorage.getItem('userInfo')
+        ? JSON.parse(localStorage.getItem('userInfo')).userId
+        : null;
+      if (
+        refreshToken &&
+        client.defaults.headers.common['Authorization'] === 'Bearer 1'
+      ) {
+        if (userId) {
+          const config = {
+            headers: {
+              'refresh-token': `${refreshToken}`,
+            },
+          };
+          const res = await axios.post(
+            'http://localhost:8080/accounts/refresh/',
+            { userId },
+            config,
+          );
+          const { accessToken } = res.data.data;
+          // const accessToken = res.data.data.accessToken;
+          client.defaults.headers.common[
+            'Authorization'
+          ] = `Bearer ${accessToken}`;
+          client.defaults.headers.common[
+            'Authorization'
+          ] = `Bearer ${accessToken}`;
+          console.log(accessToken);
+          // 헤더 설정하고 실패한 요청 다시보내기
+          console.log(client.defaults.headers.common['Authorization']);
+          return config;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     return config;
   },
   function (error) {
@@ -26,42 +71,13 @@ client.interceptors.response.use(
     // 2xx 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
     // 응답 데이터가 있는 작업 수행
     console.log('// 응답 데이터가 있는 작업 수행');
-    console.log(response);
     return response;
   },
-  async function (error) {
+  function (error) {
     // 2xx 외의 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
     // 응답 오류가 있는 작업 수행
     console.log('// 응답 오류가 있는 작업 수행');
-    try {
-      const originalRequest = error.config;
-      // console.log(client.defaults.headers.common);
-      const refreshToken = localStorage.getItem('refreshToken')
-        ? localStorage.getItem('refreshToken')
-        : null;
-      const userId = localStorage.getItem('userInfo')
-        ? JSON.parse(localStorage.getItem('userInfo')).userId
-        : null;
-      if (refreshToken && userId) {
-        const config = {
-          headers: {
-            'refresh-token': `${refreshToken}`,
-          },
-        };
-        const res = await client.post('accounts/refresh/', userId, config);
-        const { accessToken } = res.data.data;
-        console.log(accessToken);
-        client.defaults.headers.common[
-          'Authorization'
-        ] = `Bearer ${accessToken}`;
-
-        // 헤더 설정하고 실패한 요청 다시보내기
-        // return await client.request(originalRequest);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
+    // console.log(error);
     return Promise.reject(error);
   },
 );

@@ -8,6 +8,7 @@ import LoginPage from './pages/user/LoginPage';
 import LogoutPage from './pages/user/LogoutPage';
 import SignUpPage from './pages/user/SignUpPage';
 import ProfilePage from './pages/user/ProfilePage';
+import FindPwPage from './pages/user/FindPwPage';
 // import CartPage from './pages/user/Cartpage';
 
 // lectures
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="logout" element={<LogoutPage />} />
           <Route path="signup" element={<SignUpPage />} />
           <Route path="profile/:nickName" element={<ProfilePage />} />
+          <Route path="password" element={<FindPwPage />} />
           {/* <Route path="cart" element={<CartPage />} /> */}
         </Route>
         {/* lectures */}
