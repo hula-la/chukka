@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { login, register, getToken, fetchPro } from '../../api/user';
+import client from '../../api/client';
 
 const BASE_URL = 'http://127.0.0.1:8080';
 
@@ -35,6 +36,7 @@ export const userLogin = createAsyncThunk(
       };
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
       localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('accessToken', accessToken);
 
       return { userInfo, accessToken };
     } catch (error) {
