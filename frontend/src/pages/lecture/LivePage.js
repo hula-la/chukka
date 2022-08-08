@@ -95,7 +95,7 @@ const LivePage = () => {
             videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
             publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
             publishVideo: true, // Whether you want to start publishing with your video enabled or not
-            resolution: '640x480', // The resolution of your video
+            resolution: '640x960', // The resolution of your video
             frameRate: 30, // The frame rate of your video
             insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
             mirror: false, // Whether to mirror your local video or not
@@ -235,7 +235,7 @@ const LivePage = () => {
               /> */}
                 </div>
               ) : null}
-              <div id="video-container" className="col-md-6">
+              <div>
                 {publisher !== undefined ? (
                   <div
                     className="stream-container col-md-6 col-xs-6"
