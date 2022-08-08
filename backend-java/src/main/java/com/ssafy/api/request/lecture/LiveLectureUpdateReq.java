@@ -1,16 +1,17 @@
 package com.ssafy.api.request.lecture;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Setter;
 
 import java.util.Date;
 
 @Getter
 @Setter
-@ApiModel("LectureUpdateRequest")
-public class LectureUpdateReq {
+@ApiModel("LiveLectureUpdateRequest")
+public class LiveLectureUpdateReq {
 
     @ApiModelProperty(name = "강의 ID", example = "1, 2")
     int lecId;
@@ -28,4 +29,18 @@ public class LectureUpdateReq {
     int lecLevel;
     @ApiModelProperty(name = "춤 장르", example = "1,2")
     String lecGenre;
+    @ApiModelProperty(name = "공지사항", example = "이번주는 강의 한번 더 제공~")
+    String lecNotice;
+    @ApiModelProperty(name = "강의 일정", example = "7주, 주 1회")
+    String lecSchedule;
+    @ApiModelProperty(name = "강의 요일/시간", example = "화요일, 오후 8시")
+    String dayAndTime;
+    @ApiModelProperty(name = "강의 시작일", example = "2022/08/10")
+    Date lecStartDate;
+    @ApiModelProperty(name = "강의 종료일", example = "2022/08/31")
+    Date lecEndDate;
+    @ApiModelProperty(name = "현재인원", example = "1,2")
+    int lecStudent;
+    @ApiModelProperty(name = "제한인원", example = "1,2")
+    int lecLimit;
 }

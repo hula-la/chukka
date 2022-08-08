@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.instructor.InstructorPostReq;
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
+import com.ssafy.api.request.lecture.LiveLecturePostReq;
 import com.ssafy.api.request.section.SectionPostReq;
 import com.ssafy.api.response.admin.InstructorRes;
 import com.ssafy.api.response.admin.LectureListRes;
@@ -134,8 +135,8 @@ public class AdminController {
 			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> registerLecture(
-			@RequestBody @ApiParam(value="강의 정보", required = true) LecturePostReq lectureInfo) {
-		Lecture lecture = lectureService.createLecture(lectureInfo);
+			@RequestBody @ApiParam(value="강의 정보", required = true) int lecCategory, LecturePostReq lectureInfo, LiveLecturePostReq liveInfo) {
+		Lecture lecture = lectureService.createLecture(lecCategory, lectureInfo, liveInfo);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
 	}
 
@@ -160,21 +161,21 @@ public class AdminController {
 	}
 
 	// 강의 수정 ========================================================================================================
-	@PutMapping("/lectures/")
-	@ApiOperation(value = "강의 수정", notes = "<strong>강사 아이디, 썸네일, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 시작일, 강의 종료일, 카테고리(라이브 / 녹화), 난이도, 제한인원, 그리고 장르</strong>를 받아 특정 강의의 정보를 수정한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
-	})
-	public ResponseEntity<BaseResponseBody> modifyLecture(
-			@RequestPart @ApiParam(value = "수정할 강의 내용", required = true) LectureUpdateReq lectureInfo,
-			HttpServletRequest req) throws IOException {
-		lectureService.updateLecture(lectureInfo.getLecId(), lectureInfo);
-		MultipartFile thumbnail = lectureInfo.getThumbnail();
-		if(thumbnail != null) {
-			s3Uploader.uploadFiles(thumbnail, "img/lecture/thumbnail", req.getServletContext().getRealPath("/img/"), Integer.toString(lectureInfo.getLecId()));
-		}
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
-	}
+//	@PutMapping("/lectures/")
+//	@ApiOperation(value = "강의 수정", notes = "<strong>강사 아이디, 썸네일, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 시작일, 강의 종료일, 카테고리(라이브 / 녹화), 난이도, 제한인원, 그리고 장르</strong>를 받아 특정 강의의 정보를 수정한다.")
+//	@ApiResponses({
+//			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
+//	})
+//	public ResponseEntity<BaseResponseBody> modifyLecture(
+//			@RequestPart @ApiParam(value = "수정할 강의 내용", required = true) LectureUpdateReq lectureInfo,
+//			HttpServletRequest req) throws IOException {
+//		lectureService.updateLecture(lectureInfo.getLecId(), lectureInfo);
+//		MultipartFile thumbnail = lectureInfo.getLecThumb();
+//		if(thumbnail != null) {
+//			s3Uploader.uploadFiles(thumbnail, "img/lecture/thumbnail", req.getServletContext().getRealPath("/img/"), Integer.toString(lectureInfo.getLecId()));
+//		}
+//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
+//	}
 
 	// 섹션 수정 ========================================================================================================
 	@PutMapping("/sections/{lecId}")

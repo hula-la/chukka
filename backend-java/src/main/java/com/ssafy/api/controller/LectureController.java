@@ -28,7 +28,7 @@ public class LectureController {
 
     // 전체 강의 목록 ====================================================================================================
     // 인기순
-    @GetMapping("/")
+    @GetMapping("/popular")
     @ApiOperation(value = "인기순", notes = "전체 게시글을 불러온다.", response = LectureGetForListRes.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LectureGetForListRes.class),
@@ -38,6 +38,19 @@ public class LectureController {
         Page<LectureGetForListRes> popular = lectureService.getMostPopularLecture(pageable);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", popular));
+    }
+
+    //유저별
+    @GetMapping("/latest")
+    @ApiOperation(value = "인기순", notes = "전체 게시글을 불러온다.", response = LectureGetForListRes.class)
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = LectureGetForListRes.class),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<BaseResponseBody> getMostLatestLecture(Pageable pageable) {
+        Page<LectureGetForListRes> latest = lectureService.getMostLatestLectures(pageable);
+
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", latest));
     }
 
     // 최신순
@@ -50,8 +63,6 @@ public class LectureController {
 //    public ResponseEntity<Page<Lecture>> lectureList(Pageable pageable) {
 //        return ResponseEntity.ok(lectureService.findAll(pageable));
 //    }
-
-    //유저별
 
     // 공지사항 수정 =====================================================================================================
     // 강사 userType == 1 권한 주기

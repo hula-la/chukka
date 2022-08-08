@@ -13,42 +13,41 @@ import java.util.Date;
 @Setter
 @ApiModel("LectureUpdateResponse")
 public class LectureUpdateRes {
-    @ApiModelProperty(name = "강의 ID", example = "lecture_id")
+
+    @ApiModelProperty(name = "강의 ID", example = "1, 2")
     int lecId;
-    @ApiModelProperty(name = "강의 제목", example = "lec_title")
+    @ApiModelProperty(name = "강사 아이디", example = "instructor")
+    int insId;
+    @ApiModelProperty(name = "썸네일", example = "img/thumbnail.jpg")
+    String lecThumb;
+    @ApiModelProperty(name = "강의 제목", example = "aenergy (Coachella Ver.)")
     String lecTitle;
-    @ApiModelProperty(name = "강의 내용", example = "lec_contents")
+    @ApiModelProperty(name = "강의내용", example = "누구의 춤 솰라솰라")
     String lecContents;
-    @ApiModelProperty(name = "가격", example = "150,000")
+    @ApiModelProperty(name = "수강료", example = "150,000")
     int lecPrice;
-    @ApiModelProperty(name = "공지사항", example = "lec_notice")
-    String lecNotice;
-    @ApiModelProperty(name = "강의 시작일", example = "2022/08/10")
-    Date lecStartDate;
-    @ApiModelProperty(name = "강의 종료일", example = "2022/08/31")
-    Date lecEndDate;
-    @ApiModelProperty(name = "강의 카테고리", example = "1, 2")
-    int lecCategory;
-    @ApiModelProperty(name = "강의 난이도", example = "상? 중? 하?")
+    @ApiModelProperty(name = "난이도", example = "1,2")
     int lecLevel;
-    @ApiModelProperty(name = "강의 제한인원", example = "20명")
-    int lecLimit;
-    @ApiModelProperty(name = "춤 장르", example = "힙합, 팝..")
+    @ApiModelProperty(name = "춤 장르", example = "1,2")
     String lecGenre;
 
-    public static LectureUpdateRes of(Lecture lecture) {
+    public static LectureUpdateRes of(int lecId,
+                                      int insId,
+                                      String lecThumb,
+                                      String lecTitle,
+                                      String lecContents,
+                                      int lecPrice,
+                                      int lecLevel,
+                                      String lecGenre) {
         LectureUpdateRes res = new LectureUpdateRes();
-        res.setLecId(lecture.getLecId());
-        res.setLecTitle(lecture.getLecTitle());
-        res.setLecContents(lecture.getLecContents());
-        res.setLecPrice(lecture.getLecPrice());
-        res.setLecNotice(lecture.getLecNotice());
-        res.setLecStartDate(lecture.getLecStartDate());
-        res.setLecEndDate(lecture.getLecEndDate());
-        res.setLecCategory(lecture.getLecCategory());
-        res.setLecLevel(lecture.getLecLevel());
-        res.setLecLimit(lecture.getLecLimit());
-        res.setLecGenre(lecture.getLecGenre());
+        res.setLecId(lecId);
+        res.setInsId(insId);
+        res.setLecThumb(lecThumb);
+        res.setLecTitle(lecTitle);
+        res.setLecContents(lecContents);
+        res.setLecPrice(lecPrice);
+        res.setLecLevel(lecLevel);
+        res.setLecGenre(lecGenre);
         return res;
     }
 }

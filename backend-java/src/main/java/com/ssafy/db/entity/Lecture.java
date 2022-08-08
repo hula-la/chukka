@@ -28,21 +28,27 @@ public class Lecture {
     private String lecTitle;
     private String lecContents;
     private int lecPrice;
-
-    private String lecNotice;
-
+    private String lecThumb;
     @Temporal(TemporalType.DATE)
-    private Date lecStartDate;
+    @CreatedDate
+    private Date lecRegDate;
+    private int lecLevel;
+    private String lecGenre;
 
-    @Temporal(TemporalType.DATE)
-    private Date lecEndDate;
     // 0. 라이브 1. 녹화
     private int lecCategory;
-    private int lecLevel;
+
+    // 라이브
+    private String lecNotice;
+    private String lecSchedule;
+    private String dayAndTime;
+    @Temporal(TemporalType.DATE)
+    private Date lecStartDate;
+    @Temporal(TemporalType.DATE)
+    private Date lecEndDate;
     private int lecLimit;
     private int lecStudent;
-    private String lecGenre;
-    private String lecThumb;
+
 
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     private List<CartItem> cartItems = new ArrayList<>();

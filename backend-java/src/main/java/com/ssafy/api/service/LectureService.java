@@ -2,6 +2,8 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
+import com.ssafy.api.request.lecture.LiveLecturePostReq;
+import com.ssafy.api.request.lecture.LiveLectureUpdateReq;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.db.entity.Lecture;
@@ -17,14 +19,14 @@ import java.util.List;
 public interface LectureService {
 
     // Create ==========================================================================================================
-    Lecture createLecture(LecturePostReq lecturePostReq);
+    Lecture createLecture(int lecCategory, LecturePostReq lecturePostReq, LiveLecturePostReq liveLecturePostReq);
 
     // Read ============================================================================================================
     // 인기 있는 강의순
     Page<LectureGetForListRes> getMostPopularLecture(Pageable pageable);
 
     // 최신 순의 강의
-    Page<LectureGetForListRes> getLecturesByMostLatest(Pageable pageable);
+    Page<LectureGetForListRes> getMostLatestLectures(Pageable pageable);
 
     // 전체 강의 조회
   	Page<LectureGetForListRes> findAll(Pageable pageable);
@@ -37,7 +39,7 @@ public interface LectureService {
 
     // Update ==========================================================================================================
     // 강의 수정
-    Lecture updateLecture(int lecId, LectureUpdateReq lectureUpdateReq);
+    Lecture updateLecture(int lecId, LectureUpdateReq lectureUpdateReq, LiveLectureUpdateReq liveLectureUpdateReq);
     // 공지사항 수정
     void updateLecNotice(int lecId, String lecNotice);
 
