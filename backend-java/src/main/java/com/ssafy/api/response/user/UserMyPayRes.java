@@ -19,24 +19,16 @@ import java.util.List;
 @ApiModel("UserMyPayResponse")
 public class UserMyPayRes{
 	// 결제 번호, 결제 날짜, 결제 강의 수, 결제 수단, 결제 강의 리스트
-	@ApiModelProperty(name="강의 아이디", example="1")
-	int payId;
-	@ApiModelProperty(name="강의 썸네일", example="img/thumbnail.png")
-	Date payDate;
+	@ApiModelProperty(name="주문목록 아이디", example="1")
+	int paylistId;
+	@ApiModelProperty(name="구매자 아이디", example="your_id")
+	String userId;
 	@ApiModelProperty(name="강의명", example="Introduction of Advanced Dance")
-	int payAmount;
-	@ApiModelProperty(name="강사명", example="Kim")
-	int payMethod;
-	@ApiModelProperty(name="강사명", example="Kim")
-	List<PayList> payList;
+	int lecId;
 	
-	public static UserMyPayRes of(Pay pay) {
+	public static UserMyPayRes of(PayList paylist) {
 		UserMyPayRes res = new UserMyPayRes();
-		res.setPayId(pay.getPayId());
-		res.setPayDate(pay.getPayDate());
-		res.setPayAmount(pay.getPayAmount());
-		res.setPayMethod(pay.getPayMethod());
-		res.setPayList(pay.getPayLists());
+		res.setPaylistId(paylist.getPaylistId());
 		return res;
 	}
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,8 @@ import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +46,9 @@ public class UserServiceImpl implements UserService {
 	SnacksRepository snacksRepository;
 	@Autowired
 	PayRepository payRepository;
+	@Autowired
 	private JavaMailSender emailSender;
+
 	@Value("${spring.mail.username}")
 	private String email;
 	@Value("${cloud.aws.s3.bucket}")
@@ -136,12 +141,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void sendPw(MailUtil mail) {
 		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom(email);
+		message.setFrom("chukkadance@naver.com");
 		message.setTo(mail.getAddress());
 		message.setSubject(mail.getTitle());
 		message.setText(mail.getContent());
 		emailSender.send(message);
 	}
+
 
 	// 유저 아이디로 수강 강의 목록 조회
 	@Override
@@ -158,6 +164,7 @@ public class UserServiceImpl implements UserService {
 	// 유저 아이디로 결제 목록 조회
 	@Override
 	public List<Pay> getPaysByUserId(String userId) {
+//		payRepository.findPaylistUsingFetchJoin(userId).stream().map(s -> new);
 		return payRepository.findPaylistUsingFetchJoin(userId);
 	}
 

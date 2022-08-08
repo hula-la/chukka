@@ -12,6 +12,7 @@ import com.ssafy.db.entity.Pay;
 import com.ssafy.db.entity.Snacks;
 import org.springframework.data.domain.Pageable;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 
@@ -25,7 +26,7 @@ public interface UserService {
 	int updateUserRefreshToken(String userId, String userAccessToken);
 	User updateUser(String userId, UserModifyReq modifyInfo);
 	int updatePw(String userId, String userPw);
-	void sendPw(MailUtil mail);
+	void sendPw(MailUtil mail) throws MessagingException;
 	List<UserMyLectureRes> getLecturesByUserId(String userId);
 	List<Snacks> getSnacksByUserId(String UserId);
 	List<Pay> getPaysByUserId(String userId);

@@ -15,10 +15,10 @@ public class PayList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int paylist_id;
+    private int paylistId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pay_id")
+    @JoinColumn(name = "payId")
     private Pay pay;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,7 +26,7 @@ public class PayList {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lec_id")
+    @JoinColumn(name = "lecId")
     private Lecture lecture;
 
 }
