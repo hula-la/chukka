@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("LecturePopularRes")
-public class LectureGetRes {
+public class LectureGetForListRes {
 
     @ApiModelProperty(value = "인기순 강의 제목", example = "")
     private String lecTitle;
@@ -21,12 +21,12 @@ public class LectureGetRes {
     @ApiModelProperty(value = "인기순 장르", example = "")
     private String lecGenre;
 
-    public static LectureGetRes of(String lecTitle,
-                                   String lecContents,
-                                   int lecCategory,
-                                   int lecLevel,
-                                   String lecGenre) {
-        LectureGetRes res = new LectureGetRes();
+    public static LectureGetForListRes of(String lecTitle,
+                                          String lecContents,
+                                          int lecCategory,
+                                          int lecLevel,
+                                          String lecGenre) {
+        LectureGetForListRes res = new LectureGetForListRes();
         res.setLecTitle(lecTitle);
         res.setLecContents(lecContents);
         res.setLecCategory(lecCategory);

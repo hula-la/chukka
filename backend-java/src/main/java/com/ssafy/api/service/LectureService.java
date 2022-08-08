@@ -2,7 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
-import com.ssafy.api.response.lecture.LectureGetRes;
+import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.db.entity.Lecture;
 
@@ -21,17 +21,17 @@ public interface LectureService {
 
     // Read ============================================================================================================
     // 인기 있는 강의순
-    Page<LectureGetRes> getMostPopularLecture(Pageable pageable);
+    Page<LectureGetForListRes> getMostPopularLecture(Pageable pageable);
 
     // 최신 순의 강의
-    Page<LectureGetRes> getLecturesByMostLatest(Pageable pageable);
+    Page<LectureGetForListRes> getLecturesByMostLatest(Pageable pageable);
 
     // 전체 강의 조회
-  	Page<LectureGetRes> findAll(Pageable pageable);
+  	Page<LectureGetForListRes> findAll(Pageable pageable);
 
     List<LectureRes> findAll();
 
-
+//    Lecture getDetailLecture(int lecId);
 
     // 결제한 강의 조회
 

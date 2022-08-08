@@ -40,7 +40,7 @@ public class Lecture {
     private int lecCategory;
     private int lecLevel;
     private int lecLimit;
-    private Integer lecStudent;
+    private int lecStudent;
     private String lecGenre;
 
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)

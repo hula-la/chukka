@@ -4,7 +4,8 @@ package com.ssafy.api.service;
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
 import com.ssafy.api.response.admin.LectureRes;
-import com.ssafy.api.response.lecture.LectureGetRes;
+import com.ssafy.api.response.lecture.LectureGetForDetailRes;
+import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.InstructorRepository;
@@ -32,30 +33,41 @@ public class LectureServiceImpl implements LectureService {
 
     // 인기순
     @Override
-    public Page<LectureGetRes> getMostPopularLecture(Pageable pageable) {
+    public Page<LectureGetForListRes> getMostPopularLecture(Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         Page<Lecture> page = lectureRepository.getMostPopularLecture(pageRequest);
-        Page<LectureGetRes> dtoPage = page.map(m -> new LectureGetRes());
+        Page<LectureGetForListRes> dtoPage = page.map(m -> new LectureGetForListRes());
         return dtoPage;
     }
 
     // 최신순
     @Override
-    public Page<LectureGetRes> getLecturesByMostLatest(Pageable pageable) {
+    public Page<LectureGetForListRes> getLecturesByMostLatest(Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         Page<Lecture> page = lectureRepository.getLecturesByMostLatest(pageRequest);
-        Page<LectureGetRes> dtoPage = page.map(m -> new LectureGetRes());
+        Page<LectureGetForListRes> dtoPage = page.map(m -> new LectureGetForListRes());
         return dtoPage;
     }
 
     // 전부다
     @Override
-    public Page<LectureGetRes> findAll(Pageable pageable) {
+    public Page<LectureGetForListRes> findAll(Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
         Page<Lecture> page = lectureRepository.findAll(pageRequest);
-        Page<LectureGetRes> dtoPage = page.map(m -> new LectureGetRes());
+        Page<LectureGetForListRes> dtoPage = page.map(m -> new LectureGetForListRes());
         return dtoPage;
     }
+
+    // 상세 페이지
+//    @Override
+//    public Lecture getDetailLecture(int lecId) {
+//        Optional<Instructor> ins = instructorRepository.findById();
+//        Optional<LectureGetForDetailRes> lecture = lectureRepository.findById(lecId);
+//        if (lecture.isPresent()) {
+//            return lecture.get();
+//        }
+//        return null;
+//    }
 
     @Override
     public List<LectureRes> findAll() {
