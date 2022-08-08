@@ -1,6 +1,7 @@
 import client from './client';
 
 export const login = async (data) => {
+  console.log('client login!');
   const res = await client.post('accounts/login/', data);
   console.log(res);
   return res;
@@ -33,8 +34,6 @@ export const nickCheck = async (userNickname) => {
 
 export const fetchPro = async (data) => {
   const userNickname = data.paramsNickname;
-  console.log(userNickname);
-  console.log('fetchPro', client.defaults.headers);
   const res = await client.post(`accounts/`, { userNickname });
   console.log(res);
   return res;

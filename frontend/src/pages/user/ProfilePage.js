@@ -202,7 +202,6 @@ const ProfilePage = () => {
 
   const paramsNickname = params.nickName;
   useEffect(() => {
-    console.log('fetchProfile!');
     dispatch(fetchProfile({ paramsNickname }));
   }, [dispatch, paramsNickname]);
 
