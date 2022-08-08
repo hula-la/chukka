@@ -39,3 +39,8 @@ export const fetchPro = async (data) => {
   console.log(res);
   return res;
 };
+
+export const find = async (data) => {
+  const res = await client.post('accounts/password', data);
+  return res;
+};

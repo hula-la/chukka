@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux/es/exports';
+import { findPw } from '../../features/user/userActions';
 import styled from 'styled-components';
 
 const StyledInput = styled.input`
@@ -68,17 +70,43 @@ const FindPwBox = styled.div`
 `;
 
 const FindPw = () => {
+  const dispatch = useDispatch();
+
+  const [findPwInfo, setFindPwInfo] = useState({
+    userId: '',
+    userEmail: '',
+  });
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    const nextInputs = {
+      ...findPwInfo,
+      [name]: value,
+    };
+    setFindPwInfo(nextInputs);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    dispatch(findPw(findPwInfo));
+  };
+
   return (
     <FindPwTemplateBlock>
       <FindPwBox>
         <p className="welcome">비밀번호 찾기</p>
         <hr className="line" />
-        <form>
+        <form onSubmit={onSubmit}>
           <div>
             <StyledLabel>아이디</StyledLabel>
-            <StyledInput name="userId" required />
+            <StyledInput name="userId" onChange={onChange} required />
             <StyledLabel>이메일</StyledLabel>
-            <StyledInput name="userEmail" type="email" required />
+            <StyledInput
+              name="userEmail"
+              type="email"
+              onChange={onChange}
+              required
+            />
             <StyledButton>비밀번호 찾기</StyledButton>
           </div>
         </form>
