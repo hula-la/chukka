@@ -129,14 +129,25 @@ public class AdminController {
 	// 수정 필요 ********************************************************************************************************
 	// - 관리자 페이지 포맷에 따라 썸네일 수정 분리 필요할 수 있음 **************************************************************
 	// 강의 추가 ========================================================================================================
-	@PostMapping("/lectures/")
+	@PostMapping("/lectures/live")
 	@ApiOperation(value = "강의 추가", notes = "<strong>강사 아이디, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 시작일, 강의 종료일, 카테고리, 난이도, 제한인원, 그리고 춤 장르</strong>를 받아 강의를 추가한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> registerLecture(
-			@RequestBody @ApiParam(value="강의 정보", required = true) int lecCategory, LecturePostReq lectureInfo, LiveLecturePostReq liveInfo) {
-		Lecture lecture = lectureService.createLecture(lecCategory, lectureInfo, liveInfo);
+			@RequestBody @ApiParam(value="강의 정보", required = true) LiveLecturePostReq liveInfo) {
+		Lecture lecture = lectureService.createLiveLecture(liveInfo);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
+	}
+
+	@PostMapping("/lectures/record")
+	@ApiOperation(value = "강의 추가", notes = "<strong>강사 아이디, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 시작일, 강의 종료일, 카테고리, 난이도, 제한인원, 그리고 춤 장르</strong>를 받아 강의를 추가한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
+	})
+	public ResponseEntity<BaseResponseBody> registerLecture(
+			@RequestBody @ApiParam(value="강의 정보", required = true) LecturePostReq lectureInfo) {
+		Lecture lecture = lectureService.createLecture(lectureInfo);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
 	}
 

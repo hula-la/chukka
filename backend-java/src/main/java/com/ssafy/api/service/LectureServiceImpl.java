@@ -89,25 +89,27 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public Lecture createLecture(int lecCategory, LecturePostReq lecturePostReq, LiveLecturePostReq liveLecturePostReq) {
+    public Lecture createLecture(LecturePostReq lecturePostReq) {
         // 녹화 강의일때
-        if (lecCategory == 1) {
-            Optional<Instructor> ins = instructorRepository.findByInsId(lecturePostReq.getInsId());
-            if (!ins.isPresent()) {
-                return null;
-            }
-            Lecture lecture = Lecture.builder()
-                    .instructor(ins.get())
-                    .lecThumb((lecturePostReq.getLecThumb()))
-                    .lecTitle(lecturePostReq.getLecTitle())
-                    .lecContents(lecturePostReq.getLecContents())
-                    .lecPrice(lecturePostReq.getLecPrice())
-                    .lecCategory(lecturePostReq.getLecCategory())
-                    .lecLevel(lecturePostReq.getLecLevel())
-                    .lecGenre(lecturePostReq.getLecGenre())
-                    .build();
-            return lectureRepository.save(lecture);
+        Optional<Instructor> ins = instructorRepository.findByInsId(lecturePostReq.getInsId());
+        if (!ins.isPresent()) {
+            return null;
         }
+        Lecture lecture = Lecture.builder()
+                .instructor(ins.get())
+                .lecThumb((lecturePostReq.getLecThumb()))
+                .lecTitle(lecturePostReq.getLecTitle())
+                .lecContents(lecturePostReq.getLecContents())
+                .lecPrice(lecturePostReq.getLecPrice())
+                .lecCategory(lecturePostReq.getLecCategory())
+                .lecLevel(lecturePostReq.getLecLevel())
+                .lecGenre(lecturePostReq.getLecGenre())
+                .build();
+        return lectureRepository.save(lecture);
+    }
+
+    @Override
+    public Lecture createLiveLecture(LiveLecturePostReq liveLecturePostReq) {
         Optional<Instructor> ins = instructorRepository.findByInsId(liveLecturePostReq.getInsId());
         if (!ins.isPresent()) {
             return null;
