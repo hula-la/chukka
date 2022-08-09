@@ -72,7 +72,7 @@ export const changeProfile = createAsyncThunk(
   'user/changeProfile',
   async ({ profileInputs, profilePicture }, { rejectWithValue }) => {
     try {
-      console.log(profilePicture);
+      console.log(profileInputs);
       const { data } = await change(profileInputs, profilePicture);
       return data;
     } catch (error) {

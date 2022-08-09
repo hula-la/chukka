@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { fetchProfile, changeProfile } from '../../features/user/userActions';
+import defaultImage from '../../img/default.jpeg';
 
 // 페이지 블락
 const ProfilePageBlock = styled.div`
@@ -187,18 +188,9 @@ const ProfilePage = () => {
 
   // 내 페이지인지 남의 페이지인지 구분
   // 1이면 나의 프로필페이지, 2이면 남의 프로필
-  const [isProfile, setIsProfile] = useState('1');
-  const [profileInputs, setProfileInputs] = useState({
-    userBirth: '',
-    userEmail: '',
-    userGender: '',
-    userName: '',
-    userNickname: '',
-    userPhone: '',
-  });
+  const [myProfile, setMyProfile] = useState('1');
 
-  const [profilePicture, setProfilePicture] = useState(null);
-
+  // 현재 유저의 닉네임
   const currentUser = useSelector((state) => {
     const userNickname = state.user.userInfo
       ? state.user.userInfo.userNickname
@@ -208,9 +200,9 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (currentUser === params.nickName) {
-      setIsProfile('1');
+      setMyProfile('1');
     } else {
-      setIsProfile('2');
+      setMyProfile('2');
     }
   }, [currentUser, params]);
 
@@ -219,10 +211,36 @@ const ProfilePage = () => {
     dispatch(fetchProfile({ paramsNickname }));
   }, [dispatch, paramsNickname]);
 
+  // 컴포넌트 바꾸기 용
+  const [pageNum, setpageNum] = useState('1');
+
+  const onClickSnacks = () => setpageNum('1');
+  const onClickMyList = () => setpageNum('2');
+  const onClickChangeProfile = () => setpageNum('3');
+  const onClickPassword = () => setpageNum('4');
+
+  // 프로필 변경용 인풋
+  const [profileInputs, setProfileInputs] = useState({
+    userBirth: '',
+    userEmail: '',
+    userGender: '',
+    userName: '',
+    userNickname: '',
+    userPhone: '',
+    isProfile: 'true',
+  });
+
+  // 프로필 사진은 파일로 보내야해서 따로
+  const [profilePicture, setProfilePicture] = useState(null);
+
+  // 회원 정보의 프로필 사진
+  const [userProfile, setUserProfile] = useState(null);
+
   const userProInfo = useSelector((state) => {
     return state.user.userProInfo;
   });
 
+  // 유저프로필의 정보가 바뀔 때 인풋에 기본값을 넣어줌
   useEffect(() => {
     if (!userProInfo) {
       return;
@@ -234,6 +252,7 @@ const ProfilePage = () => {
       userName,
       userNickname,
       userPhone,
+      userProfile,
     } = userProInfo;
     const temp = {
       userBirth: userBirth,
@@ -242,17 +261,21 @@ const ProfilePage = () => {
       userName: userName,
       userNickname: userNickname,
       userPhone: userPhone,
+      isProfile: 'true',
     };
     setProfileInputs({ ...temp });
+    setUserProfile(userProfile);
+    if (!userProfile) {
+      setUserProfile(defaultImage);
+      setProfileInputs((prevState) => ({
+        ...prevState,
+        isProfile: 'false',
+      }));
+    } else {
+    }
   }, [userProInfo]);
 
-  // 컴포넌트 바꾸기 용
-  const [pageNum, setpageNum] = useState('1');
-
-  const onClickSnacks = () => setpageNum('1');
-  const onClickMyList = () => setpageNum('2');
-  const onClickChangeProfile = () => setpageNum('3');
-  const onClickPassword = () => setpageNum('4');
+  const [force, setForce] = useState('1');
 
   const onChangeProfile = (e) => {
     const { name, value } = e.target;
@@ -270,28 +293,29 @@ const ProfilePage = () => {
   const onSubmitProfile = (e) => {
     e.preventDefault();
     dispatch(changeProfile({ profileInputs, profilePicture }));
+    setForce(...force);
   };
 
   return (
     <ProfilePageBlock>
       <Side>
         <hr className="line" />
-        <Profile src="/img/login.png"></Profile>
-        <p>이름</p>
+        <Profile src={userProfile}></Profile>
+        <p>{paramsNickname}</p>
         <hr className="line" />
         <Menu>
           <SideBarButton onClick={onClickSnacks}>스낵스</SideBarButton>
-          {isProfile === '1' && (
+          {myProfile === '1' && (
             <SideBarButton onClick={onClickMyList}>
               나의 강의 목록
             </SideBarButton>
           )}
-          {isProfile === '1' && (
+          {myProfile === '1' && (
             <SideBarButton onClick={onClickChangeProfile}>
               프로필 수정
             </SideBarButton>
           )}
-          {isProfile === '1' && (
+          {myProfile === '1' && (
             <SideBarButton onClick={onClickPassword}>
               비밀번호 변경
             </SideBarButton>
@@ -322,7 +346,7 @@ const ProfilePage = () => {
       )}
       {pageNum === '3' && (
         <ChangeProfileBox>
-          <Profile src={userProInfo.userProfile}></Profile>
+          <Profile src={userProfile}></Profile>
           <ChangeProfileForm onSubmit={onSubmitProfile}>
             <input type="file" onChange={onChangePicture} />
             <div>
