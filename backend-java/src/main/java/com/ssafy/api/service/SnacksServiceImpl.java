@@ -93,7 +93,7 @@ public class SnacksServiceImpl implements SnacksService{
                 .snacksTitle(snack.getSnacksTitle())
                 .snacksId(snack.getSnacksId())
                 .user(user)
-                .snacksContents("https://" + bucket + ".s3." + region + ".amazonaws.com/" + snack.getSnacksId())
+                .snacksContents("https://" + bucket + ".s3." + region + ".amazonaws.com/vid/snacks/" + snack.getSnacksId())
                 .build();
         snacksRepository.save(snackss);
         // 태그 추가

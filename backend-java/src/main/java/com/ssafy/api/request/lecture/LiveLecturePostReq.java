@@ -14,8 +14,6 @@ public class LiveLecturePostReq {
 
     @ApiModelProperty(name = "강사 아이디", example = "instructor")
     int insId;
-    @ApiModelProperty(name = "썸네일", example = "img/thumbnail.jpg")
-    String lecThumb;
     @ApiModelProperty(name = "강의 제목", example = "aenergy (Coachella Ver.)")
     String lecTitle;
     @ApiModelProperty(name = "강의내용", example = "누구의 춤 솰라솰라")
@@ -38,8 +36,7 @@ public class LiveLecturePostReq {
     Date lecStartDate;
     @ApiModelProperty(name = "강의 종료일", example = "2022/08/31")
     Date lecEndDate;
-    @ApiModelProperty(name = "현재인원", example = "1,2")
-    int lecStudent;
     @ApiModelProperty(name = "제한인원", example = "1,2")
     int lecLimit;
+
 }

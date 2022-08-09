@@ -192,14 +192,12 @@ public class UserController {
 	})
 	public ResponseEntity<BaseResponseBody> modifyProfile(
 			@ApiIgnore Authentication authentication,
-			@RequestPart("data") @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo,
+			@RequestPart @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo,
 			@RequestPart @ApiParam(value="수정 회원 프로필 파일") MultipartFile file,
 			HttpServletRequest req) throws IOException {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
-		User user = userService.updateUser(loginUserId, modifyInfo);
-		// 프로필 이미지 파일 업로드
-//		MultipartFile file = modifyInfo.getUserProfile();
+		User user = userService.updateUser(loginUserId, modifyInfo, file != null);
 		if(file != null) {
 			s3Uploader.uploadFiles(file, "img/profile", req.getServletContext().getRealPath("/img/"), user.getUserId());
 		}

@@ -109,9 +109,28 @@ public class UserServiceImpl implements UserService {
 
 	// 유저 정보 수정
 	@Override
-	public User updateUser(String userId, UserModifyReq modifyInfo) {
+	public User updateUser(String userId, UserModifyReq modifyInfo, boolean isFile) {
 		if (userRepository.findByUserId(userId).isPresent()) {
 			User now = userRepository.findByUserId(userId).get();
+			if(isFile) {
+				User user = User.builder().userId(userId)
+						.userName(modifyInfo.getUserName())
+						.userPhone(modifyInfo.getUserPhone())
+						.userEmail(modifyInfo.getUserEmail())
+						.userNickname(modifyInfo.getUserNickname())
+						.userLvLec(now.getUserLvLec())
+						.userLvSnacks(now.getUserLvSnacks())
+						.userLvGame(now.getUserLvGame())
+						.userGender(modifyInfo.getUserGender())
+						.userRefreshToken(now.getUserRefreshToken())
+						.userBirth(modifyInfo.getUserBirth())
+						.userPoint(now.getUserPoint())
+						.userType(now.getUserType())
+						.userPw(now.getUserPw())
+						.userProfile("https://" + bucket + ".s3." + region + ".amazonaws.com/img/profile/" + userId)
+						.build();
+				return userRepository.save(user);
+			}
 			User user = User.builder().userId(userId)
 					.userName(modifyInfo.getUserName())
 					.userPhone(modifyInfo.getUserPhone())
@@ -126,7 +145,6 @@ public class UserServiceImpl implements UserService {
 					.userPoint(now.getUserPoint())
 					.userType(now.getUserType())
 					.userPw(now.getUserPw())
-					.userProfile("https://" + bucket + ".s3." + region + ".amazonaws.com/" + userId)
 					.build();
 			return userRepository.save(user);
 		}
