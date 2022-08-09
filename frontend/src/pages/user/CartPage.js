@@ -5,6 +5,9 @@ import { getCartList, deleteCartItem } from '../../api/cart';
 import {LectureInfo} from '../../components/carts/LectureInfo';
 import { PayLecture } from '../../components/carts/PayLecture';
 
+import RequestPay from '../../components/carts/requestPay'; 
+
+
 const ProfilePageBlock = styled.div`
   display: flex;
   flex-direction: row;
@@ -12,7 +15,6 @@ const ProfilePageBlock = styled.div`
   margin: 1rem 1rem 0 1rem;
   align-items: flex-start;
   height:100%;
-  
   .icon{
     cursor : pointer;
     margin : auto;
@@ -26,6 +28,7 @@ const Side = styled.div`
   justify-content: center;
   width: 30%;
   height : 100%;
+  position : relative;
 
   .title{
     text-align : center;
@@ -49,14 +52,6 @@ const Profile = styled.div`
   }
   
 `
-const PayList = styled.div`
-  border-top: 2px solid #ff2c55;
-  width : 100%;
-  padding-top : 3%;
-  padding-bottom : 7%;
-  text-align : center;
-  `
-
 const Cart = styled.div`
   border-left: 2px solid #ff2c55;
   width:100%;
@@ -65,7 +60,6 @@ const Cart = styled.div`
 `
 
 const CartList = styled.div`
-
   // border-style : solid;
   // border-color : white;
   width:100%;
@@ -76,8 +70,29 @@ const CartLecInfo = styled.div`
   display: grid;
   grid-template-columns: 1fr 50fr 1fr;
 `
+
+const PayList = styled.div`
+// border-style : solid;
+// border-color : white;
+  border-top: 2px solid #ff2c55;
+  width : 100%;
+  padding-top : 3%;
+  padding-bottom : 7%;
+  text-align : center;
+  `
+
 const PayResult = styled.div`
-  bottom:0;
+// border-style : solid;
+// border-color : white;
+width : 100%;
+.span-right{
+  float: right;
+}
+.span-left{
+  float: left;
+}
+
+
 `
 const CartPage = () => {  
 
@@ -85,6 +100,7 @@ const CartPage = () => {
   const [checkedItems,  setCheckedItems] = useState([]); // 선택된 lecture 객체 저장
   const [checkedIds, setCheckedIds] = useState([]);      // 체크 표시를 위해 선택된 객체의 id값만 저장
   const [totalPrice, setTotalPrice] = useState(0);
+  const [userInfo,setUserInfo] = useState({});
 
   useEffect(()=>{
     getCartList("user1").then((data)=>{
@@ -101,9 +117,19 @@ const CartPage = () => {
         setCheckedIds(...checkedIds,
           data.data.map(item=>item.cartItemId)
           );
-
+          /* 사용자 정보 불러오기 */
+          setUserInfo(
+            {
+              user_id : "user1",
+              buyer_email: "lye0626@gmail.com",
+              buyer_name: "홍길동", 
+              buyer_tel: "010-4242-4242", 
+            }
+          );
       }
     });
+
+
   },[])
 
   useEffect(()=>{
@@ -134,26 +160,33 @@ const CartPage = () => {
 
   const deleteItem = (id)=>{
     deleteCartItem(id).then((res)=>{
-      if(res.data.message=="success"){
+      if(res.data.message==="Success"){
         getCartList("user1").then((data)=>{
           if(data.data){
             setLectures(
-              data.data);
+             data.data);
         
             setCheckedItems(
-                data.data);
+              data.data);
         
             setCheckedIds(
               data.data.map(item=>item.cartItemId)
               );
+          }else{
+            setLectures([]);
+         
+             setCheckedItems([]);
+         
+             setCheckedIds([]);
           }
         });
+      }else{
+        console.log(res.data.message);
       }
     }).catch((error)=>{
       console.log(error);
     })
   }
-
 
   return (
     <ProfilePageBlock>
@@ -170,9 +203,11 @@ const CartPage = () => {
             ))}
           </PayList>
           <PayResult>
-            <span>총 결제 금액</span>
-            <span>{totalPrice}</span>
+            <span className="span-left">총 결제 금액</span>
+            <span className='span-right'>{totalPrice}</span>
+            <RequestPay user={userInfo} price={totalPrice} payList={checkedItems}/>
           </PayResult>
+          
       </Side>
       <Cart>
         <h3>장바구니</h3>
@@ -189,5 +224,4 @@ const CartPage = () => {
     </ProfilePageBlock>
   );
 };
-
 export default CartPage;

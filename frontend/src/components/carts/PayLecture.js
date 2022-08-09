@@ -14,7 +14,7 @@ export const PayLecture = ({data},key) =>{
   return(
     <PayLectureItem>
       <span className='payTitle'>{data.lecTitle}</span>
-      <span className='payPrice'>{data.lecPrice} 원</span>
+      <span className='payPrice'><strong>{data.lecPrice}원</strong></span>
     </PayLectureItem>
   )
 }
