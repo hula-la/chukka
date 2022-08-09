@@ -26,7 +26,7 @@ public interface UserService {
 	User getUserByUserId(String userId);
 	User getUserByUserNickname(String userNickname);
 	int updateUserRefreshToken(String userId, String userAccessToken);
-	User updateUser(String userId, UserModifyReq modifyInfo, boolean isFile);
+	User updateUser(String userId, UserModifyReq modifyInfo, boolean isFile, boolean isProfile);
 	int updatePw(String userId, String userPw);
 	void sendPw(MailUtil mail) throws MessagingException;
 	List<UserMyLectureRes> getLecturesByUserId(String userId);

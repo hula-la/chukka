@@ -109,10 +109,10 @@ public class UserServiceImpl implements UserService {
 
 	// 유저 정보 수정
 	@Override
-	public User updateUser(String userId, UserModifyReq modifyInfo, boolean isFile) {
+	public User updateUser(String userId, UserModifyReq modifyInfo, boolean isFile, boolean isProfile) {
 		if (userRepository.findByUserId(userId).isPresent()) {
 			User now = userRepository.findByUserId(userId).get();
-			if(isFile) {
+			if(isFile || isProfile) {
 				User user = User.builder().userId(userId)
 						.userName(modifyInfo.getUserName())
 						.userPhone(modifyInfo.getUserPhone())

@@ -28,6 +28,6 @@ public class UserModifyReq {
 	Date userBirth;
 	@ApiModelProperty(name="유저 Nickname", example="your_nickname")
 	String userNickname;
-//	@ApiModelProperty(name="유저 Profile", example="img/profile.png")
-//	MultipartFile userProfile;
+	@ApiModelProperty(name="수정 전 유저 Profile 유무", example="true")
+	boolean isProfile;
 }
