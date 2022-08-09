@@ -3,20 +3,44 @@ import { OpenVidu } from 'openvidu-browser';
 import React, { useEffect, useState } from 'react';
 import UserVideoComponent from '../../components/UserVideoComponent';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import OpenViduLayout from './openvidu-layout';
 
 const Wrapper = styled.div`
   width: 100%;
+  height: 100vh;
+  /* overflow: hidden; */
+
   display: flex;
   flex-direction: column;
+  /* overflow-y: scroll; */
 
-  & .stream-div {
+  /* & .stream-div {
     width: 50%;
     display: flex;
-  }
+  } */
 
   & .video-div {
     display: flex;
+    flex-grow: 1;
     width: 100%;
+    /* height: 89%; */
+  }
+  & .video-btn-div {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+  & .lecture-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  & .student-div {
+    background: white;
+    display: flex;
+    flex-direction: column;
+    /* flex-wrap: wrap; */
+    width: 50%;
   }
 `;
 
@@ -34,7 +58,10 @@ const LivePage = () => {
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState();
-  const [videoState, setVideoState] = useState(false);
+  const [videoEnabled, setVideoEnabled] = useState(true);
+  const [audioEnabled, setAudioEnabled] = useState(true);
+
+  var layout = new OpenViduLayout();
 
   const onbeforeunload = (event) => {
     leaveSession();
@@ -42,17 +69,27 @@ const LivePage = () => {
 
   useEffect(() => {
     window.addEventListener('beforeunload', onbeforeunload);
-    joinSession();
+    // joinSession();
+
     return () => {
       window.addEventListener('beforeunload', onbeforeunload);
     };
   }, []);
+
+  const handleChangeMySessionId = (e) => {
+    setMySessionId(e.target.value);
+  };
+  const handleChangeMyUserName = (e) => {
+    setMyUserName(e.target.value);
+  };
 
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager !== stream) {
       setMainStreamManager(stream);
     }
   };
+
+  const updateLayout = () => {};
 
   const deleteSubscriber = (streamManager) => {
     let newSubscribers = subscribers;
@@ -96,10 +133,10 @@ const LivePage = () => {
             videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
             publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
             publishVideo: true, // Whether you want to start publishing with your video enabled or not
-            resolution: '400x500', // The resolution of your video
+            resolution: '640x480', // The resolution of your video
             frameRate: 30, // The frame rate of your video
             insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-            mirror: false, // Whether to mirror your local video or not
+            mirror: true, // Whether to mirror your local video or not
           });
 
           newSession.publish(publisher);
@@ -211,31 +248,116 @@ const LivePage = () => {
 
   return (
     <Wrapper>
-      {/* <UserVideoComponent streamManager={publisher} /> */}
-      {session !== undefined ? (
+      {session === undefined ? (
+        <div id="join">
+          <div id="img-div">
+            <img alt="OpenVidu logo" />
+          </div>
+          <div id="join-dialog" className="jumbotron vertical-center">
+            <h1> Join a video session </h1>
+            <form
+              className="form-group"
+              onSubmit={(e) => {
+                e.preventDefault();
+                joinSession();
+              }}
+            >
+              <p>
+                <label>Participant: </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="myUserName"
+                  value={myUserName}
+                  onChange={handleChangeMyUserName}
+                  required
+                />
+              </p>
+              <p>
+                <label> Session: </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="mySessionId"
+                  value={mySessionId}
+                  onChange={handleChangeMySessionId}
+                  required
+                />
+              </p>
+              <p className="text-center">
+                <input
+                  className="btn btn-lg btn-success"
+                  name="commit"
+                  type="submit"
+                  value="JOIN"
+                />
+              </p>
+            </form>
+          </div>
+        </div>
+      ) : null}
+      {session !== undefined && mySessionId == myUserName ? (
         <>
-          <div>
-            <h1>{mySessionId}</h1>
-            <input type="button" onClick={leaveSession} value="Leave session" />
+          <div className="lecture-header">
+            <h1>강사페이지 입니다. {mySessionId}</h1>
+            <div>
+              <button
+                onClick={() => {
+                  publisher.publishVideo(!videoEnabled);
+                  setVideoEnabled(!videoEnabled);
+                }}
+              >
+                비디오 끄기
+              </button>
+              <input
+                type="button"
+                onClick={leaveSession}
+                value="Leave session"
+              />
+            </div>
           </div>
           <div className="video-div">
-            <UserVideoComponent streamManager={mainStreamManager} />
-            <UserVideoComponent streamManager={mainStreamManager} />
-          </div>
-          {subscribers.map((sub, i) => {
-            const { clientData } = JSON.parse(sub.stream.connection.data);
-            if (clientData !== myUserName) {
-              return (
+            <UserVideoComponent streamManager={publisher} setWidth={true} />
+            <div class="student-div">
+              <div className="layout">
                 <div
-                  key={i}
-                  className="stream-container col-md-6 col-xs-6"
-                  onClick={() => handleMainVideoStream(sub)}
+                  className="OT_root OT_publisher custom-class"
+                  id="remoteUsers"
                 >
-                  <UserVideoComponent streamManager={sub} />
+                  <UserVideoComponent streamManager={publisher} />
+                  <UserVideoComponent streamManager={publisher} />
+                  <UserVideoComponent streamManager={publisher} />
+                  <UserVideoComponent streamManager={publisher} />
                 </div>
-              );
-            }
-          })}
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
+      {session !== undefined && mySessionId != myUserName ? (
+        <>
+          <div className="lecture-header">
+            <h1>{mySessionId}</h1>
+            <div>
+              <button
+                onClick={() => {
+                  publisher.publishVideo(!videoEnabled);
+                  setVideoEnabled(!videoEnabled);
+                }}
+              >
+                비디오 끄기
+              </button>
+              <input
+                type="button"
+                onClick={leaveSession}
+                value="Leave session"
+              />
+            </div>
+          </div>
+          <div className="video-div">
+            <UserVideoComponent streamManager={publisher} setWidth={true} />
+            <UserVideoComponent streamManager={publisher} setWidth={true} />
+          </div>
         </>
       ) : null}
     </Wrapper>

@@ -3,10 +3,6 @@ import OpenViduVideoComponent from './OvVideo';
 import './UserVideo.css';
 import styled from 'styled-components';
 
-const Wrapper = styled.div`
-  width: 100%;
-`;
-
 export default class UserVideoComponent extends Component {
   getNicknameTag() {
     // Gets the nickName of the user
@@ -16,7 +12,10 @@ export default class UserVideoComponent extends Component {
 
   render() {
     return this.props.streamManager !== undefined ? (
-      <OpenViduVideoComponent streamManager={this.props.streamManager} />
+      <OpenViduVideoComponent
+        streamManager={this.props.streamManager}
+        setWidth={this.props.setWidth}
+      />
     ) : null;
   }
 }

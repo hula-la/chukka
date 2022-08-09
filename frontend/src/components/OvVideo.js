@@ -4,6 +4,11 @@ export default class OpenViduVideoComponent extends Component {
   constructor(props) {
     super(props);
     this.videoRef = React.createRef();
+    if (this.props.setWidth) {
+      this.style = {
+        width: '50vw',
+      };
+    }
   }
 
   componentDidUpdate(props) {
@@ -19,6 +24,6 @@ export default class OpenViduVideoComponent extends Component {
   }
 
   render() {
-    return <video autoPlay={true} ref={this.videoRef} width="50%" />;
+    return <video autoPlay={true} ref={this.videoRef} style={this.style} />;
   }
 }
