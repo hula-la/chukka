@@ -10,8 +10,6 @@ import SignUpPage from './pages/user/SignUpPage';
 import ProfilePage from './pages/user/ProfilePage';
 import FindPwPage from './pages/user/FindPwPage';
 import CartPage from './pages/user/CartPage';
-import PayConfirmPage from './pages/user/PayConfirmPage';
-
 // lectures
 import LecturesPage from './pages/lecture/LecturesPage';
 import LivePage from './pages/lecture/LivePage';
@@ -25,10 +23,7 @@ import AdminPage from './pages/admin/AdminPage';
 import NotFound from './pages/NotFound';
 import LectureDetailpage from './pages/lecture/LectureDetailpage';
 
-import { useNavigate } from 'react-router-dom';
-
 const App = () => {
-  const navigate = useNavigate();
   return (
     <div className="App">
       <Routes>
@@ -45,23 +40,13 @@ const App = () => {
           <Route path="password" element={<FindPwPage />} />
           <Route path="profile/:nickname" element={<ProfilePage />} />
           <Route path="cart" element={<CartPage />} />
-          <Route path="pay" element={<PayConfirmPage />} />
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
           <Route path="" element={<LecturesPage />} />
           <Route path=":lectureId" element={<LectureDetailpage />} />
         </Route>
-        <Route
-          path="lectures/live"
-          element={
-            <LivePage
-              navigate={() => {
-                navigate(-1);
-              }}
-            />
-          }
-        />
+        <Route path="lectures/live" element={<LivePage />} />
         {/* snacks */}
         <Route path="snacks" element={<Layout />}>
           <Route path="" element={<SnacksPage />} />
