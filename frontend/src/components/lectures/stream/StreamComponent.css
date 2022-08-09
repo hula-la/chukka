@@ -1,4 +1,4 @@
-.nickname {
+.live-nickname {
   background: rgba(58, 64, 74, 0.651);
   padding: 5px !important;
   position: absolute;
@@ -37,7 +37,7 @@
   height: 100%;
 }
 
-video {
+.lecture-video {
   -o-object-fit: cover;
   object-fit: cover;
   width: 100%;

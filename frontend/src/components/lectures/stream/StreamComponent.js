@@ -6,12 +6,7 @@ import MicOff from '@material-ui/icons/MicOff';
 import VideocamOff from '@material-ui/icons/VideocamOff';
 import VolumeUp from '@material-ui/icons/VolumeUp';
 import VolumeOff from '@material-ui/icons/VolumeOff';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import IconButton from '@material-ui/core/IconButton';
-import HighlightOff from '@material-ui/icons/HighlightOff';
-import FormHelperText from '@material-ui/core/FormHelperText';
 
 export default class StreamComponent extends Component {
   constructor(props) {
@@ -59,7 +54,7 @@ export default class StreamComponent extends Component {
   render() {
     return (
       <div className="OT_widget-container">
-        <div className="nickname">
+        <div className="live-nickname">
           <span id="nickname">{this.props.user.getNickname()}</span>
         </div>
 
