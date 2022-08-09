@@ -51,10 +51,9 @@ public class SnacksController {
             @ApiResponse(code = 200, message = "Success")
     })
     public ResponseEntity<BaseResponseBody> getSnacks(
-            @RequestBody @ApiParam(value="페이지 정보") Pageable pageable){
+            @ApiParam(value="페이지 정보") Pageable pageable){
         Slice<SnacksRes> slice = snacksService.findAll(pageable);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", slice));
-
     }
 
     // 수정 필요 ********************************************************************************************************
@@ -69,7 +68,7 @@ public class SnacksController {
     })
     public ResponseEntity<BaseResponseBody> uploadSnacks(
             @ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value="스낵스 정보") SnacksUploadReq snacksInfo,
+            @RequestPart @ApiParam(value="스낵스 정보") SnacksUploadReq snacksInfo,
             @RequestPart @ApiParam(value="스낵스 영상 파일") MultipartFile file,
             HttpServletRequest req) throws IOException {
         // 로그인 유저 판별

@@ -5,6 +5,7 @@ import com.ssafy.api.request.user.UserRegisterPostReq;
 
 import com.ssafy.api.response.admin.UserRes;
 import com.ssafy.api.response.snacks.SnacksRes;
+import com.ssafy.api.response.user.UserMyInsLectureRes;
 import com.ssafy.api.response.user.UserMyPayRes;
 import com.ssafy.db.entity.User;
 
@@ -38,5 +39,6 @@ public interface UserService {
 	List<UserRes> getCertainUsers(String category, String keyword);
 	boolean quit(String userId);
 	void createInstructor(String userId, int userType);
+	List<UserMyInsLectureRes> getLecturesByInstructorId(String userId);
 
 }

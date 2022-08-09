@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.response.snacks.SnacksRes;
 import com.ssafy.api.response.user.UserYourRes;
+import com.ssafy.api.service.LectureService;
 import com.ssafy.common.util.S3Uploader;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -53,7 +54,6 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
-
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	@Autowired
@@ -264,7 +264,7 @@ public class UserController {
 	// - 라이브 / 녹화 강의 모두 가져오기 ***********************************************************************************
 	// 마이페이지 수강 목록 ================================================================================================
 	@GetMapping("/mylectures/")
-	@ApiOperation(value = "나의 수강 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 수강 강의 목록을 반환한다.")
+	@ApiOperation(value = "나의 수강 목록", notes = "<strong>토큰</strong>을 통해 회원의 수강 강의 목록을 반환한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = UserMyLectureListRes.class)
 	})
@@ -278,7 +278,7 @@ public class UserController {
 
 	// 마이페이지 스낵스 목록 ==============================================================================================
 	@GetMapping("/mysnacks/")
-	@ApiOperation(value = "나의 스낵스 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 업로드 스낵스 목록을 반환한다.")
+	@ApiOperation(value = "나의 스낵스 목록", notes = "<strong>토큰</strong>을 통해 회원의 업로드 스낵스 목록을 반환한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = SnacksRes.class)
 	})
@@ -292,7 +292,7 @@ public class UserController {
 
 	// 마이페이지 결제 목록 ================================================================================================
 	@GetMapping("/myorders/")
-	@ApiOperation(value = "나의 결제 목록", notes = "<strong>회원 아이디</strong>를 통해 회원의 결제 목록을 반환한다.")
+	@ApiOperation(value = "나의 결제 목록", notes = "<strong>토큰</strong>을 통해 회원의 결제 목록을 반환한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = UserMyPayRes.class)
 	})
@@ -301,6 +301,21 @@ public class UserController {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		List<UserMyPayRes> list = userService.getPaysByUserId(loginUserId);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", list));
+
+	}
+
+	// 강사 강의 목록 ====================================================================================================
+	@GetMapping("/myteach/")
+	@ApiOperation(value = "강사 강의 목록", notes = "<strong>토큰</strong>을 통해 강사의 강의 목록을 반환한다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "Success", response = UserMyPayRes.class)
+	})
+	public ResponseEntity<BaseResponseBody> getMyInsLecture(
+			@ApiIgnore Authentication authentication) {
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String loginUserId = userDetails.getUsername();
+		List<UserMyInsLectureRes> list = userService.getLecturesByInstructorId(loginUserId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", list));
 
 	}

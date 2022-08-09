@@ -4,6 +4,7 @@ import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.response.admin.UserRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.snacks.SnacksRes;
+import com.ssafy.api.response.user.UserMyInsLectureRes;
 import com.ssafy.api.response.user.UserMyPayRes;
 import com.ssafy.api.response.user.UserPayListRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -260,6 +261,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void createInstructor(String userId, int userType) {
 		userRepository.updateUserType(userId, userType);
+	}
+
+	@Override
+	public List<UserMyInsLectureRes> getLecturesByInstructorId(String userId) {
+		List<UserMyInsLectureRes> list = lectureRepository.findAllByInstructor_InsId(userId)
+				.stream().map(s -> UserMyInsLectureRes.of(s)).collect(Collectors.toList());
+		return list;
 	}
 
 }
