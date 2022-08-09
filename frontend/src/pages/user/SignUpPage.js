@@ -4,20 +4,37 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../features/user/userActions';
 import { idCheck, nickCheck } from '../../api/user';
+import PersonIcon from '@mui/icons-material/Person';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import LockIcon from '@mui/icons-material/Lock';
+import EnhancedEncryptionIcon from '@mui/icons-material/EnhancedEncryption';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import MaleIcon from '@mui/icons-material/Male';
+import FemaleIcon from '@mui/icons-material/Female';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 const StyledInput = styled.input`
-  font-size: 1rem;
+  font-size: 0.75rem;
   color: #ffffff;
   border-color: #ffffff;
   border-width: thin;
   border-radius: 5px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+  padding: 0.3rem 0.8rem;
   margin-bottom: 1rem;
   margin-top: 0.5rem;
   outline-color: #ffffff;
   width: 98%;
+  height: 2.5rem;
   background-color: #0b0b0b;
+  transition: 300ms;
+  &[type='radio'] {
+    width: 1.5rem;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+  }
+  :hover {
+    border-color: #ff2c55;
+  }
 
   &::-webkit-calendar-picker-indicator {
     filter: invert(1);
@@ -28,14 +45,16 @@ const StyledInput = styled.input`
 `;
 
 const StyledLabel = styled.label`
-  font-size: small;
+  /* font-size: small; */
+  font-size: 0.75rem;
   text-align: left;
 `;
 
 const StyledButton = styled.button`
   border: none;
   border-radius: 4px;
-  font-size: small;
+  font-size: 1rem;
+  /* font-size: small; */
   font-weight: bold;
   padding: 0.5rem 1rem;
   margin-top: 1rem;
@@ -43,7 +62,14 @@ const StyledButton = styled.button`
   color: #ffffff;
   outline: none;
   cursor: pointer;
-  width: 100%;
+  width: 50%;
+  margin-left: 10rem;
+  opacity: 0.5;
+  transition: 500ms;
+  :hover {
+    opacity: 1;
+    font-weight: bold;
+  }
 `;
 const SignupTemplateBlock = styled.div`
   display: flex;
@@ -54,21 +80,41 @@ const SignupTemplateBlock = styled.div`
 
 const SignupBox = styled.div`
   .welcome {
-    margin-top: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
     margin-bottom: 0;
-    font-size: 1.3rem;
-    font-weight: bolder;
-    letter-spacing: 2px;
     text-align: center;
+  }
+  #gender {
+    display: block;
+  }
+  #male {
+    margin-right: 2rem;
   }
   .line {
     border: 0;
     height: 2px;
     background: #ff2c55;
     width: 100%;
-    margin-bottom: 0.5rem;
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
   }
-  width: 250px;
+  & form > div {
+    margin: 0 10rem;
+    width: 50%;
+  }
+  .icon {
+    vertical-align: middle;
+    width: 1rem;
+  }
+  .genderdiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  width: 40rem;
 `;
 
 const SignUpPage = () => {
@@ -126,12 +172,12 @@ const SignUpPage = () => {
   return (
     <SignupTemplateBlock>
       <SignupBox>
-        <p className="welcome">Welcome to Chukka!</p>
+        <p className="welcome">WELCOME TO CHUKKA</p>
         <hr className="line" />
         <form onSubmit={onSubmit}>
           <div>
-            <StyledLabel>아이디</StyledLabel>
-            <StyledInput name="userId" onChange={onChange} required />
+            <StyledLabel for="userId">아이디 <PersonIcon className="icon"/></StyledLabel>
+            <StyledInput id="userId" name="userId" onChange={onChange} required placeholder='아이디를 입력하세요' autoComplete='off'/>
             <button
               onClick={async (e) => {
                 e.preventDefault();
@@ -149,8 +195,8 @@ const SignUpPage = () => {
             </button>
           </div>
           <div>
-            <StyledLabel>닉네임</StyledLabel>
-            <StyledInput name="userNickname" onChange={onChange} required />
+            <StyledLabel for="userNickname">닉네임 <PersonIcon className='icon'/></StyledLabel>
+            <StyledInput id="userNickname" name="userNickname" onChange={onChange} required placeholder='닉네임을 입력하세요' autoComplete='off'/>
             <button
               onClick={async (e) => {
                 e.preventDefault();
@@ -171,58 +217,69 @@ const SignUpPage = () => {
             </button>
           </div>
           <div>
-            <StyledLabel>비밀번호</StyledLabel>
+            <StyledLabel for="userPw">비밀번호 <LockIcon className='icon'/></StyledLabel>
             <StyledInput
+              id="userPW"
               name="userPw"
               type="password"
               onChange={onChange}
               required
+              placeholder='비밀번호를 입력하세요'
             />
           </div>
           <div>
-            <StyledLabel>비밀번호 확인</StyledLabel>
+            <StyledLabel for="userPwConfirm">비밀번호 확인 <EnhancedEncryptionIcon className='icon'/></StyledLabel>
             <StyledInput
+              id="userPwConfirm"
               name="userPwConfirm"
               type="password"
               onChange={onChange}
               required
+              placeholder='비밀번호를 다시 입력하세요'
             />
           </div>
           <div>
-            <StyledLabel>이름</StyledLabel>
-            <StyledInput name="userName" onChange={onChange} required />
+            <StyledLabel for="userName">이름 <PersonIcon className='icon'/></StyledLabel>
+            <StyledInput id="userName" name="userName" onChange={onChange} required placeholder='이름을 입력하세요' autoComplete='off'/>
           </div>
           <div>
-            <StyledLabel>이메일</StyledLabel>
+            <StyledLabel for="userEmail">이메일 <AlternateEmailIcon className='icon'/></StyledLabel>
             <StyledInput
+              id="userEmail"
               name="userEmail"
               type="email"
               onChange={onChange}
               required
+              placeholder='이메일을 입력하세요'
+              autoComplete='off'
             />
           </div>
           <div>
-            <StyledLabel>휴대폰 번호</StyledLabel>
-            <StyledInput name="userPhone" onChange={onChange} required />
+            <StyledLabel for="userPhone">휴대폰 번호 <LocalPhoneIcon className='icon'/></StyledLabel>
+            <StyledInput id="userPhone" name="userPhone" onChange={onChange} required placeholder='휴대폰 번호를 입력하세요' autoComplete='off' />
           </div>
           <div>
-            <StyledLabel>생년 월일</StyledLabel>
+            <StyledLabel for="userBirth">생년월일 <CalendarTodayIcon className='icon'/></StyledLabel>
             <StyledInput
+              id="userBirth"
               name="userBirth"
               type="date"
               onChange={onChange}
               required
             />
           </div>
-          <div>
-            <StyledLabel>성별</StyledLabel>
-            <select name="gender">
-              <option value="1">남성</option>
-              <option value="0">여성</option>
-            </select>
+          <div className='genderdiv'>
+              <div>
+                <StyledLabel for="male">남성<MaleIcon className='icon'></MaleIcon></StyledLabel>
+                <StyledInput id="male" type="radio" name="gender" value="1" checked/>
+              </div>
+              <div>
+                <StyledLabel for="female">여성<FemaleIcon className='icon'></FemaleIcon></StyledLabel>
+                <StyledInput id="female" type="radio" name="gender" value="0"/>
+              </div>
           </div>
           <StyledButton disabled={!isIdChecked || !isNickChecked}>
-            회원가입
+            JOIN
           </StyledButton>
         </form>
       </SignupBox>
