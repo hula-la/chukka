@@ -35,6 +35,7 @@ export default class ToolbarComponent extends Component {
     this.switchCamera = this.switchCamera.bind(this);
     this.leaveSession = this.leaveSession.bind(this);
     this.toggleChat = this.toggleChat.bind(this);
+    this.quitSession = this.quitSession.bind(this);
   }
 
   micStatusChanged() {
@@ -70,6 +71,10 @@ export default class ToolbarComponent extends Component {
     this.props.toggleChat();
   }
 
+  quitSession() {
+    this.props.quitSession();
+  }
+
   render() {
     const mySessionId = this.props.sessionId;
     const localUser = this.props.user;
@@ -77,8 +82,6 @@ export default class ToolbarComponent extends Component {
       <AppBar className="toolbar" id="header">
         <Toolbar className="toolbar">
           <div id="navSessionInfo">
-            <img id="header_img" alt="OpenVidu Logo" src={logo} />
-
             {this.props.sessionId && (
               <div id="titleContent">
                 <span id="session-title">{mySessionId}</span>
@@ -152,7 +155,7 @@ export default class ToolbarComponent extends Component {
             <IconButton
               color="secondary"
               className="navButton"
-              onClick={this.leaveSession}
+              onClick={this.quitSession}
               id="navLeaveButton"
             >
               <PowerSettingsNew />

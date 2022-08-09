@@ -22,7 +22,11 @@ import AdminPage from './pages/admin/AdminPage';
 // notfount
 import NotFound from './pages/NotFound';
 import LectureDetailpage from './pages/lecture/LectureDetailpage';
+
+import { useNavigate } from 'react-router-dom';
+
 const App = () => {
+  const navigate = useNavigate();
   return (
     <div className="App">
       <Routes>
@@ -45,7 +49,16 @@ const App = () => {
           <Route path="" element={<LecturesPage />} />
           <Route path=":lectureId" element={<LectureDetailpage />} />
         </Route>
-        <Route path="lectures/live" element={<LivePage />} />
+        <Route
+          path="lectures/live"
+          element={
+            <LivePage
+              navigate={() => {
+                navigate(-1);
+              }}
+            />
+          }
+        />
         {/* snacks */}
         <Route path="snacks" element={<Layout />}>
           <Route path="" element={<SnacksPage />} />
