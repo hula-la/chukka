@@ -4,6 +4,7 @@ import {
   userLogin,
   fetchAccessToken,
   fetchProfile,
+  changeProfile,
 } from './userActions';
 
 // initialize userToken from local storage
@@ -84,6 +85,16 @@ const userSlice = createSlice({
     },
     [fetchProfile.rejected]: (state, { payload }) => {
       state.error = payload;
+    },
+
+    // 프로필 변경
+    [changeProfile.fulfilled]: (state, { payload }) => {
+      state.userProInfo = payload.data;
+      console.log(payload);
+    },
+    [changeProfile.rejected]: (state, { payload }) => {
+      state.error = payload;
+      console.log(state.error);
     },
   },
 });

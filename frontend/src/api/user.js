@@ -43,3 +43,21 @@ export const find = async (data) => {
   const res = await client.post('accounts/password', data);
   return res;
 };
+
+export const change = async (profileInputs, profilePicture) => {
+  const formData = new FormData();
+
+  formData.append('file', profilePicture);
+  formData.append(
+    'modifyInfo',
+    new Blob([JSON.stringify(profileInputs)], { type: 'application/json' }),
+  );
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  };
+  const res = await client.put(`accounts/`, formData, config);
+  console.log(res);
+  return res;
+};

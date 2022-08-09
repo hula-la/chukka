@@ -1,8 +1,12 @@
-import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { login, register, getToken, fetchPro, find } from '../../api/user';
-
-const BASE_URL = 'http://127.0.0.1:8080';
+import {
+  login,
+  register,
+  getToken,
+  fetchPro,
+  find,
+  change,
+} from '../../api/user';
 
 export const registerUser = createAsyncThunk(
   'user/register',
@@ -66,9 +70,11 @@ export const fetchProfile = createAsyncThunk(
 
 export const changeProfile = createAsyncThunk(
   'user/changeProfile',
-  async (data, { rejectWithValue }) => {
+  async ({ profileInputs, profilePicture }, { rejectWithValue }) => {
     try {
-      await axios.put(`${BASE_URL}/accounts/`, data);
+      console.log(profilePicture);
+      const { data } = await change(profileInputs, profilePicture);
+      return data;
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);
