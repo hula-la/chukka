@@ -197,7 +197,7 @@ public class UserController {
 			HttpServletRequest req) throws IOException {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
-		User user = userService.updateUser(loginUserId, modifyInfo, file != null, modifyInfo.isProfile());
+		User user = userService.updateUser(loginUserId, modifyInfo, file != null, modifyInfo.getIsProfile().equals("true"));
 		if(file != null) {
 			s3Uploader.uploadFiles(file, "img/profile", req.getServletContext().getRealPath("/img/"), user.getUserId());
 		}
