@@ -15,7 +15,5 @@ public class SnacksUploadReq {
     private String snacksTitle;
     @ApiModelProperty(name = "태그", example = "춤,나연")
     private String snacksTag;
-    @ApiModelProperty(name = "비디오", example = "vid/snacks.mp4")
-    private MultipartFile snacksVideo;
 
 }

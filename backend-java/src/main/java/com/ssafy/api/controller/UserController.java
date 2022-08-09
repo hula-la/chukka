@@ -193,7 +193,7 @@ public class UserController {
 	public ResponseEntity<BaseResponseBody> modifyProfile(
 			@ApiIgnore Authentication authentication,
 			@RequestPart @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo,
-			@RequestPart @ApiParam(value="수정 회원 프로필 파일") MultipartFile file,
+			@RequestPart(required = false) @ApiParam(value="수정 회원 프로필 파일") MultipartFile file,
 			HttpServletRequest req) throws IOException {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();

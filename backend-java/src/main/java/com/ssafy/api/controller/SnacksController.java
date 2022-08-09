@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.snacks.SnacksReplyPostReq;
 import com.ssafy.api.request.snacks.SnacksUploadReq;
+import com.ssafy.api.response.snacks.SnacksReplyRes;
 import com.ssafy.api.response.snacks.SnacksRes;
 import com.ssafy.api.service.SnacksService;
 import com.ssafy.api.service.UserService;
@@ -12,8 +13,8 @@ import com.ssafy.db.entity.Snacks;
 import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -43,8 +44,6 @@ public class SnacksController {
      * sort : 정렬 조건, sort 파라미터 추가 가능
      **/
 
-    // 수정 필요 ********************************************************************************************************
-    // - 페이지네이션 ****************************************************************************************************
     // 스낵스 조회 =======================================================================================================
     @GetMapping("/")
     @ApiOperation(value = "스낵스 조회", notes = "스낵스 목록을 페이징 방식으로 조회한다.")
@@ -53,8 +52,8 @@ public class SnacksController {
     })
     public ResponseEntity<BaseResponseBody> getSnacks(
             @RequestBody @ApiParam(value="페이지 정보") Pageable pageable){
-        Page<Snacks> page = snacksService.findAll(pageable);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", page));
+        Slice<SnacksRes> slice = snacksService.findAll(pageable);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", slice));
 
     }
 
@@ -71,6 +70,7 @@ public class SnacksController {
     public ResponseEntity<BaseResponseBody> uploadSnacks(
             @ApiIgnore Authentication authentication,
             @RequestBody @ApiParam(value="스낵스 정보") SnacksUploadReq snacksInfo,
+            @RequestPart @ApiParam(value="스낵스 영상 파일") MultipartFile file,
             HttpServletRequest req) throws IOException {
         // 로그인 유저 판별
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
@@ -81,7 +81,6 @@ public class SnacksController {
         }
         Snacks snacks = snacksService.uploadSnacks(snacksInfo, user);
         // 스낵스 영상 파일 업로드
-        MultipartFile file = snacksInfo.getSnacksVideo();
         if(file != null) {
             s3Uploader.uploadFiles(file, "vid/snacks", req.getServletContext().getRealPath("/vid/snacks/"), String.valueOf(snacks.getSnacksId()));
         }
@@ -101,6 +100,22 @@ public class SnacksController {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Snacks", null));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", SnacksRes.of(snacks)));
+    }
+
+    // 스낵스 댓글 조회 ==================================================================================================
+    @GetMapping("/{snacksId}/reply")
+    @ApiOperation(value = "스낵스 댓글 조회", notes = "<strong>스낵스 아이디</strong>를 받아 스낵스 댓글을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success", response = SnacksReplyRes.class),
+            @ApiResponse(code = 401, message = "Invalid Snacks", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<BaseResponseBody> getComment(
+            @PathVariable @ApiParam(value = "스낵스 아이디") Long snacksId) {
+        if(snacksService.getCertainSnacks(snacksId) == null) {
+            return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Snacks", null));
+        }
+        List<SnacksReplyRes> list = snacksService.getReplybySnacksId(snacksId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", list));
     }
 
     // 수정 필요 ********************************************************************************************************

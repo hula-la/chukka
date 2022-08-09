@@ -2,16 +2,21 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.snacks.SnacksReplyPostReq;
 import com.ssafy.api.request.snacks.SnacksUploadReq;
+import com.ssafy.api.response.snacks.SnacksReplyRes;
+import com.ssafy.api.response.snacks.SnacksRes;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,10 +31,12 @@ public class SnacksServiceImpl implements SnacksService{
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    // 스낵스 조회 아직 미완성 ============================================================================================
+    // 스낵스 조회 =======================================================================================================
     @Override
-    public Page<Snacks> findAll(Pageable pageable) {
-        return null;
+    public Slice<SnacksRes> findAll(Pageable pageable) {
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        Slice<SnacksRes> slice = snacksRepository.findAll(pageRequest).map(s -> SnacksRes.of(s));
+        return slice;
     }
 
     // 특정 스낵스 조회
@@ -105,6 +112,13 @@ public class SnacksServiceImpl implements SnacksService{
     @Override
     public List<String> getPopularTags() {
         return snacksTagRepository.findSnacksPopularTags();
+    }
+
+    @Override
+    public List<SnacksReplyRes> getReplybySnacksId(Long snacksId) {
+        List<SnacksReplyRes> list = snacksReplyRepository.findBySnacks_SnacksId(snacksId)
+                .stream().map(s -> SnacksReplyRes.of(s)).collect(Collectors.toList());
+        return list;
     }
 
     // 태그 업로드
