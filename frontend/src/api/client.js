@@ -44,20 +44,34 @@ client.interceptors.request.use(
 // 응답 인터셉터 추가하기
 client.interceptors.response.use(
   function (response) {
-    // 2xx 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
-    // 응답 데이터가 있는 작업 수행
-    const { accessToken } = response.data.data;
-    if (accessToken) {
-      client.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+    try {
+      const { accessToken } = response.data.data ? response.data.data : null;
+      if (accessToken) {
+        client.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${accessToken}`;
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      return response;
     }
-    return response;
   },
-  function (error) {
-    // 2xx 외의 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
-    // 응답 오류가 있는 작업 수행
-    // console.log(error);
-    return Promise.reject(error);
-  },
+
+  //   // 2xx 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
+  //   // 응답 데이터가 있는 작업 수행
+  //   const { accessToken } = response.data.data;
+  //   if (accessToken) {
+  //     client.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+  //   }
+  //   return response;
+  // },
+  // function (error) {
+  //   // 2xx 외의 범위에 있는 상태 코드는 이 함수를 트리거 합니다.
+  //   // 응답 오류가 있는 작업 수행
+  //   // console.log(error);
+  //   return Promise.reject(error);
+  // },
 );
 
 // /*

@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { fetchProfile } from '../../features/user/userActions';
+import { fetchProfile, changeProfile } from '../../features/user/userActions';
 
 // 페이지 블락
 const ProfilePageBlock = styled.div`
   display: flex;
   flex-direction: row;
+  height: inherit;
   max-width: 1200px;
   margin: 0 auto;
   align-items: flex-start;
@@ -112,7 +113,7 @@ const FinishLectureBox = styled.div`
 
 // 프로필 변경 페이지
 const ChangeProfileBox = styled.div`
-  position: absolute;
+  width: 100%;
   top: 10%;
   left: 50%;
   display: flex;
@@ -150,6 +151,13 @@ const StyledInput = styled.input`
   outline-color: #ffffff;
   width: 100%;
   background-color: #0b0b0b;
+
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+
+  &[type='date'] {
+  }
 `;
 
 const StyledLabel = styled.label`
@@ -180,6 +188,17 @@ const ProfilePage = () => {
   // 내 페이지인지 남의 페이지인지 구분
   // 1이면 나의 프로필페이지, 2이면 남의 프로필
   const [isProfile, setIsProfile] = useState('1');
+  const [profileInputs, setProfileInputs] = useState({
+    userBirth: '',
+    userEmail: '',
+    userGender: '',
+    userName: '',
+    userNickname: '',
+    userPhone: '',
+  });
+
+  const [profilePicture, setProfilePicture] = useState(null);
+
   const currentUser = useSelector((state) => {
     const userNickname = state.user.userInfo
       ? state.user.userInfo.userNickname
@@ -195,11 +214,6 @@ const ProfilePage = () => {
     }
   }, [currentUser, params]);
 
-  // 프로필 정보 받아오기
-  // const token = useSelector((state) => {
-  //   return state.user.accessToken;
-  // });
-
   const paramsNickname = params.nickName;
   useEffect(() => {
     dispatch(fetchProfile({ paramsNickname }));
@@ -209,6 +223,29 @@ const ProfilePage = () => {
     return state.user.userProInfo;
   });
 
+  useEffect(() => {
+    if (!userProInfo) {
+      return;
+    }
+    const {
+      userBirth,
+      userEmail,
+      userGender,
+      userName,
+      userNickname,
+      userPhone,
+    } = userProInfo;
+    const temp = {
+      userBirth: userBirth,
+      userEmail: userEmail,
+      userGender: userGender,
+      userName: userName,
+      userNickname: userNickname,
+      userPhone: userPhone,
+    };
+    setProfileInputs({ ...temp });
+  }, [userProInfo]);
+
   // 컴포넌트 바꾸기 용
   const [pageNum, setpageNum] = useState('1');
 
@@ -216,6 +253,24 @@ const ProfilePage = () => {
   const onClickMyList = () => setpageNum('2');
   const onClickChangeProfile = () => setpageNum('3');
   const onClickPassword = () => setpageNum('4');
+
+  const onChangeProfile = (e) => {
+    const { name, value } = e.target;
+    const nextProfileInputs = {
+      ...profileInputs,
+      [name]: value,
+    };
+    setProfileInputs(nextProfileInputs);
+  };
+
+  const onChangePicture = (e) => {
+    setProfilePicture(e.target.files[0]);
+  };
+
+  const onSubmitProfile = (e) => {
+    e.preventDefault();
+    dispatch(changeProfile({ profileInputs, profilePicture }));
+  };
 
   return (
     <ProfilePageBlock>
@@ -267,24 +322,64 @@ const ProfilePage = () => {
       )}
       {pageNum === '3' && (
         <ChangeProfileBox>
-          <Profile src="/img/login.png"></Profile>
-          <ChangeProfileForm>
-            <input type="file" />
+          <Profile src={userProInfo.userProfile}></Profile>
+          <ChangeProfileForm onSubmit={onSubmitProfile}>
+            <input type="file" onChange={onChangePicture} />
             <div>
               <StyledLabel>아이디</StyledLabel>
               <TextBox>{userProInfo.userId}</TextBox>
             </div>
             <div>
               <StyledLabel>닉네임</StyledLabel>
-              <StyledInput value={userProInfo.userId} />
+              <StyledInput
+                value={profileInputs.userNickname}
+                onChange={onChangeProfile}
+                name="userNickname"
+              />
             </div>
             <div>
               <StyledLabel>이메일</StyledLabel>
-              <StyledInput />
+              <StyledInput
+                name="userEmail"
+                value={profileInputs.userEmail}
+                onChange={onChangeProfile}
+                required
+              />
             </div>
             <div>
               <StyledLabel>휴대폰 번호</StyledLabel>
-              <StyledInput />
+              <StyledInput
+                name="userPhone"
+                value={profileInputs.userPhone}
+                onChange={onChangeProfile}
+                required
+              />
+            </div>
+            <div>
+              <StyledLabel>이름</StyledLabel>
+              <StyledInput
+                name="userName"
+                value={profileInputs.userName}
+                onChange={onChangeProfile}
+                required
+              />
+            </div>
+            <div>
+              <StyledLabel>생년 월일</StyledLabel>
+              <StyledInput
+                name="userBirth"
+                type="date"
+                value={profileInputs.userBirth}
+                onChange={onChangeProfile}
+                required
+              />
+            </div>
+            <div>
+              <StyledLabel>성별</StyledLabel>
+              <select name="gender">
+                <option value="1">남성</option>
+                <option value="0">여성</option>
+              </select>
             </div>
             <StyledButton>프로필 수정</StyledButton>
           </ChangeProfileForm>
