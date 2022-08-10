@@ -30,7 +30,9 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public Instructor createInstructor(String insId) {
-        Instructor ins = Instructor.builder().insId(insId).insProfile("https://" + bucket + ".s3." + region + ".amazonaws.com/" + insId).build();
+        Instructor ins = Instructor.builder()
+                .insId(insId)
+                .insProfile("https://" + bucket + ".s3." + region + ".amazonaws.com/img/instructor/profile/" + insId).build();
         return instructorRepository.save(ins);
     }
 

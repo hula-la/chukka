@@ -46,25 +46,30 @@ public class Lecture {
     private Date lecStartDate;
     @Temporal(TemporalType.DATE)
     private Date lecEndDate;
-    private int lecStudent;
     private int lecLimit;
+    @Builder.Default
+    private int lecStudent = 0;
 
-
+    @Builder.Default
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     private List<CartItem> cartItems = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Enroll> enrolls = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<PayList> payLists = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Section> sections = new ArrayList<>();

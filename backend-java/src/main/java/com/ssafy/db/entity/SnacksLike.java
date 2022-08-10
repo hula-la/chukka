@@ -1,6 +1,7 @@
 package com.ssafy.db.entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,6 +26,7 @@ public class SnacksLike {
     Snacks snacks;
 
     @Temporal(TemporalType.DATE)
+    @CreatedDate
     Date likeSnacksReg;
 
 }

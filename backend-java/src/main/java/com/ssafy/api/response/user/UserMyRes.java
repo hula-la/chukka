@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 /**
  * 회원 본인 정보 조회 API ([GET] /api/v1/users/me) 요청에 대한 응답값 정의.
@@ -34,7 +35,7 @@ public class UserMyRes{
 	@ApiModelProperty(name="User Point", example="500")
 	private int userPoint;
 	@ApiModelProperty(name="User 생년월일", example="2022-01-01")
-	private Date userBirth;
+	private String userBirth;
 	@ApiModelProperty(name="User Nickname", example="your_nickname")
 	private String userNickname;
 	@ApiModelProperty(name="User Lecture Level", example="500")
@@ -52,7 +53,8 @@ public class UserMyRes{
 		res.setUserEmail(user.getUserEmail());
 		res.setUserGender(user.getUserGender());
 		res.setUserPoint(user.getUserPoint());
-		res.setUserBirth(user.getUserBirth());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		res.setUserBirth(sdf.format(user.getUserBirth()));
 		res.setUserNickname(user.getUserNickname());
 		res.setUserLvLec(user.getUserLvLec());
 		res.setUserLvSnacks(user.getUserLvSnacks());

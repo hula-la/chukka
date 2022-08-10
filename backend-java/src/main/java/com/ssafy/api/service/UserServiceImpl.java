@@ -2,6 +2,11 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.response.admin.UserRes;
+import com.ssafy.api.response.lecture.LectureGetForListRes;
+import com.ssafy.api.response.snacks.SnacksRes;
+import com.ssafy.api.response.user.UserMyInsLectureRes;
+import com.ssafy.api.response.user.UserMyPayRes;
+import com.ssafy.api.response.user.UserPayListRes;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ssafy.api.response.user.UserMyLectureRes;
@@ -10,6 +15,7 @@ import com.ssafy.db.entity.Pay;
 import com.ssafy.db.entity.Snacks;
 import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -28,6 +34,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  *	유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -103,9 +110,28 @@ public class UserServiceImpl implements UserService {
 
 	// 유저 정보 수정
 	@Override
-	public User updateUser(String userId, UserModifyReq modifyInfo) {
+	public User updateUser(String userId, UserModifyReq modifyInfo, boolean isFile, boolean isProfile) {
 		if (userRepository.findByUserId(userId).isPresent()) {
 			User now = userRepository.findByUserId(userId).get();
+			if(isFile || isProfile) {
+				User user = User.builder().userId(userId)
+						.userName(modifyInfo.getUserName())
+						.userPhone(modifyInfo.getUserPhone())
+						.userEmail(modifyInfo.getUserEmail())
+						.userNickname(modifyInfo.getUserNickname())
+						.userLvLec(now.getUserLvLec())
+						.userLvSnacks(now.getUserLvSnacks())
+						.userLvGame(now.getUserLvGame())
+						.userGender(modifyInfo.getUserGender())
+						.userRefreshToken(now.getUserRefreshToken())
+						.userBirth(modifyInfo.getUserBirth())
+						.userPoint(now.getUserPoint())
+						.userType(now.getUserType())
+						.userPw(now.getUserPw())
+						.userProfile("https://" + bucket + ".s3." + region + ".amazonaws.com/img/profile/" + userId)
+						.build();
+				return userRepository.save(user);
+			}
 			User user = User.builder().userId(userId)
 					.userName(modifyInfo.getUserName())
 					.userPhone(modifyInfo.getUserPhone())
@@ -120,7 +146,6 @@ public class UserServiceImpl implements UserService {
 					.userPoint(now.getUserPoint())
 					.userType(now.getUserType())
 					.userPw(now.getUserPw())
-					.userProfile("https://" + bucket + ".s3." + region + ".amazonaws.com/" + userId)
 					.build();
 			return userRepository.save(user);
 		}
@@ -157,15 +182,19 @@ public class UserServiceImpl implements UserService {
 
 	// 유저 아이디로 스낵스 목록 조회
 	@Override
-	public List<Snacks> getSnacksByUserId(String userId) {
-		return snacksRepository.findSnacksByUserUserIdOrderBySnacksIdDesc(userId);
+	public List<SnacksRes> getSnacksByUserId(String userId) {
+		List<SnacksRes> snack = snacksRepository.findSnacksByUserUserIdOrderBySnacksIdDesc(userId)
+				.stream().map(s -> SnacksRes.of(s)).collect(Collectors.toList());
+		return snack;
 	}
 
 	// 유저 아이디로 결제 목록 조회
 	@Override
-	public List<Pay> getPaysByUserId(String userId) {
-//		payRepository.findPaylistUsingFetchJoin(userId).stream().map(s -> new);
-		return payRepository.findPaylistUsingFetchJoin(userId);
+	public List<UserMyPayRes> getPaysByUserId(String userId) {
+		List<UserMyPayRes> pay = payRepository.findPaylistUsingFetchJoin(userId)
+				.stream().map(s -> new UserMyPayRes(s.getPayId(), s.getUser().getUserId(), s.getPayDate(), s.getPayAmount(), s.getPayMethod(), s.getPayLists()
+						.stream().map(ss-> UserPayListRes.of(ss)).collect(Collectors.toList()))).collect(Collectors.toList());
+		return pay;
 	}
 
 	// 리프레시 토큰으로 유저 조회
@@ -190,45 +219,30 @@ public class UserServiceImpl implements UserService {
 	// 모든 회원 목록 조회
 	@Override
 	public List<UserRes> getUsers() {
-		List<User> list = userRepository.findAll();
-		List<UserRes> users = new ArrayList<>();
-		for (int i = 0; i < list.size(); i++) {
-			users.add(UserRes.of(list.get(i)));
-		}
+		List<UserRes> users = userRepository.findAll().stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 		return users;
 	}
 
 	// 검색된 회원 목록 조회
 	@Override
 	public List<UserRes> getCertainUsers(String category, String keyword) {
-		List<User> list;
-		List<UserRes> users = new ArrayList<>();
+		List<UserRes> users = null;
 		switch(category) {
 			case "userId":
-				list = userRepository.findByUserIdContaining(keyword);
-				for (int i = 0; i < list.size(); i++) {
-					users.add(UserRes.of(list.get(i)));
-				}
+				users = userRepository.findByUserIdContaining(keyword)
+						.stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 			case "userName":
-				list = userRepository.findByUserNameContaining(keyword);
-				for (int i = 0; i < list.size(); i++) {
-					users.add(UserRes.of(list.get(i)));
-				}
+				users = userRepository.findByUserNameContaining(keyword)
+						.stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 			case "userNickname":
-				list = userRepository.findByUserNicknameContaining(keyword);
-				for (int i = 0; i < list.size(); i++) {
-					users.add(UserRes.of(list.get(i)));
-				}
+				users = userRepository.findByUserNicknameContaining(keyword)
+						.stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 			case "userEmail":
-				list = userRepository.findByUserEmailContaining(keyword);
-				for (int i = 0; i < list.size(); i++) {
-					users.add(UserRes.of(list.get(i)));
-				}
+				users = userRepository.findByUserEmailContaining(keyword)
+						.stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 			case "userPhone":
-				list = userRepository.findByUserPhoneContaining(keyword);
-				for (int i = 0; i < list.size(); i++) {
-					users.add(UserRes.of(list.get(i)));
-				}
+				users = userRepository.findByUserPhoneContaining(keyword)
+						.stream().map(s -> UserRes.of(s)).collect(Collectors.toList());
 		}
 		return users;
 	}
@@ -247,6 +261,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void createInstructor(String userId, int userType) {
 		userRepository.updateUserType(userId, userType);
+	}
+
+	@Override
+	public List<UserMyInsLectureRes> getLecturesByInstructorId(String userId) {
+		List<UserMyInsLectureRes> list = lectureRepository.findAllByInstructor_InsId(userId)
+				.stream().map(s -> UserMyInsLectureRes.of(s)).collect(Collectors.toList());
+		return list;
 	}
 
 }

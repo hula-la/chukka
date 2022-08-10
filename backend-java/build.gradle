@@ -7,7 +7,7 @@ buildscript{
         querydslPluginVer = '1.0.10'
         springDependencyMgmtVer = '1.0.11'
         springLoadedVer = '1.2.8'
-        nodePluginVer = '1.3.1'
+//        nodePluginVer = '1.3.1'
     }
     repositories {
         mavenCentral()
@@ -17,7 +17,7 @@ buildscript{
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVer}"
         classpath "io.spring.gradle:dependency-management-plugin:${springDependencyMgmtVer}.RELEASE"
         classpath "org.springframework:springloaded:${springLoadedVer}.RELEASE"
-        classpath "com.github.node-gradle:gradle-node-plugin:3.1.0"
+//        classpath "com.github.node-gradle:gradle-node-plugin:3.1.0"
     }
 }
 
@@ -28,8 +28,8 @@ plugins {
 }
 
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'eclipse'
-apply plugin: 'com.github.node-gradle.node'
+//apply plugin: 'eclipse'
+//apply plugin: 'com.github.node-gradle.node'
 
 repositories {
     mavenCentral()
@@ -45,12 +45,12 @@ group 'com.ssafy'
 version '1.0-SNAPSHOT'
 sourceCompatibility = '1.8'
 
-node {
-    download = true
-    version = '14.17.0'
-    // Set the work directory where node_modules should be located
-    nodeModulesDir = file("${project.projectDir}/../frontend")
-}
+//node {
+//    download = true
+//    version = '14.17.0'
+//    // Set the work directory where node_modules should be located
+//    nodeModulesDir = file("${project.projectDir}/../frontend")
+//}
 
 configurations {
     providedRuntime

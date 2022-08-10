@@ -5,6 +5,7 @@ import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.request.lecture.LectureUpdateReq;
 import com.ssafy.api.request.lecture.LiveLecturePostReq;
 import com.ssafy.api.request.section.SectionPostReq;
+import com.ssafy.api.request.section.SectionUpdateReq;
 import com.ssafy.api.response.admin.InstructorRes;
 import com.ssafy.api.response.admin.LectureListRes;
 import com.ssafy.api.response.admin.UserListRes;
@@ -101,8 +102,6 @@ public class AdminController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserListRes.of(userService.getUsers())));
 	}
 
-	// 수정 필요 ********************************************************************************************************
-	// - Pageable *****************************************************************************************************
 	// 전체 강의 목록 조회 ================================================================================================
 	@GetMapping("/lectures/")
 	@ApiOperation(value = "강의 목록 조회", notes = "모든 강의 목록을 반환한다.")
@@ -113,8 +112,6 @@ public class AdminController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
 	}
 
-	// 수정 필요 ********************************************************************************************************
-	// - Pageable *****************************************************************************************************
 	// 전체 섹션 목록 조회 ================================================================================================
 	@GetMapping("/sections/{lecId}")
 	@ApiOperation(value = "섹션 목록 조회", notes = "<strong>강의 아이디</strong>를 통해 특정 강의의 모든 섹션 목록을 반환한다.")
@@ -126,33 +123,40 @@ public class AdminController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId)));
 	}
 
-	// 수정 필요 ********************************************************************************************************
-	// - 관리자 페이지 포맷에 따라 썸네일 수정 분리 필요할 수 있음 **************************************************************
-	// 강의 추가 ========================================================================================================
+	// 라이브 강의 추가 ========================================================================================================
 	@PostMapping("/lectures/live")
-	@ApiOperation(value = "강의 추가", notes = "<strong>강사 아이디, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 시작일, 강의 종료일, 카테고리, 난이도, 제한인원, 그리고 춤 장르</strong>를 받아 강의를 추가한다.")
+	@ApiOperation(value = "라이브 강의 추가", notes = "<strong>강사 아이디, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 일정, 강의 요일/시간, 강의 시작일, 강의 종료일, 카테고리, 난이도, 제한인원, 그리고 춤 장르</strong>를 받아 강의를 추가한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> registerLecture(
-			@RequestBody @ApiParam(value="강의 정보", required = true) LiveLecturePostReq liveInfo) {
-		Lecture lecture = lectureService.createLiveLecture(liveInfo);
+			@RequestBody @ApiParam(value="강의 정보", required = true) LiveLecturePostReq liveInfo,
+			@RequestPart @ApiParam(value = "강의 썸네일 이미지 파일") MultipartFile lecThumb,
+			HttpServletRequest req) throws IOException {
+		Lecture lecture = lectureService.createLiveLecture(liveInfo, lecThumb != null);
+		if(lecThumb != null) {
+			s3Uploader.uploadFiles(lecThumb, "img/lecture/thumb", req.getServletContext().getRealPath("/img/"), Integer.toString(lecture.getLecId()));
+		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
 	}
 
+	// 녹화 강의 추가 ========================================================================================================
 	@PostMapping("/lectures/record")
-	@ApiOperation(value = "강의 추가", notes = "<strong>강사 아이디, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 시작일, 강의 종료일, 카테고리, 난이도, 제한인원, 그리고 춤 장르</strong>를 받아 강의를 추가한다.")
+	@ApiOperation(value = "녹화 강의 추가", notes = "<strong>강사 아이디, 강의 제목, 강의 내용, 수강료, 카테고리, 난이도, 그리고 춤 장르</strong>를 받아 강의를 추가한다.")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> registerLecture(
-			@RequestBody @ApiParam(value="강의 정보", required = true) LecturePostReq lectureInfo) {
-		Lecture lecture = lectureService.createLecture(lectureInfo);
+			@RequestBody @ApiParam(value="강의 정보", required = true) LecturePostReq lectureInfo,
+			@RequestPart @ApiParam(value = "강의 썸네일 이미지 파일") MultipartFile lecThumb,
+			HttpServletRequest req) throws IOException {
+		Lecture lecture = lectureService.createLecture(lectureInfo, lecThumb != null);
+		if(lecThumb != null) {
+			s3Uploader.uploadFiles(lecThumb, "img/lecture/thumb", req.getServletContext().getRealPath("/img/"), Integer.toString(lecture.getLecId()));
+		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
 	}
 
-	// 수정 필요 ********************************************************************************************************
-	// - 관리자 페이지 포맷에 따라 섹션 내용 수정 분리 필요할 수 있음 ***********************************************************
 	// 섹션 추가 ========================================================================================================
 	@PostMapping("/sections/{lecId}")
 	@ApiOperation(value = "섹션 추가", notes = "<strong>강의 아이디, 강사 아이디, 섹션 제목, 그리고 섹션 내용</strong>을 통해 섹션을 추가한다.")
@@ -162,9 +166,9 @@ public class AdminController {
 	public ResponseEntity<BaseResponseBody> registerSection(
 			@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId,
 			@RequestPart @ApiParam(value="강의 정보", required = true) SectionPostReq sectionInfo,
+			@RequestPart @ApiParam(value = "강의 영상 파일") MultipartFile contents,
 			HttpServletRequest req) throws IOException {
-		Section section = sectionService.createSection(sectionInfo);
-		MultipartFile contents = sectionInfo.getSecContents();
+		Section section = sectionService.createSection(sectionInfo, contents != null);
 		if(contents != null) {
 			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/img/"), Integer.toString(section.getSecId()));
 		}
@@ -188,23 +192,23 @@ public class AdminController {
 //		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
 //	}
 
-	// 섹션 수정 ========================================================================================================
-	@PutMapping("/sections/{lecId}")
-	@ApiOperation(value = "섹션 수정", notes = "<strong>강의 아이디, 강사 아이디, 섹션 제목, 그리고 섹션 내용</strong>을 통해 섹션을 수정한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success", response = SectionGetRes.class)
-	})
-	public ResponseEntity<BaseResponseBody> modifySection(
-			@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId,
-			@RequestPart @ApiParam(value = "수정할 섹션 내용", required = true) SectionPostReq sectionInfo,
-			HttpServletRequest req) throws IOException {
-		Section section = sectionService.updateSection(sectionInfo.getLecId(), sectionInfo);
-		MultipartFile contents = sectionInfo.getSecContents();
-		if(contents != null) {
-			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/img/"), Integer.toString(section.getSecId()));
-		}
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId)));
-	}
+//	// 섹션 수정 ========================================================================================================
+//	@PutMapping("/sections/{lecId}")
+//	@ApiOperation(value = "섹션 수정", notes = "<strong>강의 아이디, 강사 아이디, 섹션 제목, 그리고 섹션 내용</strong>을 통해 섹션을 수정한다.")
+//	@ApiResponses({
+//			@ApiResponse(code = 200, message = "Success", response = SectionGetRes.class)
+//	})
+//	public ResponseEntity<BaseResponseBody> modifySection(
+//			@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId,
+//			@RequestPart @ApiParam(value = "수정할 섹션 내용", required = true) SectionUpdateReq sectionInfo,
+//			@RequestPart @ApiParam(value = "수정할 섹션 영상 파일") MultipartFile contents,
+//			HttpServletRequest req) throws IOException {
+//		Section section = sectionService.updateSection(lecId, sectionInfo);
+//		if(contents != null) {
+//			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/img/"), Integer.toString(section.getSecId()));
+//		}
+//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId)));
+//	}
 
 	// 강의 삭제 ========================================================================================================
 	@DeleteMapping("/lectures/{lecId}")

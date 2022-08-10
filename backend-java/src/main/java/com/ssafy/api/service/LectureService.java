@@ -21,10 +21,9 @@ import java.util.Optional;
 public interface LectureService {
 
     // Create ==========================================================================================================
-    Lecture createLecture(LecturePostReq lecturePostReq);
+    Lecture createLecture(LecturePostReq lecturePostReq, boolean isFile);
 
-    Lecture createLiveLecture(LiveLecturePostReq liveLecturePostReq);
-
+    Lecture createLiveLecture(LiveLecturePostReq liveLecturePostReq, boolean isFile);
     // Read ============================================================================================================
     // 인기순
     Page<LectureGetForListRes> getMostPopularLecture(Pageable pageable);
