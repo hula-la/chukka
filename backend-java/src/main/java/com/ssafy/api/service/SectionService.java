@@ -12,7 +12,7 @@ import java.util.List;
 public interface SectionService {
 
     // Create
-    Section createSection(SectionPostReq sectionPostReq);
+    Section createSection(SectionPostReq sectionPostReq, boolean isFile);
 
     // Read
     // 현재 해당하는 강의의 섹션만 불러오기
@@ -20,7 +20,7 @@ public interface SectionService {
 
     // Update
     // 소강의 내용 수정하기
-     Section updateSection(int secId, SectionPostReq sectionInfo);
+     Section updateSection(int lecId, SectionUpdateReq sectionInfo);
 
     // Delete
     // 소강의 삭제하기

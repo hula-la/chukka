@@ -13,6 +13,7 @@ import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.InstructorRepository;
 import com.ssafy.db.repository.LectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,10 @@ public class LectureServiceImpl implements LectureService {
 
     @Autowired
     InstructorRepository instructorRepository;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+    @Value("${cloud.aws.region.static}")
+    private String region;
 
     // 인기순
     @Override
@@ -80,16 +85,13 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public List<LectureRes> findAll() {
-        List<Lecture> lectures = lectureRepository.findAll();
-        List<LectureRes> list = new ArrayList<>();
-        for (int i = 0; i < lectures.size(); i++) {
-            list.add(LectureRes.of(lectures.get(i)));
-        }
+        List<LectureRes> list = lectureRepository.findAll()
+                .stream().map(s -> LectureRes.of(s)).collect(Collectors.toList());
         return list;
     }
 
     @Override
-    public Lecture createLecture(LecturePostReq lecturePostReq) {
+    public Lecture createLecture(LecturePostReq lecturePostReq, boolean isFile) {
         // 녹화 강의일때
         Optional<Instructor> ins = instructorRepository.findByInsId(lecturePostReq.getInsId());
         if (!ins.isPresent()) {
@@ -97,7 +99,6 @@ public class LectureServiceImpl implements LectureService {
         }
         Lecture lecture = Lecture.builder()
                 .instructor(ins.get())
-                .lecThumb((lecturePostReq.getLecThumb()))
                 .lecTitle(lecturePostReq.getLecTitle())
                 .lecContents(lecturePostReq.getLecContents())
                 .lecPrice(lecturePostReq.getLecPrice())
@@ -105,18 +106,31 @@ public class LectureServiceImpl implements LectureService {
                 .lecLevel(lecturePostReq.getLecLevel())
                 .lecGenre(lecturePostReq.getLecGenre())
                 .build();
-        return lectureRepository.save(lecture);
+        Lecture lec = lectureRepository.save(lecture);
+        if(isFile) {
+            Lecture lecturee = Lecture.builder()
+                    .instructor(lec.getInstructor())
+                    .lecThumb("https://" + bucket + ".s3." + region + ".amazonaws.com/img/lecture/thumb/" + lec.getLecId())
+                    .lecTitle(lec.getLecTitle())
+                    .lecContents(lec.getLecContents())
+                    .lecPrice(lec.getLecPrice())
+                    .lecCategory(lec.getLecCategory())
+                    .lecLevel(lec.getLecLevel())
+                    .lecGenre(lec.getLecGenre())
+                    .build();
+            return lectureRepository.save(lecturee);
+        }
+        return lec;
     }
 
     @Override
-    public Lecture createLiveLecture(LiveLecturePostReq liveLecturePostReq) {
+    public Lecture createLiveLecture(LiveLecturePostReq liveLecturePostReq, boolean isFile) {
         Optional<Instructor> ins = instructorRepository.findByInsId(liveLecturePostReq.getInsId());
         if (!ins.isPresent()) {
             return null;
         }
         Lecture lecture = Lecture.builder()
                 .instructor(ins.get())
-                .lecThumb((liveLecturePostReq.getLecThumb()))
                 .lecTitle(liveLecturePostReq.getLecTitle())
                 .lecContents(liveLecturePostReq.getLecContents())
                 .lecPrice(liveLecturePostReq.getLecPrice())
@@ -128,10 +142,30 @@ public class LectureServiceImpl implements LectureService {
                 .dayAndTime(liveLecturePostReq.getDayAndTime())
                 .lecStartDate(liveLecturePostReq.getLecStartDate())
                 .lecEndDate(liveLecturePostReq.getLecEndDate())
-                .lecStudent(liveLecturePostReq.getLecStudent())
                 .lecLimit(liveLecturePostReq.getLecLimit())
                 .build();
-        return lectureRepository.save(lecture);
+        Lecture lec = lectureRepository.save(lecture);
+        if(isFile) {
+            Lecture lecturee = Lecture.builder()
+                    .instructor(lec.getInstructor())
+                    .lecThumb("https://" + bucket + ".s3." + region + ".amazonaws.com/img/lecture/thumb/" + lec.getLecId())
+                    .lecTitle(lec.getLecTitle())
+                    .lecContents(lec.getLecContents())
+                    .lecPrice(lec.getLecPrice())
+                    .lecCategory(lec.getLecCategory())
+                    .lecLevel(lec.getLecLevel())
+                    .lecGenre(lec.getLecGenre())
+                    .lecNotice(lec.getLecNotice())
+                    .lecSchedule(lec.getLecSchedule())
+                    .dayAndTime(lec.getDayAndTime())
+                    .lecStartDate(lec.getLecStartDate())
+                    .lecEndDate(lec.getLecEndDate())
+                    .lecStudent(lec.getLecStudent())
+                    .lecLimit(lec.getLecLimit())
+                    .build();
+            return lectureRepository.save(lecturee);
+        }
+        return lec;
     }
 
     @Override
