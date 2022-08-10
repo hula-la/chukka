@@ -4,6 +4,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { fetchProfile, changeProfile } from '../../features/user/userActions';
 import defaultImage from '../../img/default.jpeg';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import EmailIcon from '@mui/icons-material/Email';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import PersonIcon from '@mui/icons-material/Person';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import MaleIcon from '@mui/icons-material/Male';
+import FemaleIcon from '@mui/icons-material/Female';
 
 // 페이지 블락
 const ProfilePageBlock = styled.div`
@@ -48,6 +55,7 @@ const Menu = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 12rem;
 `;
 
 const SideBarButton = styled.button`
@@ -55,6 +63,14 @@ const SideBarButton = styled.button`
   color: #ffffff;
   margin-bottom: 1rem;
   cursor: pointer;
+  transition: 200ms;
+  font-size: 1rem;
+  opacity: 0.7;
+  :hover {
+    font-weight: bold;
+    border-bottom: #ff2c55 0.05rem solid;
+    opacity: 1;
+  }
 `;
 
 // 나의 강의 목록
@@ -120,37 +136,60 @@ const ChangeProfileBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  .addIcon {
+    position: relative;
+    top: -3rem;
+    left: 3rem;
+    cursor: pointer;
+  }
 `;
 
 const ChangeProfileForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* align-items: center; */
-`;
-
-const TextBox = styled.div`
-  border: thin solid #ffffff;
-  font-size: 1rem;
-  border-radius: 5px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin-bottom: 1rem;
-  margin-top: 0.5rem;
+  & input[type='file'] {
+    visibility: hidden;
+  }
+  & p.userId {
+    position: relative;
+    font-size: 3rem;
+    font-weight: bold;
+    top: -4rem;
+    text-align: center;
+  }
+  & p.userNickname {
+    position: relative;
+    font-size: 1rem;
+    font-weight: bold;
+    top: -4rem;
+    text-align: center;
+    color: #ff2c55;
+    opacity: 0.7;
+  }
+  .icon {
+    vertical-align: middle;
+  }
+  .infoDiv {
+    height: 3rem;
+  }
+  .flexDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+  }
 `;
 
 const StyledInput = styled.input`
   font-size: 1rem;
   color: #ffffff;
-  border-color: #ffffff;
-  border-width: thin;
-  border-radius: 5px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin-bottom: 1rem;
-  margin-top: 0.5rem;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  margin: 0.5rem 1rem 1rem;
   outline-color: #ffffff;
-  width: 100%;
+  width: 70%;
+  display: inline;
   background-color: #0b0b0b;
 
   &::-webkit-calendar-picker-indicator {
@@ -159,25 +198,37 @@ const StyledInput = styled.input`
 
   &[type='date'] {
   }
+
+  &[type='radio'] {
+    width: auto;
+  }
+
+  :hover {
+    border-bottom: #ff2c55 0.08rem solid;
+  }
 `;
 
 const StyledLabel = styled.label`
   font-size: small;
-  /* text-align: left; */
 `;
 
 const StyledButton = styled.button`
   border: none;
   border-radius: 4px;
-  font-size: small;
-  font-weight: bold;
+  font-size: 1rem;
+  /* font-weight: bold; */
   padding: 0.5rem 1rem;
-  margin-top: 1rem;
+  margin-top: 2.5rem;
   background-color: #ff2c55;
   color: #ffffff;
   outline: none;
   cursor: pointer;
-  width: 98%;
+  opacity: 0.5;
+  transition: 500ms;
+  :hover {
+    opacity: 1;
+    font-weight: bold;
+  }
 `;
 
 const ProfilePage = () => {
@@ -218,6 +269,11 @@ const ProfilePage = () => {
   const onClickMyList = () => setpageNum('2');
   const onClickChangeProfile = () => setpageNum('3');
   const onClickPassword = () => setpageNum('4');
+
+  const onClickUpload = () => {
+    let fileInput = document.getElementById("profile");
+    fileInput.click();
+  }
 
   // 프로필 변경용 인풋
   const [profileInputs, setProfileInputs] = useState({
@@ -347,22 +403,13 @@ const ProfilePage = () => {
       {pageNum === '3' && (
         <ChangeProfileBox>
           <Profile src={userProfile}></Profile>
+          <AddCircleIcon className='addIcon' onClick={onClickUpload}/>
           <ChangeProfileForm onSubmit={onSubmitProfile}>
-            <input type="file" onChange={onChangePicture} />
-            <div>
-              <StyledLabel>아이디</StyledLabel>
-              <TextBox>{userProInfo.userId}</TextBox>
-            </div>
-            <div>
-              <StyledLabel>닉네임</StyledLabel>
-              <StyledInput
-                value={profileInputs.userNickname}
-                onChange={onChangeProfile}
-                name="userNickname"
-              />
-            </div>
-            <div>
-              <StyledLabel>이메일</StyledLabel>
+            <input id="profile" type="file" onChange={onChangePicture} accept="image/*" />
+            <p className='userId'>{userProInfo.userId}</p>
+            <p className='userNickname'>{userProInfo.userNickname}</p>
+            <div className='infoDiv'>
+              <EmailIcon className='icon'/>
               <StyledInput
                 name="userEmail"
                 value={profileInputs.userEmail}
@@ -370,8 +417,8 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div>
-              <StyledLabel>휴대폰 번호</StyledLabel>
+            <div className='infoDiv'>
+              <LocalPhoneIcon className='icon'/>
               <StyledInput
                 name="userPhone"
                 value={profileInputs.userPhone}
@@ -379,8 +426,8 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div>
-              <StyledLabel>이름</StyledLabel>
+            <div className='infoDiv'>
+              <PersonIcon className='icon'/>
               <StyledInput
                 name="userName"
                 value={profileInputs.userName}
@@ -388,8 +435,8 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div>
-              <StyledLabel>생년 월일</StyledLabel>
+            <div className='infoDiv'>
+              <CalendarTodayIcon className='icon'/>
               <StyledInput
                 name="userBirth"
                 type="date"
@@ -398,12 +445,15 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div>
-              <StyledLabel>성별</StyledLabel>
-              <select name="gender">
-                <option value="1">남성</option>
-                <option value="0">여성</option>
-              </select>
+            <div className='infoDiv flexDiv'>
+              <div>
+                <StyledLabel for="male">남성<MaleIcon className='icon'></MaleIcon></StyledLabel>
+                <StyledInput id="male" type="radio" name="gender" value="1"/>
+              </div>
+              <div>
+                <StyledLabel for="female">여성<FemaleIcon className='icon'></FemaleIcon></StyledLabel>
+                <StyledInput id="female" type="radio" name="gender" value="0"/>
+              </div>
             </div>
             <StyledButton>프로필 수정</StyledButton>
           </ChangeProfileForm>
