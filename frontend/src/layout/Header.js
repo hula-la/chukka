@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '../components/Button';
 import MenuItems from '../components/MenuItems';
@@ -38,25 +38,29 @@ const NavBar = styled.div`
 const Header = () => {
   const { userInfo } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const location = useLocation();
+
   const menuItems = [
     {
       title: 'Lectures',
       submenu: [
         {
           title: 'Lectures',
-          url: '/lectures',
+          url: '/Lectures',
         },
         {
           title: 'Lectures Live',
-          url: '/lectures/live',
+          url: '/Lectures/live',
         },
       ],
     },
     {
       title: 'Snacks',
+      url: '/Snacks',
     },
     {
       title: 'Games',
+      url: '/Games',
     },
   ];
   return (
@@ -66,7 +70,7 @@ const Header = () => {
       </NavLink>
       <ul className="menus">
         {menuItems.map((menu, index) => {
-          return <MenuItems items={menu} key={index} />;
+          return <MenuItems items={menu} key={index} location={location} />;
         })}
       </ul>
       <div>
