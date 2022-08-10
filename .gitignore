@@ -622,4 +622,8 @@ application-private.yml
 # 스프링 로그
 *.gz
 
+<<<<<<< HEAD
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,intellij,visualstudiocode,venv,python,java,react,windows,macos,node
+=======
+# End of https://www.toptal.com/developers/gitignore/api/eclipse,intellij,visualstudiocode,venv,python,java,react,windows,macos,node
+>>>>>>> develop/fastapi
