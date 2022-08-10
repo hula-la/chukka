@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import SnacksItem from '../../components/snacks/SnacksItem';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
-import { fetchSnacks } from '../../features/snacks/snacksActions';
 import { useInView } from 'react-intersection-observer';
+import { fetchSnacks, fetchTags } from '../../features/snacks/snacksActions';
 
 const Wrapper = styled.div`
   div::-webkit-scrollbar {
@@ -101,7 +101,7 @@ const SnacksPage = () => {
   // */
   // }
 
-  // 무한 스크롤
+  // 무한 스크롤, 스낵스 받아오기
   const [pageNum, setPageNum] = useState(1);
 
   const dispatch = useDispatch();
@@ -125,6 +125,11 @@ const SnacksPage = () => {
       });
     }
   }, [inView]);
+
+  // 인기 태그 조회
+  useEffect(() => {
+    dispatch(fetchTags());
+  }, [dispatch]);
 
   return (
     <Wrapper>
@@ -159,12 +164,12 @@ const SnacksPage = () => {
         <div className="item">
           <ul className="nonelist list">
             {snacksList.map((snacks) => (
-              <li key={snacks.snacksId}>
-                <SnacksItem snacks={snacks} />
+              <li>
+                <SnacksItem key={snacks.snacksId} snacks={snacks} />
               </li>
             ))}
           </ul>
-          <div ref={ref} />
+          <div ref={ref}>1</div>
         </div>
       </div>
     </Wrapper>

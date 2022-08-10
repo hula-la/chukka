@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import vid from './bird.mp4';
 import image from './profile.png';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchReply, createReply } from '../../features/snacks/snacksActions';
 
 const Wrapper = styled.div`
   #my-video {
@@ -22,6 +25,7 @@ const Wrapper = styled.div`
     margin-left: 20px;
     font-size: 1.5rem;
     font-weight: bold;
+    color: #ffffff;
   }
   .tags {
     margin-left: 20px;
@@ -39,12 +43,34 @@ const Wrapper = styled.div`
   }
 `;
 
-const SnacksItem = () => {
+const SnacksItem = ({ snacks }) => {
+  const [isReply, setIsReply] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const onClickReply = (e) => {
+    setIsReply((state) => !state);
+    dispatch(fetchReply(snacks.snacksId));
+  };
+
+  const [contents, setContents] = useState('');
+
+  const snacksId = snacks.snacksId;
+
+  const onChangeReply = (e) => {
+    setContents(e.target.value);
+  };
+
+  const onSubmitRelpy = (e) => {
+    e.preventDefault();
+    dispatch(createReply({ snacksId, contents }));
+  };
+
   return (
     <Wrapper>
       <div className="account">
         <img src={image} className="profile"></img>
-        <span className="snacks-nickname">Nickname</span>
+        <span className="snacks-nickname">{snacks.userNickname}</span>
       </div>
       <div className="tags">
         <span className="tagitem"># TAG1</span>
@@ -61,7 +87,16 @@ const SnacksItem = () => {
         <source src={vid} type="video/mp4" />
       </video>
       <ThumbUpOffAltIcon className="pink" />
-      {/* <ThumbUpAltIcon className='pink'/> */}
+      <button onClick={onClickReply}>댓글</button>
+      {isReply && (
+        <div>
+          <h3>comment</h3>
+          <form onSubmit={onSubmitRelpy}>
+            <input onChange={onChangeReply} />
+            <button>댓글 작성</button>
+          </form>
+        </div>
+      )}
     </Wrapper>
   );
 };
