@@ -179,6 +179,30 @@ const ChangeProfileForm = styled.form`
     justify-content: space-between;
     margin-top: 0.5rem;
   }
+  .msg {
+    font-size: 0.5rem;
+    text-align: center;
+    line-height: 2rem;
+    opacity: 0.6;
+  }
+  .normal {
+    border-bottom: #ffffff solid 1px;
+    width: 50%;
+    float: right;
+  }
+  & hr {
+    margin: 1.5rem 0;
+    border: none;
+    height: 0.1rem;
+    background: #ff2c55;
+    opacity: 0.5;
+  }
+  & hr.top {
+    margin-top: 4rem;
+  }
+  & hr.bottom {
+    margin-bottom: 4rem;
+  }
 `;
 
 const StyledInput = styled.input`
@@ -462,17 +486,24 @@ const ProfilePage = () => {
       {pageNum === '4' && (
         <ChangeProfileBox>
           <ChangeProfileForm>
+            <hr className='top'/>
+            <div className='msg'>
+              안전한 비밀번호로 내정보를 보호하세요<br/>
+              다른 아이디/사이트에서 사용한 적 없는 비밀번호<br/>
+              이전에 사용한 적 없는 비밀번호가 안전합니다.
+            </div>
+            <hr className='bottom'/>
             <div>
               <StyledLabel>현재 비밀번호</StyledLabel>
-              <StyledInput type="password" />
+              <StyledInput className='normal' type="password" />
             </div>
             <div>
               <StyledLabel>새 비밀번호</StyledLabel>
-              <StyledInput type="password" />
+              <StyledInput className='normal' type="password" />
             </div>
             <div>
               <StyledLabel>새 비밀번호 확인</StyledLabel>
-              <StyledInput type="password" />
+              <StyledInput className='normal' type="password" />
             </div>
             <StyledButton>비밀번호 변경</StyledButton>
           </ChangeProfileForm>
