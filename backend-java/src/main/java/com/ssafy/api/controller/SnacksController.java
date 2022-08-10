@@ -90,7 +90,7 @@ public class SnacksController {
     }
 
     // 특정 스낵스 조회 ==================================================================================================
-    @GetMapping("/{snacksId}")
+    @GetMapping("/detail/{snacksId}")
     @ApiOperation(value = "특정 스낵스 조회", notes = "<strong>스낵스 아이디</strong>를 통해 특정 스낵스를 조회합니다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = SnacksRes.class)
@@ -181,8 +181,13 @@ public class SnacksController {
             @ApiResponse(code = 401, message = "Invalid User", response = BaseResponseBody.class)
     })
     public ResponseEntity<BaseResponseBody> getCertainUserSnacks(
-            @PathVariable @ApiParam(value="유저 닉네임") String userNickname) {
-        // 뭐 어떤 형식으로 보내야하는지 아직 잘 모르겠으므로 패스
+            @PathVariable @ApiParam(value="유저 닉네임") String userNickname,
+            @ApiIgnore Authentication authentication,
+            @ApiParam(value="페이지 정보") Pageable pageable) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserNickname(userNickname);
+        Slice<SnacksRes> slice = snacksService.findCertainUserSnacks(pageable, user.getUserId(), loginUserId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
     }
 
@@ -196,6 +201,23 @@ public class SnacksController {
     public ResponseEntity<BaseResponseBody> getPopularTagList() {
         List<String> tags = snacksService.getPopularTags();
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", tags));
+    }
+
+    // 태그 검색 스낵스 목록 조회 ==========================================================================================
+    @GetMapping("/tag")
+    @ApiOperation(value = "태그 검색", notes = "해당 태그를 검색하여 스낵스 목록을 반환한다." +
+            "<br>태그는 params에 담아 문자열 리스트로 요청하며, 태그1 or 태그2 로 연산한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success", response = String.class),
+            @ApiResponse(code = 401, message = "Invalid User", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<BaseResponseBody> searchTag(
+            @ApiIgnore Authentication authentication,
+            @RequestParam @ApiParam(value="유저 닉네임") List<String> tags) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        List<SnacksRes> list = snacksService.searchTag(tags, loginUserId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", list));
     }
 
 }
