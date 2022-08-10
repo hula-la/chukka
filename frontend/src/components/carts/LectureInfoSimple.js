@@ -7,14 +7,14 @@ const CartItem = styled.div`
   // border-color : white;
   border-bottom: 2px solid #4a4a4a;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 0.8fr 1fr 1fr 1fr 1fr;
   place-items: center;
   column-gap: 10px;
-  padding : 10px 5px;
+  padding : 5px 5px;
 
   img{
-    width : 100%;
-    height : 90px;
+    width : 80%;
+    height :60px;
   }
 `
 const BadgeDiv = styled.div`
@@ -24,23 +24,15 @@ const BadgeDiv = styled.div`
   }
 `;
 
-export const LectureInfo = ({data},key) =>{
+export const LectureInfoSimple = ({data},key) =>{
   return (
     <CartItem>
       <img  src={data.thumbnail}></img>
-      <div>
-        <p>{data.lecTitle}</p>
-        <p>{data.insId}</p>
-        <BadgeDiv>
-          <LevelBadge level={data.lecLevel} />
-          <CategoryBadge  category={data.lecGenre} />
-          <CategoryBadge category={data.lecCategory} />
-        </BadgeDiv>
-      </div>
+      <p>{data.lecTitle}</p>
+      <p>{data.insId}</p>
       <div>
         <p>{data.lecSchedule}</p>
         <p>{data.lecDayAndTime}</p>
-        <p>남은 인원 {data.lecLimit - data.student}명</p>
       </div>
       <div>{data.lecPrice} 원</div>
     </CartItem>

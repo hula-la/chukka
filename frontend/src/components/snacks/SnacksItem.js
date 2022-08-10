@@ -18,7 +18,7 @@ const Wrapper = styled.div`
     height: 50px;
     vertical-align: middle;
   }
-  .nickname {
+  .snacks-nickname {
     margin-left: 20px;
     font-size: 1.5rem;
     font-weight: bold;
@@ -43,8 +43,8 @@ const SnacksItem = () => {
   return (
     <Wrapper>
       <div className="account">
-        <img src={image} alt="" className="profile"></img>
-        <span className="nickname">Nickname</span>
+        <img src={image} className="profile"></img>
+        <span className="snacks-nickname">Nickname</span>
       </div>
       <div className="tags">
         <span className="tagitem"># TAG1</span>
@@ -54,7 +54,7 @@ const SnacksItem = () => {
       </div>
       <video
         id="my-video"
-        className="video-js vjs-theme-fantasy"
+        // className="video-js vjs-theme-fantasy"
         controls
         preload="auto"
       >

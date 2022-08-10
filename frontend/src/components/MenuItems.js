@@ -44,6 +44,9 @@ const NavItems = styled.li`
     transform: scale3d(0, 5, 1);
     transition-timing-function: cubic-bezier(1, 0.68, 0.16, 0.9);
   }
+  & .active:before {
+    transform: scale3d(1, 1, 1);
+  }
   & .nav-link:hover:before {
     transform: scale3d(1, 1, 1);
   }
@@ -53,7 +56,7 @@ const NavItems = styled.li`
   }
 `;
 
-const MenuItems = ({ items }) => {
+const MenuItems = ({ items, location }) => {
   const [dropdown, setDropdown] = useState(false);
 
   return (
@@ -66,14 +69,18 @@ const MenuItems = ({ items }) => {
           <button
             aria-haspopup="menu"
             aria-expanded={dropdown ? 'true' : 'false'}
-            className="nav-link button-menu"
+            className={
+              location.pathname === '/Lectures'
+                ? 'nav-link button-menu active'
+                : 'nav-link button-menu'
+            }
           >
             {items.title}{' '}
           </button>
           <Dropdown submenus={items.submenu} dropdown={dropdown} />
         </div>
       ) : (
-        <NavLink to={`/${items.title}`} className="nav-link">
+        <NavLink to={items.url} className="nav-link">
           {items.title}
         </NavLink>
       )}

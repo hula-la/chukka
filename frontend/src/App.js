@@ -22,6 +22,7 @@ import AdminPage from './pages/admin/AdminPage';
 // notfount
 import NotFound from './pages/NotFound';
 import LectureDetailpage from './pages/lecture/LectureDetailpage';
+
 const App = () => {
   return (
     <div className="App">
