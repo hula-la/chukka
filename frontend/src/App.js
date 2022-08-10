@@ -22,6 +22,7 @@ import AdminPage from './pages/admin/AdminPage';
 // notfount
 import NotFound from './pages/NotFound';
 import LectureDetailpage from './pages/lecture/LectureDetailpage';
+import DetailSnacksPage from './pages/snacks/DetailSnacksPage';
 
 const App = () => {
   return (
@@ -48,8 +49,9 @@ const App = () => {
         </Route>
         <Route path="lectures/live" element={<LivePage />} />
         {/* snacks */}
-        <Route path="snacks" element={<Layout />}>
+        <Route path="snacks/" element={<Layout />}>
           <Route path="" element={<SnacksPage />} />
+          <Route path=":snacksId" element={<DetailSnacksPage />} />
         </Route>
         {/* games */}
         <Route path="games" element={<Layout />}>
