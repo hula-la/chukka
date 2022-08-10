@@ -13,6 +13,7 @@ import CartPage from './pages/user/CartPage';
 // lectures
 import LecturesPage from './pages/lecture/LecturesPage';
 import LivePage from './pages/lecture/LivePage';
+import VideoLecturePage from './pages/lecture/VideoLecturePage';
 // snacks
 import SnacksPage from './pages/snacks/SnacksPage';
 // games
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="" element={<LecturesPage />} />
           <Route path=":lectureId" element={<LectureDetailpage />} />
         </Route>
+        <Route path="lectures/video" element={<VideoLecturePage />} />
         <Route path="lectures/live" element={<LivePage />} />
         {/* snacks */}
         <Route path="snacks" element={<Layout />}>
