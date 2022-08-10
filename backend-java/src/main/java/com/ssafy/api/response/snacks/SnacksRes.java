@@ -32,8 +32,10 @@ public class SnacksRes {
     private Date snacksRegdate;
     @ApiModelProperty(name = "태그", example = "춤,나연")
     private List<String> snacksTag;
+    @ApiModelProperty(name = "좋아요 유무", example = "true")
+    private boolean isLike;
 
-    public static SnacksRes of(Snacks snacks) {
+    public static SnacksRes of(Snacks snacks, boolean isLike) {
         SnacksRes res = new SnacksRes();
         res.setSnacksId(snacks.getSnacksId());
         res.setUserNickname(snacks.getUser().getUserNickname());
@@ -43,6 +45,8 @@ public class SnacksRes {
         res.setSnacksRegdate(snacks.getSnacksRegdate());
         res.setSnacksTag(snacks.getSnacksTags()
                 .stream().map(s -> s.getSnacksTagContent()).collect(Collectors.toList()));
+        res.isLike = isLike;
         return res;
     }
+
 }

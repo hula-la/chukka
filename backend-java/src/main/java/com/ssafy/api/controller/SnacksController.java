@@ -51,8 +51,11 @@ public class SnacksController {
             @ApiResponse(code = 200, message = "Success")
     })
     public ResponseEntity<BaseResponseBody> getSnacks(
+            @ApiIgnore Authentication authentication,
             @ApiParam(value="페이지 정보") Pageable pageable){
-        Slice<SnacksRes> slice = snacksService.findAll(pageable);
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        Slice<SnacksRes> slice = snacksService.findAll(pageable, loginUserId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", slice));
     }
 
@@ -93,12 +96,15 @@ public class SnacksController {
             @ApiResponse(code = 200, message = "Success", response = SnacksRes.class)
     })
     public ResponseEntity<BaseResponseBody> getSnacksById(
+            @ApiIgnore Authentication authentication,
             @PathVariable @ApiParam(value="스낵스 아이디") Long snacksId){
-        Snacks snacks = snacksService.getCertainSnacks(snacksId);
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        SnacksRes snacks = snacksService.getCertainSnacks(snacksId, loginUserId);
         if(snacks == null) {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Snacks", null));
         }
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", SnacksRes.of(snacks)));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", snacks));
     }
 
     // 스낵스 댓글 조회 ==================================================================================================
@@ -109,8 +115,11 @@ public class SnacksController {
             @ApiResponse(code = 401, message = "Invalid Snacks", response = BaseResponseBody.class)
     })
     public ResponseEntity<BaseResponseBody> getComment(
+            @ApiIgnore Authentication authentication,
             @PathVariable @ApiParam(value = "스낵스 아이디") Long snacksId) {
-        if(snacksService.getCertainSnacks(snacksId) == null) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        if(snacksService.getCertainSnacks(snacksId, loginUserId) == null) {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Snacks", null));
         }
         List<SnacksReplyRes> list = snacksService.getReplybySnacksId(snacksId);
@@ -120,7 +129,7 @@ public class SnacksController {
     // 수정 필요 ********************************************************************************************************
     // - 반환값 결정 ****************************************************************************************************
     // 스낵스 댓글 추가 ==================================================================================================
-    @PostMapping("/{snacksId}/comments")
+    @PostMapping("/comments")
     @ApiOperation(value = "스낵스 댓글 추가", notes = "<strong>스낵스 아이디와 댓글 내용</strong>을 받아 스낵스 댓글에 추가한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),

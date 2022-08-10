@@ -31,20 +31,22 @@ public class SnacksServiceImpl implements SnacksService{
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    // 스낵스 조회 =======================================================================================================
+    // 스낵스 조회
     @Override
-    public Slice<SnacksRes> findAll(Pageable pageable) {
+    public Slice<SnacksRes> findAll(Pageable pageable, String userId) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        Slice<SnacksRes> slice = snacksRepository.findAll(pageRequest).map(s -> SnacksRes.of(s));
+        Slice<SnacksRes> slice = snacksRepository.findAll(pageRequest)
+                .map(s -> SnacksRes.of(s, snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, s.getSnacksId()).isPresent()));
         return slice;
     }
 
     // 특정 스낵스 조회
     @Override
-    public Snacks getCertainSnacks(Long snacksId) {
+    public SnacksRes getCertainSnacks(Long snacksId, String userId) {
         Optional<Snacks> snacks = snacksRepository.findBySnacksId(snacksId);
         if(snacks.isPresent()) {
-            return snacks.get();
+            boolean isLike = snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, snacksId).isPresent();
+            return SnacksRes.of(snacks.get(), isLike);
         }
         return null;
     }

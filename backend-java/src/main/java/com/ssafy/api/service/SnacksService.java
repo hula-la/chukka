@@ -17,8 +17,8 @@ import java.util.Optional;
 
 public interface SnacksService {
 
-    Slice<SnacksRes> findAll(Pageable pageable);
-    Snacks getCertainSnacks(Long snacksId);
+    Slice<SnacksRes> findAll(Pageable pageable, String userId);
+    SnacksRes getCertainSnacks(Long snacksId, String userId);
     // 좋아요 기능
     String likeSnacks(User user, Long snacksId);
     // 댓글 기능
