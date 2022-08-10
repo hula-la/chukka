@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import vid from './bird.mp4';
 import image from './profile.png';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 
 const Wrapper = styled.div`
   #my-video {
