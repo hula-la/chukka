@@ -255,6 +255,10 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public Lecture findLectureByLecId(int ledId) {
-        return lectureRepository.findLectureByLecId(ledId);
+        Optional<Lecture> lecture = Optional.ofNullable(lectureRepository.findLectureByLecId(ledId));
+        if(lecture.isPresent()){
+            return lecture.get();
+        }
+        return null;
     }
 }

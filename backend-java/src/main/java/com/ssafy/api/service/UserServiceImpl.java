@@ -2,11 +2,14 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.response.admin.UserRes;
+
 import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.snacks.SnacksRes;
 import com.ssafy.api.response.user.UserMyInsLectureRes;
 import com.ssafy.api.response.user.UserMyPayRes;
 import com.ssafy.api.response.user.UserPayListRes;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ssafy.api.response.user.UserMyLectureRes;
@@ -53,6 +56,8 @@ public class UserServiceImpl implements UserService {
 	SnacksRepository snacksRepository;
 	@Autowired
 	PayRepository payRepository;
+	@Autowired
+	PayListRepository payListRepository;
 	@Autowired
 	private JavaMailSender emailSender;
 
@@ -195,6 +200,7 @@ public class UserServiceImpl implements UserService {
 				.stream().map(s -> new UserMyPayRes(s.getPayId(), s.getUser().getUserId(), s.getPayDate(), s.getPayAmount(), s.getPayMethod(), s.getPayLists()
 						.stream().map(ss-> UserPayListRes.of(ss)).collect(Collectors.toList()))).collect(Collectors.toList());
 		return pay;
+
 	}
 
 	// 리프레시 토큰으로 유저 조회

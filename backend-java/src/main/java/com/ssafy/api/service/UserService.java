@@ -7,6 +7,7 @@ import com.ssafy.api.response.admin.UserRes;
 import com.ssafy.api.response.snacks.SnacksRes;
 import com.ssafy.api.response.user.UserMyInsLectureRes;
 import com.ssafy.api.response.user.UserMyPayRes;
+
 import com.ssafy.db.entity.User;
 
 import com.ssafy.api.response.user.UserMyLectureRes;
@@ -31,8 +32,10 @@ public interface UserService {
 	int updatePw(String userId, String userPw);
 	void sendPw(MailUtil mail) throws MessagingException;
 	List<UserMyLectureRes> getLecturesByUserId(String userId);
+
 	List<SnacksRes> getSnacksByUserId(String UserId);
 	List<UserMyPayRes> getPaysByUserId(String userId);
+
 	User getUserByRefreshToken(String refreshToken);
 	int logout(String userId);
 	List<UserRes> getUsers();

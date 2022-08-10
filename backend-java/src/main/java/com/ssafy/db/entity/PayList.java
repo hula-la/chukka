@@ -1,16 +1,16 @@
 package com.ssafy.db.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Data
 @Entity
-@Getter
-@Setter
+@Getter @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PayList {
 
     @Id
@@ -29,4 +29,5 @@ public class PayList {
     @JoinColumn(name = "lecId")
     private Lecture lecture;
 
+    private String merchant_uid;
 }
