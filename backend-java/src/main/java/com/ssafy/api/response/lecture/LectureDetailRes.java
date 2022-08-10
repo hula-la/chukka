@@ -18,7 +18,7 @@ public class LectureDetailRes extends BaseResponseBody {
     @ApiModelProperty(value = "강의 난이도")
     private int lecLevel;
     @ApiModelProperty(value = "강의 장르")
-    private String levGenre;
+    private String lecGenre;
     @ApiModelProperty(value = "강의 카테고리")
     private int lecCategory;
     @ApiModelProperty(value = "강사 이름")
@@ -26,21 +26,21 @@ public class LectureDetailRes extends BaseResponseBody {
     @ApiModelProperty(value = "가격")
     private int lecPrice;
     @ApiModelProperty(value = "강의 정보")
-    private int lecContents;
+    private String lecContents;
 
     public static LectureDetailRes of(int lecId,
                                       String lecTitle,
                                       int lecLevel,
-                                      String levGenre,
+                                      String lecGenre,
                                       int lecCategory,
                                       String insName,
                                       int lecPrice,
-                                      int lecContents){
+                                      String lecContents){
         LectureDetailRes res = new LectureDetailRes();
         res.setLecId(lecId);
         res.setLecTitle(lecTitle);
         res.setLecLevel(lecLevel);
-        res.setLevGenre(levGenre);
+        res.setLecGenre(lecGenre);
         res.setLecCategory(lecCategory);
         res.setInsName(insName);
         res.setLecPrice(lecPrice);
