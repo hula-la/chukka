@@ -55,6 +55,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	SnacksRepository snacksRepository;
 	@Autowired
+	SnacksLikeRepository snacksLikeRepository;
+	@Autowired
 	PayRepository payRepository;
 	@Autowired
 	PayListRepository payListRepository;
@@ -189,7 +191,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<SnacksRes> getSnacksByUserId(String userId) {
 		List<SnacksRes> snack = snacksRepository.findSnacksByUserUserIdOrderBySnacksIdDesc(userId)
-				.stream().map(s -> SnacksRes.of(s)).collect(Collectors.toList());
+				.stream().map(s -> SnacksRes.of(s, snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, s.getSnacksId()).isPresent())).collect(Collectors.toList());
 		return snack;
 	}
 
