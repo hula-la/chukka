@@ -1,13 +1,10 @@
 package com.ssafy.api.service;
 
 
-import com.ssafy.api.request.lecture.LecturePostReq;
-import com.ssafy.api.request.lecture.LectureUpdateReq;
-import com.ssafy.api.request.lecture.LiveLecturePostReq;
-import com.ssafy.api.request.lecture.LiveLectureUpdateReq;
+import com.ssafy.api.request.lecture.*;
 import com.ssafy.api.response.admin.LectureRes;
+import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
-import com.ssafy.api.response.lecture.LiveLecturePostRes;
 import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.InstructorRepository;
@@ -21,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -39,7 +35,14 @@ public class LectureServiceImpl implements LectureService {
     public Page<LectureGetForListRes> getMostPopularLecture(Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         Page<Lecture> page = lectureRepository.getMostPopularLecture(pageRequest);
-        Page<LectureGetForListRes> dtoPage = page.map(m -> new LectureGetForListRes());
+        Page<LectureGetForListRes> dtoPage = page
+                .map(m -> LectureGetForListRes.of(
+                        m.getLecThumb(),
+                        m.getLecTitle(),
+                        m.getLecCategory(),
+                        m.getLecLevel(),
+                        m.getLecGenre()
+                ));
         return dtoPage;
     }
 
@@ -49,11 +52,13 @@ public class LectureServiceImpl implements LectureService {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
         Page<Lecture> page = lectureRepository.getLecturesByMostLatest(pageRequest);
         Page<LectureGetForListRes> dtoPage = page
-                .map(s -> LectureGetForListRes.of(s.getLecThumb(),
-                                                    s.getLecTitle(),
-                                                    s.getLecCategory(),
-                                                    s.getLecLevel(),
-                                                    s.getLecGenre()));
+                .map(m -> LectureGetForListRes.of(
+                        m.getLecThumb(),
+                        m.getLecTitle(),
+                        m.getLecCategory(),
+                        m.getLecLevel(),
+                        m.getLecGenre()
+                ));
         return dtoPage;
 
     }
@@ -63,20 +68,38 @@ public class LectureServiceImpl implements LectureService {
     public Page<LectureGetForListRes> findAll(Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
         Page<Lecture> page = lectureRepository.findAll(pageRequest);
-        Page<LectureGetForListRes> dtoPage = page.map(m -> new LectureGetForListRes());
+        Page<LectureGetForListRes> dtoPage = page
+                .map(m -> LectureGetForListRes.of(
+                        m.getLecThumb(),
+                        m.getLecTitle(),
+                        m.getLecCategory(),
+                        m.getLecLevel(),
+                        m.getLecGenre()
+                ));
         return dtoPage;
     }
 
     // 상세 페이지
-//    @Override
-//    public Lecture getDetailLecture(int lecId) {
-//        Optional<Instructor> ins = instructorRepository.findById();
-//        Optional<LectureDetailRes> lecture = lectureRepository.findById(lecId);
-//        if (lecture.isPresent()) {
-//            return lecture.get();
-//        }
-//        return null;
-//    }
+    @Override
+    public Optional<LectureDetailRes> getDetailLecture(int lecId) {
+        Instructor ins = lectureRepository.getInstructorByLecId(lecId);
+        Optional<Lecture> lecture = lectureRepository.findById(lecId);
+        if (!lecture.isPresent()) {
+            return null;
+        }
+        Optional<LectureDetailRes> dto = lecture
+                .map(m -> LectureDetailRes.of(
+                        m.getLecId(),
+                        m.getLecTitle(),
+                        m.getLecLevel(),
+                        m.getLecGenre(),
+                        m.getLecCategory(),
+                        m.getInstructor().getInsName(),
+                        m.getLecPrice(),
+                        m.getLecContents()
+                ));
+        return dto;
+    }
 
     @Override
     public List<LectureRes> findAll() {
@@ -135,48 +158,52 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public Lecture updateLecture(int lecId, LectureUpdateReq lectureUpdateReq, LiveLectureUpdateReq liveLectureUpdateReq) {
-        if (lectureRepository.findById(lecId).isPresent()) {
-            int category = lectureRepository.getLecCategoryByLecId(lecId);
-            // 녹화 강의일때
-            if (category == 1) {
-                Optional<Instructor> ins = instructorRepository.findByInsId(lectureUpdateReq.getInsId());
-                if (!ins.isPresent()) {
-                    return null;
-                }
-                Lecture lecture = Lecture.builder().lecId(lecId)
-                        .instructor(ins.get())
-                        .lecThumb(lectureUpdateReq.getLecThumb())
-                        .lecTitle(lectureUpdateReq.getLecTitle())
-                        .lecContents(lectureUpdateReq.getLecContents())
-                        .lecPrice(lectureUpdateReq.getLecPrice())
-                        .lecLevel(lectureUpdateReq.getLecLevel())
-                        .lecGenre(lectureUpdateReq.getLecGenre())
-                        .build();
-                return lectureRepository.save(lecture);
-            } else if(category == 0) {
-                Optional<Instructor> ins = instructorRepository.findByInsId(liveLectureUpdateReq.getInsId());
-                if (!ins.isPresent()) {
-                    return null;
-                }
-                Lecture lecture = Lecture.builder().lecId(lecId)
-                        .instructor(ins.get())
-                        .lecThumb(lectureUpdateReq.getLecThumb())
-                        .lecTitle(liveLectureUpdateReq.getLecTitle())
-                        .lecContents(liveLectureUpdateReq.getLecContents())
-                        .lecPrice(liveLectureUpdateReq.getLecPrice())
-                        .lecLevel(liveLectureUpdateReq.getLecLevel())
-                        .lecGenre(liveLectureUpdateReq.getLecGenre())
-                        .lecNotice(liveLectureUpdateReq.getLecNotice())
-                        .lecSchedule(liveLectureUpdateReq.getLecSchedule())
-                        .dayAndTime(liveLectureUpdateReq.getDayAndTime())
-                        .lecStartDate(liveLectureUpdateReq.getLecStartDate())
-                        .lecEndDate(liveLectureUpdateReq.getLecEndDate())
-                        .lecStudent(liveLectureUpdateReq.getLecStudent())
-                        .lecLimit(liveLectureUpdateReq.getLecLimit())
-                        .build();
-                return lectureRepository.save(lecture);
+    public Lecture updateLecture(LectureUpdateReq lectureUpdateReq) {
+        if (lectureRepository.findById(lectureUpdateReq.getLecId()).isPresent()) {
+            Optional<Instructor> ins = instructorRepository.findByInsId(lectureUpdateReq.getInsId());
+            if (!ins.isPresent()) {
+                return null;
             }
+            Lecture lecture = Lecture.builder()
+                    .lecId(lectureUpdateReq.getLecId())
+                    .instructor(ins.get())
+                    .lecThumb(lectureUpdateReq.getLecThumb())
+                    .lecTitle(lectureUpdateReq.getLecTitle())
+                    .lecContents(lectureUpdateReq.getLecContents())
+                    .lecPrice(lectureUpdateReq.getLecPrice())
+                    .lecLevel(lectureUpdateReq.getLecLevel())
+                    .lecGenre(lectureUpdateReq.getLecGenre())
+                    .build();
+            return lectureRepository.save(lecture);
+        }
+        return null;
+    }
+
+    @Override
+    public Lecture updateLiveLecture(LiveLectureUpdateReq liveLectureUpdateReq) {
+        if (lectureRepository.findById(liveLectureUpdateReq.getInsId()).isPresent()) {
+            Optional<Instructor> ins = instructorRepository.findByInsId(liveLectureUpdateReq.getInsId());
+            if (!ins.isPresent()) {
+                return null;
+            }
+            Lecture lecture = Lecture.builder()
+                    .lecId(liveLectureUpdateReq.getLecId())
+                    .instructor(ins.get())
+                    .lecThumb(liveLectureUpdateReq.getLecThumb())
+                    .lecTitle(liveLectureUpdateReq.getLecTitle())
+                    .lecContents(liveLectureUpdateReq.getLecContents())
+                    .lecPrice(liveLectureUpdateReq.getLecPrice())
+                    .lecLevel(liveLectureUpdateReq.getLecLevel())
+                    .lecGenre(liveLectureUpdateReq.getLecGenre())
+                    .lecNotice(liveLectureUpdateReq.getLecNotice())
+                    .lecSchedule(liveLectureUpdateReq.getLecSchedule())
+                    .dayAndTime(liveLectureUpdateReq.getDayAndTime())
+                    .lecStartDate(liveLectureUpdateReq.getLecStartDate())
+                    .lecEndDate(liveLectureUpdateReq.getLecEndDate())
+                    .lecStudent(liveLectureUpdateReq.getLecStudent())
+                    .lecLimit(liveLectureUpdateReq.getLecLimit())
+                    .build();
+            return lectureRepository.save(lecture);
         }
         return null;
     }

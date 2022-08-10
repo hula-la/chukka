@@ -46,8 +46,8 @@ public class Lecture {
     private Date lecStartDate;
     @Temporal(TemporalType.DATE)
     private Date lecEndDate;
-    private int lecLimit;
     private int lecStudent;
+    private int lecLimit;
 
 
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL)

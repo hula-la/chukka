@@ -2,6 +2,7 @@ package com.ssafy.db.repository;
 
 
 import com.ssafy.api.response.lecture.LectureNoticeRes;
+import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.api.response.user.UserMyLectureRes;
 
@@ -46,7 +47,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     // 공지사항 수정
     @Modifying(clearAutomatically = true)
     @Query(value = "update Lecture lec set lec.lecNotice = :lecNotice where lec.lecId = :lecId", nativeQuery = true)
-    Optional<LectureNoticeRes> updateLecNotice(int lecId, String lecNotice);
+    LectureNoticeRes updateLecNotice(int lecId, String lecNotice);
 
     // 강의 수정
     @Modifying(clearAutomatically = true)
@@ -80,6 +81,8 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     List<UserMyLectureRes> findLecturesByUserId(String userId);
 
     Lecture findLectureByLecId(int lecId);
+
+    Instructor getInstructorByLecId(int lecId);
 
     int getLecCategoryByLecId(int lecId);
 }
