@@ -27,6 +27,6 @@ public interface SnacksService {
     Snacks uploadSnacks(SnacksUploadReq snacksInfo, User user);
     List<String> getPopularTags();
     List<SnacksReplyRes> getReplybySnacksId(Long snacksId);
-    List<SnacksRes> searchTag(List<String> tags, String userId);
+    Slice<SnacksRes> searchTag(List<String> tags, String userId, Pageable pageable);
 
 }

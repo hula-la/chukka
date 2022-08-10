@@ -1,6 +1,7 @@
 package com.ssafy.db.repository;
 
 import com.ssafy.db.entity.Snacks;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,6 +26,6 @@ public interface SnacksRepository extends JpaRepository<Snacks, Long> {
     @Modifying
     @Query(value = "update Snacks s set s.snacksLikeCnt = s.snacksLikeCnt - 1 where s.snacksId = :snacksId")
     int dislikeSnacks(Long snacksId);
-    List<Snacks> findAllBySnacksIdIn(List<Long> snacksIds);
+    Slice<Snacks> findAllBySnacksIdIn(List<Long> snacksIds, PageRequest pageRequest);
 }
 

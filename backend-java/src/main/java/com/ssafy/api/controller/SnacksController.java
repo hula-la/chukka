@@ -188,7 +188,7 @@ public class SnacksController {
         String loginUserId = userDetails.getUsername();
         User user = userService.getUserByUserNickname(userNickname);
         Slice<SnacksRes> slice = snacksService.findCertainUserSnacks(pageable, user.getUserId(), loginUserId);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", slice));
     }
 
     // 인기 태그 조회 ====================================================================================================
@@ -209,15 +209,15 @@ public class SnacksController {
             "<br>태그는 params에 담아 문자열 리스트로 요청하며, 태그1 or 태그2 로 연산한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = String.class),
-            @ApiResponse(code = 401, message = "Invalid User", response = BaseResponseBody.class)
     })
     public ResponseEntity<BaseResponseBody> searchTag(
             @ApiIgnore Authentication authentication,
-            @RequestParam @ApiParam(value="유저 닉네임") List<String> tags) {
+            @RequestParam @ApiParam(value="검색할 태그 리스트") List<String> tags,
+            @ApiParam(value="페이지 정보") Pageable pageable) {
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String loginUserId = userDetails.getUsername();
-        List<SnacksRes> list = snacksService.searchTag(tags, loginUserId);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", list));
+        Slice<SnacksRes> slice = snacksService.searchTag(tags, loginUserId, pageable);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", slice));
     }
 
 }

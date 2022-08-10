@@ -147,7 +147,7 @@ public class SnacksServiceImpl implements SnacksService{
 
     // 태그 검색
     @Override
-    public List<SnacksRes> searchTag(List<String> tags, String userId) {
+    public Slice<SnacksRes> searchTag(List<String> tags, String userId, Pageable pageable) {
         Specification<SnacksTag> specification = null;
         for (String tag : tags) {
             Specification<SnacksTag> tagSpecification = SnacksTagSpecification.tagContains(tag);
@@ -159,8 +159,10 @@ public class SnacksServiceImpl implements SnacksService{
         }
         List<Long> snacksIds = snacksTagRepository.findAll(specification)
                 .stream().map(s -> s.getSnacks().getSnacksId()).collect(Collectors.toList());
-        List<SnacksRes> snacksRes = snacksRepository.findAllBySnacksIdIn(snacksIds)
-                .stream().map(s -> SnacksRes.of(s, snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, s.getSnacksId()).isPresent())).collect(Collectors.toList());
+
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+        Slice<SnacksRes> snacksRes = snacksRepository.findAllBySnacksIdIn(snacksIds, pageRequest)
+                .map(s -> SnacksRes.of(s, snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, s.getSnacksId()).isPresent()));
         return snacksRes;
     }
 }
