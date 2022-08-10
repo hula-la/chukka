@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import SnacksItem from '../../components/snacks/SnacksItem';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
 import { fetchSnacks } from '../../features/snacks/snacksActions';
+import { useInView } from 'react-intersection-observer';
 
 const Wrapper = styled.div`
   div::-webkit-scrollbar {
@@ -101,48 +102,29 @@ const SnacksPage = () => {
   // }
 
   // 무한 스크롤
-  const [pageNum, setPageNum] = useState('1');
-  const observerRef = useRef();
+  const [pageNum, setPageNum] = useState(1);
 
   const dispatch = useDispatch();
 
+  const [ref, inView] = useInView();
+
+  const { snacksList } = useSelector((state) => state.snacks);
+  const { hasMore } = useSelector((state) => state.snacks);
+
   useEffect(() => {
-    dispatch(fetchSnacks(pageNum));
-  }, []);
+    if (snacksList.length === 0) {
+      dispatch(fetchSnacks(pageNum));
+    }
+  }, [dispatch]);
 
-  const isLoading = useSelector((state) => {
-    const loading = state.snacks.isLoading ? state.snacks.isLoading : '';
-    return loading;
-  });
-
-  const hasMore = useSelector((state) => {
-    const more = state.snacks.hasmore ? state.snacks.hasmore : '';
-    return more;
-  });
-
-  const snacksList = useSelector((state) => {
-    const list = state.snacks.snacksList ? state.snacks.snacksList : '';
-    return list;
-  });
-  //   const more = state.snacks.hasMore;
-  //   setHasMore(more);
-
-  //   const list = state.snacks.snacksList;
-  //   setSnacksList(list);
-  // });
-
-  const observer = (node) => {
-    if (isLoading) return;
-    if (observerRef.current) observerRef.current.disconnect();
-
-    observerRef.current = new IntersectionObserver(([entry]) => {
-      if (entry.inIntersecting && hasMore) {
-        setPageNum((page) => page + 1);
-      }
-    });
-
-    node && observerRef.current.observe(node);
-  };
+  useEffect(() => {
+    if (snacksList.length !== 0 && inView && hasMore) {
+      setPageNum((page) => {
+        dispatch(fetchSnacks(page + 1));
+        return page + 1;
+      });
+    }
+  }, [inView]);
 
   return (
     <Wrapper>
@@ -176,14 +158,13 @@ const SnacksPage = () => {
         </div>
         <div className="item">
           <ul className="nonelist list">
-            <li className="snacks">
-              <SnacksItem />
-            </li>
+            {snacksList.map((snacks) => (
+              <li key={snacks.snacksId}>
+                <SnacksItem snacks={snacks} />
+              </li>
+            ))}
           </ul>
-          {/* {snacksList.map((snacks) => (
-            <li key={}></li>
-          ))} */}
-          <div ref={observer} />
+          <div ref={ref} />
         </div>
       </div>
     </Wrapper>

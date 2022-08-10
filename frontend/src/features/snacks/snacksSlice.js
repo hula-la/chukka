@@ -17,9 +17,9 @@ const snacksSlice = createSlice({
     },
     [fetchSnacks.fulfilled]: (state, { payload }) => {
       state.hasMore = payload.data.last ? false : true;
-      console.log(state.hasMore);
+      // console.log(state.hasMore);
       const newList = state.snacksList.concat(payload.data.content);
-      state.snacksList = { ...newList };
+      state.snacksList = newList;
       state.isLoading = false;
     },
   },

@@ -4,7 +4,6 @@ export const fetchSnacks = createAsyncThunk(
   'snacks/fetchSnacks',
   async (pageNum, { rejectWithValue }) => {
     try {
-      console.log(pageNum);
       const { data } = await fsnacks(pageNum);
       return data;
     } catch (error) {
