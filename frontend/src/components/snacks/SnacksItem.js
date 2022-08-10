@@ -2,9 +2,14 @@ import styled from 'styled-components';
 import vid from './bird.mp4';
 import image from './profile.png';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import { useState } from 'react';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchReply, createReply } from '../../features/snacks/snacksActions';
+import {
+  fetchReply,
+  createReply,
+  likeSnacks,
+} from '../../features/snacks/snacksActions';
 
 const Wrapper = styled.div`
   #my-video {
@@ -44,15 +49,18 @@ const Wrapper = styled.div`
 `;
 
 const SnacksItem = ({ snacks }) => {
-  const [isReply, setIsReply] = useState(false);
-
   const dispatch = useDispatch();
 
+  // 댓글 컴포넌트 열고 닫기
+  const [isReply, setIsReply] = useState(false);
+
+  // 버튼 클릭시
   const onClickReply = (e) => {
     setIsReply((state) => !state);
     dispatch(fetchReply(snacks.snacksId));
   };
 
+  // 댓글 생성
   const [contents, setContents] = useState('');
 
   const snacksId = snacks.snacksId;
@@ -64,6 +72,21 @@ const SnacksItem = ({ snacks }) => {
   const onSubmitRelpy = (e) => {
     e.preventDefault();
     dispatch(createReply({ snacksId, contents }));
+  };
+
+  // 게시글 좋아요
+  const [snacksLike, setSnacksLike] = useState(null);
+
+  useEffect(() => {
+    setSnacksLike(snacks.like);
+  }, []);
+
+  const onClickLike = () => {
+    console.log(snacksLike);
+    setSnacksLike((isLike) => {
+      return !isLike;
+    });
+    dispatch(likeSnacks(snacksId));
   };
 
   return (
@@ -86,7 +109,10 @@ const SnacksItem = ({ snacks }) => {
       >
         <source src={vid} type="video/mp4" />
       </video>
-      <ThumbUpOffAltIcon className="pink" />
+      {!snacksLike && (
+        <ThumbUpOffAltIcon onClick={onClickLike} className="pink" />
+      )}
+      {snacksLike && <ThumbUpAltIcon onClick={onClickLike} className="pink" />}
       <button onClick={onClickReply}>댓글</button>
       {isReply && (
         <div>

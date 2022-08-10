@@ -131,6 +131,8 @@ const SnacksPage = () => {
     dispatch(fetchTags());
   }, [dispatch]);
 
+  const { snacksPopularTags } = useSelector((state) => state.snacks);
+
   return (
     <Wrapper>
       <div className="sort">

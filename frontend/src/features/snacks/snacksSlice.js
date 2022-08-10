@@ -1,11 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchSnacks, fetchReply, createReply } from './snacksActions';
+import {
+  fetchSnacks,
+  fetchTags,
+  fetchReply,
+  createReply,
+  fetchDetail,
+} from './snacksActions';
 
 const initialState = {
   isLoading: false,
   hasMore: false,
   snacksList: [],
   snacksReply: [],
+  snacksPopularTags: [],
+  snacksDetail: null,
   error: null,
 };
 
@@ -26,8 +34,15 @@ const snacksSlice = createSlice({
     [fetchReply.fulfilled]: (state, { payload }) => {
       state.snacksReply = payload.data;
     },
+    [fetchTags.fulfilled]: (state, { payload }) => {
+      state.snacksPopularTags = payload.data;
+    },
     [createReply.fulfilled]: (state, { payload }) => {
       state.snacksReply = payload.data;
+    },
+    [fetchDetail.fulfilled]: (state, { payload }) => {
+      state.snacksDetail = payload.data;
+      console.log(state.snacksDetail);
     },
   },
 });
