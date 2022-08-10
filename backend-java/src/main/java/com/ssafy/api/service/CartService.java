@@ -16,6 +16,9 @@ public interface CartService {
     // 장바구니 생성(장바구니에 한번도 강의를 넣은적이 없을 때)
     Cart createCart(User user);
 
+    // 장바구니 수량 변경
+    Cart updateCart(Cart cart);
+
     //장바구니 목록 추가
     CartItem createCartItem(Cart cart, Lecture lecture);
 

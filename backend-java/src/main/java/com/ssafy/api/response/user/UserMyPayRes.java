@@ -29,7 +29,7 @@ public class UserMyPayRes{
 	@ApiModelProperty(name="주문 금액", example="10000")
 	int payAmount;
 	@ApiModelProperty(name="결제 수단", example="1")
-	int payMethod;
+	String payMethod;
 	@ApiModelProperty(name="주문 목록")
 	List<UserPayListRes> payLists;
 

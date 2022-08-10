@@ -1,16 +1,15 @@
 package com.ssafy.db.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Data
 @Entity
-@Getter
-@Setter
+@Getter @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Enroll {
 
     @Id
@@ -24,5 +23,7 @@ public class Enroll {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
+
+    private int status; // 0 : 수강중, 1 :  수강완료(라이브)
 
 }

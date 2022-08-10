@@ -5,6 +5,7 @@ import com.ssafy.api.response.snacks.SnacksRes;
 import com.ssafy.api.response.user.UserYourRes;
 import com.ssafy.api.service.LectureService;
 import com.ssafy.common.util.S3Uploader;
+import com.ssafy.db.entity.PayList;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ssafy.api.request.user.*;
@@ -317,7 +318,6 @@ public class UserController {
 		String loginUserId = userDetails.getUsername();
 		List<UserMyInsLectureRes> list = userService.getLecturesByInstructorId(loginUserId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", list));
-
 	}
 
 	// 회원 탈퇴 ========================================================================================================
