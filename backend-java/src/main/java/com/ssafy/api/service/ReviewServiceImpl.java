@@ -28,6 +28,7 @@ public class ReviewServiceImpl implements ReviewService{
     @Autowired
     UserRepository userRepository;
 
+    // 리뷰 생성
     @Override
     public Review createReview(ReviewPostReq reviewPostReq) {
         Optional<Lecture> lec = lectureRepository.findById(reviewPostReq.getLecId());
@@ -44,6 +45,7 @@ public class ReviewServiceImpl implements ReviewService{
         return reviewRepository.save(review);
     }
 
+    // 리뷰 조회
     @Override
     public List<ReviewGetRes> findByLecId(int lecId) {
         List<Review> review = reviewRepository.findByLecture_LecId(lecId);
@@ -54,6 +56,7 @@ public class ReviewServiceImpl implements ReviewService{
         return reviews;
     }
 
+    // 리뷰 삭제
     @Override
     public Integer deleteByReviewId(int reviewId) {
         reviewRepository.deleteByReviewId(reviewId);

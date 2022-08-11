@@ -22,27 +22,22 @@ import java.util.Optional;
 public interface LectureRepository extends JpaRepository<Lecture, Integer> {
 
     // 존재하는 강의 중 학생 수가 많은 순서대로(인기순)
-    @Query(value = "select lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre " +
+    @Query(value = "select lec " +
             "from Enroll e, Lecture lec " +
-            "where e.lecture.lecId = lec.lecId and current_date < lec.lecEndDate " +
+            "where e.lecture.lecId = lec.lecId " +
             "group by lec.lecId " +
             "order by count(e.enrollId) desc")
-    Page<Lecture> getMostPopularLecture(Pageable pageable);
+    List<Lecture> getMostPopularLecture(Pageable pageable);
 
     // 존재하는 강의 중 최신순으로(최신순)
-    @Query(value = "select lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre " +
-            "from Lecture lec " +
-            "where current_date < lec.lecEndDate " +
-            "order by lec.lecEndDate desc")
-    Page<Lecture> getLecturesByMostLatest(Pageable pageable);
+    Page<Lecture> findAll(Pageable pageable);
 
     // 존재하는 강의 / 연령대 / 성별 기준으로
-    @Query(value = "select lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre, u.userGender " +
+    @Query(value = "select lec, ageGroup " +
             "from Enroll e, Lecture lec, User u " +
-            "where e.lecture = lec and current_date < lec.lecEndDate and u.userGender = :userGender " +
-            "partition by lec.lecId , :userGender, ((extract(year from current_date) - extract(year from u.userBirth) + 1) - ((extract(year from current_date) - extract(year from u.userBirth) + 1) % 10) as age_group) " +
-            "order by count(e.enrollId)", nativeQuery = true)
-    Page<Lecture> getMostPopularLectureByYourBirthAndGender(Pageable pageable);
+            "where e.lecture.lecId = lec.lecId and e.user.userGender = :userGender " +
+            "order by count(e.enrollId) desc")
+    Page<Lecture> getMostPopularLectureByYourBirthAndGender(String userGender, Pageable pageable);
 
     // 공지사항 수정
     @Modifying(clearAutomatically = true)
@@ -77,7 +72,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
                                     String lecGenre);
 
     // 본인이 수강중인 강의 조회
-    @Query(value = "select l.lecId, l.lecTitle, l.instructor.ins_name, l.thumbnail from Lecture l join Enroll e on l.lecId = e.lecture.lecId where e.user.userId = :userId order by e.enroll_id desc", nativeQuery = true)
+    @Query(value = "select l.lecId, l.lecTitle, l.instructor.insName, l.lecThumb from Lecture l join Enroll e on l.lecId = e.lecture.lecId where e.user.userId = :userId order by e.enrollId desc")
     List<UserMyLectureRes> findLecturesByUserId(String userId);
 
     Lecture findLectureByLecId(int lecId);

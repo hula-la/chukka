@@ -20,7 +20,7 @@ import java.util.List;
 
 @Api(value = "강의 섹션 API", tags = {"Section"})
 @RestController
-@RequestMapping("/lecture/{lecId}")
+@RequestMapping("/sections")
 public class SectionController {
 
     @Autowired
@@ -30,12 +30,13 @@ public class SectionController {
     SectionLikeService sectionLikeService;
 
     // 강의별 섹션 조회 ==================================================================================================
-    @GetMapping("/")
+    @GetMapping("/{lecId}")
     @ApiOperation(value = "섹션 조회", notes = "강의별 섹션을 불러온다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success")
     })
-    public ResponseEntity<BaseResponseBody> findByLecId(@RequestBody @ApiParam(value = "섹션 조회", required = true) int lecId) {
+    public ResponseEntity<BaseResponseBody> findByLecId(
+            @PathVariable @ApiParam(value = "섹션 조회", required = true) int lecId) {
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId)));
     }
 
