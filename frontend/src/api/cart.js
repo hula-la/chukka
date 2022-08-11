@@ -2,7 +2,6 @@ import client from './client';
 
 export const getCartList = async (userId) => {
   const res = await client.get(`cart/${userId}/`);
-  console.log(res);
   return res.data;
 };
 

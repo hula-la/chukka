@@ -7,6 +7,12 @@
   color: #e2e2e2;
   /* line-height: 27px;
   letter-spacing:1px; */
+
+  /* 드래그 방지 */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .App {

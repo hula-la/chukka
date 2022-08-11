@@ -34,22 +34,12 @@ const Lectures2 = styled.div`
   overflow-x: scroll; */
 `;
 
-const Lectures3 = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 30px;
-  /* flex-wrap: nowrap;
-  flex: 0 0 90%;
-  overflow-x: scroll; */
-`;
-
 const LecturesPage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchLatestLectures());
-  }, []);
+  }, [dispatch]);
   const lectures = useSelector((state) => state.lecture.lectures);
-  console.log(lectures);
   // Dummy Data
   const dummy = [
     {

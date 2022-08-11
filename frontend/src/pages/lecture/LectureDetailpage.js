@@ -96,9 +96,8 @@ const LectureDetailpage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     dispatch(fetchLectureDetail(lectureId));
-  }, []);
+  }, [dispatch, lectureId]);
   // const { title, content, thumbnail, level, genre, category } = useSelector(
   //   (state) => state.lecture,
   // );
@@ -146,13 +145,13 @@ const LectureDetailpage = () => {
     },
   ];
 
-  const instructorInfo = {
-    ins_profile: 'https://pbs.twimg.com/media/EFI_9boU4AEWVJp?format=jpg',
-    ins_name: '임나연',
-    ins_introduce:
-      'JYP엔터테인먼트 소속 9인조 그룹 TWICE의 멤버. 팀에서 리드보컬, 리드댄서를 맡고 있다. 2022년 6월 24일 첫 미니 앨범인 IM NAYEON을 발매하며 솔로 활동을 시작했다. 캐치프레이즈는 밝은 에너지. 상징 색깔은 하늘색 (#5bc2e7).팀 내에서 리드댄서를 맡고 있다. 타고난 선과 감각으로 춤의 포인트가 되는 부분들의 강약을 잘 살린다. 특히 나연이 많은 사람들로부터 춤선이 뛰어나다고 호평을 받았던 Alcohol-Free 안무처럼 허리와 골반의 움직임을 포인트로 사용한 안무에 매우 특출하다. 또한 군무를 할 때 센터에서의 밸런스와 춤선이 뛰어나다. 손가락이 길고 동작이 섬세하여 손을 사용한 디테일한 안무를 잘 살린다는 평가가 있다. 마치 마술사가 관객을 현혹하듯 공연에서 손과 손가락 하나 하나의 움직임이 섬세하고 아름답다. 무대 시야가 넓고 관객과의 소통에 능숙하다. 일방적인 무대가 아닌 주위에 시야를 넓게 두고 강약과 완급을 조절하며 무대를 여유롭고 자유롭게 즐긴다.',
-    ins_email: 'limNaYeon@gmail.com',
-  };
+  // const instructorInfo = {
+  //   ins_profile: 'https://pbs.twimg.com/media/EFI_9boU4AEWVJp?format=jpg',
+  //   ins_name: '임나연',
+  //   ins_introduce:
+  //     'JYP엔터테인먼트 소속 9인조 그룹 TWICE의 멤버. 팀에서 리드보컬, 리드댄서를 맡고 있다. 2022년 6월 24일 첫 미니 앨범인 IM NAYEON을 발매하며 솔로 활동을 시작했다. 캐치프레이즈는 밝은 에너지. 상징 색깔은 하늘색 (#5bc2e7).팀 내에서 리드댄서를 맡고 있다. 타고난 선과 감각으로 춤의 포인트가 되는 부분들의 강약을 잘 살린다. 특히 나연이 많은 사람들로부터 춤선이 뛰어나다고 호평을 받았던 Alcohol-Free 안무처럼 허리와 골반의 움직임을 포인트로 사용한 안무에 매우 특출하다. 또한 군무를 할 때 센터에서의 밸런스와 춤선이 뛰어나다. 손가락이 길고 동작이 섬세하여 손을 사용한 디테일한 안무를 잘 살린다는 평가가 있다. 마치 마술사가 관객을 현혹하듯 공연에서 손과 손가락 하나 하나의 움직임이 섬세하고 아름답다. 무대 시야가 넓고 관객과의 소통에 능숙하다. 일방적인 무대가 아닌 주위에 시야를 넓게 두고 강약과 완급을 조절하며 무대를 여유롭고 자유롭게 즐긴다.',
+  //   ins_email: 'limNaYeon@gmail.com',
+  // };
 
   return (
     <Wrapper>
@@ -185,7 +184,12 @@ const LectureDetailpage = () => {
             </div>
             <div>
               <>총 금액 : </>
-              <span>{lecPrice}원</span>
+              <span>
+                {lecPrice
+                  .toString()
+                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}
+                원
+              </span>
             </div>
           </div>
           <StyledButton content="장바구니에 담기" />
@@ -269,7 +273,7 @@ const ReviewContainer = ({ reviews }) => {
   return (
     <ReviewWrapper>
       {reviews.map((review, index) => (
-        <ReviewItem review={review} key={review.id} />
+        <ReviewItem review={review} key={index} />
       ))}
       {/* <ReviewItem review={reviews[2]} /> */}
     </ReviewWrapper>
