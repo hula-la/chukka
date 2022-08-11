@@ -51,7 +51,8 @@ const NavItems = styled.li`
     transform: scale3d(1, 1, 1);
   }
   & .nav-link {
-    font-family: 'Montserrat', sans-serif;
+    // font-family: 'Montserrat', sans-serif;
+    font-family: 'Russo One', sans-serif; 
     font-weight: 600;
   }
 `;

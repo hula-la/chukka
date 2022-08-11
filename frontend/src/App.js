@@ -29,9 +29,9 @@ const App = () => {
     <div className="App">
       <Routes>
         {/* Index */}
-        <Route path="" element={<Layout />}>
+        {/* <Route path="" element={<Layout />}> */}
           <Route path="" element={<IndexPage />} />
-        </Route>
+        {/* </Route> */}
         {/* accounts */}
         <Route path="accounts" element={<Layout />}>
           <Route path="login" element={<LoginPage />} />

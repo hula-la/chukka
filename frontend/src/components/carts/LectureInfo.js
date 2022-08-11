@@ -5,12 +5,14 @@ import styled from 'styled-components';
 const CartItem = styled.div`
   // border-style:solid;
   // border-color : white;
+  margin-top:10px;
   border-bottom: 2px solid #4a4a4a;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   place-items: center;
   column-gap: 10px;
-  padding : 10px 5px;
+  row-gap:10px;
+  padding : 20px 5px;
 
   img{
     width : 100%;
