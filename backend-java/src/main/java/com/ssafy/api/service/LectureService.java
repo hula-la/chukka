@@ -37,7 +37,7 @@ public interface LectureService {
 
     List<LectureRes> findAll();
 
-    Optional<LectureDetailRes> getDetailLecture(int lecId);
+    LectureDetailRes getDetailLecture(int lecId);
 
     // 결제한 강의 조회
 

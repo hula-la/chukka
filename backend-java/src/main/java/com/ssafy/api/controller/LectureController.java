@@ -76,7 +76,7 @@ public class LectureController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<BaseResponseBody> lectureDetail( @PathVariable @ApiParam(value = "불러올 해당 강의 ID", required = true) int lecId) {
-        Optional<LectureDetailRes> lecture = lectureService.getDetailLecture(lecId);
+        LectureDetailRes lecture = lectureService.getDetailLecture(lecId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lecture));
     }
 

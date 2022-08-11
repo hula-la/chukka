@@ -31,13 +31,13 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
 
     // 존재하는 강의 중 최신순으로(최신순)
     Page<Lecture> findAll(Pageable pageable);
+
     // 존재하는 강의 / 연령대 / 성별 기준으로
-    @Query(value = "select lec.lecTitle, lec.lecContents, lec.lecCategory, lec.lecLevel, lec.lecGenre, u.userGender " +
-            "from Enroll e, Lecture lec, User u " +
-            "where e.lecture = lec and current_date < lec.lecEndDate and u.userGender = :userGender " +
-            "partition by lec.lecId , :userGender, ((extract(year from current_date) - extract(year from u.userBirth) + 1) - ((extract(year from current_date) - extract(year from u.userBirth) + 1) % 10) as age_group) " +
-            "order by count(e.enrollId)", nativeQuery = true)
-    Page<Lecture> getMostPopularLectureByYourBirthAndGender(Pageable pageable);
+    @Query(value = "select lec, substring(current_date, 0, 4) - e.user_userBirth " +
+            "from Enroll e, Lecture lec " +
+            "where e.lecture = lec and e.user_userGender = :userGender " +
+            "order by count(e.enrollId) desc", nativeQuery = true)
+    Page<Lecture> getMostPopularLectureByYourBirthAndGender(String userGender, Pageable pageable);
 
     // 공지사항 수정
     @Modifying(clearAutomatically = true)

@@ -15,33 +15,33 @@ import java.util.List;
 
 @Api(value = "대강의 댓글 API", tags = {"Review"})
 @RestController
-@RequestMapping("lectures/{lecId}")
+@RequestMapping("/reviews")
 public class ReviewController {
 
     // 리뷰 작성 ========================================================================================================
     @Autowired
     ReviewService reviewService;
 
-    @PostMapping("/")
+    @PostMapping("/create")
     @ApiOperation(value = "댓글 작성", notes = "댓글을 작성한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공")
     })
     public ResponseEntity<BaseResponseBody> createReview(
             @RequestBody @ApiParam(value = "댓글 작성 정보", required = true) ReviewPostReq reviewPostReq) {
-        Review review = reviewService.createReview(reviewPostReq);
+        reviewService.createReview(reviewPostReq);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
     }
 
     // 강의별 리뷰 조회 ==================================================================================================
-    @GetMapping("/")
+    @GetMapping("/{lecId}")
     @ApiOperation(value = "리뷰 조회", notes = "강의별 전체 리뷰를 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = ReviewGetRes.class)
     })
     public ResponseEntity<BaseResponseBody> findByLecId(
-            @RequestBody @ApiParam(value = "강의에 달려 있는 리뷰", required = true) int lecId) {
+            @PathVariable @ApiParam(value = "강의에 달려 있는 리뷰", required = true) int lecId) {
         List<ReviewGetRes> review = reviewService.findByLecId(lecId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", review));
     }
@@ -51,7 +51,8 @@ public class ReviewController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공")
     })
-    public ResponseEntity<BaseResponseBody> deleteByReviewId(@RequestBody @ApiParam(value = "삭제할 댓글 ID", required = true) int reviewId) {
+    public ResponseEntity<BaseResponseBody> deleteByReviewId(
+            @RequestBody @ApiParam(value = "삭제할 댓글 ID", required = true) int reviewId) {
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", reviewService.deleteByReviewId(reviewId)));
     }

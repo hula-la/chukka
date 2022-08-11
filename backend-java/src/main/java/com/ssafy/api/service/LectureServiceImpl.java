@@ -86,25 +86,12 @@ public class LectureServiceImpl implements LectureService {
 
     // 상세 페이지
     @Override
-    public Optional<LectureDetailRes> getDetailLecture(int lecId) {
+    public LectureDetailRes getDetailLecture(int lecId) {
         Optional<Lecture> lecture = lectureRepository.findById(lecId);
         if (!lecture.isPresent()) {
             return null;
         }
-        Optional<LectureDetailRes> dto = lecture
-                .map(m -> LectureDetailRes.of(
-                        m.getLecId(),
-                        m.getLecTitle(),
-                        m.getLecLevel(),
-                        m.getLecGenre(),
-                        m.getLecCategory(),
-                        m.getInstructor().getInsName(),
-                        m.getInstructor().getInsEmail(),
-                        m.getInstructor().getInsIntroduce(),
-                        m.getInstructor().getInsProfile(),
-                        m.getLecPrice(),
-                        m.getLecContents()
-                ));
+        LectureDetailRes dto = LectureDetailRes.of(lecture.get());
         return dto;
     }
 
