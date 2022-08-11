@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -13,6 +15,9 @@ const Wrapper = styled.div`
     height: 80px;
   }
   & .btn-video-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: transparent;
     box-sizing: border-box;
     border: 1px solid white;
@@ -21,6 +26,12 @@ const Wrapper = styled.div`
     width: 205px;
     height: 50px;
     font-size: 1.5rem;
+  }
+  & .video-lecture-icon {
+    margin-right: 8px;
+  }
+  & .video-off {
+    color: red;
   }
 
   & .video-lecture-body {
@@ -91,7 +102,8 @@ const VideoLecturePage = () => {
       <div className="video-lecture-header">
         <h1>강의영상</h1>
         <button className="btn-video-toggle" onClick={onClickHandler}>
-          내 화면
+          <VideocamOffIcon className="video-lecture-icon video-off" />
+          <span>내 화면</span>
         </button>
       </div>
       <div className="video-lecture-body">
