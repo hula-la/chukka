@@ -42,6 +42,7 @@ public class LectureServiceImpl implements LectureService {
         List<Lecture> page = lectureRepository.getMostPopularLecture(pageRequest);
         List<LectureGetForListRes> dtoPage = page.stream()
                 .map(m -> new LectureGetForListRes(
+                        m.getLecId(),
                         m.getLecThumb(),
                         m.getLecTitle(),
                         m.getLecCategory(),
@@ -58,6 +59,7 @@ public class LectureServiceImpl implements LectureService {
         Page<Lecture> page = lectureRepository.findAll(pageRequest);
         Page<LectureGetForListRes> dtoPage = page
                 .map(m -> LectureGetForListRes.of(
+                        m.getLecId(),
                         m.getLecThumb(),
                         m.getLecTitle(),
                         m.getLecCategory(),
@@ -75,6 +77,7 @@ public class LectureServiceImpl implements LectureService {
         Page<Lecture> page = lectureRepository.findAll(pageRequest);
         Page<LectureGetForListRes> dtoPage = page
                 .map(m -> LectureGetForListRes.of(
+                        m.getLecId(),
                         m.getLecThumb(),
                         m.getLecTitle(),
                         m.getLecCategory(),
