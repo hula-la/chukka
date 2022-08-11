@@ -1,21 +1,42 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchLectures } from './lectureActions';
+import { fetchLatestLectures, fetchLectureDetail } from './lectureActions';
 import thumbnail1 from '../../img/pop.jpeg';
 
 const initialState = {
-  title: '나연 - POP',
-  content: '',
-  thumbnail: thumbnail1,
-  level: 1,
-  genre: '아이돌',
-  category: '실시간',
+  lectures: [],
+  lecture: {
+    lecId: '',
+    lecThumb: '',
+    lecTitle: '',
+    lecLevel: '',
+    lecGenre: '',
+    lecCategory: '',
+    lecPrice: '',
+    lecContents: '',
+    lecNotice: '',
+    lecSchedule: '',
+    dayAndTime: '',
+    lecStartDate: '',
+    lecEndDate: '',
+    lecStudent: '',
+    lecLimit: '',
+    insInfo: {},
+  },
 };
 
 const lectureSlice = createSlice({
   name: 'lecture',
   initialState,
   reducers: {},
-  extraReducers: {},
+  extraReducers: {
+    [fetchLatestLectures.fulfilled]: (state, { payload }) => {
+      state.lectures = payload.content;
+    },
+    [fetchLectureDetail.fulfilled]: (state, { payload }) => {
+      state.lecture = payload.data;
+      console.log(state.lecture);
+    },
+  },
 });
 
 export default lectureSlice.reducer;

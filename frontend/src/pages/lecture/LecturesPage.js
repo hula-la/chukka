@@ -1,3 +1,6 @@
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchLatestLectures } from '../../features/lecture/lectureActions';
 import Lecture from '../../components/lectures/Lecture';
 import LectureSmall from '../../components/lectures/LectureSmall';
 import styled from 'styled-components';
@@ -10,6 +13,16 @@ const Wrapper = styled.div`
   }
   & > div {
     margin-top: 40px;
+  }
+  & .lectures-div {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 20px;
+    column-gap: 20px;
+    /* flex-wrap: wrap; */
+  }
+  & .lectures-div > div {
+    margin-right: 15px;
   }
 `;
 
@@ -31,6 +44,12 @@ const Lectures3 = styled.div`
 `;
 
 const LecturesPage = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchLatestLectures());
+  }, []);
+  const lectures = useSelector((state) => state.lecture.lectures);
+  console.log(lectures);
   // Dummy Data
   const dummy = [
     {
@@ -75,30 +94,11 @@ const LecturesPage = () => {
       </div>
       <div>
         <h1>강의 목록</h1>
-        <Lectures3>
-          {dummy.map((lecture, index) => (
-            <LectureSmall props={lecture} key={index} />
+        <div className="lectures-div">
+          {lectures.map((lecture, index) => (
+            <LectureSmall props={lecture} key={lecture.lecId} />
           ))}
-          <LectureSmall props={dummy[0]} />
-        </Lectures3>
-        <Lectures3>
-          {dummy.map((lecture, index) => (
-            <LectureSmall props={lecture} key={index} />
-          ))}
-          <LectureSmall props={dummy[0]} />
-        </Lectures3>
-        <Lectures3>
-          {dummy.map((lecture, index) => (
-            <LectureSmall props={lecture} key={index} />
-          ))}
-          <LectureSmall props={dummy[0]} />
-        </Lectures3>
-        <Lectures3>
-          {dummy.map((lecture, index) => (
-            <LectureSmall props={lecture} key={index} />
-          ))}
-          <LectureSmall props={dummy[0]} />
-        </Lectures3>
+        </div>
       </div>
     </Wrapper>
   );
