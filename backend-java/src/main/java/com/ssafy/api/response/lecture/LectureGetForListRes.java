@@ -13,8 +13,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel("LecturePopularRes")
-public class LectureGetForListRes extends BaseResponseBody {
+public class LectureGetForListRes {
 
+    @ApiModelProperty(value = "강의 ID", example = "")
+    private int lecId;
     @ApiModelProperty(value = "강의 썸네일", example = "")
     private String lecThumb;
     @ApiModelProperty(value = "인기순 강의 제목", example = "")
@@ -26,12 +28,14 @@ public class LectureGetForListRes extends BaseResponseBody {
     @ApiModelProperty(value = "인기순 장르", example = "")
     private String lecGenre;
 
-    public static LectureGetForListRes of(String lecThumb,
+    public static LectureGetForListRes of(int lecId,
+                                          String lecThumb,
                                           String lecTitle,
                                           int lecCategory,
                                           int lecLevel,
                                           String lecGenre) {
         LectureGetForListRes res = new LectureGetForListRes();
+        res.setLecId(lecId);
         res.setLecThumb(lecThumb);
         res.setLecTitle(lecTitle);
         res.setLecCategory(lecCategory);

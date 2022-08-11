@@ -26,7 +26,7 @@ public interface LectureService {
     Lecture createLiveLecture(LiveLecturePostReq liveLecturePostReq, boolean isFile);
     // Read ============================================================================================================
     // 인기순
-    Page<LectureGetForListRes> getMostPopularLecture(Pageable pageable);
+    List<LectureGetForListRes> getMostPopularLecture(Pageable pageable);
 
     // 최신순
     Page<LectureGetForListRes> getMostLatestLectures(Pageable pageable);
@@ -36,7 +36,7 @@ public interface LectureService {
 
     List<LectureRes> findAll();
 
-    Optional<LectureDetailRes> getDetailLecture(int lecId);
+    LectureDetailRes getDetailLecture(int lecId);
 
     // 결제한 강의 조회
 
