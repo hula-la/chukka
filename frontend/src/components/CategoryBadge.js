@@ -13,7 +13,11 @@ const Badge = styled.div`
 `;
 
 const CategoryBadge = ({ category }) => {
-  return <Badge>{category}</Badge>;
+  let content;
+  if (category === 1) content = '실시간';
+  else if (category === 0) content = '녹화';
+  else content = category;
+  return <Badge>{content}</Badge>;
 };
 
 export default CategoryBadge;

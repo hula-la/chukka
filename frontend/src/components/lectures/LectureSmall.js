@@ -1,14 +1,17 @@
 import LevelBadge from '../LevelBadge';
 import CategoryBadge from '../CategoryBadge';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 32%;
+  width: 100%;
+  /* margin-bottom: 20px; */
 `;
 const Thumbnail = styled.div`
   position: relative;
+  cursor: pointer;
 
   &:before {
     content: '';
@@ -29,6 +32,11 @@ const Thumbnail = styled.div`
     bottom: 10px;
     left: 10px;
   }
+  &:hover {
+    transform: scale3d(1.05, 1.05, 1.05);
+    z-index: 2;
+    transition: transform 0.5s;
+  }
 `;
 
 const BadgeDiv = styled.div`
@@ -40,20 +48,23 @@ const BadgeDiv = styled.div`
 `;
 
 const LectureSmall = ({ props }) => {
-  const { title, content, thumbnail, level, genre, category } = props;
+  const navigate = useNavigate();
+  const { lecId, lecTitle, lecThumb, lecLevel, lecGenre, lecCategory } = props;
+  const onClickHandler = () => {
+    navigate(`/Lectures/${lecId}`);
+  };
   return (
     <Wrapper>
-      <Thumbnail>
-        <img src={thumbnail} alt="" />
+      <Thumbnail onClick={onClickHandler}>
+        <img src={lecThumb} alt="" />
         <div className="lecture-info">
-          <h1>{title}</h1>
-          <h2>{content}</h2>
+          <h1>{lecTitle}</h1>
         </div>
       </Thumbnail>
       <BadgeDiv>
-        <LevelBadge level={level} />
-        <CategoryBadge category={genre} />
-        <CategoryBadge category={category} />
+        <LevelBadge level={lecLevel} />
+        <CategoryBadge category={lecGenre} />
+        <CategoryBadge category={lecCategory} />
       </BadgeDiv>
     </Wrapper>
   );
