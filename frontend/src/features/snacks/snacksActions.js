@@ -3,9 +3,9 @@ import { fsnacks, fTags, freply, creply, like, detail } from '../../api/snacks';
 
 export const fetchSnacks = createAsyncThunk(
   'snacks/fetchSnacks',
-  async (pageNum, { rejectWithValue }) => {
+  async ({ newPage, sortSnacks }, { rejectWithValue }) => {
     try {
-      const { data } = await fsnacks(pageNum);
+      const { data } = await fsnacks(newPage, sortSnacks);
       return data;
     } catch (error) {
       if (error.response && error.response.data.message) {

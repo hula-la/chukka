@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
 import { useInView } from 'react-intersection-observer';
 import { fetchSnacks, fetchTags } from '../../features/snacks/snacksActions';
+import { changeSort } from '../../features/snacks/snacksSlice';
 
 const Wrapper = styled.div`
   div::-webkit-scrollbar {
@@ -100,6 +101,19 @@ const SnacksPage = () => {
   //       https://videojs.com/guides/options/#html5
   // */
   // }
+  // 인기순, 최신순 정렬
+  const [sortSnacks, setSortSnacks] = useState('snacksId,DESC');
+
+  const onClickNew = () => {
+    if (sortSnacks !== 'snacksId,DESC') {
+      setSortSnacks('snacksId,DESC');
+    }
+  };
+  const onClickPop = () => {
+    if (sortSnacks !== 'snacksLikes,ASC') {
+      setSortSnacks('snacksLikes,ASC');
+    }
+  };
 
   // 무한 스크롤, 스낵스 받아오기
   const [pageNum, setPageNum] = useState(1);
@@ -112,15 +126,25 @@ const SnacksPage = () => {
   const { hasMore } = useSelector((state) => state.snacks);
 
   useEffect(() => {
+    console.log(sortSnacks);
     if (snacksList.length === 0) {
-      dispatch(fetchSnacks(pageNum));
+      const newPage = pageNum;
+      dispatch(fetchSnacks({ newPage, sortSnacks }));
+    } else {
+      setPageNum(() => {
+        dispatch(changeSort());
+        const newPage = 1;
+        dispatch(fetchSnacks({ newPage, sortSnacks }));
+        return 1;
+      });
     }
-  }, [dispatch]);
+  }, [dispatch, sortSnacks]);
 
   useEffect(() => {
     if (snacksList.length !== 0 && inView && hasMore) {
       setPageNum((page) => {
-        dispatch(fetchSnacks(page + 1));
+        const newPage = page + 1;
+        dispatch(fetchSnacks({ newPage, sortSnacks }));
         return page + 1;
       });
     }
@@ -136,10 +160,12 @@ const SnacksPage = () => {
   return (
     <Wrapper>
       <div className="sort">
-        <button className="sortButton">인기순</button>
-        <button className="sortButton">인기순</button>
-        <button className="sortButton">인기순</button>
-        <button className="sortButton">인기순</button>
+        <button onClick={onClickNew} className="sortButton">
+          최신순
+        </button>
+        <button onClick={onClickPop} className="sortButton">
+          인기순
+        </button>
       </div>
       <div className="section">
         <div className="tag">

@@ -20,7 +20,12 @@ const initialState = {
 const snacksSlice = createSlice({
   name: 'snacks',
   initialState,
-  reducer: {},
+  reducers: {
+    changeSort: (state) => {
+      state.hasMore = false;
+      state.snacksList = [];
+    },
+  },
   extraReducers: {
     // 스낵스 목록 조회
     [fetchSnacks.pending]: (state) => {
@@ -52,5 +57,7 @@ const snacksSlice = createSlice({
     },
   },
 });
+
+export const { changeSort } = snacksSlice.actions;
 
 export default snacksSlice.reducer;

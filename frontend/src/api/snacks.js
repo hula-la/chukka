@@ -1,10 +1,10 @@
 import client from './client';
 
-export const fsnacks = async (data) => {
+export const fsnacks = async (pageNum, sort) => {
   const res = await client.get(`snacks/`, {
-    params: { page: data, size: 3 },
+    params: { page: pageNum, size: 3, sort: sort },
   });
-  // console.log(res);
+  console.log(res);
   return res;
 };
 
