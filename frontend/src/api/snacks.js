@@ -1,15 +1,15 @@
 import client from './client';
 
-export const fsnacks = async (pageNum, sort) => {
-  const res = await client.get(`snacks/`, {
+export const fsnacks = async (pageNum, sort, tags) => {
+  const res = await client.post(`snacks/`, tags, {
     params: { page: pageNum, size: 3, sort: sort },
   });
-  console.log(res);
   return res;
 };
 
 export const fTags = async () => {
   const res = await client.get('snacks/tag/popular');
+  console.log('인기 태그');
   console.log(res);
   return res;
 };
