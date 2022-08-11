@@ -25,5 +25,6 @@ public class Enroll {
     private User user;
 
     private int status; // 0 : 수강중, 1 :  수강완료(라이브)
-
+    // 연령대별 그룹
+    private int ageGroup;
 }
