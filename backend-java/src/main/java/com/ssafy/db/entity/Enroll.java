@@ -25,4 +25,5 @@ public class Enroll {
     @JoinColumn(name = "userId")
     private User user;
 
+    private int ageGroup;
 }
