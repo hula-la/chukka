@@ -54,8 +54,6 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 4px;
   font-size: 1rem;
-  /* font-size: small; */
-  font-weight: bold;
   padding: 0.5rem 1rem;
   margin-top: 1rem;
   background-color: #ff2c55;
@@ -269,14 +267,14 @@ const SignUpPage = () => {
             />
           </div>
           <div className='genderdiv'>
-              <div>
-                <StyledLabel for="male">남성<MaleIcon className='icon'></MaleIcon></StyledLabel>
-                <StyledInput id="male" type="radio" name="gender" value="1" checked/>
-              </div>
-              <div>
-                <StyledLabel for="female">여성<FemaleIcon className='icon'></FemaleIcon></StyledLabel>
-                <StyledInput id="female" type="radio" name="gender" value="0"/>
-              </div>
+            <div>
+              <StyledLabel for="male">남성<MaleIcon className='icon'></MaleIcon></StyledLabel>
+              <StyledInput id="male" type="radio" name="gender" value="1" checked/>
+            </div>
+            <div>
+              <StyledLabel for="female">여성<FemaleIcon className='icon'></FemaleIcon></StyledLabel>
+              <StyledInput id="female" type="radio" name="gender" value="0"/>
+            </div>
           </div>
           <StyledButton disabled={!isIdChecked || !isNickChecked}>
             JOIN

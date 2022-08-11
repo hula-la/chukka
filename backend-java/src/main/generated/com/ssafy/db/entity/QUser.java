@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-wjpackage com.ssafy.db.entity;
-=======
 package com.ssafy.db.entity;
->>>>>>> 14658720b448e7a95192d1f91a424c627f24a74c
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -11,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -21,33 +18,79 @@ public class QUser extends EntityPathBase<User> {
 
     private static final long serialVersionUID = 846542477L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QUser user = new QUser("user");
 
-    public final QBaseEntity _super = new QBaseEntity(this);
+    public final QCart cart;
 
-    public final StringPath department = createString("department");
+    public final ListPath<Enroll, QEnroll> enrolls = this.<Enroll, QEnroll>createList("enrolls", Enroll.class, QEnroll.class, PathInits.DIRECT2);
 
-    //inherited
-    public final NumberPath<Long> id = _super.id;
+    public final ListPath<SnacksLike, QSnacksLike> likeUsers = this.<SnacksLike, QSnacksLike>createList("likeUsers", SnacksLike.class, QSnacksLike.class, PathInits.DIRECT2);
 
-    public final StringPath name = createString("name");
+    public final ListPath<PayList, QPayList> payLists = this.<PayList, QPayList>createList("payLists", PayList.class, QPayList.class, PathInits.DIRECT2);
 
-    public final StringPath password = createString("password");
+    public final ListPath<Pay, QPay> pays = this.<Pay, QPay>createList("pays", Pay.class, QPay.class, PathInits.DIRECT2);
 
-    public final StringPath position = createString("position");
+    public final ListPath<Review, QReview> reviews = this.<Review, QReview>createList("reviews", Review.class, QReview.class, PathInits.DIRECT2);
+
+    public final ListPath<SectionLike, QSectionLike> sectionLikes = this.<SectionLike, QSectionLike>createList("sectionLikes", SectionLike.class, QSectionLike.class, PathInits.DIRECT2);
+
+    public final ListPath<SnacksLike, QSnacksLike> snacksLikes = this.<SnacksLike, QSnacksLike>createList("snacksLikes", SnacksLike.class, QSnacksLike.class, PathInits.DIRECT2);
+
+    public final ListPath<Snacks, QSnacks> snacksList = this.<Snacks, QSnacks>createList("snacksList", Snacks.class, QSnacks.class, PathInits.DIRECT2);
+
+    public final ListPath<SnacksReply, QSnacksReply> snacksReplies = this.<SnacksReply, QSnacksReply>createList("snacksReplies", SnacksReply.class, QSnacksReply.class, PathInits.DIRECT2);
+
+    public final DatePath<java.util.Date> userBirth = createDate("userBirth", java.util.Date.class);
+
+    public final StringPath userEmail = createString("userEmail");
+
+    public final NumberPath<Integer> userGender = createNumber("userGender", Integer.class);
 
     public final StringPath userId = createString("userId");
 
+    public final NumberPath<Integer> userLvGame = createNumber("userLvGame", Integer.class);
+
+    public final NumberPath<Integer> userLvLec = createNumber("userLvLec", Integer.class);
+
+    public final NumberPath<Integer> userLvSnacks = createNumber("userLvSnacks", Integer.class);
+
+    public final StringPath userName = createString("userName");
+
+    public final StringPath userNickname = createString("userNickname");
+
+    public final StringPath userPhone = createString("userPhone");
+
+    public final NumberPath<Integer> userPoint = createNumber("userPoint", Integer.class);
+
+    public final StringPath userProfile = createString("userProfile");
+
+    public final StringPath userPw = createString("userPw");
+
+    public final StringPath userRefreshToken = createString("userRefreshToken");
+
+    public final NumberPath<Integer> userType = createNumber("userType", Integer.class);
+
     public QUser(String variable) {
-        super(User.class, forVariable(variable));
+        this(User.class, forVariable(variable), INITS);
     }
 
     public QUser(Path<? extends User> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QUser(PathMetadata metadata) {
-        super(User.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QUser(PathMetadata metadata, PathInits inits) {
+        this(User.class, metadata, inits);
+    }
+
+    public QUser(Class<? extends User> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.cart = inits.isInitialized("cart") ? new QCart(forProperty("cart"), inits.get("cart")) : null;
     }
 
 }

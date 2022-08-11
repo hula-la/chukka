@@ -4,18 +4,22 @@ import { findPw } from '../../features/user/userActions';
 import styled from 'styled-components';
 
 const StyledInput = styled.input`
-  font-size: 1rem;
+  font-size: 0.5rem;
   color: #ffffff;
   border-color: #ffffff;
   border-width: thin;
   border-radius: 5px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+  padding: 0.5rem;
   margin-bottom: 1rem;
   margin-top: 0.5rem;
   outline-color: #ffffff;
   width: 98%;
+  height: 2rem;
   background-color: #0b0b0b;
+  transition: 300ms;
+  :hover {
+    border-color: #ff2c55;
+  }
 
   &::-webkit-calendar-picker-indicator {
     filter: invert(1);
@@ -33,15 +37,20 @@ const StyledLabel = styled.label`
 const StyledButton = styled.button`
   border: none;
   border-radius: 4px;
-  font-size: small;
-  font-weight: bold;
+  font-size: 1rem;
   padding: 0.5rem 1rem;
-  margin-top: 1rem;
+  margin: 1rem 0rem;
   background-color: #ff2c55;
   color: #ffffff;
   outline: none;
   cursor: pointer;
   width: 100%;
+  opacity: 0.5;
+  transition: 500ms;
+  :hover {
+    opacity: 1;
+    font-weight: bold;
+  }
 `;
 const FindPwTemplateBlock = styled.div`
   display: flex;
@@ -52,11 +61,10 @@ const FindPwTemplateBlock = styled.div`
 
 const FindPwBox = styled.div`
   .welcome {
-    margin-top: 0;
-    margin-bottom: 0;
-    font-size: 1.3rem;
-    font-weight: bolder;
-    letter-spacing: 2px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
     text-align: center;
   }
   .line {
@@ -64,7 +72,7 @@ const FindPwBox = styled.div`
     height: 2px;
     background: #ff2c55;
     width: 100%;
-    margin-bottom: 0.5rem;
+    margin: 2rem 0;
   }
   width: 250px;
 `;
@@ -98,14 +106,17 @@ const FindPw = () => {
         <hr className="line" />
         <form onSubmit={onSubmit}>
           <div>
-            <StyledLabel>아이디</StyledLabel>
-            <StyledInput name="userId" onChange={onChange} required />
-            <StyledLabel>이메일</StyledLabel>
+            <StyledLabel for="userId">아이디</StyledLabel>
+            <StyledInput id="userId" name="userId" onChange={onChange} required placeholder='아이디를 입력하세요' autoComplete='off'/>
+            <StyledLabel for="userEmail">이메일</StyledLabel>
             <StyledInput
+              id="userEmail"
               name="userEmail"
               type="email"
               onChange={onChange}
               required
+              placeholder='이메일을 입력하세요'
+              autoComplete='off'
             />
             <StyledButton>비밀번호 찾기</StyledButton>
           </div>

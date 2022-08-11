@@ -1,9 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
-import { fetchProfile, changeProfile } from '../../features/user/userActions';
+import {
+  fetchProfile,
+  changeProfile,
+  fetchSnacks,
+  fetchLectures,
+} from '../../features/user/userActions';
+import MySnacksItem from '../../components/snacks/MySnacksItem';
 import defaultImage from '../../img/default.jpeg';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import EmailIcon from '@mui/icons-material/Email';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import PersonIcon from '@mui/icons-material/Person';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import MaleIcon from '@mui/icons-material/Male';
+import FemaleIcon from '@mui/icons-material/Female';
 
 // 페이지 블락
 const ProfilePageBlock = styled.div`
@@ -48,6 +62,7 @@ const Menu = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 12rem;
 `;
 
 const SideBarButton = styled.button`
@@ -55,6 +70,14 @@ const SideBarButton = styled.button`
   color: #ffffff;
   margin-bottom: 1rem;
   cursor: pointer;
+  transition: 200ms;
+  font-size: 1rem;
+  opacity: 0.7;
+  :hover {
+    font-weight: bold;
+    border-bottom: #ff2c55 0.05rem solid;
+    opacity: 1;
+  }
 `;
 
 // 나의 강의 목록
@@ -120,37 +143,100 @@ const ChangeProfileBox = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  .addIcon {
+    position: relative;
+    top: -3rem;
+    left: 3rem;
+    cursor: pointer;
+  }
 `;
 
 const ChangeProfileForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* align-items: center; */
+  & input[type='file'] {
+    visibility: hidden;
+  }
+  & p.userId {
+    position: relative;
+    font-size: 3rem;
+    font-weight: bold;
+    top: -4rem;
+    text-align: center;
+  }
+  & p.userNickname {
+    position: relative;
+    font-size: 1rem;
+    font-weight: bold;
+    top: -4rem;
+    text-align: center;
+    color: #ff2c55;
+    opacity: 0.7;
+  }
+  .icon {
+    vertical-align: middle;
+  }
+  .infoDiv {
+    height: 3rem;
+  }
+  .flexDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+  }
+  .msg {
+    font-size: 0.5rem;
+    text-align: center;
+    line-height: 2rem;
+    opacity: 0.6;
+  }
+  .normal {
+    border-bottom: #ffffff solid 1px;
+    width: 50%;
+    float: right;
+  }
+  & hr {
+    margin: 1.5rem 0;
+    border: none;
+    height: 0.1rem;
+    background: #ff2c55;
+    opacity: 0.5;
+  }
+  & hr.top {
+    margin-top: 4rem;
+  }
+  & hr.bottom {
+    margin-bottom: 4rem;
+  }
 `;
 
-const TextBox = styled.div`
-  border: thin solid #ffffff;
-  font-size: 1rem;
-  border-radius: 5px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin-bottom: 1rem;
-  margin-top: 0.5rem;
+// 스낵스 css
+const Wrapper = styled.div`
+  div::-webkit-scrollbar {
+    display: none;
+  }
+  .item {
+    width: 50%;
+  }
+  .nonelist {
+    list-style: none;
+  }
+  .list {
+    margin-bottom: 10px;
+  }
 `;
 
 const StyledInput = styled.input`
   font-size: 1rem;
   color: #ffffff;
-  border-color: #ffffff;
-  border-width: thin;
-  border-radius: 5px;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  margin-bottom: 1rem;
-  margin-top: 0.5rem;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  margin: 0.5rem 1rem 1rem;
   outline-color: #ffffff;
-  width: 100%;
+  width: 70%;
+  display: inline;
   background-color: #0b0b0b;
 
   &::-webkit-calendar-picker-indicator {
@@ -159,25 +245,37 @@ const StyledInput = styled.input`
 
   &[type='date'] {
   }
+
+  &[type='radio'] {
+    width: auto;
+  }
+
+  :hover {
+    border-bottom: #ff2c55 0.08rem solid;
+  }
 `;
 
 const StyledLabel = styled.label`
   font-size: small;
-  /* text-align: left; */
 `;
 
 const StyledButton = styled.button`
   border: none;
   border-radius: 4px;
-  font-size: small;
-  font-weight: bold;
+  font-size: 1rem;
+  /* font-weight: bold; */
   padding: 0.5rem 1rem;
-  margin-top: 1rem;
+  margin-top: 2.5rem;
   background-color: #ff2c55;
   color: #ffffff;
   outline: none;
   cursor: pointer;
-  width: 98%;
+  opacity: 0.5;
+  transition: 500ms;
+  :hover {
+    opacity: 1;
+    font-weight: bold;
+  }
 `;
 
 const ProfilePage = () => {
@@ -218,6 +316,11 @@ const ProfilePage = () => {
   const onClickMyList = () => setpageNum('2');
   const onClickChangeProfile = () => setpageNum('3');
   const onClickPassword = () => setpageNum('4');
+
+  const onClickUpload = () => {
+    let fileInput = document.getElementById('profile');
+    fileInput.click();
+  };
 
   // 프로필 변경용 인풋
   const [profileInputs, setProfileInputs] = useState({
@@ -296,6 +399,34 @@ const ProfilePage = () => {
     setForce(...force);
   };
 
+  // 스낵스 목록 받아오기
+  const [snacksPage, setSnacksPage] = useState(1);
+  const [ref, inView] = useInView();
+
+  const { snacksList } = useSelector((state) => state.user);
+  const { hasMore } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (snacksList.length === 0) {
+      dispatch(fetchSnacks({ paramsNickname, snacksPage }));
+    }
+  }, [dispatch, paramsNickname]);
+
+  useEffect(() => {
+    if (snacksList.length !== 0 && inView && hasMore) {
+      setSnacksPage((page) => {
+        const newPage = page + 1;
+        dispatch(fetchSnacks({ paramsNickname, newPage }));
+        return page + 1;
+      });
+    }
+  }, [inView]);
+
+  // 나의 강의 목록 불러오기
+  useEffect(() => {
+    dispatch(fetchLectures());
+  }, [dispatch]);
+
   return (
     <ProfilePageBlock>
       <Side>
@@ -323,7 +454,18 @@ const ProfilePage = () => {
         </Menu>
         <hr className="line" style={{ marginTop: '1rem' }} />
       </Side>
-      {pageNum === '1' && <h1>MY Shorts</h1>}
+      {pageNum === '1' && (
+        <div className="item">
+          <ul className="nonelist list">
+            {snacksList.map((snacks) => (
+              <li>
+                <MySnacksItem key={snacks.snacksId} snacks={snacks} />
+              </li>
+            ))}
+          </ul>
+          <div ref={ref}>1</div>
+        </div>
+      )}
       {pageNum === '2' && (
         <LectureBox>
           <h3>수강중인 강의</h3>
@@ -347,22 +489,18 @@ const ProfilePage = () => {
       {pageNum === '3' && (
         <ChangeProfileBox>
           <Profile src={userProfile}></Profile>
+          <AddCircleIcon className="addIcon" onClick={onClickUpload} />
           <ChangeProfileForm onSubmit={onSubmitProfile}>
-            <input type="file" onChange={onChangePicture} />
-            <div>
-              <StyledLabel>아이디</StyledLabel>
-              <TextBox>{userProInfo.userId}</TextBox>
-            </div>
-            <div>
-              <StyledLabel>닉네임</StyledLabel>
-              <StyledInput
-                value={profileInputs.userNickname}
-                onChange={onChangeProfile}
-                name="userNickname"
-              />
-            </div>
-            <div>
-              <StyledLabel>이메일</StyledLabel>
+            <input
+              id="profile"
+              type="file"
+              onChange={onChangePicture}
+              accept="image/*"
+            />
+            <p className="userId">{userProInfo.userId}</p>
+            <p className="userNickname">{userProInfo.userNickname}</p>
+            <div className="infoDiv">
+              <EmailIcon className="icon" />
               <StyledInput
                 name="userEmail"
                 value={profileInputs.userEmail}
@@ -370,8 +508,8 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div>
-              <StyledLabel>휴대폰 번호</StyledLabel>
+            <div className="infoDiv">
+              <LocalPhoneIcon className="icon" />
               <StyledInput
                 name="userPhone"
                 value={profileInputs.userPhone}
@@ -379,8 +517,8 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div>
-              <StyledLabel>이름</StyledLabel>
+            <div className="infoDiv">
+              <PersonIcon className="icon" />
               <StyledInput
                 name="userName"
                 value={profileInputs.userName}
@@ -388,8 +526,8 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div>
-              <StyledLabel>생년 월일</StyledLabel>
+            <div className="infoDiv">
+              <CalendarTodayIcon className="icon" />
               <StyledInput
                 name="userBirth"
                 type="date"
@@ -398,12 +536,19 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div>
-              <StyledLabel>성별</StyledLabel>
-              <select name="gender">
-                <option value="1">남성</option>
-                <option value="0">여성</option>
-              </select>
+            <div className="infoDiv flexDiv">
+              <div>
+                <StyledLabel for="male">
+                  남성<MaleIcon className="icon"></MaleIcon>
+                </StyledLabel>
+                <StyledInput id="male" type="radio" name="gender" value="1" />
+              </div>
+              <div>
+                <StyledLabel for="female">
+                  여성<FemaleIcon className="icon"></FemaleIcon>
+                </StyledLabel>
+                <StyledInput id="female" type="radio" name="gender" value="0" />
+              </div>
             </div>
             <StyledButton>프로필 수정</StyledButton>
           </ChangeProfileForm>
@@ -412,17 +557,26 @@ const ProfilePage = () => {
       {pageNum === '4' && (
         <ChangeProfileBox>
           <ChangeProfileForm>
+            <hr className="top" />
+            <div className="msg">
+              안전한 비밀번호로 내정보를 보호하세요
+              <br />
+              다른 아이디/사이트에서 사용한 적 없는 비밀번호
+              <br />
+              이전에 사용한 적 없는 비밀번호가 안전합니다.
+            </div>
+            <hr className="bottom" />
             <div>
               <StyledLabel>현재 비밀번호</StyledLabel>
-              <StyledInput type="password" />
+              <StyledInput className="normal" type="password" />
             </div>
             <div>
               <StyledLabel>새 비밀번호</StyledLabel>
-              <StyledInput type="password" />
+              <StyledInput className="normal" type="password" />
             </div>
             <div>
               <StyledLabel>새 비밀번호 확인</StyledLabel>
-              <StyledInput type="password" />
+              <StyledInput className="normal" type="password" />
             </div>
             <StyledButton>비밀번호 변경</StyledButton>
           </ChangeProfileForm>

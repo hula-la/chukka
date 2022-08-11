@@ -102,7 +102,7 @@ def findCosineSimilarity_1(source_representation, test_representation):
 ########################################################################################
 
 
-@app.websocket("/client")
+@app.websocket("/fastAPI/client")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
@@ -235,7 +235,7 @@ async def websocket_endpoint(websocket: WebSocket):
 some_file_path = "dance_video/soojin.mp4"
 
 
-@app.get("/game/dancer")
+@app.get("/fastAPI/game/dancer")
 async def main():
     # def iterfile():  #
     #     with open(some_file_path, mode="rb") as file_like:  #

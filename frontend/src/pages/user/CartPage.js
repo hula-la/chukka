@@ -8,7 +8,10 @@ import { PayLecture } from '../../components/carts/PayLecture';
 import RequestPay from '../../components/carts/requestPay'; 
 
 
-const ProfilePageBlock = styled.div`
+const ProfilePageBlock = styled.div`;
+  line-height: 25px;
+  font-size:15px;
+  color : #ffffffd3;
   display: flex;
   flex-direction: row;
   max-width: 1200px;

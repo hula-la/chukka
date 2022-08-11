@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const PayLectureItem = styled.p`
-margin-top:5px;
+margin-top:10px;
 height:25px;
   .payTitle{
     float: left;
