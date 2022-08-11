@@ -49,7 +49,6 @@ public class User{
     private Integer userPoint = 0;
     @Builder.Default
     private Integer userType = 0;
-
     
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -58,10 +57,6 @@ public class User{
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<SnacksLike> likeUsers = new ArrayList<>();
-
-    @OneToOne
-    @JoinColumn(name = "cartId")
-    private Cart cart;
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

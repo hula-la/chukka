@@ -45,7 +45,7 @@ public class SnacksController {
      **/
 
     // 스낵스 태그 조건 조회 =======================================================================================================
-    @GetMapping("/")
+    @PostMapping("/")
     @ApiOperation(value = "스낵스 태그 조건 조회 ", notes = "해당 태그를 검색하여 스낵스 목록을 페이징 방식으로 조회한다." +
             "<br>태그는 params에 담아 문자열 리스트로 요청하며, 태그1 or 태그2 로 연산한다.")
     @ApiResponses({
@@ -53,7 +53,7 @@ public class SnacksController {
     })
     public ResponseEntity<BaseResponseBody> getSnacks(
             @ApiIgnore Authentication authentication,
-            @RequestParam @ApiParam(value="검색할 태그 리스트") List<String> tags,
+            @RequestBody @ApiParam(value="검색할 태그 리스트") List<String> tags,
             @ApiParam(value="페이지 정보") Pageable pageable){
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String loginUserId = userDetails.getUsername();
