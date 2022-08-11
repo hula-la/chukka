@@ -121,7 +121,7 @@ const SignUpPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (userInfo) {
-      navigate('/');
+      navigate('/lectures');
     }
   }, [navigate, userInfo]);
 
@@ -174,8 +174,17 @@ const SignUpPage = () => {
         <hr className="line" />
         <form onSubmit={onSubmit}>
           <div>
-            <StyledLabel for="userId">아이디 <PersonIcon className="icon"/></StyledLabel>
-            <StyledInput id="userId" name="userId" onChange={onChange} required placeholder='아이디를 입력하세요' autoComplete='off'/>
+            <StyledLabel for="userId">
+              아이디 <PersonIcon className="icon" />
+            </StyledLabel>
+            <StyledInput
+              id="userId"
+              name="userId"
+              onChange={onChange}
+              required
+              placeholder="아이디를 입력하세요"
+              autoComplete="off"
+            />
             <button
               onClick={async (e) => {
                 e.preventDefault();
@@ -193,8 +202,17 @@ const SignUpPage = () => {
             </button>
           </div>
           <div>
-            <StyledLabel for="userNickname">닉네임 <PersonIcon className='icon'/></StyledLabel>
-            <StyledInput id="userNickname" name="userNickname" onChange={onChange} required placeholder='닉네임을 입력하세요' autoComplete='off'/>
+            <StyledLabel for="userNickname">
+              닉네임 <PersonIcon className="icon" />
+            </StyledLabel>
+            <StyledInput
+              id="userNickname"
+              name="userNickname"
+              onChange={onChange}
+              required
+              placeholder="닉네임을 입력하세요"
+              autoComplete="off"
+            />
             <button
               onClick={async (e) => {
                 e.preventDefault();
@@ -215,49 +233,75 @@ const SignUpPage = () => {
             </button>
           </div>
           <div>
-            <StyledLabel for="userPw">비밀번호 <LockIcon className='icon'/></StyledLabel>
+            <StyledLabel for="userPw">
+              비밀번호 <LockIcon className="icon" />
+            </StyledLabel>
             <StyledInput
               id="userPW"
               name="userPw"
               type="password"
               onChange={onChange}
               required
-              placeholder='비밀번호를 입력하세요'
+              placeholder="비밀번호를 입력하세요"
             />
           </div>
           <div>
-            <StyledLabel for="userPwConfirm">비밀번호 확인 <EnhancedEncryptionIcon className='icon'/></StyledLabel>
+            <StyledLabel for="userPwConfirm">
+              비밀번호 확인 <EnhancedEncryptionIcon className="icon" />
+            </StyledLabel>
             <StyledInput
               id="userPwConfirm"
               name="userPwConfirm"
               type="password"
               onChange={onChange}
               required
-              placeholder='비밀번호를 다시 입력하세요'
+              placeholder="비밀번호를 다시 입력하세요"
             />
           </div>
           <div>
-            <StyledLabel for="userName">이름 <PersonIcon className='icon'/></StyledLabel>
-            <StyledInput id="userName" name="userName" onChange={onChange} required placeholder='이름을 입력하세요' autoComplete='off'/>
+            <StyledLabel for="userName">
+              이름 <PersonIcon className="icon" />
+            </StyledLabel>
+            <StyledInput
+              id="userName"
+              name="userName"
+              onChange={onChange}
+              required
+              placeholder="이름을 입력하세요"
+              autoComplete="off"
+            />
           </div>
           <div>
-            <StyledLabel for="userEmail">이메일 <AlternateEmailIcon className='icon'/></StyledLabel>
+            <StyledLabel for="userEmail">
+              이메일 <AlternateEmailIcon className="icon" />
+            </StyledLabel>
             <StyledInput
               id="userEmail"
               name="userEmail"
               type="email"
               onChange={onChange}
               required
-              placeholder='이메일을 입력하세요'
-              autoComplete='off'
+              placeholder="이메일을 입력하세요"
+              autoComplete="off"
             />
           </div>
           <div>
-            <StyledLabel for="userPhone">휴대폰 번호 <LocalPhoneIcon className='icon'/></StyledLabel>
-            <StyledInput id="userPhone" name="userPhone" onChange={onChange} required placeholder='휴대폰 번호를 입력하세요' autoComplete='off' />
+            <StyledLabel for="userPhone">
+              휴대폰 번호 <LocalPhoneIcon className="icon" />
+            </StyledLabel>
+            <StyledInput
+              id="userPhone"
+              name="userPhone"
+              onChange={onChange}
+              required
+              placeholder="휴대폰 번호를 입력하세요"
+              autoComplete="off"
+            />
           </div>
           <div>
-            <StyledLabel for="userBirth">생년월일 <CalendarTodayIcon className='icon'/></StyledLabel>
+            <StyledLabel for="userBirth">
+              생년월일 <CalendarTodayIcon className="icon" />
+            </StyledLabel>
             <StyledInput
               id="userBirth"
               name="userBirth"
@@ -266,14 +310,24 @@ const SignUpPage = () => {
               required
             />
           </div>
-          <div className='genderdiv'>
+          <div className="genderdiv">
             <div>
-              <StyledLabel for="male">남성<MaleIcon className='icon'></MaleIcon></StyledLabel>
-              <StyledInput id="male" type="radio" name="gender" value="1" checked/>
+              <StyledLabel for="male">
+                남성<MaleIcon className="icon"></MaleIcon>
+              </StyledLabel>
+              <StyledInput
+                id="male"
+                type="radio"
+                name="gender"
+                value="1"
+                checked
+              />
             </div>
             <div>
-              <StyledLabel for="female">여성<FemaleIcon className='icon'></FemaleIcon></StyledLabel>
-              <StyledInput id="female" type="radio" name="gender" value="0"/>
+              <StyledLabel for="female">
+                여성<FemaleIcon className="icon"></FemaleIcon>
+              </StyledLabel>
+              <StyledInput id="female" type="radio" name="gender" value="0" />
             </div>
           </div>
           <StyledButton disabled={!isIdChecked || !isNickChecked}>
