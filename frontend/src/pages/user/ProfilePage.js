@@ -27,6 +27,19 @@ const ProfilePageBlock = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   align-items: flex-start;
+  .item {
+    width: 100%;
+  }
+  .nonelist {
+    list-style: none;
+  }
+  .list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  .listItem {
+    border-top: 1px solid #ff2c55;
+  }
 `;
 
 // 사이드바 css
@@ -162,14 +175,14 @@ const ChangeProfileForm = styled.form`
     position: relative;
     font-size: 3rem;
     font-weight: bold;
-    top: -4rem;
+    top: -3.5rem;
     text-align: center;
   }
   & p.userNickname {
     position: relative;
     font-size: 1rem;
     font-weight: bold;
-    top: -4rem;
+    top: -3rem;
     text-align: center;
     color: #ff2c55;
     opacity: 0.7;
@@ -213,20 +226,20 @@ const ChangeProfileForm = styled.form`
 `;
 
 // 스낵스 css
-const Wrapper = styled.div`
-  div::-webkit-scrollbar {
-    display: none;
-  }
-  .item {
-    width: 50%;
-  }
-  .nonelist {
-    list-style: none;
-  }
-  .list {
-    margin-bottom: 10px;
-  }
-`;
+// const Wrapper = styled.div`
+//   div::-webkit-scrollbar {
+//     display: none;
+//   }
+//   /* .item {
+//     width: 50%;
+//   } */
+//   .nonelist {
+//     list-style: none;
+//   }
+//   .list {
+//     margin-bottom: 10px;
+//   }
+// `;
 
 const StyledInput = styled.input`
   font-size: 1rem;
@@ -237,7 +250,8 @@ const StyledInput = styled.input`
   outline-color: #ffffff;
   width: 70%;
   display: inline;
-  background-color: #0b0b0b;
+  background-color: #3b3b3b;
+  border-radius: 0.5rem;
 
   &::-webkit-calendar-picker-indicator {
     filter: invert(1);
@@ -458,7 +472,7 @@ const ProfilePage = () => {
         <div className="item">
           <ul className="nonelist list">
             {snacksList.map((snacks) => (
-              <li>
+              <li className='listItem'>
                 <MySnacksItem key={snacks.snacksId} snacks={snacks} />
               </li>
             ))}
