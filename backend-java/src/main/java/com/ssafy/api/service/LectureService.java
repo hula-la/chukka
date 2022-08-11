@@ -27,7 +27,7 @@ public interface LectureService {
 
     // Read ============================================================================================================
     // 인기순
-    Page<LectureGetForListRes> getMostPopularLecture(Pageable pageable);
+    List<LectureGetForListRes> getMostPopularLecture(Pageable pageable);
 
     // 최신순
     Page<LectureGetForListRes> getMostLatestLectures(Pageable pageable);

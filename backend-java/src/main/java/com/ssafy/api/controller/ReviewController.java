@@ -40,7 +40,8 @@ public class ReviewController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = ReviewGetRes.class)
     })
-    public ResponseEntity<BaseResponseBody> findByLecId(int lecId) {
+    public ResponseEntity<BaseResponseBody> findByLecId(
+            @RequestBody @ApiParam(value = "강의에 달려 있는 리뷰", required = true) int lecId) {
         List<ReviewGetRes> review = reviewService.findByLecId(lecId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", review));
     }

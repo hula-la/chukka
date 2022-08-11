@@ -9,15 +9,20 @@ import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.InstructorRepository;
 import com.ssafy.db.repository.LectureRepository;
+import javassist.runtime.Desc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 유저 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -32,25 +37,25 @@ public class LectureServiceImpl implements LectureService {
 
     // 인기순
     @Override
-    public Page<LectureGetForListRes> getMostPopularLecture(Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        Page<Lecture> page = lectureRepository.getMostPopularLecture(pageRequest);
-        Page<LectureGetForListRes> dtoPage = page
-                .map(m -> LectureGetForListRes.of(
+    public List<LectureGetForListRes> getMostPopularLecture(Pageable pageable) {
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        List<Lecture> page = lectureRepository.getMostPopularLecture(pageRequest);
+        List<LectureGetForListRes> dtoPage = page.stream()
+                .map(m -> new LectureGetForListRes(
                         m.getLecThumb(),
                         m.getLecTitle(),
                         m.getLecCategory(),
                         m.getLecLevel(),
                         m.getLecGenre()
-                ));
+                )).collect(Collectors.toList());
         return dtoPage;
     }
-
+    //findAllByLecEndDateGreaterThanOrderByLecId
     // 최신순
     @Override
     public Page<LectureGetForListRes> getMostLatestLectures(Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        Page<Lecture> page = lectureRepository.getLecturesByMostLatest(pageRequest);
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("lecId").descending());
+        Page<Lecture> page = lectureRepository.findAll(pageRequest);
         Page<LectureGetForListRes> dtoPage = page
                 .map(m -> LectureGetForListRes.of(
                         m.getLecThumb(),
@@ -82,7 +87,6 @@ public class LectureServiceImpl implements LectureService {
     // 상세 페이지
     @Override
     public Optional<LectureDetailRes> getDetailLecture(int lecId) {
-        Instructor ins = lectureRepository.getInstructorByLecId(lecId);
         Optional<Lecture> lecture = lectureRepository.findById(lecId);
         if (!lecture.isPresent()) {
             return null;
@@ -95,6 +99,9 @@ public class LectureServiceImpl implements LectureService {
                         m.getLecGenre(),
                         m.getLecCategory(),
                         m.getInstructor().getInsName(),
+                        m.getInstructor().getInsEmail(),
+                        m.getInstructor().getInsIntroduce(),
+                        m.getInstructor().getInsProfile(),
                         m.getLecPrice(),
                         m.getLecContents()
                 ));

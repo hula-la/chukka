@@ -1,6 +1,7 @@
 package com.ssafy.api.response.lecture;
 
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.db.entity.Instructor;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -23,6 +24,12 @@ public class LectureDetailRes extends BaseResponseBody {
     private int lecCategory;
     @ApiModelProperty(value = "강사 이름")
     private String insName;
+    @ApiModelProperty(value = "강사 이름")
+    private String insEmail;
+    @ApiModelProperty(value = "강사 이름")
+    private String insIntroduce;
+    @ApiModelProperty(value = "강사 이름")
+    private String insProfile;
     @ApiModelProperty(value = "가격")
     private int lecPrice;
     @ApiModelProperty(value = "강의 정보")
@@ -34,6 +41,9 @@ public class LectureDetailRes extends BaseResponseBody {
                                       String lecGenre,
                                       int lecCategory,
                                       String insName,
+                                      String insEmail,
+                                      String insIntroduce,
+                                      String insProfile,
                                       int lecPrice,
                                       String lecContents){
         LectureDetailRes res = new LectureDetailRes();
@@ -43,6 +53,9 @@ public class LectureDetailRes extends BaseResponseBody {
         res.setLecGenre(lecGenre);
         res.setLecCategory(lecCategory);
         res.setInsName(insName);
+        res.setInsEmail(insEmail);
+        res.setInsIntroduce(insIntroduce);
+        res.setInsProfile(insProfile);
         res.setLecPrice(lecPrice);
         res.setLecContents(lecContents);
         return res;
