@@ -33,12 +33,19 @@ public class CartServiceImpl implements CartService{
         return cart;
     }
 
+    public Cart updateCart(Cart cart){
+        cart.setCount(cart.getCount()-1);
+        Cart updatedCart = cartRepository.save(cart);
+
+        return updatedCart;
+    }
+
     public CartItem createCartItem(Cart cart, Lecture lecture) {
 
         CartItem cartItem = new CartItem();
         cartItem.setCart(cart);
         cartItem.setLecture(lecture);
-        // cart에 add 안해도 되는지
+        // cart에 add ?
         cartItemRepository.save(cartItem);
         cart.setCount(cart.getCount() + 1);
         cartRepository.save(cart);
@@ -63,7 +70,7 @@ public class CartServiceImpl implements CartService{
             List<CartItem> cartItems = cartItemRepository.findAllByCart_Id(cart.getId());
             List<CartLecGetRes> cartLecGetRes = new ArrayList<>();
             for(CartItem item : cartItems){
-                cartLecGetRes.add(new CartLecGetRes(item.getLecture()));
+                cartLecGetRes.add(new CartLecGetRes(item.getLecture(), item.getCartItemId()));
             }
 
             return cartLecGetRes;
@@ -75,7 +82,6 @@ public class CartServiceImpl implements CartService{
     @Override
     public void deleteByCartItemId(int cartItemId) {
         cartItemRepository.deleteById(cartItemId);
-
     }
 
     @Override

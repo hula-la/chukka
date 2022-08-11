@@ -10,6 +10,7 @@ import com.ssafy.db.repository.InstructorRepository;
 import com.ssafy.db.repository.LectureRepository;
 import com.ssafy.db.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,10 +26,14 @@ public class SectionServiceImpl implements SectionService{
     LectureRepository lectureRepository;
     @Autowired
     InstructorRepository instructorRepository;
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+    @Value("${cloud.aws.region.static}")
+    private String region;
 
     // 섹션 생성
     @Override
-    public Section createSection(SectionPostReq sectionPostReq) {
+    public Section createSection(SectionPostReq sectionPostReq, boolean isFile) {
         Optional<Lecture> lec = lectureRepository.findById(sectionPostReq.getLecId());
         Optional<Instructor> ins = instructorRepository.findById(sectionPostReq.getInsId());
         if(!lec.isPresent() || !ins.isPresent()) {
@@ -39,7 +44,18 @@ public class SectionServiceImpl implements SectionService{
                     .instructor(ins.get())
                     .secTitle(sectionPostReq.getSecTitle())
                     .build();
-        return sectionRepository.save(section);
+        Section sec = sectionRepository.save(section);
+        if(isFile) {
+            Section sectionn = Section.builder()
+                    .secId(sec.getSecId())
+                    .lecture(sec.getLecture())
+                    .instructor(sec.getInstructor())
+                    .secTitle(sec.getSecTitle())
+                    .secContents("https://" + bucket + ".s3." + region + ".amazonaws.com/vid/section/contents/" + sec.getSecId())
+                    .build();
+            return sectionRepository.save(sectionn);
+        }
+        return sectionRepository.save(sec);
     }
 
     // 강의 아이디로 섹션 목록 조회
@@ -55,17 +71,19 @@ public class SectionServiceImpl implements SectionService{
 
     // 섹션 수정 (해당 강의 아이디, 강사 아이디, 섹션 아이디가 없을 때 null 반환 그 외 수정된 섹션 객체 반환)
     @Override
-    public Section updateSection(int secId, SectionPostReq sectionInfo) {
-        Optional<Lecture> lec = lectureRepository.findById(sectionInfo.getLecId());
+    public Section updateSection(int lecId, SectionUpdateReq sectionInfo) {
+        Optional<Lecture> lec = lectureRepository.findById(lecId);
         Optional<Instructor> ins = instructorRepository.findById(sectionInfo.getInsId());
         if(!lec.isPresent() || !ins.isPresent()) {
             return null;
         }
-        if(sectionRepository.findById(secId).isPresent()) {
-            Section section = Section.builder().secId(secId)
+        if(sectionRepository.findById(sectionInfo.getSecId()).isPresent()) {
+            Section section = Section.builder()
+                    .secId(sectionInfo.getSecId())
                     .lecture(lec.get())
                     .instructor(ins.get())
                     .secTitle(sectionInfo.getSecTitle())
+                    .secContents("https://" + bucket + ".s3." + region + ".amazonaws.com/vid/section/contents/" + sectionInfo.getSecId())
                     .build();
             return sectionRepository.save(section);
         }

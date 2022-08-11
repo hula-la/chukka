@@ -1,18 +1,21 @@
 package com.ssafy.db.entity;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
+
 @Data
 @Entity
-@Getter
-@Setter
+@Getter @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+
 public class Pay{
 
     @Id
@@ -28,8 +31,8 @@ public class Pay{
     private Date payDate;
 
     private int payAmount;
-    private int payMethod;
-
+    private String payMethod;
+    private String payUid;
 
     @OneToMany(mappedBy = "pay")
     private List<PayList> payLists = new ArrayList<>();

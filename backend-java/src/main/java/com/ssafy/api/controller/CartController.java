@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
+import java.util.Optional;
 
 @Api(value = "장바구니 API", tags = {"Cart"})
 @RestController
@@ -54,14 +55,15 @@ public class CartController {
         }
         CartItem findItem = cartService.findCartItem(cartPostReq.getLecId(), cart.getId());
         if(findItem == null){ // 중복되지 않았을 경우
-            Lecture lecture = lectureService.findLectureByLecId(cartPostReq.getLecId());
-            CartItem cartItem = cartService.createCartItem(cart, lecture);
-            if(cartItem == null ){ //
-                return ResponseEntity.status(403).body(BaseResponseBody.of(403, "fail", null));
+            Lecture findLecture = lectureService.findLectureByLecId(cartPostReq.getLecId());
+            if(findLecture != null){
+                CartItem cartItem = cartService.createCartItem(cart, findLecture);
+                if(cartItem != null ){
+                    return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+                }
             }
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+            return ResponseEntity.status(403).body(BaseResponseBody.of(403, "fail", null));
         }
-
         return ResponseEntity.status(400).body(BaseResponseBody.of(400, "Duplicated Item", null));
 
     }
@@ -84,10 +86,10 @@ public class CartController {
 
         Cart cart = cartService.findCartByUser(userId);
         if(cart ==null || cart.getCount()==0){
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "success", null));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
         }
         List<CartLecGetRes> lectures = cartService.findCartItemsByCartId(userId);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "success", lectures));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lectures));
 
     }
 
@@ -105,9 +107,8 @@ public class CartController {
         /* ============================================================================ */
         try{
             cartService.deleteByCartItemId(cartItemId);
-            Cart cart = cartService.findCartByUser("user1");
-            cart.setCount(cart.getCount()-1);
-            cartRepository.save(cart);
+            Cart userCart = cartService.findCartByUser("user1");
+            cartService.updateCart(userCart);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
         }catch (Exception e){
             return ResponseEntity.status(403).body(BaseResponseBody.of(403, "fail", null));

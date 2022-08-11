@@ -4,6 +4,10 @@ import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.request.user.UserRegisterPostReq;
 
 import com.ssafy.api.response.admin.UserRes;
+import com.ssafy.api.response.snacks.SnacksRes;
+import com.ssafy.api.response.user.UserMyInsLectureRes;
+import com.ssafy.api.response.user.UserMyPayRes;
+
 import com.ssafy.db.entity.User;
 
 import com.ssafy.api.response.user.UserMyLectureRes;
@@ -24,17 +28,20 @@ public interface UserService {
 	User getUserByUserId(String userId);
 	User getUserByUserNickname(String userNickname);
 	int updateUserRefreshToken(String userId, String userAccessToken);
-	User updateUser(String userId, UserModifyReq modifyInfo);
+	User updateUser(String userId, UserModifyReq modifyInfo, boolean isFile, boolean isProfile);
 	int updatePw(String userId, String userPw);
 	void sendPw(MailUtil mail) throws MessagingException;
 	List<UserMyLectureRes> getLecturesByUserId(String userId);
-	List<Snacks> getSnacksByUserId(String UserId);
-	List<Pay> getPaysByUserId(String userId);
+
+	List<SnacksRes> getSnacksByUserId(String UserId);
+	List<UserMyPayRes> getPaysByUserId(String userId);
+
 	User getUserByRefreshToken(String refreshToken);
 	int logout(String userId);
 	List<UserRes> getUsers();
 	List<UserRes> getCertainUsers(String category, String keyword);
 	boolean quit(String userId);
 	void createInstructor(String userId, int userType);
+	List<UserMyInsLectureRes> getLecturesByInstructorId(String userId);
 
 }

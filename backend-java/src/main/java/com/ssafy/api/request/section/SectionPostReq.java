@@ -19,7 +19,5 @@ public class SectionPostReq {
     String insId;
     @ApiModelProperty(name = "섹션 제목", example = "파트 1")
     String secTitle;
-    @ApiModelProperty(name = "섹션 내용", example = "솰라솰라 배워보아요~")
-    MultipartFile secContents;
 
 }

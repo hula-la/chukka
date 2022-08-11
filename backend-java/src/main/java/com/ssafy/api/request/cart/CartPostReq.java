@@ -12,4 +12,5 @@ public class CartPostReq {
     String userId;
     @ApiModelProperty(name = "강의 아이디", example = "1")
     int lecId;
+
 }

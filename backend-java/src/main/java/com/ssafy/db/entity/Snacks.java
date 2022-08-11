@@ -1,6 +1,7 @@
 package com.ssafy.db.entity;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 
@@ -28,6 +29,7 @@ public class Snacks{
     private Long snacksLikeCnt = 0L;
 
     @Temporal(TemporalType.DATE)
+    @CreatedDate
     private Date snacksRegdate;
 
     @ManyToOne(fetch = FetchType.LAZY)

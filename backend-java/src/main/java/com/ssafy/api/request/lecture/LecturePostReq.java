@@ -16,8 +16,6 @@ public class LecturePostReq {
 
     @ApiModelProperty(name = "강사 아이디", example = "instructor")
     int insId;
-    @ApiModelProperty(name = "썸네일", example = "img/thumbnail.jpg")
-    String lecThumb;
     @ApiModelProperty(name = "강의 제목", example = "aenergy (Coachella Ver.)")
     String lecTitle;
     @ApiModelProperty(name = "강의내용", example = "누구의 춤 솰라솰라")

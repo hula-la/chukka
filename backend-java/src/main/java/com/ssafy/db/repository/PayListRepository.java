@@ -13,4 +13,7 @@ public interface PayListRepository extends JpaRepository<PayList, Integer> {
 
     List<PayList> findPayListsByPay_PayId(int payId, Pageable pageable);
 
+    List<PayList> findPayListsByUserUserId(String userId);
+
+
 }
