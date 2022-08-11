@@ -35,6 +35,7 @@ export const nickCheck = async (userNickname) => {
 export const fetchPro = async (data) => {
   const userNickname = data.paramsNickname;
   const res = await client.post(`accounts/`, { userNickname });
+  console.log('프로필 정보');
   console.log(res);
   return res;
 };
@@ -58,6 +59,22 @@ export const change = async (profileInputs, profilePicture) => {
     },
   };
   const res = await client.put(`accounts/`, formData, config);
+  console.log(res);
+  return res;
+};
+
+export const snacks = async (paramsNickname, snacksPage) => {
+  const res = await client.get(`snacks/${paramsNickname}`, {
+    params: { page: snacksPage, size: 4 },
+  });
+  console.log('스낵스 목록');
+  console.log(res);
+  return res;
+};
+
+export const lecture = async () => {
+  const res = await client.get(`accounts/mylectures/`);
+  console.log('강의 목록');
   console.log(res);
   return res;
 };
