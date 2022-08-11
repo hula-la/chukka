@@ -26,6 +26,7 @@ public interface SnacksRepository extends JpaRepository<Snacks, Long> {
     @Modifying
     @Query(value = "update Snacks s set s.snacksLikeCnt = s.snacksLikeCnt - 1 where s.snacksId = :snacksId")
     int dislikeSnacks(Long snacksId);
-    Slice<Snacks> findAllBySnacksIdIn(List<Long> snacksIds, PageRequest pageRequest);
+    @Query(value = "select s from Snacks s where s.snacksId in (:snacksIds)")
+    Slice<Snacks> findAllBySnacksIdIn(List<Long> snacksIds, Pageable pageable);
 }
 

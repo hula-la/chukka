@@ -211,12 +211,13 @@ public class SnacksController {
             @ApiResponse(code = 200, message = "Success", response = String.class),
     })
     public ResponseEntity<BaseResponseBody> searchTag(
-            @ApiIgnore Authentication authentication,
+//            @ApiIgnore Authentication authentication,
             @RequestParam @ApiParam(value="검색할 태그 리스트") List<String> tags,
             @ApiParam(value="페이지 정보") Pageable pageable) {
-        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-        String loginUserId = userDetails.getUsername();
-        Slice<SnacksRes> slice = snacksService.searchTag(tags, loginUserId, pageable);
+//        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+//        String loginUserId = userDetails.getUsername();
+//        Slice<SnacksRes> slice = snacksService.searchTag(tags, loginUserId, pageable);
+        Slice<SnacksRes> slice = snacksService.searchTag(tags, "abcd", pageable);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", slice));
     }
 

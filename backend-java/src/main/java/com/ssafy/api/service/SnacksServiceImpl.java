@@ -148,6 +148,7 @@ public class SnacksServiceImpl implements SnacksService{
     // 태그 검색
     @Override
     public Slice<SnacksRes> searchTag(List<String> tags, String userId, Pageable pageable) {
+        // 조건 생성
         Specification<SnacksTag> specification = null;
         for (String tag : tags) {
             Specification<SnacksTag> tagSpecification = SnacksTagSpecification.tagContains(tag);
@@ -157,11 +158,11 @@ public class SnacksServiceImpl implements SnacksService{
                 specification = specification.or(tagSpecification);
             }
         }
+        // 위 조건으로 스낵스 아이디 리스트 검색
         List<Long> snacksIds = snacksTagRepository.findAll(specification)
                 .stream().map(s -> s.getSnacks().getSnacksId()).collect(Collectors.toList());
-
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
-        Slice<SnacksRes> snacksRes = snacksRepository.findAllBySnacksIdIn(snacksIds, pageRequest)
+        // 해당 스낵스 아이디로 스낵스 정보 검색
+        Slice<SnacksRes> snacksRes = snacksRepository.findAllBySnacksIdIn(snacksIds, pageable)
                 .map(s -> SnacksRes.of(s, snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, s.getSnacksId()).isPresent()));
         return snacksRes;
     }
