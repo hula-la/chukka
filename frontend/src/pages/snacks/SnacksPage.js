@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import SnacksItem from '../../components/snacks/SnacksItem';
+import SnacksTag from '../../components/snacks/SnacksTag';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
 import { useInView } from 'react-intersection-observer';
 import { fetchSnacks, fetchTags } from '../../features/snacks/snacksActions';
+import { changeSort } from '../../features/snacks/snacksSlice';
 
 const Wrapper = styled.div`
   div::-webkit-scrollbar {
@@ -79,6 +81,13 @@ const Wrapper = styled.div`
       margin-right: 0px;
     }
   }
+  .tag-selected {
+    z-index: 100;
+    opacity: 1;
+    background-color: #ff2c55;
+    font-weight: bold;
+    margin-right: 0px;
+  }
   .snacks {
     margin-bottom: 20px;
     width: 100%;
@@ -100,6 +109,20 @@ const SnacksPage = () => {
   //       https://videojs.com/guides/options/#html5
   // */
   // }
+  // 인기순, 최신순 정렬
+  const [sortSnacks, setSortSnacks] = useState('snacksId,DESC');
+  const [tagList, setTagList] = useState([]);
+
+  const onClickNew = () => {
+    if (sortSnacks !== 'snacksId,DESC') {
+      setSortSnacks('snacksId,DESC');
+    }
+  };
+  const onClickPop = () => {
+    if (sortSnacks !== 'snacksLikes,ASC') {
+      setSortSnacks('snacksLikes,ASC');
+    }
+  };
 
   // 무한 스크롤, 스낵스 받아오기
   const [pageNum, setPageNum] = useState(1);
@@ -111,56 +134,95 @@ const SnacksPage = () => {
   const { snacksList } = useSelector((state) => state.snacks);
   const { hasMore } = useSelector((state) => state.snacks);
 
+  const [tags, setTags] = useState([]);
+  const [isActive, setIsActive] = useState(false);
+
+  const onClickTags = (e) => {
+    setTagList((tagList) => {
+      const nextTags = tagList.map((tag) => {
+        if (tag.tag === e.target.id) {
+          return {
+            tag: tag.tag,
+            selected: !tag.selected,
+          };
+        } else return tag;
+      });
+      return nextTags;
+    });
+  };
+
   useEffect(() => {
+    // console.log(sortSnacks);
     if (snacksList.length === 0) {
-      dispatch(fetchSnacks(pageNum));
+      const newPage = pageNum;
+      dispatch(fetchSnacks({ newPage, sortSnacks, tags }));
+    } else {
+      setPageNum(() => {
+        dispatch(changeSort());
+        const newPage = 1;
+        dispatch(fetchSnacks({ newPage, sortSnacks, tags }));
+        return 1;
+      });
     }
-  }, [dispatch]);
+  }, [dispatch, sortSnacks, tags]);
 
   useEffect(() => {
     if (snacksList.length !== 0 && inView && hasMore) {
       setPageNum((page) => {
-        dispatch(fetchSnacks(page + 1));
+        const newPage = page + 1;
+        dispatch(fetchSnacks({ newPage, sortSnacks, tags }));
         return page + 1;
       });
     }
   }, [inView]);
 
+  useEffect(() => {
+    // 성목
+    // 선택된 태그 가져오기
+    const selectedTags = tagList
+      .filter((tag) => tag.selected)
+      .map((tag) => tag.tag);
+    console.log(selectedTags);
+  }, [tagList]);
+
   // 인기 태그 조회
   useEffect(() => {
     dispatch(fetchTags());
   }, [dispatch]);
-
   const { snacksPopularTags } = useSelector((state) => state.snacks);
-
+  useEffect(() => {
+    const tmp = snacksPopularTags.map((tag) => ({
+      tag,
+      selected: false,
+    }));
+    console.log(tmp);
+    setTagList(tmp);
+  }, [snacksPopularTags]);
   return (
     <Wrapper>
       <div className="sort">
-        <button className="sortButton">인기순</button>
-        <button className="sortButton">인기순</button>
-        <button className="sortButton">인기순</button>
-        <button className="sortButton">인기순</button>
+        <button onClick={onClickNew} className="sortButton">
+          최신순
+        </button>
+        <button onClick={onClickPop} className="sortButton">
+          인기순
+        </button>
       </div>
       <div className="section">
         <div className="tag">
           <p className="ttl">실시간 인기 태그</p>
           <ul className="nonelist">
-            <li className="listitem"># Hello</li>
-            <li className="listitem"># World</li>
-            <li className="listitem"># CHUKKA</li>
-            <li className="listitem"># Do</li>
-            <li className="listitem"># Your</li>
-            <li className="listitem"># Best</li>
-            <li className="listitem"># Daeyoung</li>
-            <li className="listitem"># Sujin</li>
-            <li className="listitem"># YeonYi</li>
-            <li className="listitem"># Hojun</li>
-            <li className="listitem"># Jiwon</li>
-            <li className="listitem"># Moki</li>
-            <li className="listitem"># The</li>
-            <li className="listitem"># Greatest</li>
-            <li className="listitem"># Developer</li>
-            <li className="listitem"># Ever</li>
+            {tagList.map((tag, index) => {
+              return (
+                <li
+                  className={'listitem' + (tag.selected ? ' tag-selected' : '')}
+                  key={index}
+                  onClick={onClickTags}
+                >
+                  <div id={tag.tag}># {tag.tag}</div>
+                </li>
+              );
+            })}
           </ul>
         </div>
         <div className="item">
