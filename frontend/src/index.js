@@ -5,12 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import ScrollTop from './components/ScrollTop';
 
 import store from './app/store';
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
+      <ScrollTop />
       <App />
     </BrowserRouter>
   </Provider>,

@@ -16,9 +16,9 @@ const LoginTemplateBlock = styled.div`
 
 const LoginBox = styled.div`
   .greeting {
-   font-size: 1.9rem;
-   font-weight: bold;
-   margin-bottom: 1rem;
+    font-size: 1.9rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
   }
   .welcome {
     margin-top: 0;
@@ -58,7 +58,7 @@ const LoginFormBlock = styled.div`
   & input:hover {
     border-color: #ff2c55;
   }
-  & input[type=checkbox] {
+  & input[type='checkbox'] {
     width: 1rem;
     height: 1rem;
     vertical-align: middle;
@@ -125,7 +125,7 @@ const LoginTemplate = ({ children }) => {
     <LoginTemplateBlock>
       <img src="/img/dance.png" alt="loginImg" width={600} />
       <LoginBox>
-        <p className='greeting'>WELCOME BACK!</p>
+        <p className="greeting">WELCOME BACK!</p>
         <p className="welcome">Login to your account</p>
         <hr className="line" />
         {children}
@@ -140,7 +140,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (userInfo) {
-      navigate('/');
+      navigate('/lectures');
     }
   }, [navigate, userInfo]);
 
@@ -166,21 +166,43 @@ const LoginForm = () => {
     <LoginFormBlock>
       <form onSubmit={onSubmit}>
         <div>
-          <label for="userId">아이디 <PersonIcon/></label>
-          <input id="userId" name="userId" onChange={onChange} placeholder="아이디를 입력하세요" autoComplete='off'/>
+          <label for="userId">
+            아이디 <PersonIcon />
+          </label>
+          <input
+            id="userId"
+            name="userId"
+            onChange={onChange}
+            placeholder="아이디를 입력하세요"
+            autoComplete="off"
+          />
         </div>
         <div>
-          <label for="userPw">비밀번호 <LockIcon/></label>
-          <input id="userPw" name="userPw" type="password" onChange={onChange} placeholder="비밀번호를 입력하세요"/>
+          <label for="userPw">
+            비밀번호 <LockIcon />
+          </label>
+          <input
+            id="userPw"
+            name="userPw"
+            type="password"
+            onChange={onChange}
+            placeholder="비밀번호를 입력하세요"
+          />
         </div>
-        <div className='rediv'>
-          <label for="remember" className="remember">Remember me</label>
-          <input id="remember" type="checkbox" />          
+        <div className="rediv">
+          <label for="remember" className="remember">
+            Remember me
+          </label>
+          <input id="remember" type="checkbox" />
         </div>
         <button>LOGIN</button>
-        <div className='linkdiv'>
-          <Link to="/accounts/password" className='link'>비밀번호 찾기</Link>
-          <Link to="/accounts/signup" className='link'>회원가입하기</Link>
+        <div className="linkdiv">
+          <Link to="/accounts/password" className="link">
+            비밀번호 찾기
+          </Link>
+          <Link to="/accounts/signup" className="link">
+            회원가입하기
+          </Link>
         </div>
       </form>
     </LoginFormBlock>
