@@ -11,7 +11,7 @@ public class SnacksTagSpecification {
     public static Specification<SnacksTag> tagContains(String tags) {
         return (root, query, builder) -> {
             Expression<String> tagLowerCase = builder.lower(root.get("snacksTagContent"));
-            return builder.like(tagLowerCase, "%" + tags.toLowerCase() + "%");
+            return builder.like(tagLowerCase, tags.toLowerCase());
         };
     }
 
