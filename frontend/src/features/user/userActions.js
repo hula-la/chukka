@@ -6,6 +6,8 @@ import {
   fetchPro,
   find,
   change,
+  snacks,
+  lecture,
 } from '../../api/user';
 
 export const registerUser = createAsyncThunk(
@@ -105,6 +107,38 @@ export const findPw = createAsyncThunk(
     try {
       console.log(input);
       const { data } = await find(input);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const fetchSnacks = createAsyncThunk(
+  'user/fetchSnacks',
+  async ({ paramsNickname, newPage }, { rejectWithValue }) => {
+    try {
+      const { data } = await snacks(paramsNickname, newPage);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const fetchLectures = createAsyncThunk(
+  'user/fetchlecture',
+  async (tmp, { rejectWithValue }) => {
+    try {
+      const { data } = await lecture();
       return data;
     } catch (error) {
       if (error.response && error.response.data.message) {

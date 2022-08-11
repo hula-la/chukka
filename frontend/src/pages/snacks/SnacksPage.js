@@ -165,11 +165,13 @@ const SnacksPage = () => {
         </div>
         <div className="item">
           <ul className="nonelist list">
-            {snacksList.map((snacks) => (
-              <li>
-                <SnacksItem key={snacks.snacksId} snacks={snacks} />
-              </li>
-            ))}
+            {snacksList.map((snacks) => {
+              return (
+                <li>
+                  <SnacksItem key={snacks.snacksId} snacks={snacks} />
+                </li>
+              );
+            })}
           </ul>
           <div ref={ref}>1</div>
         </div>

@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
-import { fetchProfile, changeProfile } from '../../features/user/userActions';
+import {
+  fetchProfile,
+  changeProfile,
+  fetchSnacks,
+  fetchLectures,
+} from '../../features/user/userActions';
+import MySnacksItem from '../../components/snacks/MySnacksItem';
 import defaultImage from '../../img/default.jpeg';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import EmailIcon from '@mui/icons-material/Email';
@@ -205,6 +212,22 @@ const ChangeProfileForm = styled.form`
   }
 `;
 
+// 스낵스 css
+const Wrapper = styled.div`
+  div::-webkit-scrollbar {
+    display: none;
+  }
+  .item {
+    width: 50%;
+  }
+  .nonelist {
+    list-style: none;
+  }
+  .list {
+    margin-bottom: 10px;
+  }
+`;
+
 const StyledInput = styled.input`
   font-size: 1rem;
   color: #ffffff;
@@ -295,9 +318,9 @@ const ProfilePage = () => {
   const onClickPassword = () => setpageNum('4');
 
   const onClickUpload = () => {
-    let fileInput = document.getElementById("profile");
+    let fileInput = document.getElementById('profile');
     fileInput.click();
-  }
+  };
 
   // 프로필 변경용 인풋
   const [profileInputs, setProfileInputs] = useState({
@@ -376,6 +399,34 @@ const ProfilePage = () => {
     setForce(...force);
   };
 
+  // 스낵스 목록 받아오기
+  const [snacksPage, setSnacksPage] = useState(1);
+  const [ref, inView] = useInView();
+
+  const { snacksList } = useSelector((state) => state.user);
+  const { hasMore } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (snacksList.length === 0) {
+      dispatch(fetchSnacks({ paramsNickname, snacksPage }));
+    }
+  }, [dispatch, paramsNickname]);
+
+  useEffect(() => {
+    if (snacksList.length !== 0 && inView && hasMore) {
+      setSnacksPage((page) => {
+        const newPage = page + 1;
+        dispatch(fetchSnacks({ paramsNickname, newPage }));
+        return page + 1;
+      });
+    }
+  }, [inView]);
+
+  // 나의 강의 목록 불러오기
+  useEffect(() => {
+    dispatch(fetchLectures());
+  }, [dispatch]);
+
   return (
     <ProfilePageBlock>
       <Side>
@@ -403,7 +454,18 @@ const ProfilePage = () => {
         </Menu>
         <hr className="line" style={{ marginTop: '1rem' }} />
       </Side>
-      {pageNum === '1' && <h1>MY Shorts</h1>}
+      {pageNum === '1' && (
+        <div className="item">
+          <ul className="nonelist list">
+            {snacksList.map((snacks) => (
+              <li>
+                <MySnacksItem key={snacks.snacksId} snacks={snacks} />
+              </li>
+            ))}
+          </ul>
+          <div ref={ref}>1</div>
+        </div>
+      )}
       {pageNum === '2' && (
         <LectureBox>
           <h3>수강중인 강의</h3>
@@ -427,13 +489,18 @@ const ProfilePage = () => {
       {pageNum === '3' && (
         <ChangeProfileBox>
           <Profile src={userProfile}></Profile>
-          <AddCircleIcon className='addIcon' onClick={onClickUpload}/>
+          <AddCircleIcon className="addIcon" onClick={onClickUpload} />
           <ChangeProfileForm onSubmit={onSubmitProfile}>
-            <input id="profile" type="file" onChange={onChangePicture} accept="image/*" />
-            <p className='userId'>{userProInfo.userId}</p>
-            <p className='userNickname'>{userProInfo.userNickname}</p>
-            <div className='infoDiv'>
-              <EmailIcon className='icon'/>
+            <input
+              id="profile"
+              type="file"
+              onChange={onChangePicture}
+              accept="image/*"
+            />
+            <p className="userId">{userProInfo.userId}</p>
+            <p className="userNickname">{userProInfo.userNickname}</p>
+            <div className="infoDiv">
+              <EmailIcon className="icon" />
               <StyledInput
                 name="userEmail"
                 value={profileInputs.userEmail}
@@ -441,8 +508,8 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div className='infoDiv'>
-              <LocalPhoneIcon className='icon'/>
+            <div className="infoDiv">
+              <LocalPhoneIcon className="icon" />
               <StyledInput
                 name="userPhone"
                 value={profileInputs.userPhone}
@@ -450,8 +517,8 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div className='infoDiv'>
-              <PersonIcon className='icon'/>
+            <div className="infoDiv">
+              <PersonIcon className="icon" />
               <StyledInput
                 name="userName"
                 value={profileInputs.userName}
@@ -459,8 +526,8 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div className='infoDiv'>
-              <CalendarTodayIcon className='icon'/>
+            <div className="infoDiv">
+              <CalendarTodayIcon className="icon" />
               <StyledInput
                 name="userBirth"
                 type="date"
@@ -469,14 +536,18 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div className='infoDiv flexDiv'>
+            <div className="infoDiv flexDiv">
               <div>
-                <StyledLabel for="male">남성<MaleIcon className='icon'></MaleIcon></StyledLabel>
-                <StyledInput id="male" type="radio" name="gender" value="1"/>
+                <StyledLabel for="male">
+                  남성<MaleIcon className="icon"></MaleIcon>
+                </StyledLabel>
+                <StyledInput id="male" type="radio" name="gender" value="1" />
               </div>
               <div>
-                <StyledLabel for="female">여성<FemaleIcon className='icon'></FemaleIcon></StyledLabel>
-                <StyledInput id="female" type="radio" name="gender" value="0"/>
+                <StyledLabel for="female">
+                  여성<FemaleIcon className="icon"></FemaleIcon>
+                </StyledLabel>
+                <StyledInput id="female" type="radio" name="gender" value="0" />
               </div>
             </div>
             <StyledButton>프로필 수정</StyledButton>
@@ -486,24 +557,26 @@ const ProfilePage = () => {
       {pageNum === '4' && (
         <ChangeProfileBox>
           <ChangeProfileForm>
-            <hr className='top'/>
-            <div className='msg'>
-              안전한 비밀번호로 내정보를 보호하세요<br/>
-              다른 아이디/사이트에서 사용한 적 없는 비밀번호<br/>
+            <hr className="top" />
+            <div className="msg">
+              안전한 비밀번호로 내정보를 보호하세요
+              <br />
+              다른 아이디/사이트에서 사용한 적 없는 비밀번호
+              <br />
               이전에 사용한 적 없는 비밀번호가 안전합니다.
             </div>
-            <hr className='bottom'/>
+            <hr className="bottom" />
             <div>
               <StyledLabel>현재 비밀번호</StyledLabel>
-              <StyledInput className='normal' type="password" />
+              <StyledInput className="normal" type="password" />
             </div>
             <div>
               <StyledLabel>새 비밀번호</StyledLabel>
-              <StyledInput className='normal' type="password" />
+              <StyledInput className="normal" type="password" />
             </div>
             <div>
               <StyledLabel>새 비밀번호 확인</StyledLabel>
-              <StyledInput className='normal' type="password" />
+              <StyledInput className="normal" type="password" />
             </div>
             <StyledButton>비밀번호 변경</StyledButton>
           </ChangeProfileForm>
