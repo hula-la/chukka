@@ -5,6 +5,8 @@ import {
   fetchAccessToken,
   fetchProfile,
   changeProfile,
+  fetchSnacks,
+  fetchLectures,
 } from './userActions';
 
 // initialize userToken from local storage
@@ -22,6 +24,9 @@ const initialState = {
   error: null,
   success: false,
   userProInfo: null,
+  snacksList: [],
+  hasmore: false,
+  lecture: null,
 };
 
 const userSlice = createSlice({
@@ -95,6 +100,20 @@ const userSlice = createSlice({
     [changeProfile.rejected]: (state, { payload }) => {
       state.error = payload;
       console.log(state.error);
+    },
+
+    // 스낵스 받아오기
+    [fetchSnacks.pending]: (state) => {
+      state.Loading = true;
+    },
+    [fetchSnacks.fulfilled]: (state, { payload }) => {
+      state.hasMore = payload.data.last ? false : true;
+      const newList = state.snacksList.concat(payload.data.content);
+      state.snacksList = newList;
+      state.Loading = false;
+    },
+    [fetchLectures.fulfilled]: (state, { payload }) => {
+      console.log(payload);
     },
   },
 });
