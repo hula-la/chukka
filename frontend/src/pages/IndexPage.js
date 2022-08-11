@@ -3,8 +3,9 @@ import { Link, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import "./index.css";
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import FormatQuoteSharpIcon from '@mui/icons-material/FormatQuoteSharp';
-
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const Container = styled.div`
   width:100%;
@@ -12,7 +13,6 @@ const Container = styled.div`
   grid-template-rows : 1fr 1fr 1fr;
   .btn{    
     animation: fadeInUp 2.5s;
-    margin-top : 3rem;
     position : absolute;
     width:100%;
     left : 0;
@@ -32,7 +32,9 @@ const BackGround = styled.div`
     height: 95%;
     left : 0;
   }
-  
+  .btn{    
+    margin-top : 3rem;
+  }
   video{
     width:100%; 
     height:100%;
@@ -80,6 +82,9 @@ const Introduce = styled.div`
   img{
     width : 700px;
   }
+  .btn{    
+    margin-top : 3rem;
+  }
   .title{
     font-size:80px;
     margin-bottom:80px;
@@ -104,21 +109,21 @@ const Introduce = styled.div`
 `
 
 const Service = styled.div`
-  text-align:center;
-  margin-top:80px;
-  padding : 30px;
+  text-align:center; 
+  padding : 20px 30px;
   display : grid;
-  grid-template-rows : 4fr 1fr;
-
+  grid-template-rows : 5fr 2fr;
+  width:100vw;
  
 `
 const ServiceContainer = styled.div`
+
   display : grid;
-  grid-template-columns : 1fr 1fr 1fr;
+  grid-template-columns : 1fr 1fr 1fr
+
 `
 const ServiceItem = styled.div`
   margin : 20px 10px;
-  border : 0.5px;
   .head{
     // border-style : solid;
     // border-color : white;
@@ -137,6 +142,8 @@ const ServiceItem = styled.div`
   border-style : solid;
   border-color : white;
  }
+
+}
  .title{
   font-size : 50px;
   padding: 42% 0;
@@ -161,19 +168,28 @@ const ServiceItem = styled.div`
   // opacity:1;
   display:block;
  }
-
- .container:hover .title {
-  opacity:0;
-  display:none;
-  color:red;
+ 
+ .content .link{
+  margin-top : 10%;
+  padding 10px;
+  font-size: 40px;
  }
 
- 
- 
+ .container:hover .title {
+  // opacity:0;
+  display:none;
+ }
+
 `
 
 const Join = styled.div`
-  text-align : center;
+  text-align : center; 
+  .icon{
+    animation: motionX 0.7s linear 0s infinite alternate; margin-top: 10px;
+    font-size : 50px;
+    position:absolute;
+    margin-top:0;
+  }
 `
 
 const IndexPage = () => {
@@ -192,6 +208,7 @@ const IndexPage = () => {
     const el = document.getElementById("introduce");
     el.classList.add("fadeInUp");
   }
+
   
   return (
     <Container>
@@ -229,8 +246,9 @@ const IndexPage = () => {
             <span className='higtlight'>너와 나의 연결</span>을 가치로 둡니다.
           </p>
           <div className="btn">
-              <a href="#service" >Let's Dance !</a><br/>
+              <a href="#service" >Let's Dance !<br/>
               <KeyboardDoubleArrowDownIcon className='icon'/>
+              </a>
             </div>
         </div>
       </Introduce>
@@ -243,11 +261,11 @@ const IndexPage = () => {
               Learn ?
             </div>
             <div class="container">
-              <div class="content">
+              <Link to="lectures" class="content">
                댄서의 실시간 라이브 강의와<br/>
                 녹화 강의로 춤을 배워 보세요
-                <div class="link"><Link to="lectures">Lecture</Link></div>
-              </div>
+                <div class="link">Lecture<PlayArrowIcon className="arrow-icon" /></div>
+              </Link>
               <div class="title">Lecture</div>
             </div>
           </div>
@@ -259,11 +277,11 @@ const IndexPage = () => {
               Play ?
             </div>
             <div class="container">
-              <div class="content">
+              <Link to="games" class="content">
                 게임을 통해 춤을 즐기고<br/>
                 대결을 펼쳐보세요
-                <div class="link"><Link to="games">Game</Link></div>
-              </div>
+                <div class="link">Game<PlayArrowIcon className="arrow-icon"/></div>
+              </Link>
               <div class="title">Game</div>
             </div>
           </div>
@@ -275,18 +293,23 @@ const IndexPage = () => {
               Share ?
             </div>
             <div class="container">
-              <div class="content">
+              <Link to="snack" class="content">
                 짧게 즐길 수 있는 Snacks를 통해 <br/>
                 춤을 공유하고 구경해보세요.<br/>
-                <div className='link'><Link to="snacks">Snacks</Link></div>
-              </div>
+                <div className='link'>Snacks<PlayArrowIcon className="arrow-icon"/></div>
+              </Link>
               <div class="title">Snacks</div>
             </div>
           </div>
         </ServiceItem>
         </ServiceContainer>
         <Join>
-          Join Us
+          <Link to="accounts/signup" >
+            <div className="btn">
+              Join us ! 
+              <KeyboardDoubleArrowRightIcon className='icon'/> 
+            </div>
+          </Link>
         </Join>
       </Service>
       

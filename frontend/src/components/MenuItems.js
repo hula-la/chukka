@@ -53,7 +53,7 @@ const NavItems = styled.li`
   & .nav-link {
     // font-family: 'Montserrat', sans-serif;
     font-family: 'Russo One', sans-serif; 
-    font-weight: 600;
+    // font-weight: 600;
   }
 `;
 

@@ -14,9 +14,9 @@ const NavBar = styled.div`
   margin: 0 auto;
   padding: 0 20px;
   height: 80px;
-  font-family: 'Russo One', sans-serif!importance; 
+  font-family: 'Russo One', sans-serif !important; 
   // font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
+  // font-weight: 600;
 
   & .nav-area {
   }
@@ -80,6 +80,12 @@ const Header = () => {
           </NavLink>
         ) : (
           <div>
+            <NavLink to={`/accounts/profile/${userInfo.userNickname}`}>
+              <div className="user-div">
+                {/* <img src={userInfo.userProfile} alt="" /> */}
+                <div>Hi, {userInfo.userNickname}!</div>
+              </div>
+            </NavLink>
             <NavLink to={`/accounts/profile/${userInfo.userNickname}`}>
               <div className="user-div">
                 {/* <img src={userInfo.userProfile} alt="" /> */}
