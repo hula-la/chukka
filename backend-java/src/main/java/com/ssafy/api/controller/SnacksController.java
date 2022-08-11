@@ -44,18 +44,25 @@ public class SnacksController {
      * sort : 정렬 조건, sort 파라미터 추가 가능
      **/
 
-    // 스낵스 조회 =======================================================================================================
+    // 스낵스 태그 조건 조회 =======================================================================================================
     @GetMapping("/")
-    @ApiOperation(value = "스낵스 조회", notes = "스낵스 목록을 페이징 방식으로 조회한다.")
+    @ApiOperation(value = "스낵스 태그 조건 조회 ", notes = "해당 태그를 검색하여 스낵스 목록을 페이징 방식으로 조회한다." +
+            "<br>태그는 params에 담아 문자열 리스트로 요청하며, 태그1 or 태그2 로 연산한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Success")
+            @ApiResponse(code = 200, message = "Success", response = SnacksRes.class)
     })
     public ResponseEntity<BaseResponseBody> getSnacks(
             @ApiIgnore Authentication authentication,
+            @RequestParam @ApiParam(value="검색할 태그 리스트") List<String> tags,
             @ApiParam(value="페이지 정보") Pageable pageable){
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String loginUserId = userDetails.getUsername();
-        Slice<SnacksRes> slice = snacksService.findAll(pageable, loginUserId);
+        Slice<SnacksRes> slice = null;
+        if (tags.size() == 0) {
+            slice = snacksService.findAll(pageable, loginUserId);
+        } else {
+            slice = snacksService.searchTag(tags, loginUserId, pageable);
+        }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", slice));
     }
 
@@ -201,23 +208,6 @@ public class SnacksController {
     public ResponseEntity<BaseResponseBody> getPopularTagList() {
         List<String> tags = snacksService.getPopularTags();
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", tags));
-    }
-
-    // 태그 검색 스낵스 목록 조회 ==========================================================================================
-    @GetMapping("/tag")
-    @ApiOperation(value = "태그 검색", notes = "해당 태그를 검색하여 스낵스 목록을 반환한다." +
-            "<br>태그는 params에 담아 문자열 리스트로 요청하며, 태그1 or 태그2 로 연산한다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success", response = String.class),
-    })
-    public ResponseEntity<BaseResponseBody> searchTag(
-            @ApiIgnore Authentication authentication,
-            @RequestParam @ApiParam(value="검색할 태그 리스트") List<String> tags,
-            @ApiParam(value="페이지 정보") Pageable pageable) {
-        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-        String loginUserId = userDetails.getUsername();
-        Slice<SnacksRes> slice = snacksService.searchTag(tags, loginUserId, pageable);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", slice));
     }
 
 }
