@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { fetchMusic } from './gameActions';
 
 const initialState = {
-  musicList: null,
+  musicList: [],
 };
 
 const gameSlice = createSlice({
@@ -12,6 +12,7 @@ const gameSlice = createSlice({
   extraReducers: {
     [fetchMusic.fulfilled]: (state, { payload }) => {
       console.log(payload);
+      state.musicList = payload.data;
     },
   },
 });
