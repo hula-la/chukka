@@ -1,6 +1,7 @@
 package com.ssafy.db.repository;
 
 
+import com.ssafy.api.response.lecture.LectureGetForYouRes;
 import com.ssafy.api.response.lecture.LectureNoticeRes;
 import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
@@ -38,7 +39,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
             "where e.lecture.lecId = lec.lecId and e.user.userGender = :userGender " +
             "group by e.lecture.lecId " +
             "order by count(e.enrollId) desc")
-    Page<Lecture> getMostPopularLectureByYourBirthAndGender(String userGender, Pageable pageable);
+    List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, Pageable pageable);
 
     // 공지사항 수정
     @Modifying(clearAutomatically = true)
