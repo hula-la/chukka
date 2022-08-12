@@ -20,6 +20,8 @@ public class UserMyLectureRes{
 	String lecThumb;
 	@ApiModelProperty(name="강의명", example="Introduction of Advanced Dance")
 	String lecTitle;
+	@ApiModelProperty(name="강의 유형", example="1")
+	int lecCategory;
 	@ApiModelProperty(name="강사이름", example="Kim")
 	String instructor;
 	
@@ -28,6 +30,7 @@ public class UserMyLectureRes{
 		res.setLecId(lecture.getLecId());
 		res.setLecThumb(lecture.getLecThumb());
 		res.setLecTitle(lecture.getLecTitle());
+		res.setLecCategory(lecture.getLecCategory());
 		res.setInstructor(lecture.getInstructor().getInsName());
 		return res;
 	}
