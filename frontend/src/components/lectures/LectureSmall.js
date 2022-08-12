@@ -47,11 +47,15 @@ const BadgeDiv = styled.div`
   }
 `;
 
-const LectureSmall = ({ props }) => {
+const LectureSmall = ({ props, noBadge, classOpen }) => {
   const navigate = useNavigate();
   const { lecId, lecTitle, lecThumb, lecLevel, lecGenre, lecCategory } = props;
   const onClickHandler = () => {
-    navigate(`/Lectures/${lecId}`);
+    if (!classOpen) {
+      navigate(`/lectures/${lecId}`);
+    } else {
+      navigate(`/lectures/class/${lecId}`);
+    }
   };
   return (
     <Wrapper>
@@ -61,11 +65,13 @@ const LectureSmall = ({ props }) => {
           <h1>{lecTitle}</h1>
         </div>
       </Thumbnail>
-      <BadgeDiv>
-        <LevelBadge level={lecLevel} />
-        <CategoryBadge category={lecGenre} />
-        <CategoryBadge category={lecCategory} />
-      </BadgeDiv>
+      {!noBadge && (
+        <BadgeDiv>
+          <LevelBadge level={lecLevel} />
+          <CategoryBadge category={lecGenre} />
+          <CategoryBadge category={lecCategory} />
+        </BadgeDiv>
+      )}
     </Wrapper>
   );
 };
