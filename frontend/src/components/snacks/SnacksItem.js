@@ -3,6 +3,8 @@ import vid from './bird.mp4';
 import image from './profile.png';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {
@@ -13,9 +15,9 @@ import {
 
 const Wrapper = styled.div`
   #my-video {
-    width: 80%;
-    height: 600px;
+    max-height: 600px;
     margin-bottom: 20px;
+    overflow: hidden;
   }
   .account {
     margin-bottom: 10px;
@@ -43,8 +45,64 @@ const Wrapper = styled.div`
     cursor: pointer;
   }
   .pink {
-    color: #ff2c55;
+    fill: #ff2c55;
+  }
+  .icon {
+    width: 2rem;
+    height: 2rem;
     cursor: pointer;
+  }
+  .snacks-info {
+    position: relative;
+    bottom: 3rem;
+    text-shadow: gray 0.1rem 0.1rem;
+    font-size: 1rem;
+  }
+  .snacks-ttl {
+    padding: 0rem 1rem;
+  }
+  .video {
+    display: flex;
+    flex-direction: row;
+  }
+  .side-btns {
+    position: relative;
+    top: 510px;
+    right: 3rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .reply {
+    margin-top: 0.5rem;
+  }
+  .reply-container {
+    position: absolute;
+    bottom: -3px;
+    background-color: rgb(255, 255, 255, 0.8);
+    width: 100%;
+    height: 500px;
+  }
+  .reply-form {
+    position: absolute;
+    left: 0.5rem;
+    bottom: 0.5rem;
+  }
+  .reply-form > input {
+    border: none;
+    height: 2rem;
+    width: 220px;
+    padding: 0.5rem 0.5rem;
+    color: black;
+  }
+  .reply-upload-btn {
+    margin-left: 0.7rem;
+    vertical-align: middle;
+    cursor: pointer;
+    fill: gray;
+    transition: 300ms;
+    :hover {
+      fill: #ff2c55;
+    }
   }
 `;
 
@@ -83,6 +141,7 @@ const SnacksItem = ({ snacks }) => {
 
   const onClickLike = () => {
     console.log(snacksLike);
+    // document.getElementById('my-video').play();
     setSnacksLike((isLike) => {
       return !isLike;
     });
@@ -101,28 +160,43 @@ const SnacksItem = ({ snacks }) => {
         <span className="tagitem"># TAG3</span>
         <span className="tagitem"># TAG4</span>
       </div>
-      <video
-        id="my-video"
-        // className="video-js vjs-theme-fantasy"
-        controls
-        preload="auto"
-      >
-        <source src={vid} type="video/mp4" />
-      </video>
-      {!snacksLike && (
-        <ThumbUpOffAltIcon onClick={onClickLike} className="pink" />
-      )}
-      {snacksLike && <ThumbUpAltIcon onClick={onClickLike} className="pink" />}
-      <button onClick={onClickReply}>댓글</button>
-      {isReply && (
+      <div className='video'>
         <div>
-          <h3>comment</h3>
-          <form onSubmit={onSubmitRelpy}>
-            <input onChange={onChangeReply} />
-            <button>댓글 작성</button>
-          </form>
+          <video
+            id="my-video"
+            // className="video-js vjs-theme-fantasy"
+            // controls
+            preload="auto"
+          >
+            <source src={vid} type="video/mp4" />
+          </video>
+          <div className='snacks-info'>
+            <span className='snacks-ttl'>스낵스 제목</span>
+            {isReply && (
+              <div className='reply-container'>
+                <div className='reply-list'>여기에 댓글 데이터 리스트 넣기 스크롤 돼야 함</div>
+                <form onSubmit={onSubmitRelpy} className='reply-form'>
+                  <input onChange={onChangeReply} className='reply-input' placeholder='댓글을 입력하세요'/>
+                  <EditOutlinedIcon className='reply-upload-btn'/>
+                </form>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+        <div className='side-btns'>
+          {!snacksLike && (
+              <ThumbUpOffAltIcon onClick={onClickLike} className="icon" />
+          )}
+          {snacksLike && <ThumbUpAltIcon onClick={onClickLike} className="pink icon" />}
+          {!isReply && (
+            <ModeCommentOutlinedIcon onClick={onClickReply} className="reply icon" />
+          )}
+          {isReply && (
+            <ModeCommentOutlinedIcon onClick={onClickReply} className="reply pink icon" />
+          )}
+          
+        </div>
+      </div>
     </Wrapper>
   );
 };
