@@ -27,6 +27,4 @@ public class Game {
 
     private int level;
 
-    private String thumbnailUrl;
-
 }
