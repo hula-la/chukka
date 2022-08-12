@@ -33,7 +33,7 @@ public class EnrollServiceImpl implements EnrollService {
             Date birth = user.getUserBirth();
             LocalDateTime today = LocalDateTime.now();
             int userYear = Integer.parseInt(birth.toString().substring(0,4));
-            int ageGroup = (today.getYear() - userYear  + 1) / 10 ;
+            int ageGroup = ((today.getYear() - userYear  + 1) / 10 )*10;
             System.out.println(ageGroup);
             for (int i = 0; i < lecIds.size(); i++) {
                 System.out.println(i);
