@@ -29,7 +29,7 @@ public class EnrollServiceImpl implements EnrollService {
         Optional<User> user = userRepository.findByUserId(userId);
         Date birth = user.get().getUserBirth();
         int ageGroup = Integer.parseInt(birth.toString());
-        if(user != null){
+        if(user.isPresent()){
             for (int i = 0; i < lecIds.size(); i++) {
                 Lecture lecture = lectureRepository.findLectureByLecId(lecIds.get(i));
                 Enroll enroll = Enroll.builder()
@@ -42,5 +42,14 @@ public class EnrollServiceImpl implements EnrollService {
             }
         }
     }
+    @Override
+    public boolean findByLecId(int ledId) {
+        Optional<Enroll> enroll = enrollRepository.findByLecture_LecId(ledId);
+        if(enroll.isPresent()){ // 수강 중임
+            return true;
+        }
+        return false;
+    }
+
 }
 

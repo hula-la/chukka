@@ -4,6 +4,7 @@ import com.ssafy.api.response.cart.CartLecGetRes;
 import com.ssafy.api.request.cart.CartPostReq;
 
 import com.ssafy.api.service.CartService;
+import com.ssafy.api.service.EnrollService;
 import com.ssafy.api.service.LectureService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -32,6 +33,9 @@ public class CartController {
     LectureService lectureService;
     @Autowired
     UserService userService;
+    @Autowired
+    EnrollService enrollService;
+
 
 
     // 장바구니 추가 ========================================================================================================
@@ -50,22 +54,31 @@ public class CartController {
         /* ============================================================================ */
         Cart cart = cartService.findCartByUser(cartPostReq.getUserId());
         User user = userService.getUserByUserId(cartPostReq.getUserId());
-        if(cart == null){
+
+        System.out.println(user.getUserId());
+        String msg = "";
+        if(cart == null){ // 장바구니에 처음 담을 경우 cart 생성
             cart = cartService.createCart(user);
         }
+        // 장바구니에 담겨있는지 확인
         CartItem findItem = cartService.findCartItem(cartPostReq.getLecId(), cart.getId());
-        if(findItem == null){ // 중복되지 않았을 경우
-            Lecture findLecture = lectureService.findLectureByLecId(cartPostReq.getLecId());
-            if(findLecture != null){
-                CartItem cartItem = cartService.createCartItem(cart, findLecture);
-                if(cartItem != null ){
-                    return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+        if(findItem != null) {
+            msg = "이미 장바구니에 담긴 강의 입니다.";
+        }else {
+            boolean isEnroll = enrollService.findByLecId(cartPostReq.getLecId());
+            if (isEnroll) msg = "이미 수강 중인 강의입니다.";
+            else {
+                Lecture findLecture = lectureService.findLectureByLecId(cartPostReq.getLecId());
+                if (findLecture == null) msg = "다시 시도해주시기 바랍니다.";
+                else {
+                    CartItem cartItem = cartService.createCartItem(cart, findLecture);
+                    if (cartItem != null) {
+                        msg = "장바구니에 담겼습니다.";
+                    }
                 }
             }
-            return ResponseEntity.status(403).body(BaseResponseBody.of(403, "fail", null));
         }
-        return ResponseEntity.status(400).body(BaseResponseBody.of(400, "Duplicated Item", null));
-
+        return ResponseEntity.status(400).body(BaseResponseBody.of(200, msg, null));
     }
 
     // 장바구니 목록 ========================================================================================================
