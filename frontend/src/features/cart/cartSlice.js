@@ -14,7 +14,9 @@ const cartSlice = createSlice({
   extraReducers: {
     // 프로필 불러오기
     [fetchUser.fulfilled]: (state, { payload }) => {
+      
       state.userProfile = payload.data;
+      console.log(state.userProfile);
     },
   },
 });
