@@ -1,4 +1,3 @@
-import { style } from '@mui/system';
 import React, { useState, useEffect } from 'react';
 import {useLocation} from "react-router-dom";
 import {Link} from 'react-router-dom';
@@ -7,10 +6,6 @@ import Button from '../../components/Button';
 import {LectureInfoSimple} from '../../components/carts/LectureInfoSimple';
 import {deleteCartItem} from '../../api/cart'
 import { enrollLecture } from '../../api/pay';
-
-// 장바구니 목록에서 삭제, 수강 목록에 추가 후,
-// 결제 확인 페이지
-// 마이페이지 수강 목록으로 이동
 
 const Wrapper = styled.div`
   width:90%;
@@ -63,9 +58,9 @@ const PayCompelete = () => {
   const {state} = useLocation();
   
 
-  useState( async() =>{
+  useEffect( () =>{
     // 장바구니에서 삭제
-    await state.list.forEach(element => {
+    state.list.forEach(element => {
       deleteCartItem(element.cartItemId)
       .then((res)=>{
         console.log("삭제 완료");
@@ -78,7 +73,7 @@ const PayCompelete = () => {
 
     const data = {
       lecIds : state.list.map(ele=> ele.lecId),
-      userId : state.userId,
+      userId : state.user.userId,
     }
     // 수강 등록
     console.log(data);
@@ -91,9 +86,8 @@ const PayCompelete = () => {
     })
   },[])
 
-
   return (
-    (delDone && addDone ? 
+    (true && true ? 
     <Wrapper>
       <Content>
           <h2>결제가 완료되었습니다.</h2>
@@ -112,8 +106,8 @@ const PayCompelete = () => {
         </Content>
 
         <Buttons>
-          <Link to="/"><Button content="메인" /></Link>
-          <Link to="/"><Button content="마이페이지" /></Link>
+          <Link to="/lectures"><Button content="강의 더보기" /></Link>
+          <Link to={`/accounts/profile/${state.user.userNickname}`}><Button content="내 수강목록" /></Link>
         </Buttons>
     </Wrapper>
     :<div></div>)

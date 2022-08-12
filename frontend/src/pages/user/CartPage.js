@@ -97,22 +97,19 @@ const CartPage = () => {
   const [checkedItems, setCheckedItems] = useState([]); // 선택된 lecture 객체 저장
   const [checkedIds, setCheckedIds] = useState([]); // 체크 표시를 위해 선택된 객체의 id값만 저장
   const [totalPrice, setTotalPrice] = useState(0);
-  // const [userInfo, setUserInfo] = useState({});
+  // const [user, setUser] = useState({});
 
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state) => state.user);
+  const { userProfile } = useSelector((state) => state.cart);
 
   useEffect(() => {
     const currentUser = userInfo.userNickname;
     console.log(currentUser);
     dispatch(fetchUser(currentUser));
-  }, []);
 
-  const { userProfile } = useSelector((state) => state.cart);
-
-  useEffect(() => {
-    getCartList('user1').then((data) => {
+    getCartList(userInfo.userId).then((data) => {
       if (data.data) {
         setLectures(...lectures, data.data);
 
@@ -123,15 +120,18 @@ const CartPage = () => {
           data.data.map((item) => item.cartItemId),
         );
         /* 사용자 정보 불러오기 */
-        // setUserInfo({
-        //   user_id: 'user1',
-        //   buyer_email: 'lye0626@gmail.com',
-        //   buyer_name: '홍길동',
-        //   buyer_tel: '010-4242-4242',
+
+        // setUser({
+        //   user_id: userProfile.userId,
+        //   buyer_email: userProfile.userEmail,
+        //   buyer_name: userProfile.userName,
+        //   buyer_tel: userProfile.userPhone,
         // });
       }
     });
+
   }, []);
+
 
   useEffect(() => {
     setTotalPrice(() => calcPrice());
@@ -209,7 +209,7 @@ const CartPage = () => {
           <span className="span-left">총 결제 금액</span>
           <span className="span-right">{totalPrice}</span>
           <RequestPay
-            user={userInfo}
+            user={userProfile}
             price={totalPrice}
             payList={checkedItems}
           />

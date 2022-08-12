@@ -10,6 +10,8 @@ import SignUpPage from './pages/user/SignUpPage';
 import ProfilePage from './pages/user/ProfilePage';
 import FindPwPage from './pages/user/FindPwPage';
 import CartPage from './pages/user/CartPage';
+import PayConfrim from './pages/user/PayConfirmPage';
+
 // lectures
 import LecturesPage from './pages/lecture/LecturesPage';
 import LivePage from './pages/lecture/LivePage';
@@ -42,6 +44,7 @@ const App = () => {
           <Route path="password" element={<FindPwPage />} />
           <Route path="profile/:nickname" element={<ProfilePage />} />
           <Route path="cart" element={<CartPage />} />
+          <Route path="pay" element={<PayConfrim/>}/>
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
