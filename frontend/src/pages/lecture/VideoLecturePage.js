@@ -7,6 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import CloseIcon from '@mui/icons-material/Close';
 import Webcam from 'react-webcam';
 
 const Wrapper = styled.div`
@@ -19,23 +20,33 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 80px;
+    height: 5rem;
+    /* border-bottom: 0.1rem solid #ff2c55; */
   }
   & .video-lecture-left-div {
     display: flex;
     align-items: center;
-    margin-left: 10px;
+    margin-left: 1rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: 300ms;
+    :hover {
+      opacity: 1;
+      /* border-bottom-color: #ff2c55; */
+      /* background-color: #ff2c55; */
+    }
   }
   & .video-lecture-exit {
-    cursor: pointer;
-    margin-right: 10px;
-    font-size: 50px;
+    margin-right: 1rem;
+    font-size: 3rem;
   }
-
+  & .title {
+    text-align: center;
+  }
   & .video-lecture-btn-div {
     display: flex;
     align-items: center;
-    margin-right: 10px;
+    margin-right: 1rem;
   }
   & .btn-video-toggle {
     display: flex;
@@ -43,20 +54,28 @@ const Wrapper = styled.div`
     align-items: center;
     background: transparent;
     box-sizing: border-box;
-    border: 1px solid white;
-    border-radius: 50px;
+    /* border: 1px solid white; */
+    background-color: rgb(255, 44, 85, 1);
+    border-radius: 3rem;
     color: white;
-    width: 205px;
-    height: 50px;
+    width: 8rem;
+    height: 3rem;
     font-size: 1.5rem;
     cursor: pointer;
+    transition: 300ms;
+    opacity: 0.8;
+    ::after {
+      content: " ON";
+    }
   }
   & .btn-video-toggle:hover {
-    background: rgba(127, 127, 127, 0.5);
+    opacity: 1;
   }
   & .btn-video-off {
-    border: 1px solid red;
-    color: red !important;
+    background-color: rgb(255, 255, 255, 0.3);
+    ::after {
+      content: " OFF";
+    }
   }
   & .video-lecture-icon {
     margin-right: 8px;
@@ -68,6 +87,14 @@ const Wrapper = styled.div`
     font-size: 50px;
     margin-left: 10px;
     cursor: pointer;
+  }
+
+  .hr {
+    height: 0.2rem;
+    background-color: #ff2c55;
+    border: none;
+    margin: 0 1rem 2rem;
+    opacity: 0.5;
   }
 
   // Sidebar
@@ -94,9 +121,12 @@ const Wrapper = styled.div`
     margin-bottom: 15px;
     width: 370px;
   }
+  .sidebar-title {
+    font-size: 3rem;
+  }
 
   .sidebar-body {
-    margin-left: 30px;
+    padding: 3rem 3rem;
   }
 
   .sb-close {
@@ -128,6 +158,9 @@ const Wrapper = styled.div`
     font-size: 36px;
     margin-left: 50px;
   }
+  .sidebar .closeicon {
+    width: 3rem;
+  }
 
   .openbtn {
     font-size: 20px;
@@ -143,7 +176,8 @@ const Wrapper = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 0px 20px;
-    height: 80%;
+    margin: 0 auto;
+    height: 75vh;
   }
   /* & video {
     border: 3px solid white;
@@ -155,7 +189,7 @@ const Wrapper = styled.div`
     overflow: hidden;
   }
   & .lecture-video-container video {
-    width: 100%;
+    max-width: 100%;
   }
   & .user-video-container {
     margin-left: 10px;
@@ -167,7 +201,8 @@ const Wrapper = styled.div`
     bottom: 0;
   }
   & .video-off {
-    visibility: hidden;
+    display: none;
+    /* visibility: hidden; */
   }
 
   // footer
@@ -182,13 +217,22 @@ const Wrapper = styled.div`
     bottom: 0;
     width: 100%;
     height: 80px;
-    font-size: 24px;
+    font-size: 1.3rem;
     & div {
       cursor: pointer;
       display: flex;
       align-items: center;
+
       & span {
         margin: 0px 10px;
+        opacity: 0.5;
+        transition: 100ms;
+        :hover {
+          opacity: 0.8;
+          color: #ff2c55;
+          font-weight: bold;
+          font-size: 1.6rem;
+      }
       }
     }
   }
@@ -200,6 +244,12 @@ const SectionLecture = ({ section, index }) => {
     width: 300px;
     display: block;
     color: white;
+    opacity: 0.7;
+    border-bottom: #ff2c55 0.1rem solid;
+    cursor: pointer;
+    :hover {
+      opacity: 1;
+    }
     & .side-section-header {
       display: flex;
       align-items: flex-end;
@@ -207,14 +257,23 @@ const SectionLecture = ({ section, index }) => {
       margin-bottom: 20px;
     }
     & .side-section-title {
-      font-size: 30px;
+      font-size: 1.5rem;
       display: block;
     }
     & .side-section-playtime {
-      font-size: 18px;
+      font-size: 1rem;
+      line-height: 1.5;
+      /* color: #ff2c55; */
+      /* opacity: 0.7; */
+      color: rgb(255, 44, 85, 0.7);
+      /* :hover { */
+        /* color: rgb() */
+        /* opacity: 1; */
+        /* cursor: pointer; */
+      }
     }
-    min-height: 120px;
-    margin-bottom: 12px;
+    min-height: 6rem;
+    margin-bottom: 2rem;
   `;
 
   const { secTitle, secContent, secPlayTime } = section;
@@ -265,19 +324,18 @@ const VideoLecturePage = () => {
     <Wrapper>
       {/* header */}
       <div className="video-lecture-header">
-        <div className="video-lecture-left-div">
+        <div className="video-lecture-left-div" onClick={() => navigate('/lectures')}>
           <ExitToAppIcon
             className="video-lecture-exit"
-            onClick={() => navigate('/lectures')}
           />
-          <h1>강의영상</h1>
+          <h3>강의로 돌아가기</h3>
         </div>
+        <h1 className='title'>1. 춤의 기본-1</h1>
         <div className="video-lecture-btn-div">
           {/* Cam On/Off Button */}
           {isVideo && (
             <button className="btn-video-toggle" onClick={onClickHandler}>
               <VideocamIcon className="video-lecture-icon" />
-              <span>내 화면</span>
             </button>
           )}
 
@@ -287,7 +345,6 @@ const VideoLecturePage = () => {
               onClick={onClickHandler}
             >
               <VideocamOffIcon className="video-lecture-icon video-off-icon" />
-              <span>내 화면</span>
             </button>
           )}
           {/* SideBar Button */}
@@ -297,13 +354,14 @@ const VideoLecturePage = () => {
           />
         </div>
       </div>
+      <hr className='hr'/>
       {/* sidebar */}
       <div
         id="mySidebar"
         className={isSideBarOpen ? 'sidebar sb-open' : 'sidebar sb-close'}
       >
         <div className="sidebar-header">
-          <h1>강의 목록</h1>
+          <h1 className='sidebar-title'>챕터</h1>
           <a
             href=""
             class="closebtn"
@@ -312,7 +370,7 @@ const VideoLecturePage = () => {
               setIsSideBarOpen(false);
             }}
           >
-            ×
+            <CloseIcon class="closeicon" style={{fill: '#ff2c55'}}/>
           </a>
         </div>
         <div className="sidebar-body">
