@@ -56,12 +56,12 @@ const Header = () => {
       ],
     },
     {
-      title: 'Snacks',
-      url: '/snacks',
-    },
-    {
       title: 'Games',
       url: '/games',
+    },
+    {
+      title: 'Snacks',
+      url: '/snacks',
     },
   ];
   return (
