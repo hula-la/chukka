@@ -5,8 +5,11 @@ import com.ssafy.api.request.lecture.*;
 import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
+import com.ssafy.api.response.lecture.LectureGetForYouRes;
+import com.ssafy.db.entity.Enroll;
 import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
+import com.ssafy.db.repository.EnrollRepository;
 import com.ssafy.db.repository.InstructorRepository;
 import com.ssafy.db.repository.LectureRepository;
 import javassist.runtime.Desc;
@@ -35,6 +38,10 @@ public class LectureServiceImpl implements LectureService {
 
     @Autowired
     InstructorRepository instructorRepository;
+
+    @Autowired
+    EnrollRepository enrollRepository;
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.region.static}")
@@ -56,7 +63,7 @@ public class LectureServiceImpl implements LectureService {
                 )).collect(Collectors.toList());
         return dtoPage;
     }
-    //findAllByLecEndDateGreaterThanOrderByLecId
+
     // 최신순
     @Override
     public Page<LectureGetForListRes> getMostLatestLectures(Pageable pageable) {
@@ -72,7 +79,14 @@ public class LectureServiceImpl implements LectureService {
                         m.getLecGenre()
                 ));
         return dtoPage;
+    }
 
+    // 인기순
+    @Override
+    public List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, Pageable pageable) {
+        PageRequest pageRequest = PageRequest.of(0, 2);
+        List<LectureGetForYouRes> enroll = lectureRepository.getLectureByYourBirthAndGender(userGender, pageRequest);
+        return enroll;
     }
 
     // 전부다
