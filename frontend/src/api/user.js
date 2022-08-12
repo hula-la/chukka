@@ -42,7 +42,7 @@ export const find = async (data) => {
 
 export const change = async (profileInputs, profilePicture) => {
   const formData = new FormData();
-
+  console.log(profileInputs);
   formData.append('file', profilePicture);
   formData.append(
     'modifyInfo',

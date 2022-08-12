@@ -1,5 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { fsnacks, fTags, freply, creply, like, detail } from '../../api/snacks';
+import {
+  fsnacks,
+  fTags,
+  freply,
+  creply,
+  like,
+  detail,
+  upload,
+} from '../../api/snacks';
 
 export const fetchSnacks = createAsyncThunk(
   'snacks/fetchSnacks',
@@ -89,6 +97,21 @@ export const fetchDetail = createAsyncThunk(
     try {
       const { data } = await detail(snacksId);
       return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const uploadSnacks = createAsyncThunk(
+  'snacks/upload',
+  async ({ uploadInputs, video }, { rejectWithValue }) => {
+    try {
+      await upload(uploadInputs, video);
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);

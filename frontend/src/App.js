@@ -16,14 +16,16 @@ import LivePage from './pages/lecture/LivePage';
 import VideoLecturePage from './pages/lecture/VideoLecturePage';
 // snacks
 import SnacksPage from './pages/snacks/SnacksPage';
+import DetailSnacksPage from './pages/snacks/DetailSnacksPage';
+import UploadPage from './pages/snacks/UploadPage';
 // games
+import MainPage from './pages/game/MainPage';
 import GamesPage from './pages/game/GamesPage';
 // admin
 import AdminPage from './pages/admin/AdminPage';
 // notfount
 import NotFound from './pages/NotFound';
 import LectureDetailpage from './pages/lecture/LectureDetailpage';
-import DetailSnacksPage from './pages/snacks/DetailSnacksPage';
 
 const App = () => {
   return (
@@ -31,7 +33,7 @@ const App = () => {
       <Routes>
         {/* Index */}
         {/* <Route path="" element={<Layout />}> */}
-          <Route path="" element={<IndexPage />} />
+        <Route path="" element={<IndexPage />} />
         {/* </Route> */}
         {/* accounts */}
         <Route path="accounts" element={<Layout />}>
@@ -54,10 +56,12 @@ const App = () => {
         <Route path="snacks/" element={<Layout />}>
           <Route path="" element={<SnacksPage />} />
           <Route path=":snacksId" element={<DetailSnacksPage />} />
+          <Route path="upload" element={<UploadPage />} />
         </Route>
         {/* games */}
         <Route path="games" element={<Layout />}>
-          <Route path="" element={<GamesPage />} />
+          <Route path="" element={<MainPage />} />
+          <Route path="game" element={<GamesPage />} />
         </Route>
         {/* admin */}
         <Route path="admin" element={<Layout />}>

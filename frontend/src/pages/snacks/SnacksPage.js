@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import SnacksItem from '../../components/snacks/SnacksItem';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import SnacksItem from '../../components/snacks/SnacksItem';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
 import { useInView } from 'react-intersection-observer';
 import { fetchSnacks, fetchTags } from '../../features/snacks/snacksActions';
@@ -97,7 +98,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const SnacksPage = () => {
+const SnacksPage = ({ history }) => {
   // 여기에 코드 적자
   // {
   //   /*
@@ -133,7 +134,6 @@ const SnacksPage = () => {
 
   const { snacksList } = useSelector((state) => state.snacks);
   const { hasMore } = useSelector((state) => state.snacks);
-  const { isLoading } = useSelector((state) => state.snacks);
 
   const onClickTags = (e) => {
     setTagList((tagList) => {
@@ -245,7 +245,9 @@ const SnacksPage = () => {
           </ul>
           <div ref={ref}>1</div>
         </div>
-        <button>업로드 하기</button>
+        <Link to="upload">
+          <button>업로드 하기</button>
+        </Link>
       </div>
     </Wrapper>
   );

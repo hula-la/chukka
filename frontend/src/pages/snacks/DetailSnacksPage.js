@@ -7,10 +7,12 @@ const DetailSnacksPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
 
-  const { snacksDetail } = useSelector((state) => state.snacks);
   useEffect(() => {
     dispatch(fetchDetail(params.snacksId));
   }, [dispatch]);
+
+  const { snacksDetail } = useSelector((state) => state.snacks);
+
   return (
     <div>
       <div>userNickname : {snacksDetail.userNickname}</div>

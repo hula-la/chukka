@@ -34,3 +34,20 @@ export const detail = async (snacksId) => {
   const res = await client.get(`snacks/detail/${snacksId}`);
   return res;
 };
+
+export const upload = async (snacksInfo, file) => {
+  const formData = new FormData();
+  console.log(snacksInfo);
+  formData.append('file', file);
+  formData.append(
+    'snacksInfo',
+    new Blob([JSON.stringify(snacksInfo)], { type: 'application/json' }),
+  );
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  };
+  const res = await client.post(`snacks/upload`, formData, config);
+  return res;
+};
