@@ -29,7 +29,10 @@ import LectureDetailpage from './pages/lecture/LectureDetailpage';
 
 const App = () => {
   return (
-    <div className="App">
+    <div
+      className="App"
+      // onContextMenu={(e) => e.preventDefault()}
+    >
       <Routes>
         {/* Index */}
         {/* <Route path="" element={<Layout />}> */}

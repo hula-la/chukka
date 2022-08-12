@@ -18,6 +18,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
+import LectureSmall from '../../components/lectures/LectureSmall';
 
 // 페이지 블락
 const ProfilePageBlock = styled.div`
@@ -77,61 +78,6 @@ const SideBarButton = styled.button`
     font-weight: bold;
     border-bottom: #ff2c55 0.05rem solid;
     opacity: 1;
-  }
-`;
-
-// 나의 강의 목록
-const LectureBox = styled.div`
-  & h3 {
-    margin-bottom: 0.5rem;
-  }
-`;
-
-const RecordLectureBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 200px;
-  & p {
-    margin-left: 0.5rem;
-    font-size: small;
-    color: #ff2c55;
-  }
-  & img {
-    height: 160px;
-    width: 200px;
-    margin-top: 10px;
-  }
-`;
-
-const LiveLectureBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 200px;
-  & p {
-    margin-left: 0.5rem;
-    font-size: small;
-    color: #ff2c55;
-  }
-  & img {
-    height: 160px;
-    width: 200px;
-    margin-top: 10px;
-  }
-`;
-
-const FinishLectureBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 200px;
-  & p {
-    margin-left: 0.5rem;
-    font-size: small;
-    color: #ff2c55;
-  }
-  & img {
-    height: 160px;
-    width: 200px;
-    margin-top: 10px;
   }
 `;
 
@@ -278,11 +224,104 @@ const StyledButton = styled.button`
   }
 `;
 
+// 나의 강의 목록
+const LectureBox = ({ myLectures }) => {
+  const Wrapper = styled.div`
+    & h3 {
+      margin-bottom: 0.5rem;
+    }
+  `;
+
+  const LectureBox = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 20px;
+    column-gap: 20px;
+    min-height: 200px;
+    /* width: 100%; */
+    & p {
+      margin-left: 0.5rem;
+      font-size: small;
+      color: #ff2c55;
+    }
+    /* & img {
+      height: 160px;
+      width: 200px;
+      margin-top: 10px;
+    } */
+  `;
+
+  const LiveLectureBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    & p {
+      margin-left: 0.5rem;
+      font-size: small;
+      color: #ff2c55;
+    }
+    & img {
+      height: 160px;
+      width: 200px;
+      margin-top: 10px;
+    }
+  `;
+
+  const FinishLectureBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    & p {
+      margin-left: 0.5rem;
+      font-size: small;
+      color: #ff2c55;
+    }
+    & img {
+      height: 160px;
+      width: 200px;
+      margin-top: 10px;
+    }
+  `;
+
+  return (
+    <Wrapper>
+      <h3>수강중인 강의</h3>
+      <div className="lecture-header">녹화 강의</div>
+      <LectureBox>
+        {/* <LectureSmall /> */}
+        {myLectures
+          .filter((lecture) => lecture.lecCategory)
+          .map((lecture, index) => (
+            <LectureSmall props={lecture} noBadge classOpen />
+          ))}
+      </LectureBox>
+      <div className="lecture-header">실시간 강의</div>
+      <LectureBox>
+        {/* <LectureSmall /> */}
+        {myLectures
+          .filter((lecture) => !lecture.lecCategory)
+          .map((lecture, index) => (
+            <LectureSmall props={lecture} noBadge classOpen />
+          ))}
+      </LectureBox>
+      {/* <LiveLectureBox>
+        <p>실시간 강의</p>
+        <img src="/img/login.png" alt="loginImg" />
+      </LiveLectureBox> */}
+      {/* <FinishLectureBox>
+        <h3>수강완료 강의</h3>
+        <img src="/img/login.png" alt="loginImg" />
+      </FinishLectureBox> */}
+    </Wrapper>
+  );
+};
+
 const ProfilePage = () => {
   // URL 뒤 파라미터 불러오기
   const params = useParams();
 
   const dispatch = useDispatch();
+  const { myLectures } = useSelector((state) => state.user);
 
   // 내 페이지인지 남의 페이지인지 구분
   // 1이면 나의 프로필페이지, 2이면 남의 프로필
@@ -466,26 +505,7 @@ const ProfilePage = () => {
           <div ref={ref}>1</div>
         </div>
       )}
-      {pageNum === '2' && (
-        <LectureBox>
-          <h3>수강중인 강의</h3>
-          <RecordLectureBox>
-            <p>녹화 강의</p>
-            <div className="cardList">
-              <img src="/img/login.png" alt="loginImg" />
-              <img src="/img/login.png" alt="loginImg" />
-            </div>
-          </RecordLectureBox>
-          <LiveLectureBox>
-            <p>실시간 강의</p>
-            <img src="/img/login.png" alt="loginImg" />
-          </LiveLectureBox>
-          <FinishLectureBox>
-            <h3>수강완료 강의</h3>
-            <img src="/img/login.png" alt="loginImg" />
-          </FinishLectureBox>
-        </LectureBox>
-      )}
+      {pageNum === '2' && <LectureBox myLectures={myLectures} />}
       {pageNum === '3' && (
         <ChangeProfileBox>
           <Profile src={userProfile}></Profile>
