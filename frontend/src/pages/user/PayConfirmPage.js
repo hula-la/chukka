@@ -87,7 +87,7 @@ const PayCompelete = () => {
   },[])
 
   return (
-    (true && true ? 
+    (delDone && addDone ? 
     <Wrapper>
       <Content>
           <h2>결제가 완료되었습니다.</h2>
