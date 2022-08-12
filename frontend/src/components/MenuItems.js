@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Dropdown from './Dropdown';
 import styled from 'styled-components';
 
@@ -52,12 +52,14 @@ const NavItems = styled.li`
   }
   & .nav-link {
     // font-family: 'Montserrat', sans-serif;
-    font-family: 'Russo One', sans-serif; 
+    font-family: 'Russo One', sans-serif;
     // font-weight: 600;
+    cursor: pointer;
   }
 `;
 
 const MenuItems = ({ items, location }) => {
+  const navigate = useNavigate();
   const [dropdown, setDropdown] = useState(false);
 
   return (
@@ -71,10 +73,11 @@ const MenuItems = ({ items, location }) => {
             aria-haspopup="menu"
             aria-expanded={dropdown ? 'true' : 'false'}
             className={
-              location.pathname === '/Lectures'
+              location.pathname.split('/')[1] === 'lectures'
                 ? 'nav-link button-menu active'
                 : 'nav-link button-menu'
             }
+            onClick={(e) => navigate(items.url)}
           >
             {items.title}{' '}
           </button>

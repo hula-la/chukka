@@ -14,7 +14,7 @@ const NavBar = styled.div`
   margin: 0 auto;
   padding: 0 20px;
   height: 80px;
-  font-family: 'Russo One', sans-serif !important; 
+  font-family: 'Russo One', sans-serif !important;
   // font-family: 'Montserrat', sans-serif;
   // font-weight: 600;
 
@@ -43,24 +43,25 @@ const Header = () => {
   const menuItems = [
     {
       title: 'Lectures',
+      url: '/lectures',
       submenu: [
         {
-          title: 'Lectures',
-          url: '/Lectures',
+          title: 'Lectures Video',
+          url: '/lectures/video',
         },
         {
           title: 'Lectures Live',
-          url: '/Lectures/live',
+          url: '/lectures/live',
         },
       ],
     },
     {
       title: 'Snacks',
-      url: '/Snacks',
+      url: '/snacks',
     },
     {
       title: 'Games',
-      url: '/Games',
+      url: '/games',
     },
   ];
   return (

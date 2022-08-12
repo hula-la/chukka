@@ -12,7 +12,6 @@ export const popularLectures = async (data) => {
 
 export const lecture = async (lectureId) => {
   const res = await client.get(`lectures/${lectureId}/`);
-  console.log(res);
   return res;
 };
 

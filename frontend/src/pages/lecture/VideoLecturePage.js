@@ -1,8 +1,12 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import MenuIcon from '@mui/icons-material/Menu';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Webcam from 'react-webcam';
 
 const Wrapper = styled.div`
@@ -17,6 +21,17 @@ const Wrapper = styled.div`
     align-items: center;
     height: 80px;
   }
+  & .video-lecture-left-div {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+  }
+  & .video-lecture-exit {
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 50px;
+  }
+
   & .video-lecture-btn-div {
     display: flex;
     align-items: center;
@@ -36,18 +51,22 @@ const Wrapper = styled.div`
     font-size: 1.5rem;
     cursor: pointer;
   }
+  & .btn-video-toggle:hover {
+    background: rgba(127, 127, 127, 0.5);
+  }
   & .btn-video-off {
     border: 1px solid red;
-    color: red;
+    color: red !important;
   }
   & .video-lecture-icon {
     margin-right: 8px;
   }
   & .video-off-icon {
-    color: red;
+    color: red !important;
   }
   & .btn-sidebar {
     font-size: 50px;
+    margin-left: 10px;
     cursor: pointer;
   }
 
@@ -63,24 +82,39 @@ const Wrapper = styled.div`
     background-color: #111;
     overflow-x: hidden;
     transition: 0.5s;
-    padding-top: 60px;
+    padding-top: 10px;
     /* padding-left: 30px; */
+  }
+
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 30px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 370px;
+  }
+
+  .sidebar-body {
+    margin-left: 30px;
   }
 
   .sb-close {
     width: 0px;
+    /* z-index: -1; */
   }
   .sb-open {
-    width: 300px;
+    width: 400px;
   }
 
   .sidebar a {
-    padding: 8px 8px 8px 32px;
+    /* padding: 8px 8px 8px 32px; */
     text-decoration: none;
     font-size: 25px;
     color: #818181;
-    display: block;
+    /* display: block; */
     transition: 0.3s;
+    margin-right: 25px;
   }
 
   .sidebar a:hover {
@@ -88,9 +122,9 @@ const Wrapper = styled.div`
   }
 
   .sidebar .closebtn {
-    position: absolute;
+    /* position: absolute;
     top: 0;
-    right: 25px;
+    right: 25px; */
     font-size: 36px;
     margin-left: 50px;
   }
@@ -136,29 +170,70 @@ const Wrapper = styled.div`
     visibility: hidden;
   }
 
+  // footer
+
   & .video-lecture-footer {
     display: flex;
     justify-content: space-between;
-    border: 2px solid white;
+    align-items: center;
+    padding: 0px 18px;
+    /* border: 2px solid white; */
     position: fixed;
     bottom: 0;
     width: 100%;
+    height: 80px;
+    font-size: 24px;
+    & div {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      & span {
+        margin: 0px 10px;
+      }
+    }
   }
 `;
 
 // sidebar component
-const SectionLecture = () => {
+const SectionLecture = ({ section, index }) => {
   const Wrapper = styled.div`
+    width: 300px;
+    display: block;
     color: white;
+    & .side-section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
     & .side-section-title {
       font-size: 30px;
+      display: block;
     }
+    & .side-section-playtime {
+      font-size: 18px;
+    }
+    min-height: 120px;
+    margin-bottom: 12px;
   `;
 
-  return <div className="side-section-title">춤의 기본</div>;
+  const { secTitle, secContent, secPlayTime } = section;
+
+  return (
+    <Wrapper>
+      <div className="side-section-header">
+        <div className="side-section-title">
+          {index + 1}. {secTitle}
+        </div>
+        <div className="side-section-playtime">{secPlayTime}</div>
+      </div>
+      <div className="side-section-content">{secContent}</div>
+    </Wrapper>
+  );
 };
 
 const VideoLecturePage = () => {
+  const navigate = useNavigate();
   const videoConstraints = {
     width: 360,
     height: 800,
@@ -167,7 +242,6 @@ const VideoLecturePage = () => {
 
   const [isVideo, setIsVideo] = useState(true);
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
-  const videoRef = useRef(null);
 
   const onClickHandler = async () => {
     if (isVideo) {
@@ -180,11 +254,24 @@ const VideoLecturePage = () => {
     }
   };
 
+  // 소강의 더미 데이터
+  const dummySection = [
+    { secTitle: '춤의 기본', secContent: '스트레칭', secPlayTime: '15:23' },
+    { secTitle: '춤의 기본-2', secContent: '스텝', secPlayTime: '15:23' },
+    { secTitle: '춤의 기본-3', secContent: '스텝2', secPlayTime: '15:23' },
+  ];
+
   return (
     <Wrapper>
       {/* header */}
       <div className="video-lecture-header">
-        <h1>강의영상</h1>
+        <div className="video-lecture-left-div">
+          <ExitToAppIcon
+            className="video-lecture-exit"
+            onClick={() => navigate('/lectures')}
+          />
+          <h1>강의영상</h1>
+        </div>
         <div className="video-lecture-btn-div">
           {/* Cam On/Off Button */}
           {isVideo && (
@@ -215,17 +302,23 @@ const VideoLecturePage = () => {
         id="mySidebar"
         className={isSideBarOpen ? 'sidebar sb-open' : 'sidebar sb-close'}
       >
-        <a
-          href="javascript:void(0)"
-          class="closebtn"
-          onClick={() => setIsSideBarOpen(false)}
-        >
-          ×
-        </a>
-        <a href="">asddasasdasdd</a>
-        <div>
-          <div>rrhrhrhhrh</div>
-          <SectionLecture />
+        <div className="sidebar-header">
+          <h1>강의 목록</h1>
+          <a
+            href=""
+            class="closebtn"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsSideBarOpen(false);
+            }}
+          >
+            ×
+          </a>
+        </div>
+        <div className="sidebar-body">
+          {dummySection.map((section, index) => (
+            <SectionLecture section={section} index={index} key={index} />
+          ))}
         </div>
       </div>
       {/* body */}
@@ -246,7 +339,14 @@ const VideoLecturePage = () => {
       </div>
       {/* footer */}
       <div className="video-lecture-footer">
-        <h1>footer</h1>
+        <div className="video-lecture-prev">
+          <ArrowBackIosIcon />
+          <span>이전 강의 없음</span>
+        </div>
+        <div className="video-lecture-next">
+          <span>2. 춤의 기본-2</span>
+          <ArrowForwardIosIcon />
+        </div>
       </div>
     </Wrapper>
   );
