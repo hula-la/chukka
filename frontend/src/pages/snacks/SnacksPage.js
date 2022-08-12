@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import SnacksItem from '../../components/snacks/SnacksItem';
-import SnacksTag from '../../components/snacks/SnacksTag';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
 import { useInView } from 'react-intersection-observer';
@@ -112,6 +111,7 @@ const SnacksPage = () => {
   // 인기순, 최신순 정렬
   const [sortSnacks, setSortSnacks] = useState('snacksId,DESC');
   const [tagList, setTagList] = useState([]);
+  const [tags, setTags] = useState([]);
 
   const onClickNew = () => {
     if (sortSnacks !== 'snacksId,DESC') {
@@ -133,9 +133,7 @@ const SnacksPage = () => {
 
   const { snacksList } = useSelector((state) => state.snacks);
   const { hasMore } = useSelector((state) => state.snacks);
-
-  const [tags, setTags] = useState([]);
-  const [isActive, setIsActive] = useState(false);
+  const { isLoading } = useSelector((state) => state.snacks);
 
   const onClickTags = (e) => {
     setTagList((tagList) => {
@@ -152,11 +150,15 @@ const SnacksPage = () => {
   };
 
   useEffect(() => {
-    // console.log(sortSnacks);
     if (snacksList.length === 0) {
       const newPage = pageNum;
       dispatch(fetchSnacks({ newPage, sortSnacks, tags }));
-    } else {
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    // console.log(sortSnacks);
+    if (snacksList.length !== 0) {
       setPageNum(() => {
         dispatch(changeSort());
         const newPage = 1;
@@ -170,34 +172,40 @@ const SnacksPage = () => {
     if (snacksList.length !== 0 && inView && hasMore) {
       setPageNum((page) => {
         const newPage = page + 1;
-        dispatch(fetchSnacks({ newPage, sortSnacks, tags }));
+        setTimeout(() => {
+          dispatch(fetchSnacks({ newPage, sortSnacks, tags }));
+        }, 500);
         return page + 1;
       });
     }
   }, [inView]);
 
-  useEffect(() => {
-    // 성목
-    // 선택된 태그 가져오기
-    const selectedTags = tagList
-      .filter((tag) => tag.selected)
-      .map((tag) => tag.tag);
-    console.log(selectedTags);
-  }, [tagList]);
-
   // 인기 태그 조회
   useEffect(() => {
     dispatch(fetchTags());
   }, [dispatch]);
+
   const { snacksPopularTags } = useSelector((state) => state.snacks);
+
   useEffect(() => {
     const tmp = snacksPopularTags.map((tag) => ({
       tag,
       selected: false,
     }));
-    console.log(tmp);
     setTagList(tmp);
   }, [snacksPopularTags]);
+
+  useEffect(() => {
+    // 성목
+    // 선택된 태그 가져오기
+    setTags(() => {
+      const selectedTags = tagList
+        .filter((tag) => tag.selected)
+        .map((tag) => tag.tag);
+      return selectedTags;
+    });
+  }, [tagList]);
+
   return (
     <Wrapper>
       <div className="sort">
@@ -237,6 +245,7 @@ const SnacksPage = () => {
           </ul>
           <div ref={ref}>1</div>
         </div>
+        <button>업로드 하기</button>
       </div>
     </Wrapper>
   );
