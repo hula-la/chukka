@@ -69,9 +69,8 @@ public class SnacksController {
     // 수정 필요 ********************************************************************************************************
     // - 반환 형태 ******************************************************************************************************
     // 스낵스 업로드 =====================================================================================================
-    @PutMapping("/upload")
-    @ApiOperation(value = "스낵스 업로드", notes = "<strong>제목, 영상 파일, 그리고 태그</strong>를 받아 스낵스 영상을 업로드한다." +
-            "<br>태그는 무조건 <strong>tag1,tag2,tag3</strong> 태그와 태그 사이에 콤마 하나만 들어간 형태로 전달한다.")
+    @PostMapping("/upload")
+    @ApiOperation(value = "스낵스 업로드", notes = "<strong>제목, 영상 파일, 그리고 태그</strong>를 받아 스낵스 영상을 업로드한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
             @ApiResponse(code = 401, message = "Invalid User", response = BaseResponseBody.class)
@@ -91,7 +90,7 @@ public class SnacksController {
         Snacks snacks = snacksService.uploadSnacks(snacksInfo, user);
         // 스낵스 영상 파일 업로드
         if(file != null) {
-            s3Uploader.uploadFiles(file, "vid/snacks", req.getServletContext().getRealPath("/vid/snacks/"), String.valueOf(snacks.getSnacksId()));
+            s3Uploader.uploadFiles(file, "vid/snacks", req.getServletContext().getRealPath("/img/"), String.valueOf(snacks.getSnacksId()));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
     }

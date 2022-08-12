@@ -17,6 +17,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -135,11 +136,11 @@ public class SnacksServiceImpl implements SnacksService{
 
     // 태그 업로드
     public void uploadTags(SnacksUploadReq snacksInfo, Snacks snack){
-        String[] snacksTags = snacksInfo.getSnacksTag().split(",");
-        for (String tag:snacksTags) {
+        List<Map<String, String>> snacksTags = snacksInfo.getSnacksTag();
+        for (Map<String, String> tag:snacksTags) {
             SnacksTag snacksTag = SnacksTag.builder()
                     .snacks(snack)
-                    .snacksTagContent(tag)
+                    .snacksTagContent(tag.get("value"))
                     .build();
             snacksTagRepository.save(snacksTag);
         }
