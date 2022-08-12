@@ -65,7 +65,7 @@ const Wrapper = styled.div`
     transition: 300ms;
     opacity: 0.8;
     ::after {
-      content: " ON";
+      content: ' ON';
     }
   }
   & .btn-video-toggle:hover {
@@ -74,7 +74,7 @@ const Wrapper = styled.div`
   & .btn-video-off {
     background-color: rgb(255, 255, 255, 0.3);
     ::after {
-      content: " OFF";
+      content: ' OFF';
     }
   }
   & .video-lecture-icon {
@@ -232,7 +232,7 @@ const Wrapper = styled.div`
           color: #ff2c55;
           font-weight: bold;
           font-size: 1.6rem;
-      }
+        }
       }
     }
   }
@@ -267,11 +267,11 @@ const SectionLecture = ({ section, index }) => {
       /* opacity: 0.7; */
       color: rgb(255, 44, 85, 0.7);
       /* :hover { */
-        /* color: rgb() */
-        /* opacity: 1; */
-        /* cursor: pointer; */
-      }
+      /* color: rgb() */
+      /* opacity: 1; */
+      /* cursor: pointer; */
     }
+
     min-height: 6rem;
     margin-bottom: 2rem;
   `;
@@ -324,13 +324,14 @@ const VideoLecturePage = () => {
     <Wrapper>
       {/* header */}
       <div className="video-lecture-header">
-        <div className="video-lecture-left-div" onClick={() => navigate('/lectures')}>
-          <ExitToAppIcon
-            className="video-lecture-exit"
-          />
+        <div
+          className="video-lecture-left-div"
+          onClick={() => navigate('/lectures')}
+        >
+          <ExitToAppIcon className="video-lecture-exit" />
           <h3>강의로 돌아가기</h3>
         </div>
-        <h1 className='title'>1. 춤의 기본-1</h1>
+        <h1 className="title">1. 춤의 기본-1</h1>
         <div className="video-lecture-btn-div">
           {/* Cam On/Off Button */}
           {isVideo && (
@@ -354,14 +355,14 @@ const VideoLecturePage = () => {
           />
         </div>
       </div>
-      <hr className='hr'/>
+      <hr className="hr" />
       {/* sidebar */}
       <div
         id="mySidebar"
         className={isSideBarOpen ? 'sidebar sb-open' : 'sidebar sb-close'}
       >
         <div className="sidebar-header">
-          <h1 className='sidebar-title'>챕터</h1>
+          <h1 className="sidebar-title">챕터</h1>
           <a
             href=""
             class="closebtn"
@@ -370,7 +371,7 @@ const VideoLecturePage = () => {
               setIsSideBarOpen(false);
             }}
           >
-            <CloseIcon class="closeicon" style={{fill: '#ff2c55'}}/>
+            <CloseIcon class="closeicon" style={{ fill: '#ff2c55' }} />
           </a>
         </div>
         <div className="sidebar-body">

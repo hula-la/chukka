@@ -47,7 +47,7 @@ const Header = () => {
       submenu: [
         {
           title: 'Lectures Video',
-          url: '/lectures/video',
+          url: '/lectures/1/section/1',
         },
         {
           title: 'Lectures Live',

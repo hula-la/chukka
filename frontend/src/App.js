@@ -14,6 +14,8 @@ import CartPage from './pages/user/CartPage';
 import LecturesPage from './pages/lecture/LecturesPage';
 import LivePage from './pages/lecture/LivePage';
 import VideoLecturePage from './pages/lecture/VideoLecturePage';
+import LectureClassPage from './pages/lecture/LectureClassPage';
+import LectureDetailpage from './pages/lecture/LectureDetailpage';
 // snacks
 import SnacksPage from './pages/snacks/SnacksPage';
 import DetailSnacksPage from './pages/snacks/DetailSnacksPage';
@@ -25,7 +27,6 @@ import GamesPage from './pages/game/GamesPage';
 import AdminPage from './pages/admin/AdminPage';
 // notfount
 import NotFound from './pages/NotFound';
-import LectureDetailpage from './pages/lecture/LectureDetailpage';
 
 const App = () => {
   return (
@@ -45,15 +46,18 @@ const App = () => {
           <Route path="signup" element={<SignUpPage />} />
           <Route path="profile/:nickName" element={<ProfilePage />} />
           <Route path="password" element={<FindPwPage />} />
-          <Route path="profile/:nickname" element={<ProfilePage />} />
           <Route path="cart" element={<CartPage />} />
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
           <Route path="" element={<LecturesPage />} />
           <Route path=":lectureId" element={<LectureDetailpage />} />
+          <Route path="class/:lectureId" element={<LectureClassPage />} />
         </Route>
-        <Route path="lectures/video" element={<VideoLecturePage />} />
+        <Route
+          path="lectures/:lectureId/section/:sectionId"
+          element={<VideoLecturePage />}
+        />
         <Route path="lectures/live" element={<LivePage />} />
         {/* snacks */}
         <Route path="snacks/" element={<Layout />}>
