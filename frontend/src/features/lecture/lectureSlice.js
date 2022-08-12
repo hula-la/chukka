@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchLatestLectures, fetchLectureDetail } from './lectureActions';
+import {
+  fetchLatestLectures,
+  fetchLectureDetail,
+  fetchSections,
+} from './lectureActions';
 import thumbnail1 from '../../img/pop.jpeg';
 
 const initialState = {
@@ -22,6 +26,7 @@ const initialState = {
     lecLimit: '',
     insInfo: {},
   },
+  sections: [],
 };
 
 const lectureSlice = createSlice({
@@ -34,7 +39,9 @@ const lectureSlice = createSlice({
     },
     [fetchLectureDetail.fulfilled]: (state, { payload }) => {
       state.lecture = payload.data;
-      console.log(state.lecture);
+    },
+    [fetchSections.fulfilled]: (state, { payload }) => {
+      state.sections = payload.data;
     },
   },
 });
