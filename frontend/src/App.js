@@ -61,8 +61,8 @@ const App = () => {
         {/* games */}
         <Route path="games" element={<Layout />}>
           <Route path="" element={<MainPage />} />
-          <Route path="game" element={<GamesPage />} />
         </Route>
+        <Route path="game" element={<GamesPage />} />
         {/* admin */}
         <Route path="admin" element={<Layout />}>
           <Route path="" element={<AdminPage />} />
