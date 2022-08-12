@@ -7,6 +7,7 @@ import com.ssafy.api.service.CartService;
 import com.ssafy.api.service.EnrollService;
 import com.ssafy.api.service.LectureService;
 import com.ssafy.api.service.UserService;
+import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.CartRepository;
@@ -14,6 +15,7 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -40,20 +42,16 @@ public class CartController {
 
     // 장바구니 추가 ========================================================================================================
     @PostMapping("/")
-    @ApiOperation(value = "장바구니 추가", notes = "<strong>아이디, 강의 아이디</strong>를 받아 회원의 장바구니에 추가한다.")
+    @ApiOperation(value = "장바구니 추가", notes = "<strong>강의 아이디</strong>를 받아 회원의 장바구니에 추가한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
-            @ApiResponse(code = 400, message = "Duplicated Item", response = BaseResponseBody.class)
+            @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
     })
     public ResponseEntity<BaseResponseBody> insert(@ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value="회원 아이디, 강의 아이디", required = true) CartPostReq cartPostReq) {
-        /* =========================      로그인 안 된 경우 에러 처리  ====================== */
-//        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+            @RequestParam @ApiParam(value="강의 아이디", required = true) int lecId) {
+//        SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 //        String loginUserId = userDetails.getUsername();
-//        User user = userService.getUserByUserId(loginUserId);
-        /* ============================================================================ */
-        Cart cart = cartService.findCartByUser(cartPostReq.getUserId());
-        User user = userService.getUserByUserId(cartPostReq.getUserId());
+        User user = userService.getUserByUserId("user3");
+        Cart cart = cartService.findCartByUser(user.getUserId());
 
         System.out.println(user.getUserId());
         String msg = "";
@@ -61,14 +59,14 @@ public class CartController {
             cart = cartService.createCart(user);
         }
         // 장바구니에 담겨있는지 확인
-        CartItem findItem = cartService.findCartItem(cartPostReq.getLecId(), cart.getId());
+        CartItem findItem = cartService.findCartItem(lecId, cart.getId());
         if(findItem != null) {
             msg = "이미 장바구니에 담긴 강의 입니다.";
         }else {
-            boolean isEnroll = enrollService.findByLecId(cartPostReq.getLecId());
+            boolean isEnroll = enrollService.findByLecIdAnsUserId(lecId, user.getUserId());
             if (isEnroll) msg = "이미 수강 중인 강의입니다.";
             else {
-                Lecture findLecture = lectureService.findLectureByLecId(cartPostReq.getLecId());
+                Lecture findLecture = lectureService.findLectureByLecId(lecId);
                 if (findLecture == null) msg = "다시 시도해주시기 바랍니다.";
                 else {
                     CartItem cartItem = cartService.createCartItem(cart, findLecture);
@@ -78,30 +76,26 @@ public class CartController {
                 }
             }
         }
-        return ResponseEntity.status(400).body(BaseResponseBody.of(200, msg, null));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, msg, null));
     }
 
     // 장바구니 목록 ========================================================================================================
-    @GetMapping("/{userId}")
-    @ApiOperation(value = "장바구니 목록", notes = "<strong>회원 아이디</strong>를 받아 회원의 장바구니 목록을 반환한다. ")
+    @GetMapping("/list")
+    @ApiOperation(value = "장바구니 목록", notes = "회원의 장바구니 목록을 반환한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
     })
-    public ResponseEntity<BaseResponseBody> listAll(@ApiIgnore Authentication authentication,
-                                                   @PathVariable @ApiParam(value="회원 아이디", required = true) String userId) {
-        /* =========================      로그인 안 된 경우 에러 처리  ====================== */
-//        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-//        String loginUserId = userDetails.getUsername();
-//        User user = userService.getUserByUserId(loginUserId);
-        /* ============================================================================ */
-        User user = userService.getUserByUserId(userId);
+    public ResponseEntity<BaseResponseBody> listAll(@ApiIgnore Authentication authentication) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId(loginUserId);
 
 
-        Cart cart = cartService.findCartByUser(userId);
+        Cart cart = cartService.findCartByUser(user.getUserId());
         if(cart ==null || cart.getCount()==0){
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
         }
-        List<CartLecGetRes> lectures = cartService.findCartItemsByCartId(userId);
+        List<CartLecGetRes> lectures = cartService.findCartItemsByCartId(user.getUserId());
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lectures));
 
     }
@@ -114,13 +108,12 @@ public class CartController {
     })
     public ResponseEntity<BaseResponseBody> delete(@ApiIgnore Authentication authentication,
             @PathVariable @ApiParam(value="장바구니 목록 아이디", required = true) int cartItemId) {
-        /* =========================      로그인 안 된 경우 에러 처리  ====================== */
-//        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-//        String loginUserId = userDetails.getUsername();
-        /* ============================================================================ */
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId(loginUserId);
         try{
             cartService.deleteByCartItemId(cartItemId);
-            Cart userCart = cartService.findCartByUser("user1");
+            Cart userCart = cartService.findCartByUser(user.getUserId());
             cartService.updateCart(userCart);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
         }catch (Exception e){

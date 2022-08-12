@@ -9,6 +9,7 @@ import com.ssafy.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -26,25 +27,32 @@ public class EnrollServiceImpl implements EnrollService {
     EnrollRepository enrollRepository;
 
     public void createEnroll(String userId, List<Integer> lecIds) {
-        Optional<User> user = userRepository.findByUserId(userId);
-        Date birth = user.get().getUserBirth();
-        int ageGroup = Integer.parseInt(birth.toString());
-        if(user.isPresent()){
+        Optional<User> findUser = userRepository.findByUserId(userId);
+        if(findUser.isPresent()){
+            User user = findUser.get();
+            Date birth = user.getUserBirth();
+            LocalDateTime today = LocalDateTime.now();
+            int userYear = Integer.parseInt(birth.toString().substring(0,4));
+            int ageGroup = (today.getYear() - userYear  + 1) / 10 ;
+            System.out.println(ageGroup);
             for (int i = 0; i < lecIds.size(); i++) {
+                System.out.println(i);
                 Lecture lecture = lectureRepository.findLectureByLecId(lecIds.get(i));
                 Enroll enroll = Enroll.builder()
-                        .user(user.get())
+                        .user(user)
                         .lecture(lecture)
                         .status(0)
-                        .ageGroup(ageGroup-ageGroup%10)
+                        .ageGroup(ageGroup)
                         .build();
+                System.out.println("=========");
+                System.out.println(enroll);
                 enrollRepository.save(enroll);
             }
         }
     }
     @Override
-    public boolean findByLecId(int ledId) {
-        Optional<Enroll> enroll = enrollRepository.findByLecture_LecId(ledId);
+    public boolean findByLecIdAnsUserId(int ledId, String userId) {
+        Optional<Enroll> enroll = enrollRepository.findByLecture_LecIdAndUser_UserId(ledId, userId);
         if(enroll.isPresent()){ // 수강 중임
             return true;
         }

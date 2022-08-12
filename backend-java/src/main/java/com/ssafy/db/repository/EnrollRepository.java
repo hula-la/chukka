@@ -9,5 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
-    Optional<Enroll> findByLecture_LecId(int ledId);
+    Optional<Enroll> findByLecture_LecIdAndUser_UserId(int ledId, String userId);
+
+
 }
