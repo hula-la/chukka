@@ -19,6 +19,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import LectureSmall from '../../components/lectures/LectureSmall';
+import CircleIcon from '@mui/icons-material/Circle';
 
 // 페이지 블락
 const ProfilePageBlock = styled.div`
@@ -227,8 +228,40 @@ const StyledButton = styled.button`
 // 나의 강의 목록
 const LectureBox = ({ myLectures }) => {
   const Wrapper = styled.div`
+    padding: 0 5rem;
     & h3 {
       margin-bottom: 0.5rem;
+    }
+    width: 100%;
+    .on-air {
+      background-color: #ff2c55;
+      width: 10rem;
+      height: 4rem;
+      padding: 0.4rem 0.1rem 0.5rem 0.8rem;
+      border-radius: 5rem;
+      margin: 1rem 0 2rem;
+    }
+    .on-air-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      vertical-align: middle;
+    }
+    .on-air-msg {
+      margin-left: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      line-height: 3rem;
+    }
+    & hr {
+      margin: 1.5rem 0;
+      border: none;
+      height: 0.1rem;
+      background: #ff2c55;
+      opacity: 0.5;
+    }
+    .lecture-header {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
     }
   `;
 
@@ -238,7 +271,6 @@ const LectureBox = ({ myLectures }) => {
     row-gap: 20px;
     column-gap: 20px;
     min-height: 200px;
-    /* width: 100%; */
     & p {
       margin-left: 0.5rem;
       font-size: small;
@@ -285,7 +317,10 @@ const LectureBox = ({ myLectures }) => {
 
   return (
     <Wrapper>
-      <h3>수강중인 강의</h3>
+      <div className='on-air'>
+      <CircleIcon className='on-air-icon'/>
+      <span className='on-air-msg'>수강중</span>
+      </div>
       <div className="lecture-header">녹화 강의</div>
       <LectureBox>
         {/* <LectureSmall /> */}
@@ -295,6 +330,7 @@ const LectureBox = ({ myLectures }) => {
             <LectureSmall props={lecture} noBadge classOpen />
           ))}
       </LectureBox>
+      <hr/>
       <div className="lecture-header">실시간 강의</div>
       <LectureBox>
         {/* <LectureSmall /> */}
