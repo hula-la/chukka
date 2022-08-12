@@ -2,7 +2,11 @@ import axios from 'axios';
 // import store from '../app/store';
 
 const client = axios.create({
+<<<<<<< HEAD
+  baseURL: 'https://i7e202.p.ssafy.io/api',
+=======
   baseURL: 'http://127.0.0.1:8080/api',
+>>>>>>> 34cf8fcf6cd1e58a8a15490204a65cab8705cc55
   headers: {
     'Content-Type': 'application/json',
   },

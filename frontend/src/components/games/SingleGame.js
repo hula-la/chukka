@@ -132,7 +132,11 @@ const SingleMode = () => {
   // }, [songID]);
 
   useEffect(() => {
+<<<<<<< HEAD
+    const url = "wss://i7e202.p.ssafy.io/fastAPI/ws/client";
+=======
     const url = "ws://localhost:8000/fastAPI/client"
+>>>>>>> 34cf8fcf6cd1e58a8a15490204a65cab8705cc55
     const ws = new WebSocket(url);
 
     ws.onopen = (event) => {
@@ -165,7 +169,11 @@ const SingleMode = () => {
       <div style={Styles.Videobox}>
         <div style={Styles.Video}>
         <video id="dancer_video"  height="180" preload='auto' style={Styles.stream} muted="muted">
+<<<<<<< HEAD
+          <source src="https://i7e202.p.ssafy.io/fastAPI/game/dancer" type="video/mp4"/>
+=======
           <source src="http://localhost:8000/fastAPI/game/dancer" type="video/mp4"/>
+>>>>>>> 34cf8fcf6cd1e58a8a15490204a65cab8705cc55
         </video>
         </div>
         <div id="canvasDiv" style={Styles.Video}>
