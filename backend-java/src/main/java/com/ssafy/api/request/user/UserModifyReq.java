@@ -26,8 +26,6 @@ public class UserModifyReq {
 	int userGender;
 	@ApiModelProperty(name="유저 생년월일", example="2022-01-01")
 	Date userBirth;
-	@ApiModelProperty(name="유저 Nickname", example="your_nickname")
-	String userNickname;
 	@ApiModelProperty(name="수정 전 유저 Profile 유무", example="true")
 	String isProfile;
 }

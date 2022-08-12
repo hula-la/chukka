@@ -6,12 +6,14 @@ import com.ssafy.api.response.snacks.SnacksReplyRes;
 import com.ssafy.api.response.snacks.SnacksRes;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
+import com.ssafy.db.specification.SnacksTagSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,20 +33,30 @@ public class SnacksServiceImpl implements SnacksService{
     @Value("${cloud.aws.region.static}")
     private String region;
 
-    // 스낵스 조회 =======================================================================================================
+    // 스낵스 조회
     @Override
-    public Slice<SnacksRes> findAll(Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        Slice<SnacksRes> slice = snacksRepository.findAll(pageRequest).map(s -> SnacksRes.of(s));
+    public Slice<SnacksRes> findAll(Pageable pageable, String userId) {
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+        Slice<SnacksRes> slice = snacksRepository.findAll(pageRequest)
+                .map(s -> SnacksRes.of(s, snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, s.getSnacksId()).isPresent()));
+        return slice;
+    }
+
+    @Override
+    public Slice<SnacksRes> findCertainUserSnacks(Pageable pageable, String userId, String loginUserId) {
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
+        Slice<SnacksRes> slice = snacksRepository.findSnacksByUserUserId(userId, pageRequest)
+                .map(s -> SnacksRes.of(s, snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, s.getSnacksId()).isPresent()));
         return slice;
     }
 
     // 특정 스낵스 조회
     @Override
-    public Snacks getCertainSnacks(Long snacksId) {
+    public SnacksRes getCertainSnacks(Long snacksId, String userId) {
         Optional<Snacks> snacks = snacksRepository.findBySnacksId(snacksId);
         if(snacks.isPresent()) {
-            return snacks.get();
+            boolean isLike = snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, snacksId).isPresent();
+            return SnacksRes.of(snacks.get(), isLike);
         }
         return null;
     }
@@ -131,6 +143,27 @@ public class SnacksServiceImpl implements SnacksService{
                     .build();
             snacksTagRepository.save(snacksTag);
         }
+    }
 
+    // 태그 검색
+    @Override
+    public Slice<SnacksRes> searchTag(List<String> tags, String userId, Pageable pageable) {
+        // 조건 생성
+        Specification<SnacksTag> specification = null;
+        for (String tag : tags) {
+            Specification<SnacksTag> tagSpecification = SnacksTagSpecification.tagContains(tag);
+            if (specification == null) {
+                specification = tagSpecification;
+            } else {
+                specification = specification.or(tagSpecification);
+            }
+        }
+        // 위 조건으로 스낵스 아이디 리스트 검색
+        List<Long> snacksIds = snacksTagRepository.findAll(specification)
+                .stream().map(s -> s.getSnacks().getSnacksId()).collect(Collectors.toList());
+        // 해당 스낵스 아이디로 스낵스 정보 검색
+        Slice<SnacksRes> snacksRes = snacksRepository.findAllBySnacksIdIn(snacksIds, pageable)
+                .map(s -> SnacksRes.of(s, snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, s.getSnacksId()).isPresent()));
+        return snacksRes;
     }
 }
