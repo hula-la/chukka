@@ -36,7 +36,6 @@ const snacksSlice = createSlice({
       const newList = state.snacksList.concat(payload.data.content);
       state.snacksList = newList;
       console.log(state.snacksList);
-      state.isLoading = false;
     },
     [fetchSnacks.rejected]: (state, { payload }) => {
       console.log(payload);
