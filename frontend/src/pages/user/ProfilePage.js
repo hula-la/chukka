@@ -7,7 +7,7 @@ import {
   fetchProfile,
   changeProfile,
   fetchSnacks,
-  fetchLectures,
+  fetchMyLectures,
 } from '../../features/user/userActions';
 import MySnacksItem from '../../components/snacks/MySnacksItem';
 import defaultImage from '../../img/default.jpeg';
@@ -424,7 +424,7 @@ const ProfilePage = () => {
 
   // 나의 강의 목록 불러오기
   useEffect(() => {
-    dispatch(fetchLectures());
+    dispatch(fetchMyLectures());
   }, [dispatch]);
 
   return (

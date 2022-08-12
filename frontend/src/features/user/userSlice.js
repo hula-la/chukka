@@ -6,7 +6,7 @@ import {
   fetchProfile,
   changeProfile,
   fetchSnacks,
-  fetchLectures,
+  fetchMyLectures,
 } from './userActions';
 
 // initialize userToken from local storage
@@ -27,6 +27,7 @@ const initialState = {
   snacksList: [],
   hasmore: false,
   lecture: null,
+  myLectures: [],
 };
 
 const userSlice = createSlice({
@@ -112,8 +113,15 @@ const userSlice = createSlice({
       state.snacksList = newList;
       state.Loading = false;
     },
-    [fetchLectures.fulfilled]: (state, { payload }) => {
-      console.log(payload);
+    [fetchMyLectures.fulfilled]: (state, { payload }) => {
+      console.log(payload.data);
+      const { lectureInfo } = payload.data;
+      console.log(lectureInfo);
+      state.myLectures = lectureInfo;
+    },
+    [fetchMyLectures.rejected]: (state, { payload }) => {
+      state.error = payload;
+      console.log('fetchMyLectures rejected', state.error);
     },
   },
 });

@@ -309,7 +309,7 @@ const IndexPage = () => {
                 Share ?
               </div>
               <div class="container">
-                <Link to="snack" class="content">
+                <Link to="snacks" class="content">
                   짧게 즐길 수 있는 Snacks를 통해 <br />
                   춤을 공유하고 구경해보세요.
                   <br />

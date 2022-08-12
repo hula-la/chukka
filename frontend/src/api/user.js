@@ -65,7 +65,7 @@ export const snacks = async (paramsNickname, snacksPage) => {
   return res;
 };
 
-export const lecture = async () => {
+export const myLectures = async () => {
   const res = await client.get(`accounts/mylectures/`);
 
   return res;
