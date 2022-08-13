@@ -48,9 +48,9 @@ public class CartController {
     })
     public ResponseEntity<BaseResponseBody> insert(@ApiIgnore Authentication authentication,
             @RequestParam @ApiParam(value="강의 아이디", required = true) int lecId) {
-//        SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-//        String loginUserId = userDetails.getUsername();
-        User user = userService.getUserByUserId("user3");
+        SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId(loginUserId);
         Cart cart = cartService.findCartByUser(user.getUserId());
 
         System.out.println(user.getUserId());
@@ -121,4 +121,28 @@ public class CartController {
         }
 
     }
+
+    @GetMapping("/count")
+    @ApiOperation(value = "장바구니 목록 개수", notes = "회원의 장바구니에 들어있는 강의 수를 반환한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<BaseResponseBody> getCount(@ApiIgnore Authentication authentication) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId(loginUserId);
+        int count=0;
+        try{
+            Cart userCart = cartService.findCartByUser(user.getUserId());
+//            Cart userCart = cartService.findCartByUser("user3");
+            if(userCart != null){
+                count = userCart.getCount();
+            }
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", count));
+        }catch (Exception e){
+            return ResponseEntity.status(403).body(BaseResponseBody.of(403, "fail", null));
+        }
+
+    }
+
 }
