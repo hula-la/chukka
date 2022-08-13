@@ -261,8 +261,8 @@ const SnacksPage = ({ history }) => {
           <div ref={ref}>1</div>
         </div>
         <Link to="upload">
-          <div className='upload-parent'>
-            <LoupeOutlinedIcon className='upload-btn'/>
+          <div className="upload-parent">
+            <LoupeOutlinedIcon className="upload-btn" />
           </div>
         </Link>
       </div>
