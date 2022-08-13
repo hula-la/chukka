@@ -9,6 +9,7 @@ import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.InstructorRepository;
 import com.ssafy.db.repository.LectureRepository;
+import com.ssafy.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import java.util.List;
 public class InstructorServiceImpl implements InstructorService {
     @Autowired
     InstructorRepository instructorRepository;
+    @Autowired
+    UserRepository userRepository;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.region.static}")
@@ -62,6 +65,7 @@ public class InstructorServiceImpl implements InstructorService {
     public boolean deleteInstructor(String insId) {
         if(instructorRepository.findById(insId).isPresent()) {
             instructorRepository.delete(Instructor.builder().insId(insId).build());
+            userRepository.updateUserType(insId, 0);
             return true;
         }
         return false;

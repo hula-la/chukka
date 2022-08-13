@@ -8,6 +8,7 @@ import com.ssafy.api.request.section.SectionPostReq;
 import com.ssafy.api.request.section.SectionUpdateReq;
 import com.ssafy.api.response.admin.InstructorRes;
 import com.ssafy.api.response.admin.LectureListRes;
+import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.api.response.admin.UserListRes;
 import com.ssafy.api.response.section.SectionGetRes;
 import com.ssafy.api.service.InstructorService;
@@ -106,10 +107,10 @@ public class AdminController {
 	@GetMapping("/lectures/")
 	@ApiOperation(value = "강의 목록 조회", notes = "모든 강의 목록을 반환한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
+			@ApiResponse(code = 200, message = "Success", response = LectureRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> getLectures() {
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lectureService.findAll()));
 	}
 
 	// 전체 섹션 목록 조회 ================================================================================================

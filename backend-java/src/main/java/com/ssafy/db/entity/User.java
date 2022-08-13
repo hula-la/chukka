@@ -79,7 +79,7 @@ public class User{
     private List<SectionLike> sectionLikes = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Snacks> snacksList = new ArrayList<>();
 
     @Builder.Default
