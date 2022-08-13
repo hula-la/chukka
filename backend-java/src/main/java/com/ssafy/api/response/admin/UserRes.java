@@ -47,7 +47,7 @@ public class UserRes{
 		res.setUserGender(user.getUserGender());
 		res.setUserBirth(user.getUserBirth());
 		res.setUserType(user.getUserType());
-		res.setUserPhone(user.getUserProfile());
+		res.setUserProfile(user.getUserProfile());
 		return res;
 	}
 }
