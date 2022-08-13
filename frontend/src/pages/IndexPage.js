@@ -8,6 +8,9 @@ import FormatQuoteSharpIcon from '@mui/icons-material/FormatQuoteSharp';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const Container = styled.div`
+
+  overflow: overlay;
+
   width: 100%;
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;

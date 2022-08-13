@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '../../features/cart/cartActions';
 import CloseIcon from '@mui/icons-material/Close';
 import TvOffIcon from '@mui/icons-material/TvOff';
-import { getCartList, deleteCartItem } from '../../api/cart';
+import { getCartList, deleteCartItem, user } from '../../api/cart';
 import { LectureInfo } from '../../components/carts/LectureInfo';
 import { PayLecture } from '../../components/carts/PayLecture';
 import Alert from '../../components/Alert';
@@ -250,9 +250,9 @@ const CartPage = () => {
         <h3>구매자 정보</h3>
         <Profile>
           <div>
-            <img alt="프로필 사진" src="/img/login.png"></img>
+            <img src={userInfo.userProfile} alt="프로필 사진" ></img>
           </div>
-          <p> 이연의 </p>
+          <p>{userInfo.userNickname}</p>
         </Profile>
         <h3>결제 정보</h3>
         <PayList>
@@ -297,8 +297,8 @@ const CartPage = () => {
             </CartList>
           ):(
             <CartEmpty>
-              <div class="wapper">
-                <div class="content">
+              <div className="wapper">
+                <div className="content">
                   <TvOffIcon className="tv-icon"/>
                   <p>장바구니에 담긴 강의가 없습니다.</p>
                   <Link to="/lectures"><StyledButton content={"강의 구경하기"}></StyledButton></Link>
