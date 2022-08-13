@@ -188,18 +188,18 @@ const SingleMode = (songID) => {
     if (websckt) {
 
       websckt.onclose = function (event) {
-        // console.log("클로징 perfectCnt: " + perfectCnt);
+        console.log("클로징 perfectCnt: " + perfectCnt);
         // // console.log(timeDecrease);
         // // console.log(IV);
         // console.log("IV_tmp: " + IV_tmp);
         // console.log("IV: " + IV);
-        // clearInterval(timer);
-        // clearInterval(IV);
+        clearInterval(timer);
+        clearInterval(IV);
         // clearInterval(IV_tmp);
         // // setTimeDecrease(undefined);
         // setIV(undefined);
   
-        startOrStop();
+        // startOrStop();
   
         if (event.wasClean) {
           alert(`[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`);
@@ -234,11 +234,11 @@ const SingleMode = (songID) => {
             setGameEF("../../img/game_effect/perfect.png");
           } else if (similarity < 0.05) {
             setGoodCnt(prev => prev + 1);
-            setPerfectCnt(goodCnt=>goodCnt+1);
+            setGoodCnt(goodCnt=>goodCnt+1);
             setGameEF("../../img/game_effect/good.png");
           } else {
             setBadCnt(prev => prev + 1);
-            setPerfectCnt(badCnt=>badCnt+1);
+            setBadCnt(badCnt=>badCnt+1);
             setGameEF("../../img/game_effect/bad.png");
           }
 
@@ -250,14 +250,18 @@ const SingleMode = (songID) => {
             var arrayBufferView = new Uint8Array(e.data);
             const myFile = new File([e.data], 'imageName')
             const reader = new FileReader()
+            console.log("받음");
+            
             reader.onload = ev => {
-              const previewImage = String(ev.target?.result)
-              if (isMsgReceived) {
+              const previewImage = String(ev.target.result)
+              if (!isMsgReceived) {
+                console.log("미리보기")
                 setUserPoseImg(previewImage)
-                isMsgReceived = false;
                 // setIsMsgReceived(isMsgReceived=>false) // myImage라는 state에 저장했음
               } else {
+                console.log("내영상")
                 setPreviewImage(previewImage) // myImage라는 state에 저장했음
+                isMsgReceived = false;
               }
             }
             reader.readAsDataURL(myFile);
