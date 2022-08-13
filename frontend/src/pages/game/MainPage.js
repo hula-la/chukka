@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
 import { useNavigate } from 'react-router-dom';
 import { fetchMusic } from '../../features/game/gameActions';
-import { Link } from 'react-router-dom';
 import { Carousel } from '3d-react-carousal';
 
 const MainPage = () => {

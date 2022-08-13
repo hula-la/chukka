@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import vid from './bird.mp4';
-import image from './profile.png';
+import defaultImage from '../../img/default.jpeg';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchReply,
   createReply,
@@ -26,6 +26,7 @@ const Wrapper = styled.div`
   .profile {
     width: 50px;
     height: 50px;
+    border-radius: 100%;
     vertical-align: middle;
   }
   .snacks-nickname {
@@ -108,6 +109,7 @@ const Wrapper = styled.div`
 
 const SnacksItem = ({ snacks }) => {
   const dispatch = useDispatch();
+  const { snacksReply } = useSelector((state) => state.snacks);
 
   // 댓글 컴포넌트 열고 닫기
   const [isReply, setIsReply] = useState(false);
@@ -141,6 +143,7 @@ const SnacksItem = ({ snacks }) => {
 
   const onClickLike = () => {
     console.log(snacksLike);
+    console.log(snacksReply);
     // document.getElementById('my-video').play();
     setSnacksLike((isLike) => {
       return !isLike;
@@ -151,16 +154,22 @@ const SnacksItem = ({ snacks }) => {
   return (
     <Wrapper>
       <div className="account">
-        <img src={image} className="profile"></img>
+        <img
+          src={snacks.userProfile === null ? defaultImage : snacks.userProfile}
+          className="profile"
+        ></img>
         <span className="snacks-nickname">{snacks.userNickname}</span>
       </div>
       <div className="tags">
-        <span className="tagitem"># TAG1</span>
-        <span className="tagitem"># TAG2</span>
-        <span className="tagitem"># TAG3</span>
-        <span className="tagitem"># TAG4</span>
+        {snacks.snacksTag.map((tag, index) => {
+          return (
+            <span className="tagitem" key={index}>
+              # {tag}{' '}
+            </span>
+          );
+        })}
       </div>
-      <div className='video'>
+      <div className="video">
         <div>
           <video
             id="my-video"
@@ -168,33 +177,56 @@ const SnacksItem = ({ snacks }) => {
             // controls
             preload="auto"
           >
-            <source src={vid} type="video/mp4" />
+            <source
+              src={`https://chukkadance.s3.ap-northeast-2.amazonaws.com/vid/snacks/${snacks.snacksId}`}
+              type="video/mp4"
+            />
           </video>
-          <div className='snacks-info'>
-            <span className='snacks-ttl'>스낵스 제목</span>
+          <div className="snacks-info">
+            <span className="snacks-ttl">{snacks.snacksTitle}</span>
             {isReply && (
-              <div className='reply-container'>
-                <div className='reply-list'>여기에 댓글 데이터 리스트 넣기 스크롤 돼야 함</div>
-                <form onSubmit={onSubmitRelpy} className='reply-form'>
-                  <input onChange={onChangeReply} className='reply-input' placeholder='댓글을 입력하세요'/>
-                  <EditOutlinedIcon className='reply-upload-btn'/>
+              <div className="reply-container">
+                {snacksReply.length !== 0 && (
+                  <div className="reply-list">
+                    <h1>sd</h1>
+                    {snacksReply.map((reply, index) => {
+                      return <li key={index}>{reply.contents}</li>;
+                    })}
+                  </div>
+                )}
+                <form onSubmit={onSubmitRelpy} className="reply-form">
+                  <input
+                    onChange={onChangeReply}
+                    className="reply-input"
+                    placeholder="댓글을 입력하세요"
+                  />
+                  <button>
+                    <EditOutlinedIcon className="reply-upload-btn" />
+                  </button>
                 </form>
               </div>
             )}
           </div>
         </div>
-        <div className='side-btns'>
+        <div className="side-btns">
           {!snacksLike && (
-              <ThumbUpOffAltIcon onClick={onClickLike} className="icon" />
+            <ThumbUpOffAltIcon onClick={onClickLike} className="icon" />
           )}
-          {snacksLike && <ThumbUpAltIcon onClick={onClickLike} className="pink icon" />}
+          {snacksLike && (
+            <ThumbUpAltIcon onClick={onClickLike} className="pink icon" />
+          )}
           {!isReply && (
-            <ModeCommentOutlinedIcon onClick={onClickReply} className="reply icon" />
+            <ModeCommentOutlinedIcon
+              onClick={onClickReply}
+              className="reply icon"
+            />
           )}
           {isReply && (
-            <ModeCommentOutlinedIcon onClick={onClickReply} className="reply pink icon" />
+            <ModeCommentOutlinedIcon
+              onClick={onClickReply}
+              className="reply pink icon"
+            />
           )}
-          
         </div>
       </div>
     </Wrapper>

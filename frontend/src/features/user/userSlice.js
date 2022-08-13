@@ -112,6 +112,7 @@ const userSlice = createSlice({
       const newList = state.snacksList.concat(payload.data.content);
       state.snacksList = newList;
       state.Loading = false;
+      console.log(state.snacksList);
     },
     [fetchMyLectures.fulfilled]: (state, { payload }) => {
       console.log(payload.data);

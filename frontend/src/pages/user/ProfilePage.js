@@ -331,9 +331,9 @@ const LectureBox = ({ myLectures }) => {
 
   return (
     <Wrapper>
-      <div className='on-air'>
-      <CircleIcon className='on-air-icon'/>
-      <span className='on-air-msg'>수강중</span>
+      <div className="on-air">
+        <CircleIcon className="on-air-icon" />
+        <span className="on-air-msg">수강중</span>
       </div>
       <div className="lecture-header">녹화 강의</div>
       <LectureBox>
@@ -341,17 +341,17 @@ const LectureBox = ({ myLectures }) => {
         {myLectures
           .filter((lecture) => lecture.lecCategory)
           .map((lecture, index) => (
-            <LectureSmall props={lecture} noBadge classOpen />
+            <LectureSmall key={index} props={lecture} noBadge classOpen />
           ))}
       </LectureBox>
-      <hr/>
+      <hr />
       <div className="lecture-header">실시간 강의</div>
       <LectureBox>
         {/* <LectureSmall /> */}
         {myLectures
           .filter((lecture) => !lecture.lecCategory)
           .map((lecture, index) => (
-            <LectureSmall props={lecture} noBadge classOpen />
+            <LectureSmall key={index} props={lecture} noBadge classOpen />
           ))}
       </LectureBox>
       {/* <LiveLectureBox>
@@ -546,9 +546,9 @@ const ProfilePage = () => {
       {pageNum === '1' && (
         <div className="item">
           <ul className="nonelist list">
-            {snacksList.map((snacks) => (
-              <li className='listItem'>
-                <MySnacksItem key={snacks.snacksId} snacks={snacks} />
+            {snacksList.map((snacks, index) => (
+              <li className="listItem">
+                <MySnacksItem key={index} snacks={snacks} />
               </li>
             ))}
           </ul>

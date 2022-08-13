@@ -13,7 +13,6 @@ export const fetchSnacks = createAsyncThunk(
   'snacks/fetchSnacks',
   async ({ newPage, sortSnacks, tags }, { rejectWithValue }) => {
     try {
-      console.log(tags);
       const { data } = await fsnacks(newPage, sortSnacks, tags);
       return data;
     } catch (error) {
@@ -78,7 +77,6 @@ export const likeSnacks = createAsyncThunk(
   'snacks/likeSnacks',
   async (snacksId, { rejectWithValue }) => {
     try {
-      console.log(snacksId);
       const { data } = await like(snacksId);
       return data;
     } catch (error) {
@@ -109,9 +107,10 @@ export const fetchDetail = createAsyncThunk(
 
 export const uploadSnacks = createAsyncThunk(
   'snacks/upload',
-  async ({ uploadInputs, video }, { rejectWithValue }) => {
+  async ({ snacksTitle, snacksTag, video }, { rejectWithValue }) => {
     try {
-      await upload(uploadInputs, video);
+      console.log(snacksTitle, snacksTag);
+      await upload({ snacksTitle, snacksTag }, video);
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);

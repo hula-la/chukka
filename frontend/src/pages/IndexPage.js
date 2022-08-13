@@ -8,7 +8,6 @@ import FormatQuoteSharpIcon from '@mui/icons-material/FormatQuoteSharp';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const Container = styled.div`
-
   overflow: overlay;
 
   width: 100%;
@@ -267,52 +266,52 @@ const IndexPage = () => {
         <ServiceContainer>
           <ServiceItem>
             <div>
-              <div class="head">
+              <div className="head">
                 <p>HOW</p>
                 Learn ?
               </div>
-              <div class="container">
-                <Link to="lectures" class="content">
+              <div className="container">
+                <Link to="lectures" className="content">
                   댄서의 실시간 라이브 강의와
                   <br />
                   녹화 강의로 춤을 배워 보세요
-                  <div class="link">
+                  <div className="link">
                     Lecture
                     <PlayArrowIcon className="arrow-icon" />
                   </div>
                 </Link>
-                <div class="title">Lecture</div>
+                <div className="title">Lecture</div>
               </div>
             </div>
           </ServiceItem>
           <ServiceItem>
             <div>
-              <div class="head">
+              <div className="head">
                 <p>HOW</p>
                 Play ?
               </div>
-              <div class="container">
-                <Link to="games" class="content">
+              <div className="container">
+                <Link to="games" className="content">
                   게임을 통해 춤을 즐기고
                   <br />
                   대결을 펼쳐보세요
-                  <div class="link">
+                  <div className="link">
                     Game
                     <PlayArrowIcon className="arrow-icon" />
                   </div>
                 </Link>
-                <div class="title">Game</div>
+                <div className="title">Game</div>
               </div>
             </div>
           </ServiceItem>
           <ServiceItem>
             <div>
-              <div class="head">
+              <div className="head">
                 <p>HOW</p>
                 Share ?
               </div>
-              <div class="container">
-                <Link to="snacks" class="content">
+              <div className="container">
+                <Link to="snacks" className="content">
                   짧게 즐길 수 있는 Snacks를 통해 <br />
                   춤을 공유하고 구경해보세요.
                   <br />
@@ -321,7 +320,7 @@ const IndexPage = () => {
                     <PlayArrowIcon className="arrow-icon" />
                   </div>
                 </Link>
-                <div class="title">Snacks</div>
+                <div className="title">Snacks</div>
               </div>
             </div>
           </ServiceItem>

@@ -5,6 +5,7 @@ import '@yaireo/tagify/dist/tagify.css';
 import styled from 'styled-components';
 import { uploadSnacks } from '../../features/snacks/snacksActions';
 import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined';
+import { useNavigate } from 'react-router-dom';
 // import SubscriptionsOutlinedIcon from '@mui/icons-material/SubscriptionsOutlined';
 
 const Wrapper = styled.div`
@@ -12,7 +13,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
 
-  .upload-icon {  
+  .upload-icon {
     width: 15rem;
     height: 15rem;
     margin: 3rem auto 0;
@@ -28,13 +29,13 @@ const Wrapper = styled.div`
     top: -2rem;
     text-align: center;
     font-size: 2rem;
-    font-weight: bold
+    font-weight: bold;
     margin: 1rem 0;
   }
   .upload-input {
     display: none;
   }
-`
+`;
 
 const SnacksUploadForm = styled.form`
   display: flex;
@@ -114,35 +115,25 @@ const StyledButton = styled.button`
 `;
 
 const UploadPage = () => {
-  const [uploadInputs, setuploadInputs] = useState({
-    snacksTitle: '',
-    snacksTag: null,
-  });
-
+  const navigate = useNavigate();
+  const [snacksTitle, setSnacksTitle] = useState('');
+  const [snacksTag, setSnacksTag] = useState();
   const [video, setVideo] = useState(null);
 
   const dispatch = useDispatch();
 
   const onClickUpload = () => {
     document.getElementById('file').click();
-  }
+  };
 
   const onChangeTitle = (e) => {
     const { value } = e.target;
-    const nextInputs = {
-      ...uploadInputs,
-      ['snacksTitle']: value,
-    };
-    setuploadInputs(nextInputs);
+    setSnacksTitle(value);
   };
 
   const onChangeTag = (e) => {
     const tags = e.detail.tagify.getCleanValue();
-    const nextInputs = {
-      ...uploadInputs,
-      ['snacksTag']: tags,
-    };
-    setuploadInputs(nextInputs);
+    setSnacksTag(tags);
   };
 
   const onChangeVideo = (e) => {
@@ -151,22 +142,38 @@ const UploadPage = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(uploadSnacks({ uploadInputs, video }));
+    dispatch(uploadSnacks({ snacksTitle, snacksTag, video }));
+    navigate('/snacks');
   };
 
   return (
     <Wrapper>
-      <VideoCallOutlinedIcon className="upload-icon" onClick={onClickUpload}/>
-      <p className='upload-msg'>SELECT YOUR SNACKS</p>
+      <VideoCallOutlinedIcon className="upload-icon" onClick={onClickUpload} />
+      <p className="upload-msg">SELECT YOUR SNACKS</p>
       <SnacksUploadForm onSubmit={onSubmit}>
-        <input type="file" onChange={onChangeVideo} accept="video/*" className='upload-input' id="file" />
+        <input
+          type="file"
+          onChange={onChangeVideo}
+          accept="video/*"
+          className="upload-input"
+          id="file"
+        />
         <div className="upload-ttl">
           <StyledLabel for="title">제목</StyledLabel>
-          <StyledInput id="title" value={uploadInputs.title} onChange={onChangeTitle} placeholder="제목을 입력하세요"/>
+          <StyledInput
+            id="title"
+            value={snacksTitle}
+            onChange={onChangeTitle}
+            placeholder="제목을 입력하세요"
+          />
         </div>
-        <div class="tag-container">
+        <div className="tag-container">
           <StyledLabel for="tag">태그</StyledLabel>
-          <Tags value={uploadInputs.hashTag} onChange={onChangeTag} className="upload-tag"/>
+          <Tags
+            value={snacksTag}
+            onChange={onChangeTag}
+            className="upload-tag"
+          />
         </div>
         <StyledButton>UPLOAD</StyledButton>
       </SnacksUploadForm>
