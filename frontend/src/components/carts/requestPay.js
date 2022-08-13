@@ -31,7 +31,7 @@ const RequestPay= (props)=> {
     var merchant_uid ="";
     await getPayId().then((res)=>{
       console.log(res)
-      merchant_uid = res.data+111;
+      merchant_uid = res.data+115;
     })
     console.log(merchant_uid);
     /* 주문 이름 생성 */
@@ -54,9 +54,9 @@ const RequestPay= (props)=> {
       merchant_uid: merchant_uid,
       name: pay_name, 
       amount: 100,
-      buyer_email: props.user.buyer_email,
-      buyer_name: props.user.buyer_name,
-      buyer_tel: props.user.buyer_tel,
+      buyer_email: props.user.userEmail,
+      buyer_name: props.user.userName,
+      buyer_tel: props.user.userPhone,
       buyer_addr: "",
       buyer_postcode: ""
 
@@ -73,13 +73,13 @@ const RequestPay= (props)=> {
           payLecList: payLecList,
           payMethod: "card",
           payUid: res.imp_uid,
-          userId: props.user.user_id,
+          userId: props.user.userId,
         }
         
         completePay(data).then((response)=>{
           console.log(response);
           if(response.message === "Success"){
-            navigate("/accounts/pay",{state :{ list : props.payList, amount : res.paid_amount, userId : props.user.user_id}});
+            navigate("/accounts/pay",{state :{ list : props.payList, amount : res.paid_amount, user : props.user}});
           }else{
             console.log("결제 정보 저장 실패");
           }

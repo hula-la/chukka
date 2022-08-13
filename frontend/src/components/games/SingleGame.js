@@ -1,8 +1,6 @@
 import { AccountBoxTwoTone } from '@material-ui/icons';
 import React, { useState, useEffect, useRef } from 'react';
 
-
-
 const SingleMode = (songID) => {
   songID = "soojin";
   let isMsgReceived = false;
@@ -13,8 +11,8 @@ const SingleMode = (songID) => {
   const [websckt, setWebsckt] = useState();
   const [FPS, setFPS] = useState(1);
   const [playing, setPlaying] = useState(undefined);
-  const [timer, setTimer] = useState(undefined)
-  
+  const [timer, setTimer] = useState(undefined);
+
   // setInterval
   const [IV, setIV] = useState(undefined);
   // const [timeDecrease, setTimeDecrease] = useState(undefined);  
@@ -39,27 +37,37 @@ const SingleMode = (songID) => {
 
   // 미리보기
   const previewRef = useRef(null);
-  // const previewRef = useRef(null);
-  const perfectRef = useRef(0);
 
+  // 미리동작 보기를 위한 타이머
+  // const [time, setTime] = useState(10);
+  // const clearTime = () => {
+  //   setTime(10);
+  // };
 
-
+  // 점수 업그레이드
+  // const scoreChange = type => {
+  //   console.log(type);
+  //   setScore({
+  //     ...score,
+  //     "bad": 1
+  //   });
+  //   console.log(score);
+  // }
 
   // 동영상 재생을 위한 변수
   const getWebcam = (callback) => {
     try {
       const constraints = {
-        'video': true,
-        'audio': false
-      }
-      navigator.mediaDevices.getUserMedia(constraints)
-        .then(callback);
+        video: true,
+        audio: false,
+      };
+      navigator.mediaDevices.getUserMedia(constraints).then(callback);
     } catch (err) {
-      console.log(">>>> error ")
+      console.log('>>>> error ');
       console.log(err);
       return undefined;
     }
-  }
+  };
 
   const drawToCanvas = () => {
     try {
@@ -73,17 +81,20 @@ const SingleMode = (songID) => {
 
           // 뒤집기
           ctx.scale(-1, 1);
-          ctx.drawImage(videoRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+          ctx.drawImage(
+            videoRef.current,
+            0,
+            0,
+            canvasRef.current.width,
+            canvasRef.current.height,
+          );
           // ctx.setTransform(1, 0, 0, 1, 0, 0);
         }
       }
     } catch (err) {
       console.log(err);
     }
-  }
-
-
-
+  };
 
   // const stream = () => {
   //   const a = setInterval(() => sendImage(), 1000 / FPS);
@@ -93,10 +104,10 @@ const SingleMode = (songID) => {
   //   console.log(a, b,timer);
   //   setIV(a);
   //   setTimeDecrease(b);
-    
+
   //   document.getElementById("dancer_video").play();
   // }
-  
+
   const startOrStop = () => {
     // console.log("timer: " + timer)
     
@@ -116,11 +127,11 @@ const SingleMode = (songID) => {
       
       const t = setInterval(() => drawToCanvas(), 50);
       // const video_stream = videoRef.current.srcObject;
-      // videoRef.current.srcObject = video_stream; 
+      // videoRef.current.srcObject = video_stream;
       setTimer(t);
       timer_tmp = t;
     } else {
-      document.getElementById("dancer_video").pause();
+      document.getElementById('dancer_video').pause();
 
       // console.log("************");
       // console.log(IV, timer);
@@ -129,21 +140,19 @@ const SingleMode = (songID) => {
       clearInterval(timer);
       setTimer(undefined);
 
-      // 
+      //
       // clearInterval(timeDecrease);
       clearInterval(IV);
       // setTimeDecrease(undefined);
       setIV(undefined);
     }
     setPlaying(!playing);
-  }
+  };
 
   const sendImage = async () => {
-    var rawData = document.getElementById('canvas').toDataURL("image/jpeg");
+    var rawData = document.getElementById('canvas').toDataURL('image/jpeg');
     websckt.send(rawData);
-  }
-
-
+  };
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -158,15 +167,11 @@ const SingleMode = (songID) => {
     return () => clearInterval(countdown);
   }, [gameStartCounter]);
 
-
   useEffect(() => {
-
-    getWebcam((stream => {
+    getWebcam((stream) => {
       setPlaying(true);
       videoRef.current.srcObject = stream;
-    }));
-
-
+    });
 
     const url = "wss://i7e202.p.ssafy.io/fastAPI/ws/client";
     // const url = "ws://localhost:8000/fastAPI/ws/client";
@@ -175,7 +180,7 @@ const SingleMode = (songID) => {
     setFPS(1);
 
     ws.onopen = (event) => {
-      console.log("ws.open");
+      console.log('ws.open');
       // 노래제목 보내기
       ws.send(songID);
     }
@@ -277,27 +282,34 @@ const SingleMode = (songID) => {
   })
   
 
-
-  
   const Styles = {
-    gameBox: {display:"flex-column"},
-    Videobox : { position:"relative", display: 'flex'},
+    gameBox: { display: 'flex-column' },
+    Videobox: { position: 'relative', display: 'flex' },
     Video: { backgroundColor: 'gray', width: '50%', height: '50vh' },
-    stream : {  height:'100%',  width:'100%'},
-    Canvas: { width: "100%", height: "100%", background: 'rgba(245, 240, 215, 0.5)' },
-    ScoreBox: {position:'relative', zIndex:"3" },
-    Score: { position: 'absolute',  width: '50%', top:'10px', height: '10vh'},
-    Time: { position: 'absolute',  width: '50%', top:'10px', height: '10vh', zIndex: '5'},
+    stream: { height: '100%', width: '100%' },
+    Canvas: {
+      width: '100%',
+      height: '100%',
+      background: 'rgba(245, 240, 215, 0.5)',
+    },
+    ScoreBox: { position: 'relative', zIndex: '3' },
+    Score: { position: 'absolute', width: '50%', top: '10px', height: '10vh' },
+    Time: {
+      position: 'absolute',
+      width: '50%',
+      top: '10px',
+      height: '10vh',
+      zIndex: '5',
+    },
     None: { display: 'none' },
     previewImage: { position: 'absolute', height: '15vh' },
-    PoseContainer: {display: 'flex'},
-    Pose: {width: "50%", height: '20vh' },
-    PoseObject: {width: "50%",margin:"auto" },
-  }
-  
+    PoseContainer: { display: 'flex' },
+    Pose: { width: '50%', height: '20vh' },
+    PoseObject: { width: '50%', margin: 'auto' },
+  };
+
   // if (loading) return <div>로딩중..</div>;
   // if (error) return <div>에러가 발생했습니다</div>;
-
 
   return (
     <div>
@@ -308,50 +320,62 @@ const SingleMode = (songID) => {
       {gameStartCounter != 0 &&
         <div id="gameStartCounter">
           {/* {gameStartCounter } */}
-        <img src="../../img/game_effect/countdown.gif" alt="loading..." />
+          <img src="../../img/game_effect/countdown.gif" alt="loading..." />
         </div>
-      }
+      )}
 
-      {gameStartCounter == 0 &&
-        (
+      {gameStartCounter == 0 && (
         <div>
 
           {/* <button color="warning" onClick={() => startOrStop()}>{timer} </button> */}
           <div style={ Styles.gameBox}>
             <div style={Styles.Videobox}>
-              
               <div style={Styles.Video}>
-                <video id="dancer_video"  height="180" preload='auto' style={Styles.stream} muted="muted">
-                    
-                  <source src={"https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/video/"+songID} type="video/mp4"/>
+                <video
+                  id="dancer_video"
+                  height="180"
+                  preload="auto"
+                  style={Styles.stream}
+                  muted="muted"
+                >
+                  <source
+                    src={
+                      'https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/video/' +
+                      songID
+                    }
+                    type="video/mp4"
+                  />
                   {/* <source src="http://localhost:8000/fastAPI/game/dancer" type="video/mp4"/> */}
                 </video>
               </div>
               <div id="canvasDiv" style={Styles.Video}>
-                  <div style={Styles.ScoreBox}>
-                    <img id="scoreCanvas" src={gameEF} style={Styles.Score} />
-                    <canvas id="canvas" ref={canvasRef} style={Styles.Canvas} />
-                  </div>
+                <div style={Styles.ScoreBox}>
+                  <img id="scoreCanvas" src={gameEF} style={Styles.Score} />
+                  <canvas id="canvas" ref={canvasRef} style={Styles.Canvas} />
+                </div>
               </div>
-
             </div>
             <div style={Styles.PoseContainer}>
               <div style={Styles.Pose}>
                 {/* <div style={Styles.Time}>ms: { time }</div> */}
-                <img id="previewImg" src={previewImage} style={Styles.PoseObject } />
-
+                <img
+                  id="previewImg"
+                  src={previewImage}
+                  style={Styles.PoseObject}
+                />
               </div>
               <div style={Styles.Pose}>
-                <img id="userPoseImg" src={userPoseImg} style={Styles.PoseObject }></img>
+                <img
+                  id="userPoseImg"
+                  src={userPoseImg}
+                  style={Styles.PoseObject}
+                ></img>
               </div>
             </div>
-            <div>
-            </div>
-
-
+            <div></div>
           </div>
-        </div>)
-      }
+        </div>
+      )}
 
       <video ref={videoRef} autoPlay style={Styles.None} />
     </div>

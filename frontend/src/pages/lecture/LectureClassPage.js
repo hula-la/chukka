@@ -6,8 +6,13 @@ import StyledButton from '../../components/Button';
 import ReviewStar from '../../components/lectures/ReviewStar';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { fetchLectureDetail } from '../../features/lecture/lectureActions';
+import {
+  fetchLectureDetail,
+  fetchSections,
+} from '../../features/lecture/lectureActions';
+import CampaignIcon from '@mui/icons-material/Campaign';
 
+// style
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -69,12 +74,16 @@ const NoticeDiv = styled.div`
   width: 100%;
   background-color: #316cc3;
   color: white;
-  height: 65px;
+  height: 60px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   padding-left: 20px;
-  font-size: 18px;
+  font-size: 22px;
+  margin-bottom: 2rem;
+  & span {
+    margin-left: 8px;
+  }
 `;
 
 const LectureSubTitle = styled.div`
@@ -91,14 +100,19 @@ const LectureNav = styled.div`
   }
 `;
 
-const LectureDetailpage = () => {
+const LectureClassPage = () => {
   const { lectureId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchLectureDetail(lectureId));
+    dispatch(fetchSections(lectureId));
   }, [dispatch, lectureId]);
+
+  const onClickSectionHandler = (sectionId) => {
+    navigate(`/lectures/${lectureId}/section/${sectionId}`);
+  };
   // const { title, content, thumbnail, level, genre, category } = useSelector(
   //   (state) => state.lecture,
   // );
@@ -120,6 +134,8 @@ const LectureDetailpage = () => {
     lecLimit,
     insInfo,
   } = useSelector((state) => state.lecture.lecture);
+
+  const sections = useSelector((state) => state.lecture.sections);
 
   const reviews = [
     {
@@ -145,15 +161,6 @@ const LectureDetailpage = () => {
         '가나다라마바사 아자차카타파하 목업이 거의 완성이 되는 것 같습니다. 아마도 ?  배경이 너무 어둡지 않나 라는 생각이 조금 들긴 하지만 괜찮은 것 같습니다. 이것은 리뷰입니다. 한 세줄정도 쓰고 그만 쓰려고 합니다. 배가 고파요. 오늘 점심에 해물 야끼우동이었나 그랬던거 같은데 맛있었으면 좋곘습니다. 그럼 이만',
     },
   ];
-
-  // const instructorInfo = {
-  //   ins_profile: 'https://pbs.twimg.com/media/EFI_9boU4AEWVJp?format=jpg',
-  //   ins_name: '임나연',
-  //   ins_introduce:
-  //     'JYP엔터테인먼트 소속 9인조 그룹 TWICE의 멤버. 팀에서 리드보컬, 리드댄서를 맡고 있다. 2022년 6월 24일 첫 미니 앨범인 IM NAYEON을 발매하며 솔로 활동을 시작했다. 캐치프레이즈는 밝은 에너지. 상징 색깔은 하늘색 (#5bc2e7).팀 내에서 리드댄서를 맡고 있다. 타고난 선과 감각으로 춤의 포인트가 되는 부분들의 강약을 잘 살린다. 특히 나연이 많은 사람들로부터 춤선이 뛰어나다고 호평을 받았던 Alcohol-Free 안무처럼 허리와 골반의 움직임을 포인트로 사용한 안무에 매우 특출하다. 또한 군무를 할 때 센터에서의 밸런스와 춤선이 뛰어나다. 손가락이 길고 동작이 섬세하여 손을 사용한 디테일한 안무를 잘 살린다는 평가가 있다. 마치 마술사가 관객을 현혹하듯 공연에서 손과 손가락 하나 하나의 움직임이 섬세하고 아름답다. 무대 시야가 넓고 관객과의 소통에 능숙하다. 일방적인 무대가 아닌 주위에 시야를 넓게 두고 강약과 완급을 조절하며 무대를 여유롭고 자유롭게 즐긴다.',
-  //   ins_email: 'limNaYeon@gmail.com',
-  // };
-
   return (
     <Wrapper>
       <LectureInfo>
@@ -183,7 +190,7 @@ const LectureDetailpage = () => {
                 {lecStudent} / {lecLimit}
               </span>
             </div>
-            <div>
+            {/* <div>
               <>총 금액 : </>
               <span>
                 {lecPrice
@@ -191,25 +198,33 @@ const LectureDetailpage = () => {
                   .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}
                 원
               </span>
-            </div>
+            </div> */}
           </div>
           <StyledButton
-            content="장바구니에 담기"
-            onClick={() => navigate(`/accounts/cart`)}
+            content="수업 들으러 가기"
+            onClick={() => {
+              navigate(`/lectures/${lectureId}/section/1`);
+            }}
           />
         </LectureInfoDetail>
       </LectureInfo>
-      {/* <NoticeDiv>공지사항 </NoticeDiv> */}
+      <NoticeDiv>
+        <CampaignIcon />
+        <span>공지사항 : 오늘 수업 쉽니당!! 다음주에 뵙겠습니다! :)</span>
+      </NoticeDiv>
       <LectureNav>
-        <a href="#info">강의 정보</a>
+        <a href="#sections">목차</a>
         <a href="#instructor">강사 소개</a>
         <a href="#review">리뷰</a>
       </LectureNav>
-      <LectureSubTitle id="info">
-        <h1>강의 정보</h1>
+      <LectureSubTitle id="sections">
+        <h1>목차</h1>
       </LectureSubTitle>
       {/* {lecContents} */}
-      <LectureSubContent content={lecContents} />
+      <SectionContainer
+        sections={sections}
+        onClickSectionHandler={onClickSectionHandler}
+      />
 
       <LectureSubTitle id="instructor">
         <h1>강사 소개</h1>
@@ -224,7 +239,7 @@ const LectureDetailpage = () => {
   );
 };
 
-export default LectureDetailpage;
+export default LectureClassPage;
 
 const LectureSubContent = ({ content }) => {
   const SubContent = styled.div`
@@ -234,6 +249,86 @@ const LectureSubContent = ({ content }) => {
     font-size: 24px;
   `;
   return <SubContent>{content}</SubContent>;
+};
+
+const SectionContainer = ({ sections, onClickSectionHandler }) => {
+  const Wrapper = styled.div`
+    margin: 1rem 0rem;
+    padding: 2rem;
+    min-height: 500px;
+    font-size: 24px;
+  `;
+  return (
+    <Wrapper>
+      {sections.map((section, index) => (
+        <SectionLecture
+          section={section}
+          index={index}
+          key={index}
+          onClickSectionHandler={onClickSectionHandler}
+        />
+      ))}
+    </Wrapper>
+  );
+};
+
+const SectionLecture = ({ section, index, onClickSectionHandler }) => {
+  const Wrapper = styled.div`
+    width: 100%;
+    display: block;
+    color: white;
+    opacity: 0.7;
+    border-bottom: #ff2c55 0.1rem solid;
+    cursor: pointer;
+    :hover {
+      opacity: 1;
+    }
+    & .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    & .section-title {
+      font-size: 1.6rem;
+      display: block;
+    }
+    & .section-regdate {
+      font-size: 1.3rem;
+      line-height: 1.5;
+      /* color: #ff2c55; */
+      /* opacity: 0.7; */
+      color: rgb(255, 44, 85, 0.7);
+      /* :hover { */
+      /* color: rgb() */
+      /* opacity: 1; */
+      /* cursor: pointer; */
+    }
+    & .section-content {
+      font-size: 1.2rem;
+    }
+
+    min-height: 6rem;
+    margin-bottom: 2rem;
+  `;
+
+  const { secId, secTitle, secContents, secRegDate } = section;
+
+  return (
+    <Wrapper
+      onClick={() => {
+        onClickSectionHandler(secId);
+      }}
+    >
+      <div className="section-header">
+        <div className="section-title">
+          {index + 1}. {secTitle}
+        </div>
+        <div className="section-regdate">{secRegDate}</div>
+      </div>
+      <div className="section-content">{secContents}</div>
+    </Wrapper>
+  );
 };
 
 const InstructorInfo = ({ instructorInfo }) => {

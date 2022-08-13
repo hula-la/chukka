@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import CloseIcon from '@mui/icons-material/Close';
-import { getCartList, deleteCartItem } from '../../api/cart';
-import { LectureInfo } from '../../components/carts/LectureInfo';
-import { PayLecture } from '../../components/carts/PayLecture';
-
-import RequestPay from '../../components/carts/requestPay';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '../../features/cart/cartActions';
+import CloseIcon from '@mui/icons-material/Close';
+import TvOffIcon from '@mui/icons-material/TvOff';
+import { getCartList, deleteCartItem, user } from '../../api/cart';
+import { LectureInfo } from '../../components/carts/LectureInfo';
+import { PayLecture } from '../../components/carts/PayLecture';
+import Alert from '../../components/Alert';
+import RequestPay from '../../components/carts/requestPay';
+import StyledButton from '../../components/Button';
+
 
 const ProfilePageBlock = styled.div`
+  input{
+    accent-color: #ff2c55;
+  }
+
   line-height: 25px;
   font-size: 15px;
   color: #ffffffd3;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns : 0fr 1.5fr 4fr;
   max-width: 1200px;
   margin: 1rem 1rem 0 1rem;
-  align-items: flex-start;
   height: 100%;
   .icon {
     cursor: pointer;
@@ -26,14 +33,19 @@ const ProfilePageBlock = styled.div`
 `;
 // 사이드바 css
 const Side = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 30%;
-  height: 100%;
-  position: relative;
+  // display: flex;
+  // flex-direction: column;
+  display:grid;
+  grid-template-rows : 0.5fr 0.5fr 0.5fr 2fr 1fr;
 
+  -webkit-align-items: center;
+  -webkit-box-align: unset;
+  justify-content: initial;
+
+
+  width: 100%;
+  height: 70vh;
+  position: relative;
   .title {
     text-align: center;
     margin-top: 1rem;
@@ -41,17 +53,19 @@ const Side = styled.div`
   }
 `;
 const Profile = styled.div`
+  text-align: center;
+  border-bottom: 2px solid #ff2c55;
   img {
     width: 100px;
     height: 100px;
     border-radius: 100%;
     margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom:1rem;
   }
-  p {
-    text-align: center;
-    margin-bottom: 1rem;
+  p{
+    margin-bottom:1rem;
   }
+  
 `;
 const Cart = styled.div`
   border-left: 2px solid #ff2c55;
@@ -64,7 +78,10 @@ const CartList = styled.div`
   // border-style : solid;
   // border-color : white;
   width: 100%;
+  overflow:scroll;
   padding: 0 10px;
+  height: 95%;
+  
 `;
 const CartLecInfo = styled.div`
   display: grid;
@@ -74,45 +91,71 @@ const CartLecInfo = styled.div`
 const PayList = styled.div`
   // border-style : solid;
   // border-color : white;
-  border-top: 2px solid #ff2c55;
+  
   width: 100%;
-  padding-top: 3%;
-  padding-bottom: 7%;
+  height: 100%;
+  padding : 3% 0;
   text-align: center;
+  overflow: scroll;
 `;
 
 const PayResult = styled.div`
   // border-style : solid;
   // border-color : white;
+  
+  padding : 0 8% 0 5%;
   width: 100%;
+  text-align: center;
+  font-size: 1.2rem;
   .span-right {
     float: right;
+    color: #ff2c55;
   }
   .span-left {
     float: left;
+    color: #ff2c55;
+  }
+  button{
+    margin-top:5%;
   }
 `;
+
+const CartEmpty = styled.div`
+
+  .content{
+    text-align : center;
+    margin-top: 10%;
+  }
+  .tv-icon{
+    font-size: 150px;
+  }
+  .content p{
+    margin : 5% 0;
+  }
+
+`
+
+
 const CartPage = () => {
   const [lectures, setLectures] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]); // 선택된 lecture 객체 저장
   const [checkedIds, setCheckedIds] = useState([]); // 체크 표시를 위해 선택된 객체의 id값만 저장
   const [totalPrice, setTotalPrice] = useState(0);
-  // const [userInfo, setUserInfo] = useState({});
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalHeader, setModalHeader] = useState("");
+  const [modalMain, setModalMain] = useState("");
 
   const dispatch = useDispatch();
 
   const { userInfo } = useSelector((state) => state.user);
+  const { userProfile } = useSelector((state) => state.cart);
 
   useEffect(() => {
     const currentUser = userInfo.userNickname;
     console.log(currentUser);
     dispatch(fetchUser(currentUser));
-  }, []);
 
-  const { userProfile } = useSelector((state) => state.cart);
-
-  useEffect(() => {
-    getCartList('user1').then((data) => {
+    getCartList(userInfo.userId).then((data) => {
       if (data.data) {
         setLectures(...lectures, data.data);
 
@@ -122,16 +165,11 @@ const CartPage = () => {
           ...checkedIds,
           data.data.map((item) => item.cartItemId),
         );
-        /* 사용자 정보 불러오기 */
-        // setUserInfo({
-        //   user_id: 'user1',
-        //   buyer_email: 'lye0626@gmail.com',
-        //   buyer_name: '홍길동',
-        //   buyer_tel: '010-4242-4242',
-        // });
       }
     });
+
   }, []);
+
 
   useEffect(() => {
     setTotalPrice(() => calcPrice());
@@ -163,6 +201,7 @@ const CartPage = () => {
   };
 
   const deleteItem = (id) => {
+    
     deleteCartItem(id)
       .then((res) => {
         if (res.data.message === 'Success') {
@@ -173,11 +212,15 @@ const CartPage = () => {
               setCheckedItems(data.data);
 
               setCheckedIds(data.data.map((item) => item.cartItemId));
+              
+              setModalHeader("장바구니 삭제");
+              setModalMain("장바구니에서 삭제되었습니다.");
+
+               openModal();
             } else {
+
               setLectures([]);
-
               setCheckedItems([]);
-
               setCheckedIds([]);
             }
           });
@@ -190,26 +233,41 @@ const CartPage = () => {
       });
   };
 
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   return (
     <ProfilePageBlock>
+      <Alert open={modalOpen} close={closeModal} header={modalHeader}>
+        {modalMain}
+      </Alert>
       <Side>
         <h3>구매자 정보</h3>
         <Profile>
-          <img src="/img/login.png"></img>
-          <p> 이연의 </p>
+          <div>
+            <img src={userInfo.userProfile} alt="프로필 사진" ></img>
+          </div>
+          <p>{userInfo.userNickname}</p>
         </Profile>
+        <h3>결제 정보</h3>
         <PayList>
-          <h3>결제 정보</h3>
           {checkedItems &&
             checkedItems.map((payLec, i) => (
               <PayLecture data={payLec} key={i} />
             ))}
         </PayList>
         <PayResult>
-          <span className="span-left">총 결제 금액</span>
-          <span className="span-right">{totalPrice}</span>
+          <div>
+            <span className="span-left">총 결제 금액</span>
+            <span className="span-right">{totalPrice} 원</span>
+          </div>
           <RequestPay
-            user={userInfo}
+            user={userProfile}
             price={totalPrice}
             payList={checkedItems}
           />
@@ -217,9 +275,9 @@ const CartPage = () => {
       </Side>
       <Cart>
         <h3>장바구니</h3>
-        <CartList>
-          {lectures.length > 0 ? (
-            lectures.map((lecture, i) => (
+          {lectures.length > 0 ?(
+            <CartList>
+              {lectures.map((lecture, i) => (
               <CartLecInfo>
                 <input
                   type="checkbox"
@@ -235,11 +293,19 @@ const CartPage = () => {
                   onClick={() => deleteItem(lecture.cartItemId)}
                 />
               </CartLecInfo>
-            ))
-          ) : (
-            <div>장바구니에 담긴 강의가 없습니다.</div>
+            ))}
+            </CartList>
+          ):(
+            <CartEmpty>
+              <div className="wapper">
+                <div className="content">
+                  <TvOffIcon className="tv-icon"/>
+                  <p>장바구니에 담긴 강의가 없습니다.</p>
+                  <Link to="/lectures"><StyledButton content={"강의 구경하기"}></StyledButton></Link>
+                </div>
+              </div>
+            </CartEmpty>
           )}
-        </CartList>
       </Cart>
     </ProfilePageBlock>
   );
