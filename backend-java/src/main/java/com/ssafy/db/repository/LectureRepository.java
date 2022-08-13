@@ -34,12 +34,12 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     Page<Lecture> findAll(Pageable pageable);
 
     // 존재하는 강의 / 연령대 / 성별 기준으로
-    @Query(value = "select lec, e.ageGroup " +
+    @Query(value = "select lec, e.ageGroup, e.user.userGender " +
             "from Enroll e, Lecture lec " +
-            "where e.lecture.lecId = lec.lecId and e.user.userGender = :userGender " +
+            "where e.lecture.lecId = lec.lecId and e.user.userGender = :userGender and e.ageGroup = :ageGroup " +
             "group by e.lecture.lecId " +
             "order by count(e.enrollId) desc")
-    List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, Pageable pageable);
+    List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable);
 
     // 공지사항 수정
     @Modifying(clearAutomatically = true)

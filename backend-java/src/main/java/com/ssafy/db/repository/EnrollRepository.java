@@ -8,4 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
 
+    Enroll getEnrollByUser(String userId);
+
+    Enroll getEnrollByUserAndLecture(String userId, int lecId);
 }

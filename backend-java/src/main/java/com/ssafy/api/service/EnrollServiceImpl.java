@@ -42,5 +42,17 @@ public class EnrollServiceImpl implements EnrollService {
             }
         }
     }
+
+    @Override
+    public Enroll getEnrollByUserId(String userId) {
+        Enroll enroll = enrollRepository.getEnrollByUser(userId);
+        return enroll;
+    }
+
+    @Override
+    public Enroll getEnrollByUserAndLecture(String userId, int lecId) {
+        Enroll enroll = enrollRepository.getEnrollByUserAndLecture(userId, lecId);
+        return enroll;
+    }
 }
 

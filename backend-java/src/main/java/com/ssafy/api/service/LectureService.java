@@ -34,7 +34,7 @@ public interface LectureService {
     Page<LectureGetForListRes> getMostLatestLectures(Pageable pageable);
 
     // 유저별
-    List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, Pageable pageable);
+    List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable);
 
     // 전체 강의 조회
   	Page<LectureGetForListRes> findAll(Pageable pageable);

@@ -83,9 +83,9 @@ public class LectureServiceImpl implements LectureService {
 
     // 인기순
     @Override
-    public List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, Pageable pageable) {
+    public List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(0, 2);
-        List<LectureGetForYouRes> enroll = lectureRepository.getLectureByYourBirthAndGender(userGender, pageRequest);
+        List<LectureGetForYouRes> enroll = lectureRepository.getLectureByYourBirthAndGender(userGender, ageGroup, pageRequest);
         return enroll;
     }
 

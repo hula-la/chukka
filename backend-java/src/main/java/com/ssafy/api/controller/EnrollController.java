@@ -3,17 +3,15 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.enroll.EnrollPostReq;
 import com.ssafy.api.request.pay.PayPostReq;
 import com.ssafy.api.service.EnrollService;
+import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.ssafy.db.entity.Enroll;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 @Api(value = "수강 API", tags = {"Enroll"})
@@ -41,4 +39,23 @@ public class EnrollController {
         }
     }
 
+    // enroll 테이블에 강의 결제했는지 확인해주는 url
+    @GetMapping("/{lecId}")
+    @ApiOperation(value = "결제 여부 확인", notes = "유저가 해당하는 강의를 결제했는지 확인한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success")
+    })
+    public ResponseEntity<BaseResponseBody> checkPayed(
+            @ApiIgnore Authentication authentication,
+            @RequestBody @ApiParam(value = "해당강의 ID", required = true) int lecId) {
+
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String userId = userDetails.getUsername();
+        Enroll enroll = enrollService.getEnrollByUserAndLecture(userId, lecId);
+
+        if (enroll != null) {
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Payed", true));
+        }
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "PayedYet", false));
+    }
 }
