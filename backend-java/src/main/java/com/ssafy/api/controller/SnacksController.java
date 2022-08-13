@@ -152,7 +152,8 @@ public class SnacksController {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid User", null));
         }
         snacksService.createReply(replyInfo, user);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+        List<SnacksReplyRes> list = snacksService.getReplybySnacksId(replyInfo.getSnacksId());
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", list));
     }
 
     // 스낵스 좋아요 및 취소 ==============================================================================================
