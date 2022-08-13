@@ -1,4 +1,9 @@
-import { latestLectures, popularLectures, lecture } from '../../api/lecture';
+import {
+  latestLectures,
+  popularLectures,
+  lecture,
+  sections,
+} from '../../api/lecture';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 export const fetchLatestLectures = createAsyncThunk(
@@ -22,6 +27,22 @@ export const fetchLectureDetail = createAsyncThunk(
   async (lectureId, { rejectWithValue }) => {
     try {
       const { data } = await lecture(lectureId);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const fetchSections = createAsyncThunk(
+  'lecture/fetchSections',
+  async (lectureId, { rejectWithValue }) => {
+    try {
+      const { data } = await sections(lectureId);
       return data;
     } catch (error) {
       if (error.response && error.response.data.message) {

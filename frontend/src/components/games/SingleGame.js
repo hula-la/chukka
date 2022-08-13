@@ -63,17 +63,16 @@ const SingleMode = (songID) => {
   const getWebcam = (callback) => {
     try {
       const constraints = {
-        'video': true,
-        'audio': false
-      }
-      navigator.mediaDevices.getUserMedia(constraints)
-        .then(callback);
+        video: true,
+        audio: false,
+      };
+      navigator.mediaDevices.getUserMedia(constraints).then(callback);
     } catch (err) {
-      console.log(">>>> error ")
+      console.log('>>>> error ');
       console.log(err);
       return undefined;
     }
-  }
+  };
 
   const drawToCanvas = () => {
     try {
@@ -94,8 +93,7 @@ const SingleMode = (songID) => {
     } catch (err) {
       console.log(err);
     }
-  }
-
+  };
 
 
 
@@ -134,7 +132,7 @@ const SingleMode = (songID) => {
       setTimer(t);
       timer_tmp = t;
     } else {
-      document.getElementById("dancer_video").pause();
+      document.getElementById('dancer_video').pause();
 
       console.log("************");
       console.log(IV,timer);
@@ -150,12 +148,12 @@ const SingleMode = (songID) => {
       setIV(undefined);
     }
     setPlaying(!playing);
-  }
+  };
 
   const sendImage = async () => {
-    var rawData = document.getElementById('canvas').toDataURL("image/jpeg");
+    var rawData = document.getElementById('canvas').toDataURL('image/jpeg');
     websckt.send(rawData);
-  }
+  };
 
 
 
@@ -273,6 +271,10 @@ const SingleMode = (songID) => {
     return () => ws.close();
   },[]);
 
+      //clean up function when we close page
+      return () => ws.close();
+    };
+  }, []);
 
 
   

@@ -15,6 +15,11 @@ export const lecture = async (lectureId) => {
   return res;
 };
 
+export const sections = async (lectureId) => {
+  const res = await client.get(`sections/${lectureId}`);
+  return res;
+};
+
 // export const lectureCart = async () => {
 //   const res = await client.post(`lectures/cart/`);
 //   return res.data;
