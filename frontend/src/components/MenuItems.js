@@ -10,7 +10,7 @@ const NavItems = styled.li`
 
   & a {
     display: block;
-    font-size: inherit;
+    font-size: 0.95rem;
     color: inherit;
     text-decoration: none;
     cursor: pointer;
@@ -55,6 +55,7 @@ const NavItems = styled.li`
     font-family: 'Russo One', sans-serif;
     // font-weight: 600;
     cursor: pointer;
+    font-size:1.3rem;
   }
 `;
 
