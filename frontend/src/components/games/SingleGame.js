@@ -5,20 +5,18 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const SingleMode = (songID) => {
   songID = "soojin";
-  let score = [0, 0, 0];
   let isMsgReceived = false;
-  console.log(score);
   let IV_tmp;
   let timer_tmp;
 
 
-  const [websckt, setWebsckt] = useState();  
-  const [FPS, setFPS] = useState(1);  
+  const [websckt, setWebsckt] = useState();
+  const [FPS, setFPS] = useState(1);
   const [playing, setPlaying] = useState(undefined);
   const [timer, setTimer] = useState(undefined)
   
   // setInterval
-  const [IV, setIV] = useState(undefined);  
+  const [IV, setIV] = useState(undefined);
   // const [timeDecrease, setTimeDecrease] = useState(undefined);  
   // 게임 이펙트를 위한 변수
   const [gameEF, setGameEF] = useState(null);
@@ -31,30 +29,18 @@ const SingleMode = (songID) => {
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
 
+
+  const [goodCnt, setGoodCnt] = useState(0);
+  const [perfectCnt, setPerfectCnt] = useState(0);
+  const [badCnt, setBadCnt] = useState(0);
+
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
   // 미리보기
   const previewRef = useRef(null);
-
-
-  
-  
-  // 미리동작 보기를 위한 타이머
-  // const [time, setTime] = useState(10);
-  // const clearTime = () => {
-  //   setTime(10);
-  // };
-
-  // 점수 업그레이드
-  // const scoreChange = type => {
-  //   console.log(type);
-  //   setScore({
-  //     ...score,
-  //     "bad": 1
-  //   });
-  //   console.log(score);
-  // }
+  // const previewRef = useRef(null);
+  const perfectRef = useRef(0);
 
 
 
@@ -112,7 +98,7 @@ const SingleMode = (songID) => {
   // }
   
   const startOrStop = () => {
-    console.log("timer: " + timer)
+    // console.log("timer: " + timer)
     
     if (!timer) {
       const a = setInterval(() => sendImage(), 1000 / FPS);
@@ -122,11 +108,11 @@ const SingleMode = (songID) => {
       // stream();****************
       // console.log(a, b,timer);
       setIV(a);
-      IV_tmp=a;
+      IV_tmp = a;
       // setTimeDecrease(b);
       
       document.getElementById("dancer_video").play();
-// **********************************
+      // **********************************
       
       const t = setInterval(() => drawToCanvas(), 50);
       // const video_stream = videoRef.current.srcObject;
@@ -136,9 +122,9 @@ const SingleMode = (songID) => {
     } else {
       document.getElementById("dancer_video").pause();
 
-      console.log("************");
-      console.log(IV,timer);
-      console.log("************");
+      // console.log("************");
+      // console.log(IV, timer);
+      // console.log("************");
 
       clearInterval(timer);
       setTimer(undefined);
@@ -182,8 +168,8 @@ const SingleMode = (songID) => {
 
 
 
-    // const url = "wss://i7e202.p.ssafy.io/fastAPI/ws/client";
-    const url = "ws://localhost:8000/fastAPI/ws/client";
+    const url = "wss://i7e202.p.ssafy.io/fastAPI/ws/client";
+    // const url = "ws://localhost:8000/fastAPI/ws/client";
     const ws = new WebSocket(url);
     setWebsckt(ws);
     setFPS(1);
@@ -193,86 +179,103 @@ const SingleMode = (songID) => {
       // 노래제목 보내기
       ws.send(songID);
     }
-
-    ws.onclose = function (event) {
-      // // console.log(timeDecrease);
-      // // console.log(IV);
-      console.log("IV_tmp: " +IV_tmp);
-      clearInterval(timer_tmp);
-      clearInterval(IV_tmp);
-      // // setTimeDecrease(undefined);
-      // setIV(undefined);
-
-      // startOrStop();
-
-      if (event.wasClean) {
-        alert(`[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`);
-      } else {
-        alert('[close] 커넥션이 죽었습니다.');
-      }
-    };
-
-    ws.onmessage = (e) => {
-      console.log("IV_tmp: " +IV_tmp);
-      // 전달받은 데이터가 문자열일 때(유사도) 
-      if (typeof (e.data) === "string") {
-        // setIsMsgReceived(isMsgReceived=>true);
-        isMsgReceived = true;
-        // console.log(">>>>>>>>>>>>>>>>");
-        // console.log(e.data+" "+typeof(e.data));
-        let similarity = e.data;
-        console.log(similarity);
-        
-        // [] 제거  
-        similarity=similarity.replace(/[\[\]]+/g,'');
-        
-        
-        if (similarity == 0) {
-          setGameEF("../../img/game_effect/norecognize.png");
-        } else if (similarity < 0.02) {
-          score[0] ++;
-          setGameEF("../../img/game_effect/perfect.png");
-        } else if (similarity < 0.05) {
-          score[1] ++;
-          setGameEF("../../img/game_effect/good.png");
-        } else {
-          score[2] ++;
-          setGameEF("../../img/game_effect/bad.png");
-        }
-
-        console.log(score);
-        
-      }
-      // 전달받은 데이터가 이미지일 때
-      else {
-        try {
-          var arrayBufferView = new Uint8Array(e.data);
-          const myFile = new File([e.data], 'imageName')
-          const reader = new FileReader()
-          reader.onload = ev => {
-            const previewImage = String(ev.target?.result)
-            if (isMsgReceived) {
-              setUserPoseImg(previewImage)
-              isMsgReceived = false;
-              // setIsMsgReceived(isMsgReceived=>false) // myImage라는 state에 저장했음
-            } else {
-              setPreviewImage(previewImage) // myImage라는 state에 저장했음
-            }
-          } 
-          reader.readAsDataURL(myFile);
-
-          // clearTime();
-
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    };
-
+    
     //clean up function when we close page
     return () => ws.close();
-  },[]);
+  }, []);
+  
+  useEffect(() => {
+    if (websckt) {
 
+      websckt.onclose = function (event) {
+        // console.log("클로징 perfectCnt: " + perfectCnt);
+        // // console.log(timeDecrease);
+        // // console.log(IV);
+        // console.log("IV_tmp: " + IV_tmp);
+        // console.log("IV: " + IV);
+        // clearInterval(timer);
+        // clearInterval(IV);
+        // clearInterval(IV_tmp);
+        // // setTimeDecrease(undefined);
+        // setIV(undefined);
+  
+        startOrStop();
+  
+        if (event.wasClean) {
+          alert(`[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`);
+        } else {
+          alert('[close] 커넥션이 죽었습니다.');
+        }
+      };
+
+      
+      websckt.onmessage = (e) => {
+        // console.log(perfectCnt);
+    
+    
+        // console.log("IV_tmp: " + IV_tmp);
+        // 전달받은 데이터가 문자열일 때(유사도) 
+        if (typeof (e.data) === "string") {
+          // setIsMsgReceived(isMsgReceived=>true);
+          isMsgReceived = true;
+          let similarity = e.data;
+          // console.log(similarity);
+          // [] 제거  
+          similarity = similarity.replace(/[\[\]]+/g, '');
+          
+          
+          if (similarity == 0) {
+            // console.log("카운팅되는중~")
+            // setPerfectCnt((perfectRef.current+=1));
+            // console.log(perfectCnt);
+            setGameEF("../../img/game_effect/norecognize.png");
+          } else if (similarity < 0.02) {
+            setPerfectCnt(perfectCnt=>perfectCnt+1);
+            setGameEF("../../img/game_effect/perfect.png");
+          } else if (similarity < 0.05) {
+            setGoodCnt(prev => prev + 1);
+            setPerfectCnt(goodCnt=>goodCnt+1);
+            setGameEF("../../img/game_effect/good.png");
+          } else {
+            setBadCnt(prev => prev + 1);
+            setPerfectCnt(badCnt=>badCnt+1);
+            setGameEF("../../img/game_effect/bad.png");
+          }
+
+          
+        }
+        // 전달받은 데이터가 이미지일 때
+        else {
+          try {
+            var arrayBufferView = new Uint8Array(e.data);
+            const myFile = new File([e.data], 'imageName')
+            const reader = new FileReader()
+            reader.onload = ev => {
+              const previewImage = String(ev.target?.result)
+              if (isMsgReceived) {
+                setUserPoseImg(previewImage)
+                isMsgReceived = false;
+                // setIsMsgReceived(isMsgReceived=>false) // myImage라는 state에 저장했음
+              } else {
+                setPreviewImage(previewImage) // myImage라는 state에 저장했음
+              }
+            }
+            reader.readAsDataURL(myFile);
+    
+            // clearTime();
+    
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+    }
+  }, [websckt,perfectCnt, goodCnt, badCnt]);
+  
+  useEffect(() => {
+    
+  })
+  
 
 
   
@@ -301,6 +304,7 @@ const SingleMode = (songID) => {
       <h2>
         Sigle Mode
       </h2>
+      <div>{ perfectCnt}</div>
       {gameStartCounter != 0 &&
         <div id="gameStartCounter">
           {/* {gameStartCounter } */}
@@ -312,7 +316,7 @@ const SingleMode = (songID) => {
         (
         <div>
 
-          <button color="warning" onClick={() => startOrStop()}>{timer} </button>
+          {/* <button color="warning" onClick={() => startOrStop()}>{timer} </button> */}
           <div style={ Styles.gameBox}>
             <div style={Styles.Videobox}>
               
