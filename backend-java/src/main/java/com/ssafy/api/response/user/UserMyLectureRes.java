@@ -1,6 +1,6 @@
 package com.ssafy.api.response.user;
 
-import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.db.entity.Lecture;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -20,15 +20,18 @@ public class UserMyLectureRes{
 	String lecThumb;
 	@ApiModelProperty(name="강의명", example="Introduction of Advanced Dance")
 	String lecTitle;
-	@ApiModelProperty(name="강사명", example="Kim")
+	@ApiModelProperty(name="강의 유형", example="1")
+	int lecCategory;
+	@ApiModelProperty(name="강사이름", example="Kim")
 	String instructor;
 	
-	public static UserMyLectureRes of(int lecId, String lecThumb, String lecTitle, String instructor) {
+	public static UserMyLectureRes of(Lecture lecture) {
 		UserMyLectureRes res = new UserMyLectureRes();
-		res.setLecId(lecId);
-		res.setLecThumb(lecThumb);
-		res.setLecTitle(lecTitle);
-		res.setInstructor(instructor);
+		res.setLecId(lecture.getLecId());
+		res.setLecThumb(lecture.getLecThumb());
+		res.setLecTitle(lecture.getLecTitle());
+		res.setLecCategory(lecture.getLecCategory());
+		res.setInstructor(lecture.getInstructor().getInsName());
 		return res;
 	}
 }

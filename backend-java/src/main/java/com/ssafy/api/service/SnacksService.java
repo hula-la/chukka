@@ -17,8 +17,9 @@ import java.util.Optional;
 
 public interface SnacksService {
 
-    Slice<SnacksRes> findAll(Pageable pageable);
-    Snacks getCertainSnacks(Long snacksId);
+    Slice<SnacksRes> findAll(Pageable pageable, String userId);
+    Slice<SnacksRes> findCertainUserSnacks(Pageable pageable, String userId, String loginUserId);
+    SnacksRes getCertainSnacks(Long snacksId, String userId);
     // 좋아요 기능
     String likeSnacks(User user, Long snacksId);
     // 댓글 기능
@@ -26,5 +27,6 @@ public interface SnacksService {
     Snacks uploadSnacks(SnacksUploadReq snacksInfo, User user);
     List<String> getPopularTags();
     List<SnacksReplyRes> getReplybySnacksId(Long snacksId);
+    Slice<SnacksRes> searchTag(List<String> tags, String userId, Pageable pageable);
 
 }

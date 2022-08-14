@@ -58,26 +58,29 @@ public class PayServiceImpl implements PayService {
 
     @Override
     public Pay createPay(PayPostReq payPostReq) {
-        Optional<User> user =  userRepository.findByUserId(payPostReq.getUserId());
-        if(user.isPresent()){
+        Optional<User> findUser =  userRepository.findByUserId(payPostReq.getUserId());
+        if(findUser.isPresent()){
+            User user = findUser.get();
             Pay pay = Pay.builder()
                     .payMethod(payPostReq.getPayMethod())
                     .payAmount(payPostReq.getPayAmount())
                     .payDate(new Date())
                     .payUid(payPostReq.getPayUid())
-                    .user(user.get()).build();
+                    .user(user).build();
             System.out.println(pay);
             payRepository.save(pay);
 
-            List<PayList> payLists = new ArrayList<>();
+            user.setUserLvLec(user.getUserLvLec()+payPostReq.getPayAmount()/100);
+            userRepository.save(user);
 
+            List<PayList> payLists = new ArrayList<>();
             /* 결제 상세 정보 저장 */
             for(int i = 0 ; i < payPostReq.getPayLecList().size(); i++){
                 PayList payList = PayList.builder()
                         .pay(pay)
                         .lecture(lectureRepository.findLectureByLecId(payPostReq.getPayLecList().get(i)))
                         .merchant_uid(payPostReq.getMerchantUid())
-                        .user(user.get())
+                        .user(user)
                         .build();
 
                 payLists.add(payList);

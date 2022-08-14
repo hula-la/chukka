@@ -17,9 +17,7 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "songId")
-    private long songId;
-
-    private String fileName;
+    private Long songId;
 
     private String songName;
 
@@ -27,6 +25,9 @@ public class Game {
 
     private int level;
 
-    private String thumbnailUrl;
+    @Builder.Default
+    @OneToMany(mappedBy = "game",cascade = CascadeType.ALL)
+    private List<GameHighScore> gameHighScores = new ArrayList<>();
+
 
 }

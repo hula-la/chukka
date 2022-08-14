@@ -55,6 +55,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	SnacksRepository snacksRepository;
 	@Autowired
+	SnacksLikeRepository snacksLikeRepository;
+	@Autowired
 	PayRepository payRepository;
 	@Autowired
 	PayListRepository payListRepository;
@@ -123,7 +125,7 @@ public class UserServiceImpl implements UserService {
 						.userName(modifyInfo.getUserName())
 						.userPhone(modifyInfo.getUserPhone())
 						.userEmail(modifyInfo.getUserEmail())
-						.userNickname(modifyInfo.getUserNickname())
+						.userNickname(now.getUserNickname())
 						.userLvLec(now.getUserLvLec())
 						.userLvSnacks(now.getUserLvSnacks())
 						.userLvGame(now.getUserLvGame())
@@ -141,7 +143,7 @@ public class UserServiceImpl implements UserService {
 					.userName(modifyInfo.getUserName())
 					.userPhone(modifyInfo.getUserPhone())
 					.userEmail(modifyInfo.getUserEmail())
-					.userNickname(modifyInfo.getUserNickname())
+					.userNickname(now.getUserNickname())
 					.userLvLec(now.getUserLvLec())
 					.userLvSnacks(now.getUserLvSnacks())
 					.userLvGame(now.getUserLvGame())
@@ -182,14 +184,16 @@ public class UserServiceImpl implements UserService {
 	// 유저 아이디로 수강 강의 목록 조회
 	@Override
 	public List<UserMyLectureRes> getLecturesByUserId(String userId) {
-		return lectureRepository.findLecturesByUserId(userId);
+		List<UserMyLectureRes> list = lectureRepository.findLecturesByUserId(userId)
+				.stream().map(s -> UserMyLectureRes.of(s)).collect(Collectors.toList());
+		return list;
 	}
 
 	// 유저 아이디로 스낵스 목록 조회
 	@Override
 	public List<SnacksRes> getSnacksByUserId(String userId) {
 		List<SnacksRes> snack = snacksRepository.findSnacksByUserUserIdOrderBySnacksIdDesc(userId)
-				.stream().map(s -> SnacksRes.of(s)).collect(Collectors.toList());
+				.stream().map(s -> SnacksRes.of(s, snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, s.getSnacksId()).isPresent())).collect(Collectors.toList());
 		return snack;
 	}
 

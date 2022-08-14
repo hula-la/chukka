@@ -22,7 +22,6 @@ public class EnrollController {
     EnrollService enrollService;
 
     /* 수강 정보 저장 */
-    /* 수정 필요 -> 이미 수강한 강의는 저장하지 않도록 */
     @PostMapping("/")
     @ApiOperation(value = "수강 정보 저장", notes = "결제 완료 후, 결제된 강의를 회원의 수강 테이블에 저장합니다.")
     @ApiResponses({

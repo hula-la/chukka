@@ -44,24 +44,33 @@ public class SnacksController {
      * sort : 정렬 조건, sort 파라미터 추가 가능
      **/
 
-    // 스낵스 조회 =======================================================================================================
-    @GetMapping("/")
-    @ApiOperation(value = "스낵스 조회", notes = "스낵스 목록을 페이징 방식으로 조회한다.")
+    // 스낵스 태그 조건 조회 =======================================================================================================
+    @PostMapping("/")
+    @ApiOperation(value = "스낵스 태그 조건 조회 ", notes = "해당 태그를 검색하여 스낵스 목록을 페이징 방식으로 조회한다." +
+            "<br>태그는 params에 담아 문자열 리스트로 요청하며, 태그1 or 태그2 로 연산한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Success")
+            @ApiResponse(code = 200, message = "Success", response = SnacksRes.class)
     })
     public ResponseEntity<BaseResponseBody> getSnacks(
+            @ApiIgnore Authentication authentication,
+            @RequestBody @ApiParam(value="검색할 태그 리스트") List<String> tags,
             @ApiParam(value="페이지 정보") Pageable pageable){
-        Slice<SnacksRes> slice = snacksService.findAll(pageable);
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        Slice<SnacksRes> slice = null;
+        if (tags.size() == 0) {
+            slice = snacksService.findAll(pageable, loginUserId);
+        } else {
+            slice = snacksService.searchTag(tags, loginUserId, pageable);
+        }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", slice));
     }
 
     // 수정 필요 ********************************************************************************************************
     // - 반환 형태 ******************************************************************************************************
     // 스낵스 업로드 =====================================================================================================
-    @PutMapping("/upload")
-    @ApiOperation(value = "스낵스 업로드", notes = "<strong>제목, 영상 파일, 그리고 태그</strong>를 받아 스낵스 영상을 업로드한다." +
-            "<br>태그는 무조건 <strong>tag1,tag2,tag3</strong> 태그와 태그 사이에 콤마 하나만 들어간 형태로 전달한다.")
+    @PostMapping("/upload")
+    @ApiOperation(value = "스낵스 업로드", notes = "<strong>제목, 영상 파일, 그리고 태그</strong>를 받아 스낵스 영상을 업로드한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
             @ApiResponse(code = 401, message = "Invalid User", response = BaseResponseBody.class)
@@ -81,24 +90,27 @@ public class SnacksController {
         Snacks snacks = snacksService.uploadSnacks(snacksInfo, user);
         // 스낵스 영상 파일 업로드
         if(file != null) {
-            s3Uploader.uploadFiles(file, "vid/snacks", req.getServletContext().getRealPath("/vid/snacks/"), String.valueOf(snacks.getSnacksId()));
+            s3Uploader.uploadFiles(file, "vid/snacks", req.getServletContext().getRealPath("/img/"), String.valueOf(snacks.getSnacksId()));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
     }
 
     // 특정 스낵스 조회 ==================================================================================================
-    @GetMapping("/{snacksId}")
+    @GetMapping("/detail/{snacksId}")
     @ApiOperation(value = "특정 스낵스 조회", notes = "<strong>스낵스 아이디</strong>를 통해 특정 스낵스를 조회합니다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = SnacksRes.class)
     })
     public ResponseEntity<BaseResponseBody> getSnacksById(
+            @ApiIgnore Authentication authentication,
             @PathVariable @ApiParam(value="스낵스 아이디") Long snacksId){
-        Snacks snacks = snacksService.getCertainSnacks(snacksId);
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        SnacksRes snacks = snacksService.getCertainSnacks(snacksId, loginUserId);
         if(snacks == null) {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Snacks", null));
         }
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", SnacksRes.of(snacks)));
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", snacks));
     }
 
     // 스낵스 댓글 조회 ==================================================================================================
@@ -109,8 +121,11 @@ public class SnacksController {
             @ApiResponse(code = 401, message = "Invalid Snacks", response = BaseResponseBody.class)
     })
     public ResponseEntity<BaseResponseBody> getComment(
+            @ApiIgnore Authentication authentication,
             @PathVariable @ApiParam(value = "스낵스 아이디") Long snacksId) {
-        if(snacksService.getCertainSnacks(snacksId) == null) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        if(snacksService.getCertainSnacks(snacksId, loginUserId) == null) {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid Snacks", null));
         }
         List<SnacksReplyRes> list = snacksService.getReplybySnacksId(snacksId);
@@ -120,7 +135,7 @@ public class SnacksController {
     // 수정 필요 ********************************************************************************************************
     // - 반환값 결정 ****************************************************************************************************
     // 스낵스 댓글 추가 ==================================================================================================
-    @PostMapping("/{snacksId}/comments")
+    @PostMapping("/comments")
     @ApiOperation(value = "스낵스 댓글 추가", notes = "<strong>스낵스 아이디와 댓글 내용</strong>을 받아 스낵스 댓글에 추가한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
@@ -137,7 +152,8 @@ public class SnacksController {
             return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid User", null));
         }
         snacksService.createReply(replyInfo, user);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+        List<SnacksReplyRes> list = snacksService.getReplybySnacksId(replyInfo.getSnacksId());
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", list));
     }
 
     // 스낵스 좋아요 및 취소 ==============================================================================================
@@ -172,9 +188,14 @@ public class SnacksController {
             @ApiResponse(code = 401, message = "Invalid User", response = BaseResponseBody.class)
     })
     public ResponseEntity<BaseResponseBody> getCertainUserSnacks(
-            @PathVariable @ApiParam(value="유저 닉네임") String userNickname) {
-        // 뭐 어떤 형식으로 보내야하는지 아직 잘 모르겠으므로 패스
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+            @PathVariable @ApiParam(value="유저 닉네임") String userNickname,
+            @ApiIgnore Authentication authentication,
+            @ApiParam(value="페이지 정보") Pageable pageable) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserNickname(userNickname);
+        Slice<SnacksRes> slice = snacksService.findCertainUserSnacks(pageable, user.getUserId(), loginUserId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", slice));
     }
 
     // 인기 태그 조회 ====================================================================================================

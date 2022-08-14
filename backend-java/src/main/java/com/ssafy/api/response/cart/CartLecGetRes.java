@@ -17,8 +17,8 @@ public class CartLecGetRes {
     int cartItemId;
     @ApiModelProperty(name = "강의", example = "1,2")
     int lecId;
-    @ApiModelProperty(name = "강사 아이디", example = "instructor")
-    String insId;
+    @ApiModelProperty(name = "강사 이름", example = "instructor")
+    String insName;
     @ApiModelProperty(name = "썸네일", example = "ssafy/img/thumbnail.jpg")
     String thumbnail;
     @ApiModelProperty(name = "강의 제목", example = "aenergy (Coachella Ver.)")
@@ -48,7 +48,7 @@ public class CartLecGetRes {
     public CartLecGetRes(Lecture lecture, int cartItemId){
         this.cartItemId = cartItemId;
         this.lecId  = lecture.getLecId();
-        this.insId = lecture.getInstructor().getInsId();
+        this.insName = lecture.getInstructor().getInsName();
         this.lecTitle = lecture.getLecTitle();
         this.lecPrice = lecture.getLecPrice();
         this.lecStartDate = lecture.getLecStartDate();

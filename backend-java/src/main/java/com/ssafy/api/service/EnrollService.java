@@ -12,4 +12,8 @@ public interface EnrollService {
     Enroll getEnrollByUserId(String userId);
 
     Enroll getEnrollByUserAndLecture(String userId, int lecId);
+
+    /* 수강 조회 */
+    boolean findByLecIdAnsUserId(int ledId, String userId);
+
 }

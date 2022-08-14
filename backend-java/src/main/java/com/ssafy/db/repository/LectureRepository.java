@@ -74,8 +74,8 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
                                     String lecGenre);
 
     // 본인이 수강중인 강의 조회
-    @Query(value = "select l.lecId, l.lecTitle, l.instructor.insName, l.lecThumb from Lecture l join Enroll e on l.lecId = e.lecture.lecId where e.user.userId = :userId order by e.enrollId desc")
-    List<UserMyLectureRes> findLecturesByUserId(String userId);
+    @Query(value = "select l from Lecture l join Enroll e on l.lecId = e.lecture.lecId where e.user.userId = :userId order by e.enrollId desc")
+    List<Lecture> findLecturesByUserId(String userId);
 
     Lecture findLectureByLecId(int lecId);
 
