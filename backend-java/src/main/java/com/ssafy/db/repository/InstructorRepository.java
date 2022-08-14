@@ -19,5 +19,5 @@ import java.util.Optional;
  */
 @Repository
 public interface InstructorRepository extends JpaRepository<Instructor, String> {
-    Optional<Instructor> findByInsId(int insId);
+    Optional<Instructor> findByInsId(String insId);
 }

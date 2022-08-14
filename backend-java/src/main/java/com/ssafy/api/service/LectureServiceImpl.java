@@ -226,7 +226,7 @@ public class LectureServiceImpl implements LectureService {
 
     @Override
     public Lecture updateLiveLecture(LiveLectureUpdateReq liveLectureUpdateReq) {
-        if (lectureRepository.findById(liveLectureUpdateReq.getInsId()).isPresent()) {
+        if (lectureRepository.findById(liveLectureUpdateReq.getLecId()).isPresent()) {
             Optional<Instructor> ins = instructorRepository.findByInsId(liveLectureUpdateReq.getInsId());
             if (!ins.isPresent()) {
                 return null;

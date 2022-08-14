@@ -128,34 +128,34 @@ public class AdminController {
 	@PostMapping("/lectures/live")
 	@ApiOperation(value = "라이브 강의 추가", notes = "<strong>강사 아이디, 강의 제목, 강의 내용, 수강료, 공지사항, 강의 일정, 강의 요일/시간, 강의 시작일, 강의 종료일, 카테고리, 난이도, 제한인원, 그리고 춤 장르</strong>를 받아 강의를 추가한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
+			@ApiResponse(code = 200, message = "Success", response = LectureRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> registerLecture(
-			@RequestBody @ApiParam(value="강의 정보", required = true) LiveLecturePostReq liveInfo,
+			@RequestPart @ApiParam(value="강의 정보", required = true) LiveLecturePostReq liveInfo,
 			@RequestPart @ApiParam(value = "강의 썸네일 이미지 파일") MultipartFile lecThumb,
 			HttpServletRequest req) throws IOException {
 		Lecture lecture = lectureService.createLiveLecture(liveInfo, lecThumb != null);
 		if(lecThumb != null) {
 			s3Uploader.uploadFiles(lecThumb, "img/lecture/thumb", req.getServletContext().getRealPath("/img/"), Integer.toString(lecture.getLecId()));
 		}
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lectureService.findAll()));
 	}
 
 	// 녹화 강의 추가 ========================================================================================================
 	@PostMapping("/lectures/record")
 	@ApiOperation(value = "녹화 강의 추가", notes = "<strong>강사 아이디, 강의 제목, 강의 내용, 수강료, 카테고리, 난이도, 그리고 춤 장르</strong>를 받아 강의를 추가한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success", response = LectureListRes.class)
+			@ApiResponse(code = 200, message = "Success", response = LectureRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> registerLecture(
-			@RequestBody @ApiParam(value="강의 정보", required = true) LecturePostReq lectureInfo,
+			@RequestPart @ApiParam(value="강의 정보", required = true) LecturePostReq lectureInfo,
 			@RequestPart @ApiParam(value = "강의 썸네일 이미지 파일") MultipartFile lecThumb,
 			HttpServletRequest req) throws IOException {
 		Lecture lecture = lectureService.createLecture(lectureInfo, lecThumb != null);
 		if(lecThumb != null) {
 			s3Uploader.uploadFiles(lecThumb, "img/lecture/thumb", req.getServletContext().getRealPath("/img/"), Integer.toString(lecture.getLecId()));
 		}
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lectureService.findAll()));
 	}
 
 	// 섹션 추가 ========================================================================================================
@@ -220,7 +220,7 @@ public class AdminController {
 	public ResponseEntity<BaseResponseBody> deleteLecture(
 			@PathVariable @ApiParam(value = "강의 Id", required = true) int lecId) {
 		lectureService.delete(lecId);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureListRes.off(lectureService.findAll())));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lectureService.findAll()));
 	}
 
 	// 섹션 삭제 ========================================================================================================
