@@ -136,7 +136,7 @@ public class LectureServiceImpl implements LectureService {
                 .lecTitle(lecturePostReq.getLecTitle())
                 .lecContents(lecturePostReq.getLecContents())
                 .lecPrice(lecturePostReq.getLecPrice())
-                .lecCategory(lecturePostReq.getLecCategory())
+                .lecCategory(0)
                 .lecLevel(lecturePostReq.getLecLevel())
                 .lecGenre(lecturePostReq.getLecGenre())
                 .build();
@@ -169,7 +169,7 @@ public class LectureServiceImpl implements LectureService {
                 .lecTitle(liveLecturePostReq.getLecTitle())
                 .lecContents(liveLecturePostReq.getLecContents())
                 .lecPrice(liveLecturePostReq.getLecPrice())
-                .lecCategory(liveLecturePostReq.getLecCategory())
+                .lecCategory(1)
                 .lecLevel(liveLecturePostReq.getLecLevel())
                 .lecGenre(liveLecturePostReq.getLecGenre())
                 .lecNotice(liveLecturePostReq.getLecNotice())
