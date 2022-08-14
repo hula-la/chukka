@@ -32,7 +32,7 @@ public class Snacks{
     @CreatedDate
     private Date snacksRegdate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 

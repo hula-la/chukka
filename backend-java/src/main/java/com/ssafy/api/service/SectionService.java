@@ -3,10 +3,9 @@ package com.ssafy.api.service;
 import com.ssafy.api.request.section.SectionPostReq;
 import com.ssafy.api.request.section.SectionUpdateReq;
 import com.ssafy.api.response.section.SectionGetRes;
-import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.Section;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 public interface SectionService {
@@ -16,7 +15,9 @@ public interface SectionService {
 
     // Read
     // 현재 해당하는 강의의 섹션만 불러오기
-    List<SectionGetRes> getSectionByLecId(int lecId);
+    Page<SectionGetRes> getSectionByLecId(int lecId, Pageable pageable);
+
+    Page<SectionGetRes> getAllSections(Pageable pageable);
 
     // Update
     // 소강의 내용 수정하기

@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public class SnacksReplyRes {
     @ApiModelProperty(name = "스낵스 댓글 Id", example = "1")
     private int replyId;
-    @ApiModelProperty(name = "유저 아이디", example = "your_id")
-    private String userId;
+    @ApiModelProperty(name = "유저 아이디", example = "your_nickname")
+    private String userNickname;
     @ApiModelProperty(name = "내용", example = "reply_contents")
     private String contents;
     @ApiModelProperty(name = "스낵스 아이디", example = "1")
@@ -29,7 +29,7 @@ public class SnacksReplyRes {
     public static SnacksReplyRes of(SnacksReply reply) {
         SnacksReplyRes res = new SnacksReplyRes();
         res.setReplyId(reply.getReplyId());
-        res.setUserId(reply.getUser().getUserId());
+        res.setUserNickname(reply.getUser().getUserNickname());
         res.setContents(reply.getContents());
         res.setSnacksId(reply.getSnacks().getSnacksId());
         res.setReplyRegdate(reply.getReplyRegdate());

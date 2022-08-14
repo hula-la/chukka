@@ -49,7 +49,6 @@ public class User{
     private Integer userPoint = 0;
     @Builder.Default
     private Integer userType = 0;
-
     
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -58,10 +57,6 @@ public class User{
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<SnacksLike> likeUsers = new ArrayList<>();
-
-    @OneToOne
-    @JoinColumn(name = "cartId")
-    private Cart cart;
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -84,7 +79,7 @@ public class User{
     private List<SectionLike> sectionLikes = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Snacks> snacksList = new ArrayList<>();
 
     @Builder.Default
@@ -94,5 +89,9 @@ public class User{
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<SnacksReply> snacksReplies = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<GameHighScore> gameHighScores = new ArrayList<>();
 
 }

@@ -3,9 +3,14 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.lecture.LectureNoticeReq;
 import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
+import com.ssafy.api.response.lecture.LectureGetForYouRes;
 import com.ssafy.api.response.lecture.LectureNoticeRes;
+import com.ssafy.api.response.user.UserYourRes;
+import com.ssafy.api.service.EnrollService;
 import com.ssafy.api.service.LectureService;
 
+import com.ssafy.api.service.UserService;
+import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 
 import io.swagger.annotations.*;
@@ -14,8 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,6 +37,12 @@ public class LectureController {
     @Autowired
     LectureService lectureService;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    EnrollService enrollService;
+
     // 전체 강의 목록 ====================================================================================================
     // 인기순
     @GetMapping("/popular")
@@ -38,7 +52,7 @@ public class LectureController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<BaseResponseBody> getMostPopularLecture(Pageable pageable) {
-        Page<LectureGetForListRes> popular = lectureService.getMostPopularLecture(pageable);
+        List<LectureGetForListRes> popular = lectureService.getMostPopularLecture(pageable);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", popular));
     }
@@ -57,15 +71,21 @@ public class LectureController {
     }
 
     // 유저별
-//    @GetMapping("/")
-//    @ApiOperation(value = "전체 강의 목록", notes = "전체 게시글을 불러온다.")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "성공"),
-//            @ApiResponse(code = 500, message = "서버 오류")
-//    })
-//    public ResponseEntity<Page<Lecture>> lectureList(Pageable pageable) {
-//        return ResponseEntity.ok(lectureService.findAll(pageable));
-//    }
+    @GetMapping("/forUsers")
+    @ApiOperation(value = "유저별", notes = "유저에 맞춰 추천 강의를 제공한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공", response = LectureGetForYouRes.class),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<BaseResponseBody> getUserCustomList(
+            @ApiIgnore Authentication authentication, Pageable pageable) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String userId = userDetails.getUsername();
+        int userGender = userService.getUserByUserId(userId).getUserGender();
+        int ageGroup = enrollService.getEnrollByUserId(userId).getAgeGroup();
+        List<LectureGetForYouRes> forUser = lectureService.getLectureByYourBirthAndGender(userGender, ageGroup, pageable);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", forUser));
+    }
 
     // 상세페이지
     @GetMapping("/{lecId}")
@@ -74,8 +94,8 @@ public class LectureController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<BaseResponseBody> lectureDetail( @RequestBody @ApiParam(value = "불러올 해당 강의 ID", required = true) int lecId) {
-        Optional<LectureDetailRes> lecture = lectureService.getDetailLecture(lecId);
+    public ResponseEntity<BaseResponseBody> lectureDetail( @PathVariable @ApiParam(value = "불러올 해당 강의 ID", required = true) int lecId) {
+        LectureDetailRes lecture = lectureService.getDetailLecture(lecId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lecture));
     }
 

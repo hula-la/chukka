@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ApiModel("SectionGetResponse")
-public class SectionGetRes extends BaseResponseBody {
+public class SectionGetRes {
 
     @ApiModelProperty(value = "섹션 ID", example = "1, 2")
     private int secId;
@@ -20,15 +20,18 @@ public class SectionGetRes extends BaseResponseBody {
     private String secTitle;
     @ApiModelProperty(value = "섹션 내용", example = "http://chukka/section/contents/section_id")
     private String secContents;
-    @ApiModelProperty(value = "섹션 등록일", example = "sec_reg_date")
-    private Date secRegDate;
+    @ApiModelProperty(value = "섹션 썸네일", example = "img.jpg")
+    private String secThumb;
 
-    public static SectionGetRes of(Section section) {
+    public static SectionGetRes of(int secId,
+                                   String secTitle,
+                                   String secContents,
+                                   String secThumb) {
         SectionGetRes res = new SectionGetRes();
-        res.setSecId(section.getSecId());
-        res.setSecTitle(section.getSecTitle());
-        res.setSecContents(section.getSecContents());
-        res.setSecRegDate(section.getSecRegDate());
+        res.setSecId(secId);
+        res.setSecTitle(secTitle);
+        res.setSecContents(secContents);
+        res.setSecThumb(secThumb);
         return res;
     }
 }

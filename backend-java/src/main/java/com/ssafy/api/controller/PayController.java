@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Api(value = "결제 API", tags = {"Pay"})
-    @RestController
-    @RequestMapping("/pay")
-    public class PayController {
+@RestController
+@RequestMapping("/pay")
+public class PayController {
 
     @Autowired
     PayService payService;

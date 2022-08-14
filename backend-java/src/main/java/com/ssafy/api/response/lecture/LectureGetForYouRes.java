@@ -1,6 +1,6 @@
 package com.ssafy.api.response.lecture;
 
-import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.db.entity.Enroll;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -12,8 +12,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel("LecturePopularRes")
-public class LectureGetForListRes {
+@ApiModel("LectureGetForYouResponse")
+
+public class LectureGetForYouRes {
 
     @ApiModelProperty(value = "강의 ID", example = "")
     private int lecId;
@@ -27,20 +28,21 @@ public class LectureGetForListRes {
     private int lecLevel;
     @ApiModelProperty(value = "인기순 장르", example = "")
     private String lecGenre;
+    @ApiModelProperty(value = "유저 성별", example = "")
+    private int userGender;
+    @ApiModelProperty(value = "연령대", example = "")
+    private int ageGroup;
 
-    public static LectureGetForListRes of(int lecId,
-                                          String lecThumb,
-                                          String lecTitle,
-                                          int lecCategory,
-                                          int lecLevel,
-                                          String lecGenre) {
-        LectureGetForListRes res = new LectureGetForListRes();
-        res.setLecId(lecId);
-        res.setLecThumb(lecThumb);
-        res.setLecTitle(lecTitle);
-        res.setLecCategory(lecCategory);
-        res.setLecLevel(lecLevel);
-        res.setLecGenre(lecGenre);
+    public static LectureGetForYouRes of(Enroll enroll) {
+        LectureGetForYouRes res = new LectureGetForYouRes();
+        res.setLecId(enroll.getLecture().getLecId());
+        res.setLecThumb(enroll.getLecture().getLecThumb());
+        res.setLecTitle(enroll.getLecture().getLecTitle());
+        res.setLecCategory(enroll.getLecture().getLecCategory());
+        res.setLecLevel(enroll.getLecture().getLecLevel());
+        res.setLecGenre(enroll.getLecture().getLecGenre());
+        res.setUserGender(enroll.getUser().getUserGender());
+        res.setAgeGroup(enroll.getAgeGroup());
         return res;
     }
 }

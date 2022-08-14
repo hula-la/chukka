@@ -9,12 +9,14 @@ import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.repository.InstructorRepository;
 import com.ssafy.db.repository.LectureRepository;
+import com.ssafy.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 강사 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -23,6 +25,8 @@ import java.util.List;
 public class InstructorServiceImpl implements InstructorService {
     @Autowired
     InstructorRepository instructorRepository;
+    @Autowired
+    UserRepository userRepository;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.region.static}")
@@ -38,11 +42,13 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public Instructor updateInstructor(InstructorPostReq insInfo) {
-        if(instructorRepository.findById(insInfo.getInsId()).isPresent()) {
+        Optional<Instructor> instructor = instructorRepository.findByInsId(insInfo.getInsId());
+        if(instructor.isPresent()) {
             Instructor ins = Instructor.builder().insId(insInfo.getInsId())
                     .insName(insInfo.getInsName())
                     .insEmail(insInfo.getInsEmail())
-                    .insIntroduce(insInfo.getInsIntroduce()).build();
+                    .insIntroduce(insInfo.getInsIntroduce())
+                    .insProfile(instructor.get().getInsProfile()).build();
             return instructorRepository.save(ins);
         }
         return null;
@@ -62,6 +68,7 @@ public class InstructorServiceImpl implements InstructorService {
     public boolean deleteInstructor(String insId) {
         if(instructorRepository.findById(insId).isPresent()) {
             instructorRepository.delete(Instructor.builder().insId(insId).build());
+            userRepository.updateUserType(insId, 0);
             return true;
         }
         return false;

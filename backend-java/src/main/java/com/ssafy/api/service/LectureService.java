@@ -7,6 +7,7 @@ import com.ssafy.api.request.lecture.LiveLectureUpdateReq;
 import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.admin.LectureRes;
+import com.ssafy.api.response.lecture.LectureGetForYouRes;
 import com.ssafy.db.entity.Lecture;
 
 import org.springframework.data.domain.Page;
@@ -24,19 +25,23 @@ public interface LectureService {
     Lecture createLecture(LecturePostReq lecturePostReq, boolean isFile);
 
     Lecture createLiveLecture(LiveLecturePostReq liveLecturePostReq, boolean isFile);
+
     // Read ============================================================================================================
     // 인기순
-    Page<LectureGetForListRes> getMostPopularLecture(Pageable pageable);
+    List<LectureGetForListRes> getMostPopularLecture(Pageable pageable);
 
     // 최신순
     Page<LectureGetForListRes> getMostLatestLectures(Pageable pageable);
+
+    // 유저별
+    List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable);
 
     // 전체 강의 조회
   	Page<LectureGetForListRes> findAll(Pageable pageable);
 
     List<LectureRes> findAll();
 
-    Optional<LectureDetailRes> getDetailLecture(int lecId);
+    LectureDetailRes getDetailLecture(int lecId);
 
     // 결제한 강의 조회
 

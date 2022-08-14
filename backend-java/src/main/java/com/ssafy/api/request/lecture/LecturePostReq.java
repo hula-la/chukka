@@ -15,7 +15,7 @@ import java.util.Date;
 public class LecturePostReq {
 
     @ApiModelProperty(name = "강사 아이디", example = "instructor")
-    int insId;
+    String insId;
     @ApiModelProperty(name = "강의 제목", example = "aenergy (Coachella Ver.)")
     String lecTitle;
     @ApiModelProperty(name = "강의내용", example = "누구의 춤 솰라솰라")

@@ -25,6 +25,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     // 아래와 같이, Query Method 인터페이스(반환값, 메소드명, 인자) 정의를 하면 자동으로 Query Method 구현됨.
     Optional<User> findByUserId(String userId);
 
+    User findUserByUserId(String userId);
+
     Optional<User> findByUserNickname(String userNickname);
 
     @Transactional
@@ -53,5 +55,10 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Modifying
     @Query(value = "update User u set u.user_type = :userType where u.user_id = :userId", nativeQuery = true)
     int updateUserType(String userId, int userType);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update User u set u.user_lv_game = u.user_lv_game + :exp where u.user_id = :userId", nativeQuery = true)
+    int updateGameExp(String userId, int exp);
 
 }

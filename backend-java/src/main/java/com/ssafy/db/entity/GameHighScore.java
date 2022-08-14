@@ -4,27 +4,27 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Data
 @Entity
-@Getter @Setter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class Enroll {
+@AllArgsConstructor
+@Getter
+@Setter
+public class GameHighScore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int enrollId;
+    @Column(name = "gameHighScore")
+    private Long gameHighScoreId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lec_id")
-    private Lecture lecture;
+    @JoinColumn(name = "gameId")
+    private Game game;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
-    private int status; // 0 : 수강중, 1 :  수강완료(라이브)
-    // 연령대별 그룹
-    private int ageGroup;
+
+    private int score;
 }
