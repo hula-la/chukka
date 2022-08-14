@@ -6,8 +6,10 @@ import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.lecture.LectureGetForYouRes;
 import com.ssafy.api.response.lecture.LectureNoticeRes;
 import com.ssafy.api.response.user.UserYourRes;
+import com.ssafy.api.service.EnrollService;
 import com.ssafy.api.service.LectureService;
 
+import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 
@@ -34,6 +36,12 @@ public class LectureController {
 
     @Autowired
     LectureService lectureService;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    EnrollService enrollService;
 
     // 전체 강의 목록 ====================================================================================================
     // 인기순
@@ -64,20 +72,18 @@ public class LectureController {
 
     // 유저별
     @GetMapping("/forUsers")
-    @ApiOperation(value = "전체 강의 목록", notes = "전체 게시글을 불러온다.")
+    @ApiOperation(value = "유저별", notes = "유저에 맞춰 추천 강의를 제공한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = LectureGetForYouRes.class),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<BaseResponseBody> getUserCustomList(@ApiIgnore Authentication authentication, Pageable pageable) {
-        // 토큰에 문제가 있을 때
-        if(authentication == null) {
-            return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Invalid User", null));
-        }
-        // 정상 로그인 유저가 정상 닉네임 유저를 찾아갈 때
+    public ResponseEntity<BaseResponseBody> getUserCustomList(
+            @ApiIgnore Authentication authentication, Pageable pageable) {
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-        int userGender = userDetails.getUser().getUserGender();
-        List<LectureGetForYouRes> forUser = lectureService.getLectureByYourBirthAndGender(userGender, pageable);
+        String userId = userDetails.getUsername();
+        int userGender = userService.getUserByUserId(userId).getUserGender();
+        int ageGroup = enrollService.getEnrollByUserId(userId).getAgeGroup();
+        List<LectureGetForYouRes> forUser = lectureService.getLectureByYourBirthAndGender(userGender, ageGroup, pageable);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", forUser));
     }
 

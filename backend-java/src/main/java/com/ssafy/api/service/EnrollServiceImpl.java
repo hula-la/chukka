@@ -50,6 +50,22 @@ public class EnrollServiceImpl implements EnrollService {
             }
         }
     }
+
+    @Override
+    public Enroll getEnrollByUserId(String userId) {
+        User user = userRepository.findUserByUserId(userId);
+        Enroll enroll = enrollRepository.getEnrollByUser(user);
+        return enroll;
+    }
+
+    @Override
+    public Enroll getEnrollByUserAndLecture(String userId, int lecId) {
+        User user = userRepository.findUserByUserId(userId);
+        Lecture lec = lectureRepository.findLectureByLecId(lecId);
+        Enroll enroll = enrollRepository.getEnrollByUserAndLecture(user, lec);
+        return enroll;
+    }
+
     @Override
     public boolean findByLecIdAnsUserId(int ledId, String userId) {
         Optional<Enroll> enroll = enrollRepository.findByLecture_LecIdAndUser_UserId(ledId, userId);
@@ -58,6 +74,5 @@ public class EnrollServiceImpl implements EnrollService {
         }
         return false;
     }
-
 }
 

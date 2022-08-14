@@ -8,6 +8,8 @@ import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.Review;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +43,8 @@ public class ReviewController {
             @ApiResponse(code = 200, message = "성공", response = ReviewGetRes.class)
     })
     public ResponseEntity<BaseResponseBody> findByLecId(
-            @PathVariable @ApiParam(value = "강의에 달려 있는 리뷰", required = true) int lecId) {
-        List<ReviewGetRes> review = reviewService.findByLecId(lecId);
+            @PathVariable @ApiParam(value = "강의에 달려 있는 리뷰", required = true) int lecId, Pageable pageable) {
+        Page<ReviewGetRes> review = reviewService.findByLecId(lecId, pageable);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", review));
     }
 
