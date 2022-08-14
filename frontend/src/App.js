@@ -94,7 +94,7 @@ const App = () => {
           <Route path=":lecId" element={<DetailLectue />} />
           <Route path="section/:lecId" element={<AddSection />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </div>
   );
