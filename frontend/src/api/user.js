@@ -32,8 +32,6 @@ export const nickCheck = async (userNickname) => {
 export const fetchPro = async (data) => {
   const userNickname = data.paramsNickname;
   const res = await client.post(`accounts/`, { userNickname });
-  console.log('프로필 정보');
-  console.log(res);
   return res;
 };
 
@@ -44,7 +42,6 @@ export const find = async (data) => {
 
 export const change = async (profileInputs, profilePicture) => {
   const formData = new FormData();
-  console.log(profileInputs);
   formData.append('file', profilePicture);
   formData.append(
     'modifyInfo',
@@ -75,7 +72,6 @@ export const myLectures = async () => {
 
 export const lecture = async () => {
   const res = await client.get(`accounts/mylectures/`);
-  console.log('강의 목록');
-  console.log(res);
+
   return res;
 };

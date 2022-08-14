@@ -27,7 +27,6 @@ export const sections = async (lectureId) => {
 
 export const isEnroll = async (lectureId) => {
   const res = await client.get(`enroll/${lectureId}`);
-  console.log('isEnroll', res);
   return res;
 };
 
