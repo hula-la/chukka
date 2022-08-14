@@ -45,11 +45,10 @@ public abstract class CartController  {
     })
     public ResponseEntity<BaseResponseBody> insert(@ApiIgnore Authentication authentication,
             @PathVariable @ApiParam(value="강의 아이디", required = true) int lecId) {
-//        SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-//        String loginUserId = userDetails.getUsername();
-        User user = userService.getUserByUserId("user4");
+        SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId(loginUserId);
         Cart cart = cartService.findCartByUser(user.getUserId());
-
         System.out.println(user.getUserId());
         String msg = "";
         if(cart == null){ // 장바구니에 처음 담을 경우 cart 생성
