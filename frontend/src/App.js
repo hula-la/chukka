@@ -22,6 +22,9 @@ import LectureDetailpage from './pages/lecture/LectureDetailpage';
 import SnacksPage from './pages/snacks/SnacksPage';
 import DetailSnacksPage from './pages/snacks/DetailSnacksPage';
 import UploadPage from './pages/snacks/UploadPage';
+import CamUploadPage from './pages/snacks/CamUploadPage';
+import MakeSnacksPage from './pages/snacks/MakeSnacksPage';
+
 // games
 import MainPage from './pages/game/MainPage';
 import GamesPage from './pages/game/GamesPage';
@@ -72,6 +75,8 @@ const App = () => {
           <Route path="" element={<SnacksPage />} />
           <Route path=":snacksId" element={<DetailSnacksPage />} />
           <Route path="upload" element={<UploadPage />} />
+          <Route path="record" element={<MakeSnacksPage />} />
+          <Route path="camupload" element={<CamUploadPage />} />
         </Route>
         {/* games */}
         <Route path="games" element={<Layout />}>

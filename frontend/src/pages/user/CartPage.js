@@ -34,9 +34,8 @@ const ProfilePageBlock = styled.div`
 const Side = styled.div`
   // display: flex;
   // flex-direction: column;
-  display: grid;
-  grid-template-rows: 0.5fr 0.5fr 0.5fr 2fr 1fr;
-
+  display:grid;
+  grid-template-rows : 0.5fr 0.5fr 0.5fr 2fr 1fr;
   -webkit-align-items: center;
   -webkit-box-align: unset;
   justify-content: initial;
@@ -147,6 +146,8 @@ const CartPage = () => {
     const currentUser = userInfo.userNickname;
     console.log(currentUser);
     dispatch(fetchUser(currentUser));
+    console.log(userInfo);
+    console.log(userProfile);
 
     getCartList(userInfo.userId).then((data) => {
       if (data.data) {
