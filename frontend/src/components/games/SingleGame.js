@@ -3,16 +3,14 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const SingleMode = (songID) => {
   songID = "soojin";
-  let isMsgReceived = false;
-  let IV_tmp;
-  let timer_tmp;
+  // let isMsgReceived = false;
 
 
   const [websckt, setWebsckt] = useState();
   const [FPS, setFPS] = useState(1);
   const [playing, setPlaying] = useState(undefined);
   const [timer, setTimer] = useState(undefined);
-
+  
   // setInterval
   const [IV, setIV] = useState(undefined);
   // const [timeDecrease, setTimeDecrease] = useState(undefined);  
@@ -23,20 +21,25 @@ const SingleMode = (songID) => {
   const [userPoseImg, setUserPoseImg] = useState(null);
   // 게임 시작 카운터
   const [gameStartCounter, setGameStartCounter] = useState(3);
-
+  
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
-
-
+  
+  
   const [goodCnt, setGoodCnt] = useState(0);
   const [perfectCnt, setPerfectCnt] = useState(0);
   const [badCnt, setBadCnt] = useState(0);
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-
+  
   // 미리보기
   const previewRef = useRef(null);
+  // const previewRef = useRef(null);
+  const perfectRef = useRef(0);
+  
+  // 관절 영상 분리를 위한 변수
+  const [isMsgReceived, setIsMsgReceived] = useState(false)
 
   // 미리동작 보기를 위한 타이머
   // const [time, setTime] = useState(10);
@@ -119,7 +122,7 @@ const SingleMode = (songID) => {
       // stream();****************
       // console.log(a, b,timer);
       setIV(a);
-      IV_tmp = a;
+      // IV_tmp = a;
       // setTimeDecrease(b);
       
       document.getElementById("dancer_video").play();
@@ -129,7 +132,7 @@ const SingleMode = (songID) => {
       // const video_stream = videoRef.current.srcObject;
       // videoRef.current.srcObject = video_stream;
       setTimer(t);
-      timer_tmp = t;
+      // timer_tmp = t;
     } else {
       document.getElementById('dancer_video').pause();
 
@@ -173,8 +176,8 @@ const SingleMode = (songID) => {
       videoRef.current.srcObject = stream;
     });
 
-    const url = "wss://i7e202.p.ssafy.io/fastAPI/ws/client";
-    // const url = "ws://localhost:8000/fastAPI/ws/client";
+    // const url = "wss://i7e202.p.ssafy.io/fastAPI/ws/client";
+    const url = "ws://localhost:8000/fastAPI/ws/client";
     const ws = new WebSocket(url);
     setWebsckt(ws);
     setFPS(1);
@@ -222,9 +225,9 @@ const SingleMode = (songID) => {
         // 전달받은 데이터가 문자열일 때(유사도) 
         if (typeof (e.data) === "string") {
           // setIsMsgReceived(isMsgReceived=>true);
-          isMsgReceived = true;
+          setIsMsgReceived(true);
           let similarity = e.data;
-          // console.log(similarity);
+          console.log(similarity);
           // [] 제거  
           similarity = similarity.replace(/[\[\]]+/g, '');
           
@@ -237,7 +240,7 @@ const SingleMode = (songID) => {
           } else if (similarity < 0.02) {
             setPerfectCnt(perfectCnt=>perfectCnt+1);
             setGameEF("../../img/game_effect/perfect.png");
-          } else if (similarity < 0.05) {
+          } else if (similarity < 0.03) {
             setGoodCnt(prev => prev + 1);
             setGoodCnt(goodCnt=>goodCnt+1);
             setGameEF("../../img/game_effect/good.png");
@@ -255,18 +258,15 @@ const SingleMode = (songID) => {
             var arrayBufferView = new Uint8Array(e.data);
             const myFile = new File([e.data], 'imageName')
             const reader = new FileReader()
-            console.log("받음");
             
             reader.onload = ev => {
               const previewImage = String(ev.target.result)
-              if (!isMsgReceived) {
-                console.log("미리보기")
+              if (isMsgReceived) {
+                setIsMsgReceived(false);
                 setUserPoseImg(previewImage)
                 // setIsMsgReceived(isMsgReceived=>false) // myImage라는 state에 저장했음
               } else {
-                console.log("내영상")
                 setPreviewImage(previewImage) // myImage라는 state에 저장했음
-                isMsgReceived = false;
               }
             }
             reader.readAsDataURL(myFile);
@@ -279,7 +279,7 @@ const SingleMode = (songID) => {
         }
       }
     }
-  }, [websckt,perfectCnt, goodCnt, badCnt]);
+  }, [websckt,perfectCnt, goodCnt, badCnt,isMsgReceived]);
   
   useEffect(() => {
     
@@ -320,11 +320,9 @@ const SingleMode = (songID) => {
       <h2>
         Sigle Mode
       </h2>
-      <div>{ perfectCnt}</div>
       {gameStartCounter != 0 &&
         <div id="gameStartCounter">
-          {/* {gameStartCounter } */}
-          <img src="../../img/game_effect/countdown.gif" alt="loading..." />
+        <img src="../../img/game_effect/countdown.gif" alt="loading..." />
         </div>
       )}
 
