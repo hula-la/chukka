@@ -143,6 +143,7 @@ public class LectureServiceImpl implements LectureService {
         Lecture lec = lectureRepository.save(lecture);
         if(isFile) {
             Lecture lecturee = Lecture.builder()
+                    .lecId(lec.getLecId())
                     .instructor(lec.getInstructor())
                     .lecThumb("https://" + bucket + ".s3." + region + ".amazonaws.com/img/lecture/thumb/" + lec.getLecId())
                     .lecTitle(lec.getLecTitle())
@@ -181,6 +182,7 @@ public class LectureServiceImpl implements LectureService {
         Lecture lec = lectureRepository.save(lecture);
         if(isFile) {
             Lecture lecturee = Lecture.builder()
+                    .lecId(lec.getLecId())
                     .instructor(lec.getInstructor())
                     .lecThumb("https://" + bucket + ".s3." + region + ".amazonaws.com/img/lecture/thumb/" + lec.getLecId())
                     .lecTitle(lec.getLecTitle())
