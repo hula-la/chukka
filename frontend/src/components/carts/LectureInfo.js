@@ -12,7 +12,11 @@ const CartItem = styled.div`
   place-items: center;
   column-gap: 10px;
   row-gap:10px;
+<<<<<<< HEAD
   padding : 20px 5px;
+=======
+  padding : 20px 5px 20px 15px;
+>>>>>>> develop/front
 
   img{
     width : 100%;
@@ -29,10 +33,10 @@ const BadgeDiv = styled.div`
 export const LectureInfo = ({data},key) =>{
   return (
     <CartItem>
-      <img  src={data.thumbnail}></img>
+      <img  src={data.thumbnail} alt="강의 이미지"></img>
       <div>
         <p>{data.lecTitle}</p>
-        <p>{data.insId}</p>
+        <p>{data.insName}</p>
         <BadgeDiv>
           <LevelBadge level={data.lecLevel} />
           <CategoryBadge  category={data.lecGenre} />
@@ -40,9 +44,9 @@ export const LectureInfo = ({data},key) =>{
         </BadgeDiv>
       </div>
       <div>
-        <p>{data.lecSchedule}</p>
-        <p>{data.lecDayAndTime}</p>
-        <p>남은 인원 {data.lecLimit - data.student}명</p>
+        {/* <p>{data.lecSchedule}</p>
+        <p>{data.lecDayAndTime}</p> */}
+        <p>남은 인원 <span>{data.lecLimit - data.student}명</span></p>
       </div>
       <div>{data.lecPrice} 원</div>
     </CartItem>

@@ -1,11 +1,19 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { fsnacks, fTags, freply, creply, like, detail } from '../../api/snacks';
+import {
+  fsnacks,
+  fTags,
+  freply,
+  creply,
+  like,
+  detail,
+  upload,
+} from '../../api/snacks';
 
 export const fetchSnacks = createAsyncThunk(
   'snacks/fetchSnacks',
-  async (pageNum, { rejectWithValue }) => {
+  async ({ newPage, sortSnacks, tags }, { rejectWithValue }) => {
     try {
-      const { data } = await fsnacks(pageNum);
+      const { data } = await fsnacks(newPage, sortSnacks, tags);
       return data;
     } catch (error) {
       if (error.response && error.response.data.message) {
@@ -69,7 +77,6 @@ export const likeSnacks = createAsyncThunk(
   'snacks/likeSnacks',
   async (snacksId, { rejectWithValue }) => {
     try {
-      console.log(snacksId);
       const { data } = await like(snacksId);
       return data;
     } catch (error) {
@@ -88,6 +95,21 @@ export const fetchDetail = createAsyncThunk(
     try {
       const { data } = await detail(snacksId);
       return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const uploadSnacks = createAsyncThunk(
+  'snacks/upload',
+  async ({ snacksTitle, snacksTag, video }, { rejectWithValue }) => {
+    try {
+      await upload({ snacksTitle, snacksTag }, video);
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);

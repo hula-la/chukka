@@ -2,12 +2,14 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  scroll-behavior: smooth;
   font-family: 'GongGothicLight';
   color: #e2e2e2;
-  /* line-height: 27px;
-  letter-spacing:1px; */
-  
+
+  /* 드래그 방지 */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .App {
@@ -15,7 +17,6 @@
   display: flex;
   justify-content: center;
   min-height: 100%;
-
 }
 
 /* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap'); */
@@ -23,27 +24,29 @@
 /* 한글 font */
 @font-face {
   font-family: 'GongGothicMedium';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicMedium.woff') format('woff');
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicMedium.woff')
+    format('woff');
+
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'GongGothicLight';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicLight.woff') format('woff');
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicLight.woff')
+    format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
 /* 강조 font */
-@font-face{
-  font-family: 'Russo One',sans-serif;
-  src: url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap') format('woff');
+@font-face {
+  font-family: 'Russo One', sans-serif;
+  src: url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap')
+    format('woff');
   font-weight: normal;
   font-style: normal;
 }
 @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
-
-
 
 /* @font-face {
   font-family: 'OTWelcomeRA';
@@ -51,5 +54,3 @@
   font-weight: normal;
   font-style: normal;
 } */
-
-

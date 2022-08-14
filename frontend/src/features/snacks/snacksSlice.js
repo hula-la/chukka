@@ -20,7 +20,12 @@ const initialState = {
 const snacksSlice = createSlice({
   name: 'snacks',
   initialState,
-  reducer: {},
+  reducers: {
+    changeSort: (state) => {
+      state.hasMore = false;
+      state.snacksList = [];
+    },
+  },
   extraReducers: {
     // 스낵스 목록 조회
     [fetchSnacks.pending]: (state) => {
@@ -31,7 +36,33 @@ const snacksSlice = createSlice({
       const newList = state.snacksList.concat(payload.data.content);
       state.snacksList = newList;
       console.log(state.snacksList);
+<<<<<<< HEAD
       state.isLoading = false;
+=======
+    },
+    [fetchSnacks.rejected]: (state, { payload }) => {
+      console.log(payload);
+    },
+    // 스낵스 댓글 조회
+    [fetchReply.fulfilled]: (state, { payload }) => {
+      state.snacksReply = payload.data;
+      console.log(state.snacksReply);
+    },
+    // 인기태그 조회
+    [fetchTags.fulfilled]: (state, { payload }) => {
+      state.snacksPopularTags = payload.data;
+      console.log(state.snacksPopularTags);
+    },
+    // 댓글 생성
+    [createReply.fulfilled]: (state, { payload }) => {
+      state.snacksReply = payload.data;
+      console.log(payload);
+    },
+    // 특정 스낵스 조회
+    [fetchDetail.fulfilled]: (state, { payload }) => {
+      state.snacksDetail = payload.data;
+      console.log(state.snacksDetail);
+>>>>>>> develop/front
     },
     // 스낵스 댓글 조회
     [fetchReply.fulfilled]: (state, { payload }) => {
@@ -52,5 +83,7 @@ const snacksSlice = createSlice({
     },
   },
 });
+
+export const { changeSort } = snacksSlice.actions;
 
 export default snacksSlice.reducer;

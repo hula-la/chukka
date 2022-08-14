@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import SnacksItem from '../../components/snacks/SnacksItem';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import SnacksItem from '../../components/snacks/SnacksItem';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
 import { useInView } from 'react-intersection-observer';
 import { fetchSnacks, fetchTags } from '../../features/snacks/snacksActions';
+<<<<<<< HEAD
+=======
+import { changeSort } from '../../features/snacks/snacksSlice';
+import LoupeOutlinedIcon from '@mui/icons-material/LoupeOutlined';
+>>>>>>> develop/front
 
 const Wrapper = styled.div`
   div::-webkit-scrollbar {
@@ -34,7 +40,7 @@ const Wrapper = styled.div`
   }
   .section {
     width: 100%;
-    height: 800px;
+    height: 85vh;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -44,7 +50,6 @@ const Wrapper = styled.div`
   .tag {
     width: 30%;
     height: 100px;
-    /* border: white 2px solid; */
     border-radius: 10px;
     padding: 20px;
     position: sticky;
@@ -55,11 +60,11 @@ const Wrapper = styled.div`
     font-weight: bold;
     font-size: 1.5rem;
   }
-  .item {
-    width: 50%;
-  }
   .nonelist {
     list-style: none;
+  }
+  .snacksitem {
+    margin-bottom: 5rem;
   }
   .listitem {
     float: left;
@@ -79,6 +84,13 @@ const Wrapper = styled.div`
       margin-right: 0px;
     }
   }
+  .tag-selected {
+    z-index: 100;
+    opacity: 1;
+    background-color: #ff2c55;
+    font-weight: bold;
+    margin-right: 0px;
+  }
   .snacks {
     margin-bottom: 20px;
     width: 100%;
@@ -87,9 +99,24 @@ const Wrapper = styled.div`
   .list {
     margin-bottom: 10px;
   }
+  .upload-parent {
+    position: fixed;
+  }
+  .upload-btn {
+    position: absolute;
+    right: 8rem;
+    width: 4rem;
+    height: 4rem;
+    fill: #ff2c55;
+    opacity: 0.6;
+    transition: 300ms;
+    :hover {
+      opacity: 1;
+    }
+  }
 `;
 
-const SnacksPage = () => {
+const SnacksPage = ({ history }) => {
   // 여기에 코드 적자
   // {
   //   /*
@@ -100,7 +127,25 @@ const SnacksPage = () => {
   //       https://videojs.com/guides/options/#html5
   // */
   // }
+  // 인기순, 최신순 정렬
+  const [sortSnacks, setSortSnacks] = useState('snacksId,DESC');
+  const [tagList, setTagList] = useState([]);
+  const [tags, setTags] = useState([]);
 
+<<<<<<< HEAD
+=======
+  const onClickNew = () => {
+    if (sortSnacks !== 'snacksId,DESC') {
+      setSortSnacks('snacksId,DESC');
+    }
+  };
+  const onClickPop = () => {
+    if (sortSnacks !== 'snacksLikes,ASC') {
+      setSortSnacks('snacksLikes,ASC');
+    }
+  };
+
+>>>>>>> develop/front
   // 무한 스크롤, 스낵스 받아오기
   const [pageNum, setPageNum] = useState(1);
 
@@ -111,16 +156,46 @@ const SnacksPage = () => {
   const { snacksList } = useSelector((state) => state.snacks);
   const { hasMore } = useSelector((state) => state.snacks);
 
+  const onClickTags = (e) => {
+    setTagList((tagList) => {
+      const nextTags = tagList.map((tag) => {
+        if (tag.tag === e.target.id) {
+          return {
+            tag: tag.tag,
+            selected: !tag.selected,
+          };
+        } else return tag;
+      });
+      return nextTags;
+    });
+  };
+
   useEffect(() => {
     if (snacksList.length === 0) {
-      dispatch(fetchSnacks(pageNum));
+      const newPage = pageNum;
+      dispatch(fetchSnacks({ newPage, sortSnacks, tags }));
     }
   }, [dispatch]);
 
   useEffect(() => {
+    // console.log(sortSnacks);
+    if (snacksList.length !== 0) {
+      setPageNum(() => {
+        dispatch(changeSort());
+        const newPage = 1;
+        dispatch(fetchSnacks({ newPage, sortSnacks, tags }));
+        return 1;
+      });
+    }
+  }, [dispatch, sortSnacks, tags]);
+
+  useEffect(() => {
     if (snacksList.length !== 0 && inView && hasMore) {
       setPageNum((page) => {
-        dispatch(fetchSnacks(page + 1));
+        const newPage = page + 1;
+        setTimeout(() => {
+          dispatch(fetchSnacks({ newPage, sortSnacks, tags }));
+        }, 500);
         return page + 1;
       });
     }
@@ -133,41 +208,64 @@ const SnacksPage = () => {
 
   const { snacksPopularTags } = useSelector((state) => state.snacks);
 
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    const tmp = snacksPopularTags.map((tag) => ({
+      tag,
+      selected: false,
+    }));
+    setTagList(tmp);
+  }, [snacksPopularTags]);
+
+  useEffect(() => {
+    // 성목
+    // 선택된 태그 가져오기
+    setTags(() => {
+      const selectedTags = tagList
+        .filter((tag) => tag.selected)
+        .map((tag) => tag.tag);
+      return selectedTags;
+    });
+  }, [tagList]);
+
+>>>>>>> develop/front
   return (
     <Wrapper>
       <div className="sort">
-        <button className="sortButton">인기순</button>
-        <button className="sortButton">인기순</button>
-        <button className="sortButton">인기순</button>
-        <button className="sortButton">인기순</button>
+        <button onClick={onClickNew} className="sortButton">
+          최신순
+        </button>
+        <button onClick={onClickPop} className="sortButton">
+          인기순
+        </button>
       </div>
       <div className="section">
         <div className="tag">
           <p className="ttl">실시간 인기 태그</p>
           <ul className="nonelist">
-            <li className="listitem"># Hello</li>
-            <li className="listitem"># World</li>
-            <li className="listitem"># CHUKKA</li>
-            <li className="listitem"># Do</li>
-            <li className="listitem"># Your</li>
-            <li className="listitem"># Best</li>
-            <li className="listitem"># Daeyoung</li>
-            <li className="listitem"># Sujin</li>
-            <li className="listitem"># YeonYi</li>
-            <li className="listitem"># Hojun</li>
-            <li className="listitem"># Jiwon</li>
-            <li className="listitem"># Moki</li>
-            <li className="listitem"># The</li>
-            <li className="listitem"># Greatest</li>
-            <li className="listitem"># Developer</li>
-            <li className="listitem"># Ever</li>
+            {tagList.map((tag, index) => {
+              return (
+                <li
+                  className={'listitem' + (tag.selected ? ' tag-selected' : '')}
+                  key={index}
+                  onClick={onClickTags}
+                >
+                  <div id={tag.tag}># {tag.tag}</div>
+                </li>
+              );
+            })}
           </ul>
         </div>
         <div className="item">
           <ul className="nonelist list">
             {snacksList.map((snacks) => {
               return (
+<<<<<<< HEAD
                 <li>
+=======
+                <li className="snacksitem">
+>>>>>>> develop/front
                   <SnacksItem key={snacks.snacksId} snacks={snacks} />
                 </li>
               );
@@ -175,6 +273,11 @@ const SnacksPage = () => {
           </ul>
           <div ref={ref}>1</div>
         </div>
+        <Link to="upload">
+          <div className="upload-parent">
+            <LoupeOutlinedIcon className="upload-btn" />
+          </div>
+        </Link>
       </div>
     </Wrapper>
   );

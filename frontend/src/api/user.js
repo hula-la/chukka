@@ -1,9 +1,7 @@
 import client from './client';
 
 export const login = async (data) => {
-  console.log('client login!');
   const res = await client.post('accounts/login/', data);
-  console.log(res);
   return res;
 };
 
@@ -28,7 +26,6 @@ export const idCheck = async (userId) => {
 };
 export const nickCheck = async (userNickname) => {
   const res = await client.get(`accounts/checkid/${userNickname}/`);
-  console.log(res);
   return res.data;
 };
 
@@ -47,7 +44,7 @@ export const find = async (data) => {
 
 export const change = async (profileInputs, profilePicture) => {
   const formData = new FormData();
-
+  console.log(profileInputs);
   formData.append('file', profilePicture);
   formData.append(
     'modifyInfo',
@@ -59,16 +56,20 @@ export const change = async (profileInputs, profilePicture) => {
     },
   };
   const res = await client.put(`accounts/`, formData, config);
-  console.log(res);
   return res;
 };
 
 export const snacks = async (paramsNickname, snacksPage) => {
   const res = await client.get(`snacks/${paramsNickname}`, {
-    params: { page: snacksPage, size: 4 },
+    params: { page: snacksPage, size: 8 },
   });
-  console.log('스낵스 목록');
-  console.log(res);
+
+  return res;
+};
+
+export const myLectures = async () => {
+  const res = await client.get(`accounts/mylectures/`);
+
   return res;
 };
 

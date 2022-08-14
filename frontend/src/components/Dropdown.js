@@ -30,6 +30,9 @@ const DropdownDiv = styled.div`
     left: 100%;
     top: -7px;
   }
+  & .dropdown .menu-items:hover {
+    color:#ff2c55;
+  }
 `;
 
 const Dropdown = ({ submenus, dropdown }) => {

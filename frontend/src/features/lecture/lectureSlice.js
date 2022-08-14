@@ -1,21 +1,65 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchLectures } from './lectureActions';
+import {
+  fetchPopularLectures,
+  fetchRecommendLectures,
+  fetchLatestLectures,
+  fetchLectureDetail,
+  fetchSections,
+  fetchIsEnroll,
+} from './lectureActions';
 import thumbnail1 from '../../img/pop.jpeg';
 
 const initialState = {
-  title: '나연 - POP',
-  content: '',
-  thumbnail: thumbnail1,
-  level: 1,
-  genre: '아이돌',
-  category: '실시간',
+  popularLectures: [],
+  recommendLectures: [],
+  lectures: [],
+  lecture: {
+    lecId: '',
+    lecThumb: '',
+    lecTitle: '',
+    lecLevel: '',
+    lecGenre: '',
+    lecCategory: '',
+    lecPrice: '',
+    lecContents: '',
+    lecNotice: '',
+    lecSchedule: '',
+    dayAndTime: '',
+    lecStartDate: '',
+    lecEndDate: '',
+    lecStudent: '',
+    lecLimit: '',
+    insInfo: {},
+  },
+  isEnroll: false,
+  sections: [],
 };
 
 const lectureSlice = createSlice({
   name: 'lecture',
   initialState,
   reducers: {},
-  extraReducers: {},
+  extraReducers: {
+    [fetchPopularLectures.fulfilled]: (state, { payload }) => {
+      state.popularLectures = payload.data;
+    },
+    [fetchRecommendLectures.fulfilled]: (state, { payload }) => {
+      console.log('reco', payload.data);
+      state.recommendLectures = payload.data;
+    },
+    [fetchLatestLectures.fulfilled]: (state, { payload }) => {
+      state.lectures = payload.content;
+    },
+    [fetchLectureDetail.fulfilled]: (state, { payload }) => {
+      state.lecture = payload.data;
+    },
+    [fetchSections.fulfilled]: (state, { payload }) => {
+      state.sections = payload.data.content;
+    },
+    [fetchIsEnroll.fulfilled]: (state, { payload }) => {
+      state.isEnroll = payload.data;
+    },
+  },
 });
 
 export default lectureSlice.reducer;

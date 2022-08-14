@@ -7,7 +7,7 @@ import {
   find,
   change,
   snacks,
-  lecture,
+  myLectures,
 } from '../../api/user';
 
 export const registerUser = createAsyncThunk(
@@ -134,11 +134,11 @@ export const fetchSnacks = createAsyncThunk(
   },
 );
 
-export const fetchLectures = createAsyncThunk(
-  'user/fetchlecture',
+export const fetchMyLectures = createAsyncThunk(
+  'user/fetchMyLecture',
   async (tmp, { rejectWithValue }) => {
     try {
-      const { data } = await lecture();
+      const { data } = await myLectures();
       return data;
     } catch (error) {
       if (error.response && error.response.data.message) {

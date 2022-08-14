@@ -5,19 +5,19 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import registerServiceWorker from './registerServiceWorker';
+import ScrollTop from './components/ScrollTop';
 
 import store from './app/store';
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
+      <ScrollTop />
       <App />
     </BrowserRouter>
   </Provider>,
   document.getElementById('root'),
 );
-registerServiceWorker();
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

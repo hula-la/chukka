@@ -1,3 +1,10 @@
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchPopularLectures,
+  fetchRecommendLectures,
+  fetchLatestLectures,
+} from '../../features/lecture/lectureActions';
 import Lecture from '../../components/lectures/Lecture';
 import LectureSmall from '../../components/lectures/LectureSmall';
 import styled from 'styled-components';
@@ -11,6 +18,23 @@ const Wrapper = styled.div`
   & > div {
     margin-top: 40px;
   }
+  & .popular-lectures-div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 20px;
+    column-gap: 20px;
+    /* flex-wrap: wrap; */
+  }
+  & .lectures-div {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 20px;
+    column-gap: 20px;
+    /* flex-wrap: wrap; */
+  }
+  & .lectures-div > div {
+    margin-right: 15px;
+  }
 `;
 
 const Lectures2 = styled.div`
@@ -21,16 +45,15 @@ const Lectures2 = styled.div`
   overflow-x: scroll; */
 `;
 
-const Lectures3 = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 30px;
-  /* flex-wrap: nowrap;
-  flex: 0 0 90%;
-  overflow-x: scroll; */
-`;
-
 const LecturesPage = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchPopularLectures());
+    dispatch(fetchRecommendLectures());
+    dispatch(fetchLatestLectures());
+  }, [dispatch]);
+  const lectures = useSelector((state) => state.lecture.lectures);
+  const popularLectures = useSelector((state) => state.lecture.popularLectures);
   // Dummy Data
   const dummy = [
     {
@@ -55,13 +78,11 @@ const LecturesPage = () => {
     <Wrapper>
       <div>
         <h1>인기 강의</h1>
-        <Lectures2>
-          {dummy.map((lecture, index) => (
-            <Lecture props={lecture} key={index} />
+        <div className="popular-lectures-div">
+          {popularLectures.map((lecture, index) => (
+            <LectureSmall props={lecture} key={index} />
           ))}
-          {/* <Lecture props={dummy[0]} />
-          <Lecture props={dummy[1]} /> */}
-        </Lectures2>
+        </div>
       </div>
       <div>
         <h1>20대 여성 인기</h1>
@@ -75,30 +96,11 @@ const LecturesPage = () => {
       </div>
       <div>
         <h1>강의 목록</h1>
-        <Lectures3>
-          {dummy.map((lecture, index) => (
-            <LectureSmall props={lecture} key={index} />
+        <div className="lectures-div">
+          {lectures.map((lecture, index) => (
+            <LectureSmall props={lecture} key={lecture.lecId} />
           ))}
-          <LectureSmall props={dummy[0]} />
-        </Lectures3>
-        <Lectures3>
-          {dummy.map((lecture, index) => (
-            <LectureSmall props={lecture} key={index} />
-          ))}
-          <LectureSmall props={dummy[0]} />
-        </Lectures3>
-        <Lectures3>
-          {dummy.map((lecture, index) => (
-            <LectureSmall props={lecture} key={index} />
-          ))}
-          <LectureSmall props={dummy[0]} />
-        </Lectures3>
-        <Lectures3>
-          {dummy.map((lecture, index) => (
-            <LectureSmall props={lecture} key={index} />
-          ))}
-          <LectureSmall props={dummy[0]} />
-        </Lectures3>
+        </div>
       </div>
     </Wrapper>
   );

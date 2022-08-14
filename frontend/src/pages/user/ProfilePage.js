@@ -7,7 +7,11 @@ import {
   fetchProfile,
   changeProfile,
   fetchSnacks,
+<<<<<<< HEAD
   fetchLectures,
+=======
+  fetchMyLectures,
+>>>>>>> develop/front
 } from '../../features/user/userActions';
 import MySnacksItem from '../../components/snacks/MySnacksItem';
 import defaultImage from '../../img/default.jpeg';
@@ -18,6 +22,11 @@ import PersonIcon from '@mui/icons-material/Person';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
+<<<<<<< HEAD
+=======
+import LectureSmall from '../../components/lectures/LectureSmall';
+import CircleIcon from '@mui/icons-material/Circle';
+>>>>>>> develop/front
 
 // 페이지 블락
 const ProfilePageBlock = styled.div`
@@ -27,6 +36,19 @@ const ProfilePageBlock = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   align-items: flex-start;
+  .item {
+    width: 100%;
+  }
+  .nonelist {
+    list-style: none;
+  }
+  .list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+  .listItem {
+    border-top: 1px solid #ff2c55;
+  }
 `;
 
 // 사이드바 css
@@ -77,6 +99,7 @@ const SideBarButton = styled.button`
     font-weight: bold;
     border-bottom: #ff2c55 0.05rem solid;
     opacity: 1;
+<<<<<<< HEAD
   }
 `;
 
@@ -132,6 +155,8 @@ const FinishLectureBox = styled.div`
     height: 160px;
     width: 200px;
     margin-top: 10px;
+=======
+>>>>>>> develop/front
   }
 `;
 
@@ -162,14 +187,22 @@ const ChangeProfileForm = styled.form`
     position: relative;
     font-size: 3rem;
     font-weight: bold;
+<<<<<<< HEAD
     top: -4rem;
+=======
+    top: -3.5rem;
+>>>>>>> develop/front
     text-align: center;
   }
   & p.userNickname {
     position: relative;
     font-size: 1rem;
     font-weight: bold;
+<<<<<<< HEAD
     top: -4rem;
+=======
+    top: -3rem;
+>>>>>>> develop/front
     text-align: center;
     color: #ff2c55;
     opacity: 0.7;
@@ -213,6 +246,7 @@ const ChangeProfileForm = styled.form`
 `;
 
 // 스낵스 css
+<<<<<<< HEAD
 const Wrapper = styled.div`
   div::-webkit-scrollbar {
     display: none;
@@ -227,6 +261,22 @@ const Wrapper = styled.div`
     margin-bottom: 10px;
   }
 `;
+=======
+// const Wrapper = styled.div`
+//   div::-webkit-scrollbar {
+//     display: none;
+//   }
+//   /* .item {
+//     width: 50%;
+//   } */
+//   .nonelist {
+//     list-style: none;
+//   }
+//   .list {
+//     margin-bottom: 10px;
+//   }
+// `;
+>>>>>>> develop/front
 
 const StyledInput = styled.input`
   font-size: 1rem;
@@ -237,7 +287,12 @@ const StyledInput = styled.input`
   outline-color: #ffffff;
   width: 70%;
   display: inline;
+<<<<<<< HEAD
   background-color: #0b0b0b;
+=======
+  background-color: #3b3b3b;
+  border-radius: 0.5rem;
+>>>>>>> develop/front
 
   &::-webkit-calendar-picker-indicator {
     filter: invert(1);
@@ -278,11 +333,139 @@ const StyledButton = styled.button`
   }
 `;
 
+// 나의 강의 목록
+const LectureBox = ({ myLectures }) => {
+  const Wrapper = styled.div`
+    padding: 0 5rem;
+    & h3 {
+      margin-bottom: 0.5rem;
+    }
+    width: 100%;
+    .on-air {
+      background-color: #ff2c55;
+      width: 10rem;
+      height: 4rem;
+      padding: 0.4rem 0.1rem 0.5rem 0.8rem;
+      border-radius: 5rem;
+      margin: 1rem 0 2rem;
+    }
+    .on-air-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      vertical-align: middle;
+    }
+    .on-air-msg {
+      margin-left: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      line-height: 3rem;
+    }
+    & hr {
+      margin: 1.5rem 0;
+      border: none;
+      height: 0.1rem;
+      background: #ff2c55;
+      opacity: 0.5;
+    }
+    .lecture-header {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+  `;
+
+  const LectureBox = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 20px;
+    column-gap: 20px;
+    min-height: 200px;
+    & p {
+      margin-left: 0.5rem;
+      font-size: small;
+      color: #ff2c55;
+    }
+    /* & img {
+      height: 160px;
+      width: 200px;
+      margin-top: 10px;
+    } */
+  `;
+
+  const LiveLectureBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    & p {
+      margin-left: 0.5rem;
+      font-size: small;
+      color: #ff2c55;
+    }
+    & img {
+      height: 160px;
+      width: 200px;
+      margin-top: 10px;
+    }
+  `;
+
+  const FinishLectureBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    & p {
+      margin-left: 0.5rem;
+      font-size: small;
+      color: #ff2c55;
+    }
+    & img {
+      height: 160px;
+      width: 200px;
+      margin-top: 10px;
+    }
+  `;
+
+  return (
+    <Wrapper>
+      <div className="on-air">
+        <CircleIcon className="on-air-icon" />
+        <span className="on-air-msg">수강중</span>
+      </div>
+      <div className="lecture-header">녹화 강의</div>
+      <LectureBox>
+        {/* <LectureSmall /> */}
+        {myLectures
+          .filter((lecture) => lecture.lecCategory)
+          .map((lecture, index) => (
+            <LectureSmall key={index} props={lecture} noBadge classOpen />
+          ))}
+      </LectureBox>
+      <hr />
+      <div className="lecture-header">실시간 강의</div>
+      <LectureBox>
+        {/* <LectureSmall /> */}
+        {myLectures
+          .filter((lecture) => !lecture.lecCategory)
+          .map((lecture, index) => (
+            <LectureSmall key={index} props={lecture} noBadge classOpen />
+          ))}
+      </LectureBox>
+      {/* <LiveLectureBox>
+        <p>실시간 강의</p>
+        <img src="/img/login.png" alt="loginImg" />
+      </LiveLectureBox> */}
+      {/* <FinishLectureBox>
+        <h3>수강완료 강의</h3>
+        <img src="/img/login.png" alt="loginImg" />
+      </FinishLectureBox> */}
+    </Wrapper>
+  );
+};
+
 const ProfilePage = () => {
   // URL 뒤 파라미터 불러오기
   const params = useParams();
 
   const dispatch = useDispatch();
+  const { myLectures } = useSelector((state) => state.user);
 
   // 내 페이지인지 남의 페이지인지 구분
   // 1이면 나의 프로필페이지, 2이면 남의 프로필
@@ -424,7 +607,11 @@ const ProfilePage = () => {
 
   // 나의 강의 목록 불러오기
   useEffect(() => {
+<<<<<<< HEAD
     dispatch(fetchLectures());
+=======
+    dispatch(fetchMyLectures());
+>>>>>>> develop/front
   }, [dispatch]);
 
   return (
@@ -457,14 +644,21 @@ const ProfilePage = () => {
       {pageNum === '1' && (
         <div className="item">
           <ul className="nonelist list">
+<<<<<<< HEAD
             {snacksList.map((snacks) => (
               <li>
                 <MySnacksItem key={snacks.snacksId} snacks={snacks} />
+=======
+            {snacksList.map((snacks, index) => (
+              <li className="listItem">
+                <MySnacksItem key={index} snacks={snacks} />
+>>>>>>> develop/front
               </li>
             ))}
           </ul>
           <div ref={ref}>1</div>
         </div>
+<<<<<<< HEAD
       )}
       {pageNum === '2' && (
         <LectureBox>
@@ -485,7 +679,10 @@ const ProfilePage = () => {
             <img src="/img/login.png" alt="loginImg" />
           </FinishLectureBox>
         </LectureBox>
+=======
+>>>>>>> develop/front
       )}
+      {pageNum === '2' && <LectureBox myLectures={myLectures} />}
       {pageNum === '3' && (
         <ChangeProfileBox>
           <Profile src={userProfile}></Profile>

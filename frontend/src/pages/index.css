@@ -13,3 +13,11 @@
 	0% {margin-top: 10px;}
 	100% {margin-top: 20px;}
 }
+<<<<<<< HEAD
+=======
+
+@keyframes motionX {
+	0% {margin-left: 10px;}
+	100% {margin-left: 20px;}
+}
+>>>>>>> develop/front
