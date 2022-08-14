@@ -5,6 +5,9 @@ import MenuItems from '../components/MenuItems';
 import { useSelector } from 'react-redux';
 import { logout } from '../features/user/userSlice';
 import { useDispatch } from 'react-redux';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import logo from '../img/logo2.png';
 
 const NavBar = styled.div`
   color: #ffffff;
@@ -26,6 +29,13 @@ const NavBar = styled.div`
     color: inherit;
     margin-right: 20px;
   }
+
+  .logo img {
+    margin-top: 0.8rem;
+    width: 10rem;
+    height: 3rem;
+  }
+
   & .menus {
     display: flex;
     list-style: none;
@@ -33,7 +43,53 @@ const NavBar = styled.div`
   & .user-div {
     display: flex;
   }
+
+  .user-info {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 0.5fr 1fr 1fr;
+    place-items: center;
+    vertical-align: middle;
+  }
+
+  .user-info .user-div {
+    vertical-align: middle;
+    place-items: center;
+    vertical-align: middle;
+    margin: 0 0.1rem 0 0.1rem;
+  }
+  .user-info .cart-icon {
+    margin-bottom: 0.2rem;
+    width: 100%;
+    height: 100%;
+  }
+  .cart-num {
+    font-size: 0.5rem;
+    text-align: center;
+    z-index: 10;
+    position: relative;
+    top: 0.5rem;
+    left: 0.7rem;
+    border-radius: 3rem;
+    background-color: #ff2c55;
+    width: 1.2rem;
+    padding: 2px;
+  }
+  .btn {
+    background-color: #0b0b0b;
+    border: solid 1px #ff2c55;
+    border-radius: 24px;
+    padding: 3px 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .btn:hover {
+    background-color: #ff2c55;
+  }
 `;
+
+const Logo = styled.div``;
 
 const Header = () => {
   const { userInfo } = useSelector((state) => state.user);
@@ -47,7 +103,7 @@ const Header = () => {
       submenu: [
         {
           title: 'Lectures Video',
-          url: '/lectures/video',
+          url: '/lectures/1/section/1',
         },
         {
           title: 'Lectures Live',
@@ -67,7 +123,7 @@ const Header = () => {
   return (
     <NavBar>
       <NavLink to="/" className="logo">
-        Chukka
+        <img src={logo} />
       </NavLink>
       <ul className="menus">
         {menuItems.map((menu, index) => {
@@ -80,20 +136,20 @@ const Header = () => {
             <Button content="Sign In" />
           </NavLink>
         ) : (
-          <div>
-            <NavLink to={`/accounts/profile/${userInfo.userNickname}`}>
-              <div className="user-div">
-                {/* <img src={userInfo.userProfile} alt="" /> */}
-                <div>Hi, {userInfo.userNickname}!</div>
+          <div className="user-info">
+            <NavLink to={`/accounts/cart`} className="cart-icon">
+              <div className="cart-info">
+                <div className="cart-num">1</div>
+                <ShoppingCartIcon />
               </div>
             </NavLink>
             <NavLink to={`/accounts/profile/${userInfo.userNickname}`}>
               <div className="user-div">
-                {/* <img src={userInfo.userProfile} alt="" /> */}
-                <div>Hi, {userInfo.userNickname}!</div>
+                <p>{userInfo.userNickname}</p>
               </div>
             </NavLink>
             <button
+              className="btn"
               onClick={() => {
                 dispatch(logout());
               }}

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux/es/exports';
 import { useInView } from 'react-intersection-observer';
 import { fetchSnacks, fetchTags } from '../../features/snacks/snacksActions';
 import { changeSort } from '../../features/snacks/snacksSlice';
+import LoupeOutlinedIcon from '@mui/icons-material/LoupeOutlined';
 
 const Wrapper = styled.div`
   div::-webkit-scrollbar {
@@ -36,7 +37,7 @@ const Wrapper = styled.div`
   }
   .section {
     width: 100%;
-    height: 800px;
+    height: 85vh;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -46,7 +47,6 @@ const Wrapper = styled.div`
   .tag {
     width: 30%;
     height: 100px;
-    /* border: white 2px solid; */
     border-radius: 10px;
     padding: 20px;
     position: sticky;
@@ -57,11 +57,11 @@ const Wrapper = styled.div`
     font-weight: bold;
     font-size: 1.5rem;
   }
-  .item {
-    width: 50%;
-  }
   .nonelist {
     list-style: none;
+  }
+  .snacksitem {
+    margin-bottom: 5rem;
   }
   .listitem {
     float: left;
@@ -95,6 +95,21 @@ const Wrapper = styled.div`
   }
   .list {
     margin-bottom: 10px;
+  }
+  .upload-parent {
+    position: fixed;
+  }
+  .upload-btn {
+    position: absolute;
+    right: 8rem;
+    width: 4rem;
+    height: 4rem;
+    fill: #ff2c55;
+    opacity: 0.6;
+    transition: 300ms;
+    :hover {
+      opacity: 1;
+    }
   }
 `;
 
@@ -237,7 +252,7 @@ const SnacksPage = ({ history }) => {
           <ul className="nonelist list">
             {snacksList.map((snacks) => {
               return (
-                <li>
+                <li className="snacksitem">
                   <SnacksItem key={snacks.snacksId} snacks={snacks} />
                 </li>
               );
@@ -246,7 +261,9 @@ const SnacksPage = ({ history }) => {
           <div ref={ref}>1</div>
         </div>
         <Link to="upload">
-          <button>업로드 하기</button>
+          <div className="upload-parent">
+            <LoupeOutlinedIcon className="upload-btn" />
+          </div>
         </Link>
       </div>
     </Wrapper>

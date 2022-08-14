@@ -43,6 +43,7 @@ const snacksSlice = createSlice({
     // 스낵스 댓글 조회
     [fetchReply.fulfilled]: (state, { payload }) => {
       state.snacksReply = payload.data;
+      console.log(state.snacksReply);
     },
     // 인기태그 조회
     [fetchTags.fulfilled]: (state, { payload }) => {
@@ -52,6 +53,7 @@ const snacksSlice = createSlice({
     // 댓글 생성
     [createReply.fulfilled]: (state, { payload }) => {
       state.snacksReply = payload.data;
+      console.log(payload);
     },
     // 특정 스낵스 조회
     [fetchDetail.fulfilled]: (state, { payload }) => {

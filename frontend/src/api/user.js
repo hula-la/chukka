@@ -32,6 +32,7 @@ export const nickCheck = async (userNickname) => {
 export const fetchPro = async (data) => {
   const userNickname = data.paramsNickname;
   const res = await client.post(`accounts/`, { userNickname });
+  console.log(res);
   return res;
 };
 
@@ -59,7 +60,7 @@ export const change = async (profileInputs, profilePicture) => {
 
 export const snacks = async (paramsNickname, snacksPage) => {
   const res = await client.get(`snacks/${paramsNickname}`, {
-    params: { page: snacksPage, size: 4 },
+    params: { page: snacksPage, size: 8 },
   });
 
   return res;

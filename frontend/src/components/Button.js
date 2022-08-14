@@ -10,13 +10,15 @@ const StyledButton = styled.button`
   height: 42px;
   border: none;
   cursor: pointer;
+  transition: background-color 0.2s;
   &:hover {
     z-index: 100;
+    background-color: #be2446;
   }
 `;
 
 const Button = (props) => {
-  return <StyledButton>{props.content}</StyledButton>;
+  return <StyledButton onClick={props.onClick}>{props.content}</StyledButton>;
 };
 
 export default Button;

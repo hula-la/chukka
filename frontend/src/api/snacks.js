@@ -16,13 +16,13 @@ export const fTags = async () => {
 
 export const freply = async (data) => {
   const res = await client.get(`snacks/${data}/reply`);
-  console.log(res);
   return res;
 };
 
 export const creply = async (data) => {
   console.log(data);
   const res = await client.post(`snacks/comments`, data);
+  console.log(res);
   return res;
 };
 

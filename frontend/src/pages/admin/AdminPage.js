@@ -14,6 +14,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import BuildIcon from '@mui/icons-material/Build';
 
 const AdminPageBlock = styled.div`
+  display: grid;
+  grid-template-columns:1fr 9fr;
+  width:100%;
   .table {
     background: #ffffff;
     color: #0b0b0b;
@@ -51,6 +54,55 @@ const StyledButton = styled.button`
   outline: none;
   cursor: pointer;
 `;
+
+const Content = styled.div`
+  
+`
+const SideBar = styled.div`
+  padding: 1rem 0.3rem;
+
+  text-align:center;
+  background-color:#0b0b0b;
+  position : relative;
+
+  ul{
+    font-size:1.5rem;
+    list-style: none;
+    margin:0px;
+    padding:0px;
+    position:relative;
+  }
+  ul ul {
+    display: none;
+    position:absolute;
+    left:1.5rem
+  }
+  ul li > ul {
+    font-size:1rem;    
+    left:30%;
+  }
+
+  ul li > ul li{
+    margin : 10% 0;
+  }
+
+  ul li:hover > ul{
+    display:block;
+  }
+  div{
+    margin : 1.5rem 0.2rem;
+  }
+  button{
+    cursor: pointer;
+    width:80%;
+    background-color: #0b0b0b;
+    margin :1.3rem 0;
+    padding-bottom:0.5rem;
+    border-bottom: solid 1px #ff2c55;
+
+  }
+
+`
 
 const AdminPage = () => {
   const dispatch = useDispatch();
@@ -195,11 +247,20 @@ const AdminPage = () => {
 
   return (
     <AdminPageBlock>
-      <div>
-        <button onClick={onClickUser}>회원관리</button>
-        <button onClick={onClickInst}>강사</button>
-        <button onClick={onClickLecture}>강의</button>
-      </div>
+      <SideBar>
+        <div>관리자 메뉴</div>
+        <ul>
+          <li><button onClick={onClickUser}>회원관리</button></li>
+          <li><button onClick={onClickInst}>강사관리</button></li>
+          <li><button onClick={onClickLecture}>강의관리</button>
+            <ul>
+              <li>서브1</li>
+              <li>서브2</li>
+              <li>서브3</li>
+            </ul>
+          </li>
+        </ul>
+      </SideBar>
       {/* 회원관리 탭 */}
       {pageNum === '1' && (
         <div style={{ height: 1000, width: '100%' }}>
@@ -212,28 +273,30 @@ const AdminPage = () => {
         </div>
       )}
       {/* 강사 관리 탭 */}
-      {pageNum === '2' && (
-        <InsBox>
-          <div style={{ height: 1000, width: '80%' }}>
-            <DataGrid
-              className="table"
-              rows={instList}
-              columns={columnsInst}
-              getRowId={(row) => row.insId}
-            />
-          </div>
-          <ProfileForm onSubmit={onSubmitPicture}>
-            <p>프로필 사진</p>
-            <hr className="line" />
-            <div>
-              <label>아이디</label>
-              <input onChange={onChangeId} required />
+      <Content>
+        {pageNum === '2' && (
+          <InsBox>
+            <div style={{ height: 1000, width: '80%' }}>
+              <DataGrid
+                className="table"
+                rows={instList}
+                columns={columnsInst}
+                getRowId={(row) => row.insId}
+              />
             </div>
-            <input onChange={onChangeProfile} type="file" />
-            <StyledButton>제출</StyledButton>
-          </ProfileForm>
-        </InsBox>
-      )}
+            <ProfileForm onSubmit={onSubmitPicture}>
+              <p>프로필 사진</p>
+              <hr className="line" />
+              <div>
+                <label>아이디</label>
+                <input onChange={onChangeId} required />
+              </div>
+              <input onChange={onChangeProfile} type="file" />
+              <StyledButton>제출</StyledButton>
+            </ProfileForm>
+          </InsBox>
+        )}
+      </Content>
     </AdminPageBlock>
   );
 };
