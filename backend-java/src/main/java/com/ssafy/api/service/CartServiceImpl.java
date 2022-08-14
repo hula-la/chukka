@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.controller.CartController;
 import com.ssafy.api.request.lecture.LecturePostReq;
 import com.ssafy.api.response.cart.CartLecGetRes;
 import com.ssafy.api.response.lecture.LecturePostRes;
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 
 @Service("CartService")
-public class CartServiceImpl implements CartService{
+public class CartServiceImpl extends CartController implements CartService{
 
     @Autowired
     CartRepository cartRepository;
