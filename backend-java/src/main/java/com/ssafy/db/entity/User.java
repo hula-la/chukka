@@ -90,4 +90,8 @@ public class User{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<SnacksReply> snacksReplies = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<GameHighScore> gameHighScores = new ArrayList<>();
+
 }
