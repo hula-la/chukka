@@ -12,25 +12,15 @@ import Alert from '../../components/Alert';
 import RequestPay from '../../components/carts/requestPay';
 import StyledButton from '../../components/Button';
 
-<<<<<<< HEAD
-const ProfilePageBlock = styled.div`;
-  line-height: 25px;
-  font-size:15px;
-  color : #ffffffd3;
-  display: flex;
-  flex-direction: row;
-=======
 const ProfilePageBlock = styled.div`
   input {
     accent-color: #ff2c55;
   }
-
   line-height: 25px;
   font-size: 15px;
   color: #ffffffd3;
   display: grid;
   grid-template-columns: 0fr 1.5fr 4fr;
->>>>>>> develop/front
   max-width: 1200px;
   margin: 1rem 1rem 0 1rem;
   height: 100%;
@@ -43,8 +33,8 @@ const ProfilePageBlock = styled.div`
 const Side = styled.div`
   // display: flex;
   // flex-direction: column;
-  display:grid;
-  grid-template-rows : 0.5fr 0.5fr 0.5fr 2fr 1fr;
+  display: grid;
+  grid-template-rows: 0.5fr 0.5fr 0.5fr 2fr 1fr;
   -webkit-align-items: center;
   -webkit-box-align: unset;
   justify-content: initial;

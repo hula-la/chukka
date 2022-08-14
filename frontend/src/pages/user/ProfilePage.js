@@ -7,11 +7,7 @@ import {
   fetchProfile,
   changeProfile,
   fetchSnacks,
-<<<<<<< HEAD
-  fetchLectures,
-=======
   fetchMyLectures,
->>>>>>> develop/front
 } from '../../features/user/userActions';
 import MySnacksItem from '../../components/snacks/MySnacksItem';
 import defaultImage from '../../img/default.jpeg';
@@ -22,11 +18,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
-<<<<<<< HEAD
-=======
 import LectureSmall from '../../components/lectures/LectureSmall';
 import CircleIcon from '@mui/icons-material/Circle';
->>>>>>> develop/front
 
 // 페이지 블락
 const ProfilePageBlock = styled.div`
@@ -99,64 +92,6 @@ const SideBarButton = styled.button`
     font-weight: bold;
     border-bottom: #ff2c55 0.05rem solid;
     opacity: 1;
-<<<<<<< HEAD
-  }
-`;
-
-// 나의 강의 목록
-const LectureBox = styled.div`
-  & h3 {
-    margin-bottom: 0.5rem;
-  }
-`;
-
-const RecordLectureBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 200px;
-  & p {
-    margin-left: 0.5rem;
-    font-size: small;
-    color: #ff2c55;
-  }
-  & img {
-    height: 160px;
-    width: 200px;
-    margin-top: 10px;
-  }
-`;
-
-const LiveLectureBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 200px;
-  & p {
-    margin-left: 0.5rem;
-    font-size: small;
-    color: #ff2c55;
-  }
-  & img {
-    height: 160px;
-    width: 200px;
-    margin-top: 10px;
-  }
-`;
-
-const FinishLectureBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 200px;
-  & p {
-    margin-left: 0.5rem;
-    font-size: small;
-    color: #ff2c55;
-  }
-  & img {
-    height: 160px;
-    width: 200px;
-    margin-top: 10px;
-=======
->>>>>>> develop/front
   }
 `;
 
@@ -187,22 +122,14 @@ const ChangeProfileForm = styled.form`
     position: relative;
     font-size: 3rem;
     font-weight: bold;
-<<<<<<< HEAD
-    top: -4rem;
-=======
     top: -3.5rem;
->>>>>>> develop/front
     text-align: center;
   }
   & p.userNickname {
     position: relative;
     font-size: 1rem;
     font-weight: bold;
-<<<<<<< HEAD
-    top: -4rem;
-=======
     top: -3rem;
->>>>>>> develop/front
     text-align: center;
     color: #ff2c55;
     opacity: 0.7;
@@ -246,38 +173,6 @@ const ChangeProfileForm = styled.form`
 `;
 
 // 스낵스 css
-<<<<<<< HEAD
-const Wrapper = styled.div`
-  div::-webkit-scrollbar {
-    display: none;
-  }
-  .item {
-    width: 50%;
-  }
-  .nonelist {
-    list-style: none;
-  }
-  .list {
-    margin-bottom: 10px;
-  }
-`;
-=======
-// const Wrapper = styled.div`
-//   div::-webkit-scrollbar {
-//     display: none;
-//   }
-//   /* .item {
-//     width: 50%;
-//   } */
-//   .nonelist {
-//     list-style: none;
-//   }
-//   .list {
-//     margin-bottom: 10px;
-//   }
-// `;
->>>>>>> develop/front
-
 const StyledInput = styled.input`
   font-size: 1rem;
   color: #ffffff;
@@ -287,12 +182,8 @@ const StyledInput = styled.input`
   outline-color: #ffffff;
   width: 70%;
   display: inline;
-<<<<<<< HEAD
-  background-color: #0b0b0b;
-=======
   background-color: #3b3b3b;
   border-radius: 0.5rem;
->>>>>>> develop/front
 
   &::-webkit-calendar-picker-indicator {
     filter: invert(1);
@@ -607,11 +498,7 @@ const ProfilePage = () => {
 
   // 나의 강의 목록 불러오기
   useEffect(() => {
-<<<<<<< HEAD
-    dispatch(fetchLectures());
-=======
     dispatch(fetchMyLectures());
->>>>>>> develop/front
   }, [dispatch]);
 
   return (
@@ -644,43 +531,14 @@ const ProfilePage = () => {
       {pageNum === '1' && (
         <div className="item">
           <ul className="nonelist list">
-<<<<<<< HEAD
-            {snacksList.map((snacks) => (
-              <li>
-                <MySnacksItem key={snacks.snacksId} snacks={snacks} />
-=======
             {snacksList.map((snacks, index) => (
               <li className="listItem">
                 <MySnacksItem key={index} snacks={snacks} />
->>>>>>> develop/front
               </li>
             ))}
           </ul>
           <div ref={ref}>1</div>
         </div>
-<<<<<<< HEAD
-      )}
-      {pageNum === '2' && (
-        <LectureBox>
-          <h3>수강중인 강의</h3>
-          <RecordLectureBox>
-            <p>녹화 강의</p>
-            <div className="cardList">
-              <img src="/img/login.png" alt="loginImg" />
-              <img src="/img/login.png" alt="loginImg" />
-            </div>
-          </RecordLectureBox>
-          <LiveLectureBox>
-            <p>실시간 강의</p>
-            <img src="/img/login.png" alt="loginImg" />
-          </LiveLectureBox>
-          <FinishLectureBox>
-            <h3>수강완료 강의</h3>
-            <img src="/img/login.png" alt="loginImg" />
-          </FinishLectureBox>
-        </LectureBox>
-=======
->>>>>>> develop/front
       )}
       {pageNum === '2' && <LectureBox myLectures={myLectures} />}
       {pageNum === '3' && (

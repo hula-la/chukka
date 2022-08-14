@@ -36,9 +36,6 @@ const snacksSlice = createSlice({
       const newList = state.snacksList.concat(payload.data.content);
       state.snacksList = newList;
       console.log(state.snacksList);
-<<<<<<< HEAD
-      state.isLoading = false;
-=======
     },
     [fetchSnacks.rejected]: (state, { payload }) => {
       console.log(payload);
@@ -62,7 +59,6 @@ const snacksSlice = createSlice({
     [fetchDetail.fulfilled]: (state, { payload }) => {
       state.snacksDetail = payload.data;
       console.log(state.snacksDetail);
->>>>>>> develop/front
     },
     // 스낵스 댓글 조회
     [fetchReply.fulfilled]: (state, { payload }) => {

@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-<<<<<<< HEAD
-import { useParams } from 'react-router-dom';
 import { fetchDetail } from '../../features/snacks/snacksActions';
-=======
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchDetail } from '../../features/snacks/snacksActions';
 import styled from 'styled-components';
 
 const Back = styled.div`
@@ -28,22 +24,10 @@ const Profile = styled.img`
   height: 50px;
   border-radius: 100%;
 `;
->>>>>>> develop/front
 
 const DetailSnacksPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
-<<<<<<< HEAD
-
-  const { snacksDetail } = useSelector((state) => state.snacks);
-  useEffect(() => {
-    dispatch(fetchDetail(params.snacksId));
-  }, [dispatch]);
-  return (
-    <div>
-      <div>userNickname : {snacksDetail.userNickname}</div>
-      <div>snacksTitle: {snacksDetail.snacksTitle}</div>
-=======
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -75,7 +59,6 @@ const DetailSnacksPage = () => {
           </video>
         </div>
       )}
->>>>>>> develop/front
     </div>
   );
 };

@@ -5,11 +5,8 @@ import SnacksItem from '../../components/snacks/SnacksItem';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
 import { useInView } from 'react-intersection-observer';
 import { fetchSnacks, fetchTags } from '../../features/snacks/snacksActions';
-<<<<<<< HEAD
-=======
 import { changeSort } from '../../features/snacks/snacksSlice';
 import LoupeOutlinedIcon from '@mui/icons-material/LoupeOutlined';
->>>>>>> develop/front
 
 const Wrapper = styled.div`
   div::-webkit-scrollbar {
@@ -132,8 +129,6 @@ const SnacksPage = ({ history }) => {
   const [tagList, setTagList] = useState([]);
   const [tags, setTags] = useState([]);
 
-<<<<<<< HEAD
-=======
   const onClickNew = () => {
     if (sortSnacks !== 'snacksId,DESC') {
       setSortSnacks('snacksId,DESC');
@@ -145,7 +140,6 @@ const SnacksPage = ({ history }) => {
     }
   };
 
->>>>>>> develop/front
   // 무한 스크롤, 스낵스 받아오기
   const [pageNum, setPageNum] = useState(1);
 
@@ -208,8 +202,6 @@ const SnacksPage = ({ history }) => {
 
   const { snacksPopularTags } = useSelector((state) => state.snacks);
 
-<<<<<<< HEAD
-=======
   useEffect(() => {
     const tmp = snacksPopularTags.map((tag) => ({
       tag,
@@ -229,7 +221,6 @@ const SnacksPage = ({ history }) => {
     });
   }, [tagList]);
 
->>>>>>> develop/front
   return (
     <Wrapper>
       <div className="sort">
@@ -261,11 +252,7 @@ const SnacksPage = ({ history }) => {
           <ul className="nonelist list">
             {snacksList.map((snacks) => {
               return (
-<<<<<<< HEAD
-                <li>
-=======
                 <li className="snacksitem">
->>>>>>> develop/front
                   <SnacksItem key={snacks.snacksId} snacks={snacks} />
                 </li>
               );

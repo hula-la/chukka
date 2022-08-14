@@ -3,15 +3,10 @@ import vid from './bird.mp4';
 import defaultImage from '../../img/default.jpeg';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-<<<<<<< HEAD
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-=======
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
->>>>>>> develop/front
 import {
   fetchReply,
   createReply,
@@ -114,10 +109,7 @@ const Wrapper = styled.div`
 
 const SnacksItem = ({ snacks }) => {
   const dispatch = useDispatch();
-<<<<<<< HEAD
-=======
   const { snacksReply } = useSelector((state) => state.snacks);
->>>>>>> develop/front
 
   // 댓글 컴포넌트 열고 닫기
   const [isReply, setIsReply] = useState(false);
@@ -150,12 +142,6 @@ const SnacksItem = ({ snacks }) => {
   }, []);
 
   const onClickLike = () => {
-    console.log(snacksLike);
-<<<<<<< HEAD
-=======
-    console.log(snacksReply);
-    // document.getElementById('my-video').play();
->>>>>>> develop/front
     setSnacksLike((isLike) => {
       return !isLike;
     });
@@ -165,14 +151,10 @@ const SnacksItem = ({ snacks }) => {
   return (
     <Wrapper>
       <div className="account">
-<<<<<<< HEAD
-        <img src={image} className="profile"></img>
-=======
         <img
           src={snacks.userProfile === null ? defaultImage : snacks.userProfile}
           className="profile"
         ></img>
->>>>>>> develop/front
         <span className="snacks-nickname">{snacks.userNickname}</span>
       </div>
       <div className="tags">
@@ -244,31 +226,6 @@ const SnacksItem = ({ snacks }) => {
           )}
         </div>
       </div>
-<<<<<<< HEAD
-      <video
-        id="my-video"
-        // className="video-js vjs-theme-fantasy"
-        controls
-        preload="auto"
-      >
-        <source src={vid} type="video/mp4" />
-      </video>
-      {!snacksLike && (
-        <ThumbUpOffAltIcon onClick={onClickLike} className="pink" />
-      )}
-      {snacksLike && <ThumbUpAltIcon onClick={onClickLike} className="pink" />}
-      <button onClick={onClickReply}>댓글</button>
-      {isReply && (
-        <div>
-          <h3>comment</h3>
-          <form onSubmit={onSubmitRelpy}>
-            <input onChange={onChangeReply} />
-            <button>댓글 작성</button>
-          </form>
-        </div>
-      )}
-=======
->>>>>>> develop/front
     </Wrapper>
   );
 };

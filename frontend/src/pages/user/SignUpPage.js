@@ -310,16 +310,7 @@ const SignUpPage = () => {
               required
             />
           </div>
-<<<<<<< HEAD
-          <div className='genderdiv'>
-            <div>
-              <StyledLabel for="male">남성<MaleIcon className='icon'></MaleIcon></StyledLabel>
-              <StyledInput id="male" type="radio" name="gender" value="1" checked/>
-            </div>
-            <div>
-              <StyledLabel for="female">여성<FemaleIcon className='icon'></FemaleIcon></StyledLabel>
-              <StyledInput id="female" type="radio" name="gender" value="0"/>
-=======
+
           <div className="genderdiv">
             <div>
               <StyledLabel for="male">
@@ -338,7 +329,6 @@ const SignUpPage = () => {
                 여성<FemaleIcon className="icon"></FemaleIcon>
               </StyledLabel>
               <StyledInput id="female" type="radio" name="gender" value="0" />
->>>>>>> develop/front
             </div>
           </div>
           <StyledButton disabled={!isIdChecked || !isNickChecked}>

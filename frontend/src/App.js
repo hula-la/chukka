@@ -37,8 +37,6 @@ import DetailLectue from './pages/admin/DetailLectue';
 import AddSection from './pages/admin/AddSection';
 // notfount
 import NotFound from './pages/NotFound';
-import LectureDetailpage from './pages/lecture/LectureDetailpage';
-import DetailSnacksPage from './pages/snacks/DetailSnacksPage';
 
 const App = () => {
   return (

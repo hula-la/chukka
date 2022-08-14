@@ -2,18 +2,17 @@ import { AccountBoxTwoTone } from '@material-ui/icons';
 import React, { useState, useEffect, useRef } from 'react';
 
 const SingleMode = (songID) => {
-  songID = "soojin";
+  songID = 'soojin';
   // let isMsgReceived = false;
-
 
   const [websckt, setWebsckt] = useState();
   const [FPS, setFPS] = useState(1);
   const [playing, setPlaying] = useState(undefined);
   const [timer, setTimer] = useState(undefined);
-  
+
   // setInterval
   const [IV, setIV] = useState(undefined);
-  // const [timeDecrease, setTimeDecrease] = useState(undefined);  
+  // const [timeDecrease, setTimeDecrease] = useState(undefined);
   // 게임 이펙트를 위한 변수
   const [gameEF, setGameEF] = useState(null);
   // 미리보기
@@ -21,25 +20,24 @@ const SingleMode = (songID) => {
   const [userPoseImg, setUserPoseImg] = useState(null);
   // 게임 시작 카운터
   const [gameStartCounter, setGameStartCounter] = useState(3);
-  
+
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
-  
-  
+
   const [goodCnt, setGoodCnt] = useState(0);
   const [perfectCnt, setPerfectCnt] = useState(0);
   const [badCnt, setBadCnt] = useState(0);
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  
+
   // 미리보기
   const previewRef = useRef(null);
   // const previewRef = useRef(null);
   const perfectRef = useRef(0);
-  
+
   // 관절 영상 분리를 위한 변수
-  const [isMsgReceived, setIsMsgReceived] = useState(false)
+  const [isMsgReceived, setIsMsgReceived] = useState(false);
 
   // 미리동작 보기를 위한 타이머
   // const [time, setTime] = useState(10);
@@ -113,7 +111,7 @@ const SingleMode = (songID) => {
 
   const startOrStop = () => {
     // console.log("timer: " + timer)
-    
+
     if (!timer) {
       const a = setInterval(() => sendImage(), 1000 / FPS);
       // const b = setInterval(() => {
@@ -124,10 +122,10 @@ const SingleMode = (songID) => {
       setIV(a);
       // IV_tmp = a;
       // setTimeDecrease(b);
-      
-      document.getElementById("dancer_video").play();
+
+      document.getElementById('dancer_video').play();
       // **********************************
-      
+
       const t = setInterval(() => drawToCanvas(), 50);
       // const video_stream = videoRef.current.srcObject;
       // videoRef.current.srcObject = video_stream;
@@ -175,24 +173,10 @@ const SingleMode = (songID) => {
       setPlaying(true);
       videoRef.current.srcObject = stream;
     });
-
-<<<<<<< HEAD
   }, []);
 
-  // useEffect(() => {
-  //   sendInfo();
-  // }, [songID]);
-
   useEffect(() => {
-<<<<<<< HEAD
-    const url = "wss://i7e202.p.ssafy.io/fastAPI/ws/client";
-=======
-    const url = "ws://localhost:8000/fastAPI/client"
->>>>>>> 34cf8fcf6cd1e58a8a15490204a65cab8705cc55
-=======
     const url = 'wss://i7e202.p.ssafy.io/fastAPI/ws/client';
-    // const url = 'ws://localhost:8000/fastAPI/ws/client';
->>>>>>> develop/front
     const ws = new WebSocket(url);
     setWebsckt(ws);
     setFPS(1);
@@ -201,17 +185,16 @@ const SingleMode = (songID) => {
       console.log('ws.open');
       // 노래제목 보내기
       ws.send(songID);
-    }
-    
+    };
+
     //clean up function when we close page
     return () => ws.close();
   }, []);
-  
+
   useEffect(() => {
     if (websckt) {
-
       websckt.onclose = function (event) {
-        console.log("클로징 perfectCnt: " + perfectCnt);
+        console.log('클로징 perfectCnt: ' + perfectCnt);
         // // console.log(timeDecrease);
         // // console.log(IV);
         // console.log("IV_tmp: " + IV_tmp);
@@ -221,85 +204,78 @@ const SingleMode = (songID) => {
         // clearInterval(IV_tmp);
         // // setTimeDecrease(undefined);
         // setIV(undefined);
-  
+
         // startOrStop();
-  
+
         if (event.wasClean) {
-          alert(`[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`);
+          alert(
+            `[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`,
+          );
         } else {
           alert('[close] 커넥션이 죽었습니다.');
         }
       };
 
-      
       websckt.onmessage = (e) => {
         // console.log(perfectCnt);
-    
-    
+
         // console.log("IV_tmp: " + IV_tmp);
-        // 전달받은 데이터가 문자열일 때(유사도) 
-        if (typeof (e.data) === "string") {
+        // 전달받은 데이터가 문자열일 때(유사도)
+        if (typeof e.data === 'string') {
           // setIsMsgReceived(isMsgReceived=>true);
           setIsMsgReceived(true);
           let similarity = e.data;
           console.log(similarity);
-          // [] 제거  
+          // [] 제거
           similarity = similarity.replace(/[\[\]]+/g, '');
-          
-          
+
           if (similarity == 0) {
             // console.log("카운팅되는중~")
             // setPerfectCnt((perfectRef.current+=1));
             // console.log(perfectCnt);
-            setGameEF("../../img/game_effect/norecognize.png");
+            setGameEF('../../img/game_effect/norecognize.png');
           } else if (similarity < 0.02) {
-            setPerfectCnt(perfectCnt=>perfectCnt+1);
-            setGameEF("../../img/game_effect/perfect.png");
+            setPerfectCnt((perfectCnt) => perfectCnt + 1);
+            setGameEF('../../img/game_effect/perfect.png');
           } else if (similarity < 0.03) {
-            setGoodCnt(prev => prev + 1);
-            setGoodCnt(goodCnt=>goodCnt+1);
-            setGameEF("../../img/game_effect/good.png");
+            setGoodCnt((prev) => prev + 1);
+            setGoodCnt((goodCnt) => goodCnt + 1);
+            setGameEF('../../img/game_effect/good.png');
           } else {
-            setBadCnt(prev => prev + 1);
-            setBadCnt(badCnt=>badCnt+1);
-            setGameEF("../../img/game_effect/bad.png");
+            setBadCnt((prev) => prev + 1);
+            setBadCnt((badCnt) => badCnt + 1);
+            setGameEF('../../img/game_effect/bad.png');
           }
-
-          
         }
         // 전달받은 데이터가 이미지일 때
         else {
           try {
             var arrayBufferView = new Uint8Array(e.data);
-            const myFile = new File([e.data], 'imageName')
-            const reader = new FileReader()
-            
-            reader.onload = ev => {
-              const previewImage = String(ev.target.result)
+            const myFile = new File([e.data], 'imageName');
+            const reader = new FileReader();
+
+            reader.onload = (ev) => {
+              const previewImage = String(ev.target.result);
               if (isMsgReceived) {
                 setIsMsgReceived(false);
-                setUserPoseImg(previewImage)
+                setUserPoseImg(previewImage);
                 // setIsMsgReceived(isMsgReceived=>false) // myImage라는 state에 저장했음
               } else {
-                setPreviewImage(previewImage) // myImage라는 state에 저장했음
+                setPreviewImage(previewImage); // myImage라는 state에 저장했음
               }
-            }
+            };
             reader.readAsDataURL(myFile);
-    
+
             // clearTime();
-    
           } catch (err) {
             console.log(err);
           }
         }
-      }
+      };
     }
-  }, [websckt,perfectCnt, goodCnt, badCnt,isMsgReceived]);
-  
-  useEffect(() => {
-    
-  })
-  
+  }, [websckt, perfectCnt, goodCnt, badCnt, isMsgReceived]);
+
+  useEffect(() => {});
 
   const Styles = {
     gameBox: { display: 'flex-column' },
@@ -332,38 +308,17 @@ const SingleMode = (songID) => {
 
   return (
     <div>
-<<<<<<< HEAD
-      <h2>
-        Sigle Mode
-      </h2>
-      <button color="warning" onClick={() => startOrStop()}>{playing ? 'Stop' : 'Start'} </button>
-      <div style={Styles.Videobox}>
-        <div style={Styles.Video}>
-        <video id="dancer_video"  height="180" preload='auto' style={Styles.stream} muted="muted">
-<<<<<<< HEAD
-          <source src="https://i7e202.p.ssafy.io/fastAPI/game/dancer" type="video/mp4"/>
-=======
-          <source src="http://localhost:8000/fastAPI/game/dancer" type="video/mp4"/>
->>>>>>> 34cf8fcf6cd1e58a8a15490204a65cab8705cc55
-        </video>
-        </div>
-        <div id="canvasDiv" style={Styles.Video}>
-          <video ref={videoRef} autoPlay style={Styles.None} />
-          <canvas id="canvas" ref={canvasRef} style={Styles.Canvas} />
-=======
       <h2>Sigle Mode</h2>
       {gameStartCounter != 0 && (
         <div id="gameStartCounter">
-        <img src="../../img/game_effect/countdown.gif" alt="loading..." />
->>>>>>> develop/front
+          <img src="../../img/game_effect/countdown.gif" alt="loading..." />
         </div>
       )}
 
       {gameStartCounter == 0 && (
         <div>
-
           {/* <button color="warning" onClick={() => startOrStop()}>{timer} </button> */}
-          <div style={ Styles.gameBox}>
+          <div style={Styles.gameBox}>
             <div style={Styles.Videobox}>
               <div style={Styles.Video}>
                 <video
