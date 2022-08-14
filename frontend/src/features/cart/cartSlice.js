@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchUser } from './cartActions';
+import { fetchUser, userCartCount } from './cartActions';
 
 const initialState = {
   loading: false,
   error: null,
   userProfile: null,
+  cartCount: 0,
 };
 
 const cartSlice = createSlice({
@@ -14,9 +15,11 @@ const cartSlice = createSlice({
   extraReducers: {
     // 프로필 불러오기
     [fetchUser.fulfilled]: (state, { payload }) => {
-      
       state.userProfile = payload.data;
       console.log(state.userProfile);
+    },
+    [userCartCount.fulfilled]: (state, { payload }) => {
+      console.log(payload);
     },
   },
 });
