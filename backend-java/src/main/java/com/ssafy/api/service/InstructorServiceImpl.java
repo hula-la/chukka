@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 강사 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -41,11 +42,13 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public Instructor updateInstructor(InstructorPostReq insInfo) {
-        if(instructorRepository.findById(insInfo.getInsId()).isPresent()) {
+        Optional<Instructor> instructor = instructorRepository.findByInsId(insInfo.getInsId());
+        if(instructor.isPresent()) {
             Instructor ins = Instructor.builder().insId(insInfo.getInsId())
                     .insName(insInfo.getInsName())
                     .insEmail(insInfo.getInsEmail())
-                    .insIntroduce(insInfo.getInsIntroduce()).build();
+                    .insIntroduce(insInfo.getInsIntroduce())
+                    .insProfile(instructor.get().getInsProfile()).build();
             return instructorRepository.save(ins);
         }
         return null;

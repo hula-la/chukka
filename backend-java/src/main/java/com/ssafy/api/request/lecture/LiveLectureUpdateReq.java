@@ -16,7 +16,7 @@ public class LiveLectureUpdateReq {
     @ApiModelProperty(name = "강의 ID", example = "1, 2")
     int lecId;
     @ApiModelProperty(name = "강사 아이디", example = "instructor")
-    int insId;
+    String insId;
     @ApiModelProperty(name = "썸네일", example = "img/thumbnail.jpg")
     String lecThumb;
     @ApiModelProperty(name = "강의 제목", example = "aenergy (Coachella Ver.)")
