@@ -13,6 +13,7 @@ import com.ssafy.db.entity.Section;
 import com.ssafy.db.entity.SectionLike;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +37,9 @@ public class SectionController {
             @ApiResponse(code = 200, message = "Success")
     })
     public ResponseEntity<BaseResponseBody> findByLecId(
-            @PathVariable @ApiParam(value = "섹션 조회", required = true) int lecId) {
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId)));
+            @PathVariable @ApiParam(value = "섹션 조회", required = true) int lecId,
+            Pageable pageable) {
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId, pageable)));
     }
 
     @PostMapping("/{secId}")

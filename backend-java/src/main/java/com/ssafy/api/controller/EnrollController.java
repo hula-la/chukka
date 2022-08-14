@@ -46,8 +46,8 @@ public class EnrollController {
             @ApiResponse(code = 200, message = "Success")
     })
     public ResponseEntity<BaseResponseBody> checkPayed(
-            @ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value = "해당강의 ID", required = true) int lecId) {
+            Authentication authentication,
+            @PathVariable @ApiParam(value = "해당강의 ID", required = true) int lecId) {
 
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String userId = userDetails.getUsername();

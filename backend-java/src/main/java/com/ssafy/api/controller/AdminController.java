@@ -20,6 +20,7 @@ import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.Section;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -119,8 +120,8 @@ public class AdminController {
 			@ApiResponse(code = 200, message = "Success", response = SectionGetRes.class)
 	})
 	public ResponseEntity<BaseResponseBody> getSections(
-			@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId) {
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId)));
+			@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId, Pageable pageable) {
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getAllSections(pageable)));
 	}
 
 	// 라이브 강의 추가 ========================================================================================================
@@ -167,12 +168,13 @@ public class AdminController {
 			@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId,
 			@RequestPart @ApiParam(value="강의 정보", required = true) SectionPostReq sectionInfo,
 			@RequestPart @ApiParam(value = "강의 영상 파일") MultipartFile contents,
+			Pageable pageable,
 			HttpServletRequest req) throws IOException {
 		Section section = sectionService.createSection(sectionInfo, contents != null);
 		if(contents != null) {
 			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/img/"), Integer.toString(section.getSecId()));
 		}
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId)));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId, pageable)));
 	}
 
 	// 강의 수정 ========================================================================================================
@@ -230,9 +232,10 @@ public class AdminController {
 	})
 	public ResponseEntity<BaseResponseBody> deleteSection(
 			@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId,
-			@PathVariable @ApiParam(value = "섹션 Id", required = true) int sectionId) {
+			@PathVariable @ApiParam(value = "섹션 Id", required = true) int sectionId,
+			Pageable pageable) {
 		sectionService.deleteBySecId(sectionId);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success",  sectionService.getSectionByLecId(lecId)));
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success",  sectionService.getSectionByLecId(lecId, pageable)));
 	}
 
 	// 강사 목록 조회 ====================================================================================================

@@ -29,7 +29,7 @@ public class Section{
     @JoinColumn(name = "ins_id")
     private Instructor instructor;
 
-    private String setThumb;
+    private String secThumb;
     private String secTitle;
     private String secContents;
 

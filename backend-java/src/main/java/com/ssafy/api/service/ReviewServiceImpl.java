@@ -10,6 +10,9 @@ import com.ssafy.db.repository.LectureRepository;
 import com.ssafy.db.repository.ReviewRepository;
 import com.ssafy.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,13 +50,19 @@ public class ReviewServiceImpl implements ReviewService{
 
     // 리뷰 조회
     @Override
-    public List<ReviewGetRes> findByLecId(int lecId) {
-        List<Review> review = reviewRepository.findByLecture_LecId(lecId);
-        List<ReviewGetRes> reviews = new ArrayList<>();
-        for (int i = 0; i < review.size(); i++) {
-            reviews.add(ReviewGetRes.of(review.get(i)));
-        }
-        return reviews;
+    public Page<ReviewGetRes> findByLecId(int lecId, Pageable pageable) {
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+        Lecture lec = lectureRepository.findLectureByLecId(lecId);
+        Page<Review> page = reviewRepository.findByLecture(lec, pageRequest);
+        Page<ReviewGetRes> dtoPage = page
+                .map(m -> ReviewGetRes.of(
+                        m.getReviewId(),
+                        m.getUser().getUserNickname(),
+                        m.getReviewRegdate(),
+                        m.getReviewScore(),
+                        m.getReviewContents()
+                ));
+        return dtoPage;
     }
 
     // 리뷰 삭제

@@ -15,13 +15,10 @@ import java.util.Optional;
 
 public interface SectionRepository extends JpaRepository<Section, Integer> {
 
-    // 현재 해당하는 강의의 섹션만 불러오기
-    @Query(value = "select s.secId, s.secTitle, s.secContents, s.secRegDate " +
-            "from Section s " +
-            "where s.lecture.lecId = :lecId " +
-            "order by s.secId")
-    List<SectionGetRes> getSectionByLecId(int lecId);
+    // 현재 해당하는 강의의 섹션들을 불러오기
+    Page<Section> findAllByLecture(Lecture lecture, Pageable pageable);
 
+    Page<Section> findAll(Pageable pageable);
     // 소강의 수정하기
     @Modifying(clearAutomatically = true)
     @Query(value = "update Section sec " +
