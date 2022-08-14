@@ -177,7 +177,7 @@ const SingleMode = (songID) => {
     });
 
     // const url = "wss://i7e202.p.ssafy.io/fastAPI/ws/client";
-    const url = "ws://localhost:8000/fastAPI/ws/client";
+    const url = 'ws://localhost:8000/fastAPI/ws/client';
     const ws = new WebSocket(url);
     setWebsckt(ws);
     setFPS(1);
@@ -317,10 +317,8 @@ const SingleMode = (songID) => {
 
   return (
     <div>
-      <h2>
-        Sigle Mode
-      </h2>
-      {gameStartCounter != 0 &&
+      <h2>Sigle Mode</h2>
+      {gameStartCounter != 0 && (
         <div id="gameStartCounter">
         <img src="../../img/game_effect/countdown.gif" alt="loading..." />
         </div>
