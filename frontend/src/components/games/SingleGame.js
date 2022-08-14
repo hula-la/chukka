@@ -176,8 +176,8 @@ const SingleMode = (songID) => {
       videoRef.current.srcObject = stream;
     });
 
-    // const url = "wss://i7e202.p.ssafy.io/fastAPI/ws/client";
-    const url = 'ws://localhost:8000/fastAPI/ws/client';
+    const url = 'wss://i7e202.p.ssafy.io/fastAPI/ws/client';
+    // const url = 'ws://localhost:8000/fastAPI/ws/client';
     const ws = new WebSocket(url);
     setWebsckt(ws);
     setFPS(1);
