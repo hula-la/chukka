@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchSections } from '../../features/lecture/lectureActions';
 import styled from 'styled-components';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
@@ -9,6 +11,8 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import CloseIcon from '@mui/icons-material/Close';
 import Webcam from 'react-webcam';
+import NotFound from '../NotFound';
+import { useEffect } from 'react';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -87,6 +91,11 @@ const Wrapper = styled.div`
     font-size: 50px;
     margin-left: 10px;
     cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  & .btn-sidebar:hover {
+    opacity: 1;
   }
 
   .hr {
@@ -152,11 +161,12 @@ const Wrapper = styled.div`
   }
 
   .sidebar .closebtn {
-    /* position: absolute;
-    top: 0;
-    right: 25px; */
     font-size: 36px;
     margin-left: 50px;
+    opacity: 0.5;
+  }
+  .sidebar .closebtn:hover {
+    opacity: 1;
   }
   .sidebar .closeicon {
     width: 3rem;
@@ -239,7 +249,8 @@ const Wrapper = styled.div`
 `;
 
 // sidebar component
-const SectionLecture = ({ section, index }) => {
+const SectionLecture = ({ section, index, sideBarClickHandler }) => {
+  const { sectionId } = useParams();
   const Wrapper = styled.div`
     width: 300px;
     display: block;
@@ -263,36 +274,49 @@ const SectionLecture = ({ section, index }) => {
     & .side-section-playtime {
       font-size: 1rem;
       line-height: 1.5;
-      /* color: #ff2c55; */
-      /* opacity: 0.7; */
       color: rgb(255, 44, 85, 0.7);
-      /* :hover { */
-      /* color: rgb() */
-      /* opacity: 1; */
-      /* cursor: pointer; */
     }
 
     min-height: 6rem;
     margin-bottom: 2rem;
   `;
 
-  const { secTitle, secContent, secPlayTime } = section;
+  const { secTitle, secContents, secPlayTime } = section;
 
   return (
-    <Wrapper>
+    <Wrapper onClick={() => sideBarClickHandler(index + 1)}>
       <div className="side-section-header">
         <div className="side-section-title">
           {index + 1}. {secTitle}
         </div>
         <div className="side-section-playtime">{secPlayTime}</div>
       </div>
-      <div className="side-section-content">{secContent}</div>
+      <div className="side-section-content">{secContents}</div>
     </Wrapper>
   );
 };
 
 const VideoLecturePage = () => {
+  const { lectureId, sectionIdx } = useParams();
+  // const { lectureId } = useParams();
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [sectionInfo, setSectionInfo] = useState(null);
+  const [sectionList, setSectionList] = useState([]);
+  useEffect(() => {
+    dispatch(fetchSections(lectureId));
+  }, [dispatch]);
+  const sections = useSelector((state) => state.lecture.sections);
+  // setSections(useSelector((state) => state.lecture.sections));
+  useEffect(() => {
+    setSectionList(sections);
+  }, [sections]);
+  useEffect(() => {
+    // const section = sections.filter((sec) => sec.secId == sectionId)[0];
+    const section = sections[sectionIdx - 1];
+    setSectionInfo(section);
+  }, [sections, sectionIdx]);
   const videoConstraints = {
     width: 360,
     height: 800,
@@ -302,111 +326,148 @@ const VideoLecturePage = () => {
   const [isVideo, setIsVideo] = useState(true);
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
 
-  const onClickHandler = async () => {
+  const onClickHandler = () => {
     if (isVideo) {
       setIsVideo(false);
-      // videoRef.current.srcObject = null;
     } else {
       setIsVideo(true);
-      // const stream = await navigator.mediaDevices.getUserMedia(CONSTRAINTS);
-      // videoRef.current.srcObject = stream;
     }
   };
 
-  // 소강의 더미 데이터
-  const dummySection = [
-    { secTitle: '춤의 기본', secContent: '스트레칭', secPlayTime: '15:23' },
-    { secTitle: '춤의 기본-2', secContent: '스텝', secPlayTime: '15:23' },
-    { secTitle: '춤의 기본-3', secContent: '스텝2', secPlayTime: '15:23' },
-  ];
+  const sideBarClickHandler = (secId) => {
+    navigate(`/lectures/${lectureId}/section/${secId}`);
+  };
 
   return (
     <Wrapper>
-      {/* header */}
-      <div className="video-lecture-header">
-        <div
-          className="video-lecture-left-div"
-          onClick={() => navigate('/lectures')}
-        >
-          <ExitToAppIcon className="video-lecture-exit" />
-          <h3>강의로 돌아가기</h3>
-        </div>
-        <h1 className="title">1. 춤의 기본-1</h1>
-        <div className="video-lecture-btn-div">
-          {/* Cam On/Off Button */}
-          {isVideo && (
-            <button className="btn-video-toggle" onClick={onClickHandler}>
-              <VideocamIcon className="video-lecture-icon" />
-            </button>
-          )}
-
-          {!isVideo && (
-            <button
-              className="btn-video-toggle btn-video-off"
-              onClick={onClickHandler}
+      {sectionInfo && (
+        <>
+          {/* header */}
+          <div className="video-lecture-header">
+            <div
+              className="video-lecture-left-div"
+              onClick={() => navigate(`/lectures/${lectureId}`)}
             >
-              <VideocamOffIcon className="video-lecture-icon video-off-icon" />
-            </button>
-          )}
-          {/* SideBar Button */}
-          <MenuIcon
-            className="btn-sidebar"
-            onClick={() => setIsSideBarOpen(true)}
-          />
-        </div>
-      </div>
-      <hr className="hr" />
-      {/* sidebar */}
-      <div
-        id="mySidebar"
-        className={isSideBarOpen ? 'sidebar sb-open' : 'sidebar sb-close'}
-      >
-        <div className="sidebar-header">
-          <h1 className="sidebar-title">챕터</h1>
-          <a
-            href=""
-            class="closebtn"
-            onClick={(e) => {
-              e.preventDefault();
-              setIsSideBarOpen(false);
-            }}
+              <ExitToAppIcon className="video-lecture-exit" />
+              <h3>강의로 돌아가기</h3>
+            </div>
+            <h1 className="title">
+              {`${sectionIdx}. ${sectionInfo.secTitle}`}
+            </h1>
+            <div className="video-lecture-btn-div">
+              {/* Cam On/Off Button */}
+              {isVideo && (
+                <button className="btn-video-toggle" onClick={onClickHandler}>
+                  <VideocamIcon className="video-lecture-icon" />
+                </button>
+              )}
+
+              {!isVideo && (
+                <button
+                  className="btn-video-toggle btn-video-off"
+                  onClick={onClickHandler}
+                >
+                  <VideocamOffIcon className="video-lecture-icon video-off-icon" />
+                </button>
+              )}
+              {/* SideBar Button */}
+              <MenuIcon
+                className="btn-sidebar"
+                onClick={() => setIsSideBarOpen(true)}
+              />
+            </div>
+          </div>
+          <hr className="hr" />
+          {/* sidebar */}
+          <div
+            id="mySidebar"
+            className={isSideBarOpen ? 'sidebar sb-open' : 'sidebar sb-close'}
           >
-            <CloseIcon class="closeicon" style={{ fill: '#ff2c55' }} />
-          </a>
-        </div>
-        <div className="sidebar-body">
-          {dummySection.map((section, index) => (
-            <SectionLecture section={section} index={index} key={index} />
-          ))}
-        </div>
-      </div>
-      {/* body */}
-      <div className="video-lecture-body">
-        <div className="lecture-video-container">
-          <video controls src="/video/video_pop.mp4" preload="auto">
-            <source src="/video/video_pop.mp4" />
-          </video>
-        </div>
-        <div className="user-video-container">
-          {/* <video autoPlay ref={videoRef} /> */}
-          <Webcam
-            mirrored
-            className={isVideo ? '' : 'video-off'}
-            videoConstraints={videoConstraints}
-          />
-        </div>
-      </div>
-      {/* footer */}
-      <div className="video-lecture-footer">
-        <div className="video-lecture-prev">
-          <ArrowBackIosIcon />
-          <span>이전 강의 없음</span>
-        </div>
-        <div className="video-lecture-next">
-          <span>2. 춤의 기본-2</span>
-          <ArrowForwardIosIcon />
-        </div>
-      </div>
+            <div className="sidebar-header">
+              <h1 className="sidebar-title">챕터</h1>
+              <a
+                href=""
+                class="closebtn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsSideBarOpen(false);
+                }}
+              >
+                <CloseIcon class="closeicon" style={{ fill: '#ff2c55' }} />
+              </a>
+            </div>
+            <div className="sidebar-body">
+              {sectionList.map((section, index) => (
+                <SectionLecture
+                  section={section}
+                  index={index}
+                  key={index}
+                  sideBarClickHandler={sideBarClickHandler}
+                />
+              ))}
+            </div>
+          </div>
+          {/* body */}
+          <div className="video-lecture-body">
+            <div className="lecture-video-container">
+              <video controls src="/video/video_pop.mp4" preload="auto">
+                <source src="/video/video_pop.mp4" />
+              </video>
+            </div>
+            <div className="user-video-container">
+              {/* <video autoPlay ref={videoRef} /> */}
+              <Webcam
+                mirrored
+                className={isVideo ? '' : 'video-off'}
+                videoConstraints={videoConstraints}
+              />
+            </div>
+          </div>
+          {/* footer */}
+          <div className="video-lecture-footer">
+            <div className="video-lecture-prev">
+              <ArrowBackIosIcon />
+              {sectionIdx == 1 ? (
+                <span>이전 강의 없음</span>
+              ) : (
+                <span
+                  onClick={() => {
+                    navigate(
+                      `/lectures/${lectureId}/section/${
+                        parseInt(sectionIdx) - 1
+                      }`,
+                    );
+                  }}
+                >{`${sectionIdx - 1}. ${
+                  sectionList[sectionIdx - 2].secTitle
+                }`}</span>
+              )}
+            </div>
+            <div className="video-lecture-next">
+              {sectionIdx == sectionList.length ? (
+                <span>다음 강의 없음</span>
+              ) : (
+                <span
+                  onClick={() => {
+                    navigate(
+                      `/lectures/${lectureId}/section/${
+                        parseInt(sectionIdx) + 1
+                      }`,
+                    );
+                  }}
+                >
+                  {`${parseInt(sectionIdx) + 1}. ${
+                    sectionList[sectionIdx].secTitle
+                  }`}
+                </span>
+              )}
+
+              <ArrowForwardIosIcon />
+            </div>
+          </div>
+        </>
+      )}
+      {!sectionInfo && <NotFound />}
     </Wrapper>
   );
 };

@@ -8,6 +8,8 @@ import { useDispatch } from 'react-redux';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import logo from '../img/logo2.png';
+import { useEffect } from 'react';
+import { userCartCount } from '../features/cart/cartActions';
 
 const NavBar = styled.div`
   color: #ffffff;
@@ -120,6 +122,14 @@ const Header = () => {
       url: '/snacks',
     },
   ];
+
+  // 장바구니 카운트
+  useEffect(() => {
+    dispatch(userCartCount());
+  }, [dispatch]);
+
+  const { cartCount } = useSelector((state) => state.cart);
+
   return (
     <NavBar>
       <NavLink to="/" className="logo">
@@ -139,7 +149,9 @@ const Header = () => {
           <div className="user-info">
             <NavLink to={`/accounts/cart`} className="cart-icon">
               <div className="cart-info">
-                <div className="cart-num">1</div>
+                {cartCount !== undefined && (
+                  <div className="cart-num">{cartCount}</div>
+                )}
                 <ShoppingCartIcon />
               </div>
             </NavLink>

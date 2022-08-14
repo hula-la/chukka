@@ -70,6 +70,7 @@ const BadgeDiv = styled.div`
 `;
 
 const NoticeDiv = styled.div`
+  display: flex;
   width: 100%;
   background-color: #316cc3;
   color: white;
@@ -80,8 +81,12 @@ const NoticeDiv = styled.div`
   padding-left: 20px;
   font-size: 22px;
   margin-bottom: 2rem;
-  & span {
+  & .notice-content {
     margin-left: 8px;
+    margin-right: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 
@@ -99,7 +104,7 @@ const LectureNav = styled.div`
   }
 `;
 
-const LectureClassPage = () => {
+const LectureClassComponent = () => {
   const { lectureId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -218,7 +223,7 @@ const LectureClassPage = () => {
       </LectureInfo>
       <NoticeDiv>
         <CampaignIcon />
-        <div>공지사항 : {lecNotice}</div>
+        <div className="notice-content">공지사항 : {lecNotice}</div>
       </NoticeDiv>
       <LectureNav>
         <a
@@ -252,6 +257,7 @@ const LectureClassPage = () => {
       <LectureSubTitle id="sections" ref={secRef}>
         <h1>목차</h1>
       </LectureSubTitle>
+      {console.log('sections', sections)}
       <SectionContainer
         sections={sections}
         onClickSectionHandler={onClickSectionHandler}
@@ -270,7 +276,7 @@ const LectureClassPage = () => {
   );
 };
 
-export default LectureClassPage;
+export default LectureClassComponent;
 
 const LectureSubContent = ({ content }) => {
   const SubContent = styled.div`

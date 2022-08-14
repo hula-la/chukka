@@ -6,12 +6,21 @@ import {
   fetchInstList,
   changeInsInfo,
   submitPicture,
+  deleteIns,
+  fetchLectures,
+  createRecordLecture,
+  deleteLecture,
+  fetchSections,
+  createSection,
+  createLiveLecture,
+  deleteSection,
 } from './adminActions';
 
 const initialState = {
   userList: [],
   instList: [],
   lectureList: [],
+  sectionList: [],
   error: null,
 };
 
@@ -94,6 +103,47 @@ const adminSlice = createSlice({
     [submitPicture.rejected]: (state, { payload }) => {
       console.log('rejected!');
       console.log(payload);
+    },
+
+    // 강사 정보 삭제
+    [deleteIns.fulfilled]: (state, payload) => {
+      state.instList = payload.data;
+    },
+
+    // 강의 목록 조회
+    [fetchLectures.fulfilled]: (state, { payload }) => {
+      state.lectureList = payload.data;
+    },
+
+    // 녹화 강의 추가
+    [createRecordLecture.fulfilled]: (state, { payload }) => {
+      state.lectureList = payload.data;
+    },
+
+    // 라이브 강의 추가
+    [createLiveLecture.fulfilled]: (state, { payload }) => {
+      state.lectureList = payload.data;
+    },
+
+    // 강의 삭제
+    [deleteLecture.fulfilled]: (state, { payload }) => {
+      state.lectureList = payload.data;
+    },
+
+    // 섹션 목록 조회
+    [fetchSections.fulfilled]: (state, { payload }) => {
+      state.sectionList = payload.data;
+      console.log(payload.data);
+    },
+
+    // 섹션 추가
+    [createSection.fulfilled]: (state, { payload }) => {
+      state.sectionList = payload.data;
+    },
+
+    // 섹션 삭제
+    [deleteSection.fulfilled]: (state, { payload }) => {
+      state.sectionList = payload.data;
     },
   },
 });

@@ -10,6 +10,11 @@ export const popularLectures = async (data) => {
   return res;
 };
 
+export const recommendLectures = async (data) => {
+  const res = await client.get('lectures/forUsers', data);
+  return res;
+};
+
 export const lecture = async (lectureId) => {
   const res = await client.get(`lectures/${lectureId}/`);
   return res;
@@ -17,6 +22,12 @@ export const lecture = async (lectureId) => {
 
 export const sections = async (lectureId) => {
   const res = await client.get(`sections/${lectureId}`);
+  return res;
+};
+
+export const isEnroll = async (lectureId) => {
+  const res = await client.get(`enroll/${lectureId}`);
+  console.log('isEnroll', res);
   return res;
 };
 
