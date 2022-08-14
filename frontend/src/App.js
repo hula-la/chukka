@@ -49,7 +49,7 @@ const App = () => {
           <Route path="profile/:nickName" element={<ProfilePage />} />
           <Route path="password" element={<FindPwPage />} />
           <Route path="cart" element={<CartPage />} />
-          <Route path="pay" element={<PayConfrim/>}/>
+          <Route path="pay" element={<PayConfrim />} />
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
@@ -58,7 +58,7 @@ const App = () => {
           <Route path="class/:lectureId" element={<LectureClassPage />} />
         </Route>
         <Route
-          path="lectures/:lectureId/section/:sectionId"
+          path="lectures/:lectureId/section/:sectionIdx"
           element={<VideoLecturePage />}
         />
         <Route path="lectures/live" element={<LivePage />} />

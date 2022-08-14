@@ -1,12 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
+  fetchPopularLectures,
+  fetchRecommendLectures,
   fetchLatestLectures,
   fetchLectureDetail,
   fetchSections,
+  fetchIsEnroll,
 } from './lectureActions';
 import thumbnail1 from '../../img/pop.jpeg';
 
 const initialState = {
+  popularLectures: [],
+  recommendLectures: [],
   lectures: [],
   lecture: {
     lecId: '',
@@ -26,6 +31,7 @@ const initialState = {
     lecLimit: '',
     insInfo: {},
   },
+  isEnroll: false,
   sections: [],
 };
 
@@ -34,6 +40,13 @@ const lectureSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
+    [fetchPopularLectures.fulfilled]: (state, { payload }) => {
+      state.popularLectures = payload.data;
+    },
+    [fetchRecommendLectures.fulfilled]: (state, { payload }) => {
+      console.log('reco', payload.data);
+      state.recommendLectures = payload.data;
+    },
     [fetchLatestLectures.fulfilled]: (state, { payload }) => {
       state.lectures = payload.content;
     },
@@ -41,7 +54,10 @@ const lectureSlice = createSlice({
       state.lecture = payload.data;
     },
     [fetchSections.fulfilled]: (state, { payload }) => {
-      state.sections = payload.data;
+      state.sections = payload.data.content;
+    },
+    [fetchIsEnroll.fulfilled]: (state, { payload }) => {
+      state.isEnroll = payload.data;
     },
   },
 });

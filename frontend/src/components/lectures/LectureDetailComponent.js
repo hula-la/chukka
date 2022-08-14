@@ -6,13 +6,8 @@ import StyledButton from '../../components/Button';
 import ReviewStar from '../../components/lectures/ReviewStar';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
-import {
-  fetchLectureDetail,
-  fetchSections,
-} from '../../features/lecture/lectureActions';
-import CampaignIcon from '@mui/icons-material/Campaign';
+import { fetchLectureDetail } from '../../features/lecture/lectureActions';
 
-// style
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -53,6 +48,7 @@ const LectureInfoDetail = styled.div`
     margin-bottom: 1rem;
     flex-grow: 1;
     font-size: 1.2rem;
+    /* justify-content: space-between; */
     & div {
       margin-bottom: 8px;
     }
@@ -73,16 +69,12 @@ const NoticeDiv = styled.div`
   width: 100%;
   background-color: #316cc3;
   color: white;
-  height: 60px;
+  height: 65px;
   border-radius: 20px;
   display: flex;
   align-items: center;
   padding-left: 20px;
-  font-size: 22px;
-  margin-bottom: 2rem;
-  & span {
-    margin-left: 8px;
-  }
+  font-size: 18px;
 `;
 
 const LectureSubTitle = styled.div`
@@ -96,25 +88,24 @@ const LectureNav = styled.div`
   & a {
     font-size: 1.6rem;
     margin-right: 2rem;
+    opacity: 0.7;
+  }
+  & a:hover {
+    opacity: 1;
   }
 `;
 
-const LectureClassPage = () => {
+const LectureDetailComponent = () => {
   const { lectureId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const secRef = useRef(null);
+  const infoRef = useRef(null);
   const insRef = useRef(null);
   const revRef = useRef(null);
 
   useEffect(() => {
     dispatch(fetchLectureDetail(lectureId));
-    dispatch(fetchSections(lectureId));
   }, [dispatch, lectureId]);
-
-  const onClickSectionHandler = (sectionId) => {
-    navigate(`/lectures/${lectureId}/section/${sectionId}`);
-  };
 
   const {
     lecId,
@@ -134,8 +125,6 @@ const LectureClassPage = () => {
     lecLimit,
     insInfo,
   } = useSelector((state) => state.lecture.lecture);
-
-  const sections = useSelector((state) => state.lecture.sections);
 
   const reviews = [
     {
@@ -172,9 +161,9 @@ const LectureClassPage = () => {
       insRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
-  const scrollToSec = () => {
-    if (secRef && secRef.current) {
-      secRef.current.scrollIntoView({ behavior: 'smooth' });
+  const scrollToInfo = () => {
+    if (infoRef && infoRef.current) {
+      infoRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -207,28 +196,32 @@ const LectureClassPage = () => {
                 {lecStudent} / {lecLimit}
               </span>
             </div>
+            <div>
+              <>총 금액 : </>
+              <span>
+                {lecPrice
+                  .toString()
+                  .replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}
+                원
+              </span>
+            </div>
           </div>
           <StyledButton
-            content="수업 들으러 가기"
-            onClick={() => {
-              navigate(`/lectures/${lectureId}/section/1`);
-            }}
+            content="장바구니에 담기"
+            onClick={() => navigate(`/accounts/cart`)}
           />
         </LectureInfoDetail>
       </LectureInfo>
-      <NoticeDiv>
-        <CampaignIcon />
-        <div>공지사항 : {lecNotice}</div>
-      </NoticeDiv>
+      {/* <NoticeDiv>공지사항 </NoticeDiv> */}
       <LectureNav>
         <a
           href=""
           onClick={(e) => {
             e.preventDefault();
-            scrollToSec();
+            scrollToInfo();
           }}
         >
-          목차
+          강의 정보
         </a>
         <a
           href=""
@@ -249,13 +242,11 @@ const LectureClassPage = () => {
           리뷰
         </a>
       </LectureNav>
-      <LectureSubTitle id="sections" ref={secRef}>
-        <h1>목차</h1>
+      <LectureSubTitle id="info" ref={infoRef}>
+        <h1>강의 정보</h1>
       </LectureSubTitle>
-      <SectionContainer
-        sections={sections}
-        onClickSectionHandler={onClickSectionHandler}
-      />
+      {/* {lecContents} */}
+      <LectureSubContent content={lecContents} />
 
       <LectureSubTitle id="instructor" ref={insRef}>
         <h1>강사 소개</h1>
@@ -270,7 +261,7 @@ const LectureClassPage = () => {
   );
 };
 
-export default LectureClassPage;
+export default LectureDetailComponent;
 
 const LectureSubContent = ({ content }) => {
   const SubContent = styled.div`
@@ -280,80 +271,6 @@ const LectureSubContent = ({ content }) => {
     font-size: 24px;
   `;
   return <SubContent>{content}</SubContent>;
-};
-
-const SectionContainer = ({ sections, onClickSectionHandler }) => {
-  const Wrapper = styled.div`
-    margin: 1rem 0rem;
-    padding: 2rem;
-    min-height: 500px;
-    font-size: 24px;
-  `;
-  return (
-    <Wrapper>
-      {sections.map((section, index) => (
-        <SectionLecture
-          section={section}
-          index={index}
-          key={index}
-          onClickSectionHandler={onClickSectionHandler}
-        />
-      ))}
-    </Wrapper>
-  );
-};
-
-const SectionLecture = ({ section, index, onClickSectionHandler }) => {
-  const Wrapper = styled.div`
-    width: 100%;
-    display: block;
-    color: white;
-    opacity: 0.7;
-    border-bottom: #ff2c55 0.1rem solid;
-    cursor: pointer;
-    :hover {
-      opacity: 1;
-    }
-    & .section-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    & .section-title {
-      font-size: 1.6rem;
-      display: block;
-    }
-    & .section-regdate {
-      font-size: 1.3rem;
-      line-height: 1.5;
-      color: rgb(255, 44, 85, 0.7);
-    }
-    & .section-content {
-      font-size: 1.2rem;
-    }
-
-    min-height: 6rem;
-    margin-bottom: 2rem;
-  `;
-
-  const { secId, secTitle, secContents, secRegDate } = section;
-
-  return (
-    <Wrapper
-      onClick={() => {
-        onClickSectionHandler(index + 1);
-      }}
-    >
-      <div className="section-header">
-        <div className="section-title">
-          {index + 1}. {secTitle}
-        </div>
-        <div className="section-regdate">{secRegDate}</div>
-      </div>
-      <div className="section-content">{secContents}</div>
-    </Wrapper>
-  );
 };
 
 const InstructorInfo = ({ instructorInfo }) => {

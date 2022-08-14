@@ -3,8 +3,42 @@ import {
   popularLectures,
   lecture,
   sections,
+  isEnroll,
+  recommendLectures,
 } from '../../api/lecture';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+
+export const fetchPopularLectures = createAsyncThunk(
+  'lecture/fetchPopularLectures',
+  async (params, { rejectWithValue }) => {
+    try {
+      const { data } = await popularLectures();
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const fetchRecommendLectures = createAsyncThunk(
+  'lecture/fetchRecommendLectures',
+  async (params, { rejectWithValue }) => {
+    try {
+      const { data } = await recommendLectures();
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
 
 export const fetchLatestLectures = createAsyncThunk(
   'lecture/fetchLatestLectures',
@@ -43,6 +77,22 @@ export const fetchSections = createAsyncThunk(
   async (lectureId, { rejectWithValue }) => {
     try {
       const { data } = await sections(lectureId);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const fetchIsEnroll = createAsyncThunk(
+  'lecture/fetchIsEnroll',
+  async (lectureId, { rejectWithValue }) => {
+    try {
+      const { data } = await isEnroll(lectureId);
       return data;
     } catch (error) {
       if (error.response && error.response.data.message) {

@@ -43,20 +43,19 @@ const BadgeDiv = styled.div`
 
 const Lecture = ({ props }) => {
   const navigate = useNavigate();
-  const { title, content, thumbnail, level, genre, category } = props;
+  const { lecTitle, lecThumb, lecLevel, lecGenre, lecCategory } = props;
   return (
     <Wrapper>
       <Thumbnail onClick={() => navigate(`/lectures/1`)}>
-        <img src={thumbnail} alt="" />
+        <img src={lecThumb} alt="" />
         <div className="lecture-info">
-          <h1>{title}</h1>
-          <h2>{content}</h2>
+          <h1>{lecTitle}</h1>
         </div>
       </Thumbnail>
       <BadgeDiv>
-        <LevelBadge level={level} />
-        <CategoryBadge category={genre} />
-        <CategoryBadge category={category} />
+        <LevelBadge level={lecLevel} />
+        <CategoryBadge category={lecGenre} />
+        <CategoryBadge category={lecCategory} />
       </BadgeDiv>
     </Wrapper>
   );
