@@ -17,14 +17,17 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "songId")
-    private long songId;
-
-    private String fileName;
+    private Long songId;
 
     private String songName;
 
     private String singer;
 
     private int level;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "game",cascade = CascadeType.ALL)
+    private List<GameHighScore> gameHighScores = new ArrayList<>();
+
 
 }
