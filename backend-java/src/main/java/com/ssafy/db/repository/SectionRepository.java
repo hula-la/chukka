@@ -32,4 +32,6 @@ public interface SectionRepository extends JpaRepository<Section, Integer> {
             "where sec.secId = :secId", nativeQuery = true)
     Optional<Integer> updateSection(int secId, Instructor instructor, String secTitle, String secContents);
 
+    List<Section> findAllByLecture_LecId(int lecId);
+
 }

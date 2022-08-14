@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service("SectionService")
 public class SectionServiceImpl implements SectionService{
@@ -61,12 +62,8 @@ public class SectionServiceImpl implements SectionService{
     // 강의 아이디로 섹션 목록 조회
     @Override
     public List<SectionGetRes> getSectionByLecId(int lecId) {
-        List<Section> list = sectionRepository.findAll();
-        List<SectionGetRes> sections = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            sections.add(SectionGetRes.of(list.get(i)));
-        }
-        return sections;
+        List<SectionGetRes> list = sectionRepository.findAllByLecture_LecId(lecId).stream().map(s -> SectionGetRes.of(s)).collect(Collectors.toList());
+        return list;
     }
 
     // 섹션 수정 (해당 강의 아이디, 강사 아이디, 섹션 아이디가 없을 때 null 반환 그 외 수정된 섹션 객체 반환)
