@@ -7,6 +7,7 @@ import ReviewStar from '../../components/lectures/ReviewStar';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { fetchLectureDetail } from '../../features/lecture/lectureActions';
+import { insertCartItem, userCartCount } from '../../features/cart/cartActions';
 
 const Wrapper = styled.div`
   display: flex;
@@ -167,6 +168,11 @@ const LectureDetailComponent = () => {
     }
   };
 
+  const onClick = async () => {
+    await dispatch(insertCartItem(lecId));
+    dispatch(userCartCount());
+    navigate(`/accounts/cart`);
+  };
   return (
     <Wrapper>
       <LectureInfo>
@@ -206,10 +212,7 @@ const LectureDetailComponent = () => {
               </span>
             </div>
           </div>
-          <StyledButton
-            content="장바구니에 담기"
-            onClick={() => navigate(`/accounts/cart`)}
-          />
+          <StyledButton content="장바구니에 담기" onClick={onClick} />
         </LectureInfoDetail>
       </LectureInfo>
       {/* <NoticeDiv>공지사항 </NoticeDiv> */}

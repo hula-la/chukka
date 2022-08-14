@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import LectureClassComponent from '../../components/lectures/LectureClassComponent';
 import LectureDetailComponent from '../../components/lectures/LectureDetailComponent';
 import { fetchIsEnroll } from '../../features/lecture/lectureActions';
+import { userCartCount } from '../../features/cart/cartActions';
 
 const LectureDetailpage = () => {
   const dispatch = useDispatch();

@@ -7,6 +7,7 @@ import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useInView } from 'react-intersection-observer';
 import {
   fetchReply,
   createReply,
@@ -151,6 +152,9 @@ const SnacksItem = ({ snacks }) => {
     dispatch(likeSnacks(snacksId));
   };
 
+  // 자동재생
+  const [ref, inView] = useInView({ threshold: 1 });
+
   return (
     <Wrapper>
       <div className="account">
@@ -174,9 +178,10 @@ const SnacksItem = ({ snacks }) => {
           <video
             id="my-video"
             // className="video-js vjs-theme-fantasy"
-            // controls
-            preload="auto"
+            controls
+            // preload="auto"
           >
+            <div ref={ref} />
             <source
               src={`https://chukkadance.s3.ap-northeast-2.amazonaws.com/vid/snacks/${snacks.snacksId}`}
               type="video/mp4"

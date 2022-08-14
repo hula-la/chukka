@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchUser, userCartCount } from './cartActions';
+import { fetchUser, insertCartItem, userCartCount } from './cartActions';
 
 const initialState = {
   loading: false,
@@ -18,7 +18,17 @@ const cartSlice = createSlice({
       state.userProfile = payload.data;
       console.log(state.userProfile);
     },
+
+    // 장바구니 갯수 불러오기
     [userCartCount.fulfilled]: (state, { payload }) => {
+      state.cartCount = payload.data;
+    },
+
+    // 장바구니에 강의 담기
+    [insertCartItem.fulfilled]: (state, { payload }) => {
+      console.log(payload);
+    },
+    [insertCartItem.rejected]: (state, { payload }) => {
       console.log(payload);
     },
   },
