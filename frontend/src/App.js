@@ -27,6 +27,11 @@ import MainPage from './pages/game/MainPage';
 import GamesPage from './pages/game/GamesPage';
 // admin
 import AdminPage from './pages/admin/AdminPage';
+import AdminInsProfile from './pages/admin/AdminInsProfile';
+import AddLiveLecture from './pages/admin/AddLiveLecture';
+import AddRecordLecture from './pages/admin/AddRecordLecture';
+import DetailLectue from './pages/admin/DetailLectue';
+import AddSection from './pages/admin/AddSection';
 // notfount
 import NotFound from './pages/NotFound';
 
@@ -76,6 +81,11 @@ const App = () => {
         {/* admin */}
         <Route path="admin" element={<Layout />}>
           <Route path="" element={<AdminPage />} />
+          <Route path="ins" element={<AdminInsProfile />} />
+          <Route path="lecture/record" element={<AddRecordLecture />} />
+          <Route path="lecture/live" element={<AddLiveLecture />} />
+          <Route path=":lecId" element={<DetailLectue />} />
+          <Route path="section/:lecId" element={<AddSection />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

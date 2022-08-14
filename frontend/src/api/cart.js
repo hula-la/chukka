@@ -10,12 +10,17 @@ export const deleteCartItem = async (CartItemId) => {
   return res;
 };
 
-export const insertCartItem = async (data) =>{
-  const res = await client.post('cart/',data);
+export const insertCartItem = async (data) => {
+  const res = await client.post('cart/', data);
   return res;
-}
+};
 
 export const user = async (userNickname) => {
   const res = await client.post('accounts/', { userNickname });
+  return res;
+};
+
+export const count = async () => {
+  const res = await client.get('cart/count');
   return res;
 };
