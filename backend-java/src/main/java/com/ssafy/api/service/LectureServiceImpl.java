@@ -220,6 +220,7 @@ public class LectureServiceImpl implements LectureService {
                     .lecPrice(lectureUpdateReq.getLecPrice())
                     .lecLevel(lectureUpdateReq.getLecLevel())
                     .lecGenre(lectureUpdateReq.getLecGenre())
+                    .lecCategory(0)
                     .build();
             return lectureRepository.save(lecture);
         }
@@ -249,6 +250,7 @@ public class LectureServiceImpl implements LectureService {
                     .lecEndDate(liveLectureUpdateReq.getLecEndDate())
                     .lecStudent(liveLectureUpdateReq.getLecStudent())
                     .lecLimit(liveLectureUpdateReq.getLecLimit())
+                    .lecCategory(1)
                     .build();
             return lectureRepository.save(lecture);
         }
