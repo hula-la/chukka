@@ -3,10 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.response.cart.CartLecGetRes;
 import com.ssafy.api.request.cart.CartPostReq;
 
-import com.ssafy.api.service.CartService;
-import com.ssafy.api.service.EnrollService;
-import com.ssafy.api.service.LectureService;
-import com.ssafy.api.service.UserService;
+import com.ssafy.api.service.*;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.*;
@@ -25,7 +22,7 @@ import java.util.Optional;
 @Api(value = "장바구니 API", tags = {"Cart"})
 @RestController
 @RequestMapping("/cart")
-public abstract class CartController implements CartService {
+public abstract class CartController  {
 
     @Autowired
     CartService cartService;
@@ -50,7 +47,7 @@ public abstract class CartController implements CartService {
             @PathVariable @ApiParam(value="강의 아이디", required = true) int lecId) {
 //        SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
 //        String loginUserId = userDetails.getUsername();
-        User user = userService.getUserByUserId("user3");
+        User user = userService.getUserByUserId("user4");
         Cart cart = cartService.findCartByUser(user.getUserId());
 
         System.out.println(user.getUserId());
