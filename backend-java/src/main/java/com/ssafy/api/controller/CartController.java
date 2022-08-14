@@ -25,7 +25,7 @@ import java.util.Optional;
 @Api(value = "장바구니 API", tags = {"Cart"})
 @RestController
 @RequestMapping("/cart")
-public class CartController {
+public abstract class CartController implements CartService {
 
     @Autowired
     CartService cartService;
@@ -41,16 +41,16 @@ public class CartController {
 
 
     // 장바구니 추가 ========================================================================================================
-    @PostMapping("/")
+    @PostMapping("/{lecId}")
     @ApiOperation(value = "장바구니 추가", notes = "<strong>강의 아이디</strong>를 받아 회원의 장바구니에 추가한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
     })
     public ResponseEntity<BaseResponseBody> insert(@ApiIgnore Authentication authentication,
-            @RequestParam @ApiParam(value="강의 아이디", required = true) int lecId) {
-        SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-        String loginUserId = userDetails.getUsername();
-        User user = userService.getUserByUserId(loginUserId);
+            @PathVariable @ApiParam(value="강의 아이디", required = true) int lecId) {
+//        SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
+//        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId("user3");
         Cart cart = cartService.findCartByUser(user.getUserId());
 
         System.out.println(user.getUserId());
