@@ -237,10 +237,10 @@ const SingleMode = (songID) => {
             // setPerfectCnt((perfectRef.current+=1));
             // console.log(perfectCnt);
             setGameEF("../../img/game_effect/norecognize.png");
-          } else if (similarity < 0.02) {
+          } else if (similarity < 0.01) {
             setPerfectCnt(perfectCnt=>perfectCnt+1);
             setGameEF("../../img/game_effect/perfect.png");
-          } else if (similarity < 0.03) {
+          } else if (similarity < 0.02) {
             setGoodCnt(prev => prev + 1);
             setGoodCnt(goodCnt=>goodCnt+1);
             setGameEF("../../img/game_effect/good.png");
