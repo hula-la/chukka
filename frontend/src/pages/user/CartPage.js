@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '../../features/cart/cartActions';
 import CloseIcon from '@mui/icons-material/Close';
 import TvOffIcon from '@mui/icons-material/TvOff';
+import defaultImage from '../../img/default.jpeg';
 import { getCartList, deleteCartItem } from '../../api/cart';
 import { LectureInfo } from '../../components/carts/LectureInfo';
 import { PayLecture } from '../../components/carts/PayLecture';
@@ -29,6 +30,7 @@ const ProfilePageBlock = styled.div`
     cursor: pointer;
     margin: auto;
   }
+
 `;
 // 사이드바 css
 const Side = styled.div`
@@ -36,7 +38,6 @@ const Side = styled.div`
   // flex-direction: column;
   display:grid;
   grid-template-rows : 0.5fr 0.5fr 0.5fr 2fr 1fr;
-  -webkit-align-items: center;
   -webkit-box-align: unset;
   justify-content: initial;
 
@@ -47,6 +48,9 @@ const Side = styled.div`
     text-align: center;
     margin-top: 1rem;
     font-size: 1.2rem;
+  }
+  h3{
+    margin-top:0.8rem;
   }
 `;
 const Profile = styled.div`
@@ -241,7 +245,7 @@ const CartPage = () => {
         {userProfile !== null && (
           <Profile>
             <div>
-              <img src={userProfile.userProfile} alt="프로필 사진"></img>
+              <img src={userProfile.userProfile!==null?userProfile.userProfile:defaultImage} alt="프로필 사진"></img>
             </div>
             <p>{userProfile.userNickname}</p>
           </Profile>
@@ -279,7 +283,7 @@ const CartPage = () => {
                   }
                   onChange={(e) => checkHandler(e)}
                 ></input>
-                <LectureInfo data={lecture} key={i} {...lecture} />
+                <LectureInfo data={lecture} key={i} />
                 <CloseIcon
                   className="icon"
                   onClick={() => deleteItem(lecture.cartItemId)}
