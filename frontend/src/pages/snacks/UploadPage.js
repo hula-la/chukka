@@ -73,6 +73,7 @@ const SnacksUploadForm = styled.form`
   }
   .tags-input {
     width: 83%;
+    overflow: auto;
   }
 `;
 
