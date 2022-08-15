@@ -1,5 +1,6 @@
 import { AccountBoxTwoTone } from '@material-ui/icons';
 import React, { useState, useEffect, useRef } from 'react';
+import "./singleGame.css";
 
 const SingleMode = (songID) => {
   songID = 'soojin';
@@ -147,7 +148,7 @@ const SingleMode = (songID) => {
       // setTimeDecrease(undefined);
       setIV(undefined);
     }
-    setPlaying(!playing);
+    // setPlaying(!playing);
   };
 
   const sendImage = async () => {
@@ -170,7 +171,7 @@ const SingleMode = (songID) => {
 
   useEffect(() => {
     getWebcam((stream) => {
-      setPlaying(true);
+      // setPlaying(true);
       videoRef.current.srcObject = stream;
     });
   }, []);
@@ -217,6 +218,7 @@ const SingleMode = (songID) => {
       };
 
       websckt.onmessage = (e) => {
+        setPlaying(true);
         // console.log(perfectCnt);
 
         // console.log("IV_tmp: " + IV_tmp);
@@ -299,7 +301,7 @@ const SingleMode = (songID) => {
     None: { display: 'none' },
     previewImage: { position: 'absolute', height: '15vh' },
     PoseContainer: { display: 'flex' },
-    Pose: { width: '50%', height: '20vh' },
+    Pose: { width: '50%', height: '20vh', position: 'relative',textAlign:'center' },
     PoseObject: { width: '50%', margin: 'auto' },
   };
 
@@ -340,7 +342,7 @@ const SingleMode = (songID) => {
               </div>
               <div id="canvasDiv" style={Styles.Video}>
                 <div style={Styles.ScoreBox}>
-                  <img id="scoreCanvas" src={gameEF} style={Styles.Score} />
+                  
                   <canvas id="canvas" ref={canvasRef} style={Styles.Canvas} />
                 </div>
               </div>
@@ -355,6 +357,7 @@ const SingleMode = (songID) => {
                 />
               </div>
               <div style={Styles.Pose}>
+                {playing==true && (<img id="scoreCanvas" class="scoreEF" src={gameEF} style={Styles.Score } />)}
                 <img
                   id="userPoseImg"
                   src={userPoseImg}
