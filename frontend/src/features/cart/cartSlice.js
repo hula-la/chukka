@@ -6,6 +6,7 @@ const initialState = {
   error: null,
   userProfile: null,
   cartCount: 0,
+  insertCartMessage: '',
 };
 
 const cartSlice = createSlice({
@@ -26,7 +27,7 @@ const cartSlice = createSlice({
 
     // 장바구니에 강의 담기
     [insertCartItem.fulfilled]: (state, { payload }) => {
-      console.log(payload);
+      state.insertCartMessage = payload.message;
     },
     [insertCartItem.rejected]: (state, { payload }) => {
       console.log(payload);

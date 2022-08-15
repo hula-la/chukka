@@ -281,10 +281,10 @@ const SnacksPage = ({ history }) => {
         </div>
         <div className="item">
           <ul className="nonelist list">
-            {snacksList.map((snacks) => {
+            {snacksList.map((snacks, index) => {
               return (
                 <li className="snacksitem">
-                  <SnacksItem key={snacks.snacksId} snacks={snacks} />
+                  <SnacksItem key={index} snacks={snacks} />
                 </li>
               );
             })}

@@ -125,6 +125,7 @@ const LectureDetailComponent = () => {
     lecStudent,
     lecLimit,
     insInfo,
+    cart,
   } = useSelector((state) => state.lecture.lecture);
 
   const reviews = [
@@ -212,7 +213,10 @@ const LectureDetailComponent = () => {
               </span>
             </div>
           </div>
-          <StyledButton content="장바구니에 담기" onClick={onClick} />
+          {!cart && (
+            <StyledButton content="장바구니에 담기" onClick={onClick} />
+          )}
+          {cart && <StyledButton content="장바구니에 담겨 있습니다" disabled />}
         </LectureInfoDetail>
       </LectureInfo>
       {/* <NoticeDiv>공지사항 </NoticeDiv> */}

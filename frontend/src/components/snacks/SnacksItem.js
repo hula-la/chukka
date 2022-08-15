@@ -81,8 +81,21 @@ const Wrapper = styled.div`
     position: absolute;
     bottom: -3px;
     background-color: rgb(255, 255, 255, 0.8);
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
     width: 100%;
     height: 500px;
+  }
+  .reply-contents {
+    margin: 0.5rem 0.5rem;
+    line-height: 1.5rem;
+    border-bottom: solid 1px rgb(0, 0, 0, 0.3);
+    color: black;
+    text-shadow: none;
+  }
+  .reply-writer {
+    font-size: smaller;
+    color: rgb(0, 0, 0, 0.7);
   }
   .reply-form {
     position: absolute;
@@ -95,6 +108,10 @@ const Wrapper = styled.div`
     width: 220px;
     padding: 0.5rem 0.5rem;
     color: black;
+  }
+  & button {
+    border: none;
+    background-color: transparent;
   }
   .reply-upload-btn {
     margin-left: 0.7rem;
@@ -193,9 +210,10 @@ const SnacksItem = ({ snacks }) => {
               <div className="reply-container">
                 {snacksReply.length !== 0 && (
                   <div className="reply-list">
-                    <h1>sd</h1>
                     {snacksReply.map((reply, index) => {
-                      return <li key={index}>{reply.contents}</li>;
+                      return <li key={index} className="reply-contents">
+                        <span className='reply-writer'>작성자</span><br/>
+                        {reply.contents}</li>;
                     })}
                   </div>
                 )}

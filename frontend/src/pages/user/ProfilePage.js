@@ -415,7 +415,7 @@ const ProfilePage = () => {
   const [profileInputs, setProfileInputs] = useState({
     userBirth: '',
     userEmail: '',
-    userGender: '',
+    userGender: '0',
     userName: '',
     userNickname: '',
     userPhone: '',
@@ -606,20 +606,36 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div className="infoDiv flexDiv">
+
+            {/* <div className="infoDiv flexDiv">
               <div>
                 <StyledLabel for="male">
                   남성<MaleIcon className="icon"></MaleIcon>
                 </StyledLabel>
-                <StyledInput id="male" type="radio" name="gender" value="1" />
+                <StyledInput
+                  id="male"
+                  type="radio"
+                  name="userGender"
+                  checkded={profileInputs.userGender === '0'}
+                  value="0"
+                  onChange={onChangeProfile}
+                />
               </div>
               <div>
                 <StyledLabel for="female">
                   여성<FemaleIcon className="icon"></FemaleIcon>
                 </StyledLabel>
-                <StyledInput id="female" type="radio" name="gender" value="0" />
+                <StyledInput
+                  id="female"
+                  type="radio"
+                  name="userGender"
+                  checkded={profileInputs.userGender === '1'}
+                  value="1"
+                  onChange={onChangeProfile}
+                />
               </div>
-            </div>
+            </div> */}
+
             <StyledButton>프로필 수정</StyledButton>
           </ChangeProfileForm>
         </ChangeProfileBox>
