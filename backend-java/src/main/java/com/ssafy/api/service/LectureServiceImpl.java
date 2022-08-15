@@ -6,9 +6,11 @@ import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.lecture.LectureGetForYouRes;
+import com.ssafy.db.entity.CartItem;
 import com.ssafy.db.entity.Enroll;
 import com.ssafy.db.entity.Instructor;
 import com.ssafy.db.entity.Lecture;
+import com.ssafy.db.repository.CartItemRepository;
 import com.ssafy.db.repository.EnrollRepository;
 import com.ssafy.db.repository.InstructorRepository;
 import com.ssafy.db.repository.LectureRepository;
@@ -41,6 +43,8 @@ public class LectureServiceImpl implements LectureService {
 
     @Autowired
     EnrollRepository enrollRepository;
+    @Autowired
+    CartItemRepository cartItemRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -108,12 +112,13 @@ public class LectureServiceImpl implements LectureService {
 
     // 상세 페이지
     @Override
-    public LectureDetailRes getDetailLecture(int lecId) {
+    public LectureDetailRes getDetailLecture(int lecId, String userId) {
         Optional<Lecture> lecture = lectureRepository.findById(lecId);
         if (!lecture.isPresent()) {
             return null;
         }
-        LectureDetailRes dto = LectureDetailRes.of(lecture.get());
+        CartItem cartItem = cartItemRepository.findByLecture_LecIdAndCart_User_UserId(lecId, userId);
+        LectureDetailRes dto = LectureDetailRes.of(lecture.get(), cartItem != null);
         return dto;
     }
 
