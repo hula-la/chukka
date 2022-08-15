@@ -233,7 +233,7 @@ const SingleMode = (songID) => {
             // console.log("카운팅되는중~")
             // setPerfectCnt((perfectRef.current+=1));
             // console.log(perfectCnt);
-            setGameEF('../../img/game_effect/norecognize.png');
+            setGameEF('../../img/game_effect/notFound.png');
           } else if (similarity < 0.02) {
             setPerfectCnt((perfectCnt) => perfectCnt + 1);
             setGameEF('../../img/game_effect/perfect.png');
