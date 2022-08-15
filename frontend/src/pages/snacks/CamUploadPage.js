@@ -5,7 +5,6 @@ import Tags from '@yaireo/tagify/dist/react.tagify';
 import '@yaireo/tagify/dist/tagify.css';
 import styled from 'styled-components';
 import { uploadSnacks } from '../../features/snacks/snacksActions';
-import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined';
 import { useNavigate } from 'react-router-dom';
 // import SubscriptionsOutlinedIcon from '@mui/icons-material/SubscriptionsOutlined';
 

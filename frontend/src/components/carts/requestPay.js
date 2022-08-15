@@ -79,7 +79,7 @@ const RequestPay= (props)=> {
         completePay(data).then((response)=>{
           console.log(response);
           if(response.message === "Success"){
-            navigate("/accounts/pay",{state :{ list : props.payList, amount : res.paid_amount, user : props.user}});
+            navigate("/accounts/pay",{state :{ list : props.payList, amount : res.paid_amount, merchant_uid:res.merchant_uid, user : props.user}});
           }else{
             console.log("결제 정보 저장 실패");
           }

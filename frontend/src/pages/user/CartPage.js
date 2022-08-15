@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUser, userCartCount } from '../../features/cart/cartActions';
+import { fetchUser } from '../../features/cart/cartActions';
 import CloseIcon from '@mui/icons-material/Close';
 import TvOffIcon from '@mui/icons-material/TvOff';
-import { getCartList, deleteCartItem, user } from '../../api/cart';
+import { getCartList, deleteCartItem } from '../../api/cart';
 import { LectureInfo } from '../../components/carts/LectureInfo';
 import { PayLecture } from '../../components/carts/PayLecture';
 import Alert from '../../components/Alert';
-import RequestPay from '../../components/carts/requestPay';
+import RequestPay from '../../components/carts/RequestPay';
 import StyledButton from '../../components/Button';
 
 const ProfilePageBlock = styled.div`
@@ -34,8 +34,8 @@ const ProfilePageBlock = styled.div`
 const Side = styled.div`
   // display: flex;
   // flex-direction: column;
-  display: grid;
-  grid-template-rows: 0.5fr 0.5fr 0.5fr 2fr 1fr;
+  display:grid;
+  grid-template-rows : 0.5fr 0.5fr 0.5fr 2fr 1fr;
   -webkit-align-items: center;
   -webkit-box-align: unset;
   justify-content: initial;
@@ -213,7 +213,6 @@ const CartPage = () => {
               setCheckedItems([]);
               setCheckedIds([]);
             }
-            dispatch(userCartCount());
           });
         } else {
           console.log(res.data.message);
