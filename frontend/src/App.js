@@ -28,6 +28,8 @@ import MakeSnacksPage from './pages/snacks/MakeSnacksPage';
 // games
 import MainPage from './pages/game/MainPage';
 import GamesPage from './pages/game/GamesPage';
+import ResultPage from './pages/game/ResultPage';
+
 // admin
 import AdminPage from './pages/admin/AdminPage';
 import AdminInsProfile from './pages/admin/AdminInsProfile';
@@ -81,8 +83,11 @@ const App = () => {
         {/* games */}
         <Route path="games" element={<Layout />}>
           <Route path="" element={<MainPage />} />
+          
+          
         </Route>
         <Route path="game" element={<GamesPage />} />
+        <Route path="game/result" element={<ResultPage />} />
         {/* admin */}
         <Route path="admin" element={<Layout />}>
           <Route path="" element={<AdminPage />} />

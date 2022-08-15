@@ -86,7 +86,6 @@ const CartLecInfo = styled.div`
 const PayList = styled.div`
   // border-style : solid;
   // border-color : white;
-
   width: 100%;
   height: 100%;
   padding: 3% 0;
