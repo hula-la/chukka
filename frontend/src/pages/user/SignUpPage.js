@@ -12,6 +12,7 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import { useCallback } from 'react';
 
 const StyledInput = styled.input`
   font-size: 0.75rem;
@@ -115,6 +116,17 @@ const SignupBox = styled.div`
   width: 40rem;
 `;
 
+const ErrorMessage = styled.div`
+  font-size: smaller;
+  margin-bottom: 2.5rem;
+  .success {
+    color: #696565;
+  }
+  .error {
+    color: #ff000091;
+  }
+`;
+
 const SignUpPage = () => {
   const { userInfo } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -125,48 +137,182 @@ const SignUpPage = () => {
     }
   }, [navigate, userInfo]);
 
-  const [signUpInputs, setSignUpInputs] = useState({
-    userId: '',
-    userName: '',
-    userNickname: '',
-    userPw: '',
-    userPwConfirm: '',
-    userEmail: '',
-    userPhone: '',
-    userBirth: '',
-    userGender: 0,
-    userProfile: 'img/profile.png',
-  });
+  // 아이디, 닉네임 중복검사
   const [isIdChecked, setIsIdChecked] = useState(false);
   const [isNickChecked, setIsNickChecked] = useState(false);
 
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    const nextInputs = {
-      ...signUpInputs,
-      [name]: value,
-    };
-    if (name === 'userNickname') {
-      setIsNickChecked(false);
-    } else if (name === 'userId') {
+  // 회원가입 인풋
+  const [userId, setUserId] = useState('');
+  const [userNickname, setUserNickname] = useState('');
+  const [userPw, setUserPw] = useState('');
+  const [userPwConfirm, setUserPwConfirm] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userPhone, setUserPhone] = useState('');
+  const [userBirth, setUserBirth] = useState('');
+  const [userGender, setUserGender] = useState('0');
+
+  // 오류메세지 상태저장
+  const [userIdMessage, setUserIdMessage] = useState('');
+  const [userNicknameMessage, setUserNicknameMessage] = useState('');
+  const [pwMessage, setPwMessage] = useState('');
+  const [pwConfirmMessage, setPwConfirmMessage] = useState('');
+  const [userNameMessage, setUserNameMessage] = useState('');
+  const [userEmailMessage, setUserEmailMessage] = useState('');
+  const [userPhoneMessage, setUserPhoneMessage] = useState('');
+
+  // 유효성 검사
+  const [isuserId, setIsUserId] = useState(false);
+  const [isuserNickname, setIsUserNickname] = useState(false);
+  const [isPw, setIsPw] = useState(false);
+  const [isPwConfirm, setIsPwConfirm] = useState(false);
+  const [isuserName, setIsUserName] = useState(false);
+  const [isuserEmail, setIsUserEmail] = useState(false);
+  const [isuserPhone, setIsUserPhone] = useState(false);
+
+  // 아이디
+  const onChangeId = useCallback(async (e) => {
+    const idRegex = /\w{4,16}$/;
+    const idCurrent = e.target.value;
+    const { statusCode } = await idCheck(idCurrent);
+    setUserId(idCurrent);
+    if (!idRegex.test(idCurrent)) {
+      setUserIdMessage('숫자 + 영문자 조합으로 4자리에서 16자리');
+      setIsUserId(false);
+    } else if (statusCode === 401) {
+      setUserIdMessage('중복된 아이디입니다!!');
       setIsIdChecked(false);
+    } else if (statusCode === 200) {
+      setUserIdMessage('올바른 아이디 형식입니다 :)');
+      setIsIdChecked(true);
+      setIsUserId(true);
     }
-    setSignUpInputs(nextInputs);
-  };
+  }, []);
+
+  // 닉네임
+  const onChangeNickname = useCallback(async (e) => {
+    const nicknameRegex = /\w{2,16}$/;
+    const nicknameCurrent = e.target.value;
+    const { statusCode } = await nickCheck(nicknameCurrent);
+    setUserNickname(nicknameCurrent);
+    if (!nicknameRegex.test(nicknameCurrent)) {
+      setUserNicknameMessage('2글자 이상 16글자 이하로 입력해주세요!');
+      setIsUserNickname(false);
+    } else if (statusCode === 401) {
+      setUserNicknameMessage('중복된 닉네임입니다!');
+      setIsNickChecked(false);
+    } else if (statusCode === 200) {
+      setUserNicknameMessage('올바른 닉네임 형식입니다 :)');
+      setIsNickChecked(true);
+      setIsUserNickname(true);
+    }
+  }, []);
+
+  // 비밀번호
+  const onChangePw = useCallback((e) => {
+    const pwRegex = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+    const pwCurrent = e.target.value;
+    setUserPw(pwCurrent);
+
+    if (!pwRegex.test(pwCurrent)) {
+      setPwMessage('숫자+영문자+특수문자 조합으로 8자리 이상 입력해주세요!');
+      setIsPw(false);
+    } else {
+      setPwMessage('안전한 비밀번호에요 :)');
+      setIsPw(true);
+    }
+  }, []);
+
+  // 비밀번호 확인
+  const onChangePwConfirm = useCallback(
+    (e) => {
+      const pwConfirmCurrent = e.target.value;
+      setUserPwConfirm(pwConfirmCurrent);
+      console.log(userPw);
+      if (userPw === pwConfirmCurrent) {
+        setPwConfirmMessage('비밀번호를 똑같이 입력했어요 :)');
+        setIsPwConfirm(true);
+      } else {
+        setPwConfirmMessage('비밀번호가 다릅니다!');
+        setIsPwConfirm(false);
+      }
+    },
+    [userPw],
+  );
+
+  // 이름
+  const onChangeName = useCallback((e) => {
+    const nameCurrent = e.target.value;
+    setUserName(nameCurrent);
+    if (nameCurrent.length < 2) {
+      setUserNameMessage('2글자 이상 입력해주세요!');
+      setIsUserName(false);
+    } else {
+      setUserNameMessage('올바른 이름 형식이에요 :)');
+      setIsUserName(true);
+    }
+  });
+
+  // 이메일
+  const onChangeEmail = useCallback((e) => {
+    const emailRegex =
+      /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+    const emailCurrent = e.target.value;
+    setUserEmail(emailCurrent);
+    if (!emailRegex.test(emailCurrent)) {
+      setUserEmailMessage('올바른 이메일 형식이 아닙니다!');
+      setIsUserEmail(false);
+    } else {
+      setUserEmailMessage('올바른 이메일 형식이에요 :)');
+      setIsUserEmail(true);
+    }
+  });
+
+  // 휴대폰 번호
+  const onChangePhone = useCallback((e) => {
+    const phoneRegex = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+    const phoneCurrent = e.target.value;
+    setUserPhone(phoneCurrent);
+    if (!phoneRegex.test(phoneCurrent)) {
+      setUserPhoneMessage('올바른 휴대폰 번호가 아닙니다!');
+      setIsUserPhone(false);
+    } else {
+      setUserPhoneMessage('올바른 휴대폰 형식이에요 :)');
+      setIsUserPhone(true);
+    }
+  });
+
+  // 생년월일
+  const onChangeBirth = useCallback((e) => {
+    setUserBirth(e.target.value);
+  });
+
+  // 성별
+  const onChangeGender = useCallback((e) => {
+    setUserGender(e.target.value);
+  });
+
   const onSubmit = (e) => {
     e.preventDefault();
-    // 회원가입 form Submit -> 유효성 검사 하고 dispatch
-    if (signUpInputs.userPw === signUpInputs.userPwConfirm) {
-      try {
-        dispatch(registerUser(signUpInputs));
-        navigate('/');
-      } catch (e) {
-        console.log(e);
-      }
-    } else {
-      alert('패스워드가 다릅니다!');
+
+    try {
+      dispatch(
+        registerUser({
+          userId,
+          userNickname,
+          userPw,
+          userName,
+          userEmail,
+          userPhone,
+          userBirth,
+          userGender,
+        }),
+      );
+    } catch (e) {
+      console.log(e);
     }
   };
+
   return (
     <SignupTemplateBlock>
       <SignupBox>
@@ -180,26 +326,18 @@ const SignUpPage = () => {
             <StyledInput
               id="userId"
               name="userId"
-              onChange={onChange}
+              onChange={onChangeId}
               required
               placeholder="아이디를 입력하세요"
               autoComplete="off"
             />
-            <button
-              onClick={async (e) => {
-                e.preventDefault();
-                const { statusCode } = await idCheck(signUpInputs.userId);
-                if (statusCode === 200) {
-                  alert('굿!');
-                  setIsIdChecked(true);
-                } else if (statusCode === 401) {
-                  alert('아이디 중복!');
-                  setIsIdChecked(false);
-                }
-              }}
-            >
-              중복검사
-            </button>
+            {userId.length > 0 && (
+              <ErrorMessage>
+                <div className={isuserId ? 'success' : 'error'}>
+                  {userIdMessage}
+                </div>
+              </ErrorMessage>
+            )}
           </div>
           <div>
             <StyledLabel for="userNickname">
@@ -208,29 +346,18 @@ const SignUpPage = () => {
             <StyledInput
               id="userNickname"
               name="userNickname"
-              onChange={onChange}
+              onChange={onChangeNickname}
               required
               placeholder="닉네임을 입력하세요"
               autoComplete="off"
             />
-            <button
-              onClick={async (e) => {
-                e.preventDefault();
-                const { statusCode } = await nickCheck(
-                  signUpInputs.userNickname,
-                );
-                console.log(statusCode);
-                if (statusCode === 200) {
-                  alert('굿!');
-                  setIsNickChecked(true);
-                } else if (statusCode === 401) {
-                  alert('닉네임 중복!');
-                  setIsNickChecked(false);
-                }
-              }}
-            >
-              중복검사
-            </button>
+            {userNickname.length > 0 && (
+              <ErrorMessage
+                className={isuserNickname && isIdChecked ? 'success' : 'error'}
+              >
+                {userNicknameMessage}
+              </ErrorMessage>
+            )}
           </div>
           <div>
             <StyledLabel for="userPw">
@@ -240,10 +367,15 @@ const SignUpPage = () => {
               id="userPW"
               name="userPw"
               type="password"
-              onChange={onChange}
+              onChange={onChangePw}
               required
               placeholder="비밀번호를 입력하세요"
             />
+            {userPw.length > 0 && (
+              <ErrorMessage className={isPw ? 'success' : 'error'}>
+                {pwMessage}
+              </ErrorMessage>
+            )}
           </div>
           <div>
             <StyledLabel for="userPwConfirm">
@@ -253,10 +385,15 @@ const SignUpPage = () => {
               id="userPwConfirm"
               name="userPwConfirm"
               type="password"
-              onChange={onChange}
+              onChange={onChangePwConfirm}
               required
               placeholder="비밀번호를 다시 입력하세요"
             />
+            {userPwConfirm.length > 0 && (
+              <ErrorMessage className={isPwConfirm ? 'success' : 'error'}>
+                {pwConfirmMessage}
+              </ErrorMessage>
+            )}
           </div>
           <div>
             <StyledLabel for="userName">
@@ -265,11 +402,16 @@ const SignUpPage = () => {
             <StyledInput
               id="userName"
               name="userName"
-              onChange={onChange}
+              onChange={onChangeName}
               required
               placeholder="이름을 입력하세요"
               autoComplete="off"
             />
+            {userName.length > 0 && (
+              <ErrorMessage className={isuserName ? 'success' : 'error'}>
+                {userNameMessage}
+              </ErrorMessage>
+            )}
           </div>
           <div>
             <StyledLabel for="userEmail">
@@ -279,11 +421,16 @@ const SignUpPage = () => {
               id="userEmail"
               name="userEmail"
               type="email"
-              onChange={onChange}
+              onChange={onChangeEmail}
               required
               placeholder="이메일을 입력하세요"
               autoComplete="off"
             />
+            {userEmail.length > 0 && (
+              <ErrorMessage className={isuserEmail ? 'success' : 'error'}>
+                {userEmailMessage}
+              </ErrorMessage>
+            )}
           </div>
           <div>
             <StyledLabel for="userPhone">
@@ -292,11 +439,16 @@ const SignUpPage = () => {
             <StyledInput
               id="userPhone"
               name="userPhone"
-              onChange={onChange}
+              onChange={onChangePhone}
               required
               placeholder="휴대폰 번호를 입력하세요"
               autoComplete="off"
             />
+            {userPhone.length > 0 && (
+              <ErrorMessage className={isuserPhone ? 'success' : 'error'}>
+                {userPhoneMessage}
+              </ErrorMessage>
+            )}
           </div>
           <div>
             <StyledLabel for="userBirth">
@@ -306,7 +458,7 @@ const SignUpPage = () => {
               id="userBirth"
               name="userBirth"
               type="date"
-              onChange={onChange}
+              onChange={onChangeBirth}
               required
             />
           </div>
@@ -318,19 +470,39 @@ const SignUpPage = () => {
               <StyledInput
                 id="male"
                 type="radio"
-                name="gender"
-                value="1"
-                checked
+                name="userGender"
+                value="0"
+                checked={userGender === '0'}
+                onChange={onChangeGender}
               />
             </div>
             <div>
               <StyledLabel for="female">
                 여성<FemaleIcon className="icon"></FemaleIcon>
               </StyledLabel>
-              <StyledInput id="female" type="radio" name="gender" value="0" />
+              <StyledInput
+                id="female"
+                type="radio"
+                name="userGender"
+                value="1"
+                checked={userGender === '1'}
+                onChange={onChangeGender}
+              />
             </div>
           </div>
-          <StyledButton disabled={!isIdChecked || !isNickChecked}>
+          <StyledButton
+            disabled={
+              !isIdChecked ||
+              !isNickChecked ||
+              !isuserId ||
+              !isuserNickname ||
+              !isPw ||
+              !isPwConfirm ||
+              !isuserName ||
+              !isuserEmail ||
+              !isuserPhone
+            }
+          >
             JOIN
           </StyledButton>
         </form>

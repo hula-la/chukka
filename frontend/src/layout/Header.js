@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '../components/Button';
 import MenuItems from '../components/MenuItems';
@@ -160,14 +160,16 @@ const Header = () => {
                 <p>{userInfo.userNickname}</p>
               </div>
             </NavLink>
-            <button
-              className="btn"
-              onClick={() => {
-                dispatch(logout());
-              }}
-            >
-              Logout
-            </button>
+            <Link to="/">
+              <button
+                className="btn"
+                onClick={() => {
+                  dispatch(logout());
+                }}
+              >
+                Logout
+              </button>
+            </Link>
           </div>
         )}
       </div>
