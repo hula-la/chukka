@@ -341,7 +341,7 @@ const LectureBox = ({ myLectures }) => {
         {myLectures
           .filter((lecture) => lecture.lecCategory)
           .map((lecture, index) => (
-            <LectureSmall key={index} props={lecture} noBadge classOpen />
+            <LectureSmall key={index} props={lecture} noBadge />
           ))}
       </LectureBox>
       <hr />
@@ -351,7 +351,7 @@ const LectureBox = ({ myLectures }) => {
         {myLectures
           .filter((lecture) => !lecture.lecCategory)
           .map((lecture, index) => (
-            <LectureSmall key={index} props={lecture} noBadge classOpen />
+            <LectureSmall key={index} props={lecture} noBadge />
           ))}
       </LectureBox>
       {/* <LiveLectureBox>
