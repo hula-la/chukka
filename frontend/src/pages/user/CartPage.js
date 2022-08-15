@@ -17,7 +17,6 @@ const ProfilePageBlock = styled.div`
   input {
     accent-color: #ff2c55;
   }
-
   line-height: 25px;
   font-size: 15px;
   color: #ffffffd3;
@@ -30,14 +29,13 @@ const ProfilePageBlock = styled.div`
     cursor: pointer;
     margin: auto;
   }
-
 `;
 // 사이드바 css
 const Side = styled.div`
   // display: flex;
   // flex-direction: column;
-  display:grid;
-  grid-template-rows : 0.5fr 0.5fr 0.5fr 2fr 1fr;
+  display: grid;
+  grid-template-rows: 0.5fr 0.5fr 0.5fr 2fr 1fr;
   -webkit-box-align: unset;
   justify-content: initial;
 
@@ -49,8 +47,8 @@ const Side = styled.div`
     margin-top: 1rem;
     font-size: 1.2rem;
   }
-  h3{
-    margin-top:0.8rem;
+  h3 {
+    margin-top: 0.8rem;
   }
 `;
 const Profile = styled.div`
@@ -245,7 +243,14 @@ const CartPage = () => {
         {userProfile !== null && (
           <Profile>
             <div>
-              <img src={userProfile.userProfile!==null?userProfile.userProfile:defaultImage} alt="프로필 사진"></img>
+              <img
+                src={
+                  userProfile.userProfile !== null
+                    ? userProfile.userProfile
+                    : defaultImage
+                }
+                alt="프로필 사진"
+              ></img>
             </div>
             <p>{userProfile.userNickname}</p>
           </Profile>
