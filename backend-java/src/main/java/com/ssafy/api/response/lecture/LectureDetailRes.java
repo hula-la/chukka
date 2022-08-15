@@ -51,7 +51,9 @@ public class LectureDetailRes {
     private int lecStudent;
     @ApiModelProperty(value = "총인원")
     private int lecLimit;
-    public static LectureDetailRes of(Lecture lecture){
+    @ApiModelProperty(value = "수강유무")
+    private boolean isEnroll;
+    public static LectureDetailRes of(Lecture lecture, boolean isEnroll){
         LectureDetailRes res = new LectureDetailRes();
         res.setLecId(lecture.getLecId());
         res.setLecThumb(lecture.getLecThumb());
@@ -69,6 +71,7 @@ public class LectureDetailRes {
         res.setLecEndDate(lecture.getLecEndDate());
         res.setLecStudent(lecture.getLecStudent());
         res.setLecLimit(lecture.getLecLimit());
+        res.isEnroll = isEnroll;
         return res;
     }
 }

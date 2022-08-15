@@ -74,6 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/accounts/my*").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
                 .antMatchers(HttpMethod.GET, "/enroll/{lecId}").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
                 .antMatchers(HttpMethod.GET,"/lectures/forUsers").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
+                .antMatchers(HttpMethod.GET,"/lectures/{lecId}").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
                 .anyRequest().permitAll()
                 .and().cors();
     }

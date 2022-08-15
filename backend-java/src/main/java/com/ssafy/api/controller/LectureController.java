@@ -94,8 +94,12 @@ public class LectureController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<BaseResponseBody> lectureDetail( @PathVariable @ApiParam(value = "불러올 해당 강의 ID", required = true) int lecId) {
-        LectureDetailRes lecture = lectureService.getDetailLecture(lecId);
+    public ResponseEntity<BaseResponseBody> lectureDetail(
+            @ApiIgnore Authentication authentication,
+            @PathVariable @ApiParam(value = "불러올 해당 강의 ID", required = true) int lecId) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String userId = userDetails.getUsername();
+        LectureDetailRes lecture = lectureService.getDetailLecture(lecId, userId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lecture));
     }
 
