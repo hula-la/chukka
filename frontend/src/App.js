@@ -1,4 +1,5 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import './App.css';
 // page
 import Layout from './layout/Layout';
@@ -46,7 +47,6 @@ const App = () => {
     >
       <Routes>
         {/* Index */}
-        {/* <Route path="" element={<Layout />}> */}
         <Route path="" element={<IndexPage />} />
         {/* </Route> */}
         {/* accounts */}
@@ -54,35 +54,45 @@ const App = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="logout" element={<LogoutPage />} />
           <Route path="signup" element={<SignUpPage />} />
-          <Route path="profile/:nickName" element={<ProfilePage />} />
           <Route path="password" element={<FindPwPage />} />
-          <Route path="cart" element={<CartPage />} />
-          <Route path="pay" element={<PayConfrim />} />
+          <Route element={<AuthLayout />}>
+            <Route path="profile/:nickName" element={<ProfilePage />} />
+            <Route path="cart" element={<CartPage />} />
+            <Route path="pay" element={<PayConfrim />} />
+          </Route>
         </Route>
         {/* lectures */}
         <Route path="lectures" element={<Layout />}>
           <Route path="" element={<LecturesPage />} />
-          <Route path=":lectureId" element={<LectureDetailpage />} />
-          <Route path="class/:lectureId" element={<LectureClassPage />} />
+          <Route element={<AuthLayout />}>
+            <Route path=":lectureId" element={<LectureDetailpage />} />
+            <Route path="class/:lectureId" element={<LectureClassPage />} />
+          </Route>
         </Route>
-        <Route
-          path="lectures/:lectureId/section/:sectionIdx"
-          element={<VideoLecturePage />}
-        />
-        <Route path="lectures/live" element={<LivePage />} />
+        <Route element={<AuthLayout />}>
+          <Route
+            path="lectures/:lectureId/section/:sectionIdx"
+            element={<VideoLecturePage />}
+          />
+          <Route path="lectures/live" element={<LivePage />} />
+        </Route>
         {/* snacks */}
-        <Route path="snacks/" element={<Layout />}>
-          <Route path="" element={<SnacksPage />} />
-          <Route path=":snacksId" element={<DetailSnacksPage />} />
-          <Route path="upload" element={<UploadPage />} />
-          <Route path="record" element={<MakeSnacksPage />} />
-          <Route path="camupload" element={<CamUploadPage />} />
+        <Route element={<AuthLayout />}>
+          <Route path="snacks/" element={<Layout />}>
+            <Route path="" element={<SnacksPage />} />
+            <Route path=":snacksId" element={<DetailSnacksPage />} />
+            <Route path="upload" element={<UploadPage />} />
+            <Route path="record" element={<MakeSnacksPage />} />
+            <Route path="camupload" element={<CamUploadPage />} />
+          </Route>
         </Route>
         {/* games */}
-        <Route path="games" element={<Layout />}>
-          <Route path="" element={<MainPage />} />
+        <Route element={<AuthLayout />}>
+          <Route path="games" element={<Layout />}>
+            <Route path="" element={<MainPage />} />
+          </Route>
+          <Route path="game" element={<GamesPage />} />
         </Route>
-        <Route path="game" element={<GamesPage />} />
         {/* admin */}
         <Route path="admin" element={<Layout />}>
           <Route path="" element={<AdminPage />} />
@@ -99,3 +109,24 @@ const App = () => {
 };
 
 export default App;
+
+const AuthLayout = () => {
+  const { userInfo } = useSelector((state) => state.user);
+  const location = useLocation();
+  if (!userInfo) {
+    alert('로그인이 필요합니다!!');
+    return <Navigate to="/accounts/login" state={{ from: location }} replace />;
+  }
+  return <Outlet />;
+};
+
+// const RequireAuth = ({ children }) => {
+//   const location = useLocation();
+//   const { userInfo } = useSelector((state) => state.user);
+//   if (!userInfo) {
+//     alert('로그인이 필요합니다!!');
+//     return <Navigate to="/accounts/login" state={{ from: location }} replace />;
+//   }
+
+//   return children;
+// };
