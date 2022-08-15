@@ -1,6 +1,5 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.request.SectionLike.SectionLikeReq;
 import com.ssafy.db.entity.Section;
 import com.ssafy.db.entity.SectionLike;
 import com.ssafy.db.entity.User;
@@ -25,33 +24,26 @@ public class SectionLikeServiceImpl implements SectionLikeService{
     SectionRepository sectionRepository;
 
     @Override
-    public SectionLike pushLike(SectionLikeReq sectionLikeGetReq) {
-        Optional<User> user = userRepository.findById(sectionLikeGetReq.getUserId());
-        Optional<Section> sec = sectionRepository.findById(sectionLikeGetReq.getSecId());
+    public SectionLike pushLike(int secId, String userId, int likeId) {
+        Optional<User> user = userRepository.findById(userId);
+        Optional<Section> sec = sectionRepository.findById(secId);
         // 유저가 없을때 or 섹션이 존재하지 않을 때
         if (!sec.isPresent() || !user.isPresent()) {
             return null;
         }
-        // 좋아요를 안 눌렀을 없을경우
-        // 위의 두 정보를 가지고 있을때 취소되게 만들어야 함
-        int likeId = sectionLikeGetReq.getLikeId();
-        if (sec.isPresent() && user.isPresent()) {
-            if (likeId < 0) {
-                likeId = 0;
-            }
-        }
 
-        if ( likeId == 0) {
+        // 좋아요를 이미 눌렀을 경우
+        if(sectionLikeRepository.findBySectionAndUser(sec.get(), user.get()) != null) {
+            sectionLikeRepository.delete(SectionLike.builder().likeId(likeId).build());
+            return null;
+        // 좋아요가 안눌러져있을경우
+        } else {
             SectionLike like = SectionLike.builder()
-                    .likeId(sectionLikeGetReq.getSecId())
                     .user(user.get())
                     .section(sec.get())
                     .build();
             return sectionLikeRepository.save(like);
         }
-        // 이미 좋아요를 한 경우
-        sectionLikeRepository.deleteById(likeId);
-        return null;
     }
 
     @Override

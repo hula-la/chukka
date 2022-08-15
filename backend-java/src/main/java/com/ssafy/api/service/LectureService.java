@@ -56,7 +56,7 @@ public interface LectureService {
     void updateLecNotice(int lecId, String lecNotice);
 
     // Delete ==========================================================================================================
-    void delete(int lecId);
+    boolean delete(int lecId);
 
     Lecture findLectureByLecId(int ledId);
 

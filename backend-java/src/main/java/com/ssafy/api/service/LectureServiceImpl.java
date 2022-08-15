@@ -81,7 +81,7 @@ public class LectureServiceImpl implements LectureService {
         return dtoPage;
     }
 
-    // 인기순
+    // 유저별
     @Override
     public List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(0, 2);
@@ -263,9 +263,12 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public void delete(int lecId) {
-        Lecture lecture = lectureRepository.findLectureByLecId(lecId);
-        lectureRepository.delete(lecture);
+    public boolean delete(int lecId) {
+        if(lectureRepository.findById(lecId).isPresent()) {
+            lectureRepository.delete(Lecture.builder().lecId(lecId).build());
+            return true;
+        }
+        return false;
     }
 
     @Override
