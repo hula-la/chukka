@@ -34,7 +34,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     Page<Lecture> findAll(Pageable pageable);
 
     // 존재하는 강의 / 연령대 / 성별 기준으로
-    @Query(value = "select lec, e.ageGroup, e.user.userGender " +
+    @Query(value = "select lec " +
             "from Enroll e, Lecture lec " +
             "where e.lecture.lecId = lec.lecId and e.user.userGender = :userGender and e.ageGroup = :ageGroup " +
             "group by e.lecture.lecId " +
