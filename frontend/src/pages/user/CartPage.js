@@ -5,18 +5,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '../../features/cart/cartActions';
 import CloseIcon from '@mui/icons-material/Close';
 import TvOffIcon from '@mui/icons-material/TvOff';
-import { getCartList, deleteCartItem, user } from '../../api/cart';
+import defaultImage from '../../img/default.jpeg';
+import { getCartList, deleteCartItem } from '../../api/cart';
 import { LectureInfo } from '../../components/carts/LectureInfo';
 import { PayLecture } from '../../components/carts/PayLecture';
 import Alert from '../../components/Alert';
-import RequestPay from '../../components/carts/requestPay';
+import RequestPay from '../../components/carts/RequestPay';
 import StyledButton from '../../components/Button';
 
 const ProfilePageBlock = styled.div`
   input {
     accent-color: #ff2c55;
   }
-
   line-height: 25px;
   font-size: 15px;
   color: #ffffffd3;
@@ -34,9 +34,8 @@ const ProfilePageBlock = styled.div`
 const Side = styled.div`
   // display: flex;
   // flex-direction: column;
-  display:grid;
-  grid-template-rows : 0.5fr 0.5fr 0.5fr 2fr 1fr;
-  -webkit-align-items: center;
+  display: grid;
+  grid-template-rows: 0.5fr 0.5fr 0.5fr 2fr 1fr;
   -webkit-box-align: unset;
   justify-content: initial;
 
@@ -47,6 +46,9 @@ const Side = styled.div`
     text-align: center;
     margin-top: 1rem;
     font-size: 1.2rem;
+  }
+  h3 {
+    margin-top: 0.8rem;
   }
 `;
 const Profile = styled.div`
@@ -240,7 +242,14 @@ const CartPage = () => {
         {userProfile !== null && (
           <Profile>
             <div>
-              <img src={userProfile.userProfile} alt="프로필 사진"></img>
+              <img
+                src={
+                  userProfile.userProfile !== null
+                    ? userProfile.userProfile
+                    : defaultImage
+                }
+                alt="프로필 사진"
+              ></img>
             </div>
             <p>{userProfile.userNickname}</p>
           </Profile>
@@ -278,7 +287,7 @@ const CartPage = () => {
                   }
                   onChange={(e) => checkHandler(e)}
                 ></input>
-                <LectureInfo data={lecture} key={i} {...lecture} />
+                <LectureInfo data={lecture} key={i} />
                 <CloseIcon
                   className="icon"
                   onClick={() => deleteItem(lecture.cartItemId)}
