@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from '../../features/user/userActions';
 import PersonIcon from '@mui/icons-material/Person';
@@ -135,15 +135,7 @@ const LoginTemplate = ({ children }) => {
 };
 
 const LoginForm = () => {
-  const { userInfo } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (userInfo) {
-      navigate('/lectures');
-    }
-  }, [navigate, userInfo]);
-
   const [loginInputs, setLoginInputs] = useState({
     userId: '',
     userPw: '',
@@ -210,6 +202,15 @@ const LoginForm = () => {
 };
 
 const LoginPage = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { userInfo } = useSelector((state) => state.user);
+  const from = location.state?.from?.pathname || '/';
+  useEffect(() => {
+    if (userInfo) {
+      navigate(from, { replace: true });
+    }
+  }, userInfo);
   return (
     <LoginTemplate>
       <LoginForm />

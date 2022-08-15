@@ -1,10 +1,6 @@
-import LevelBadge from '../../components/LevelBadge';
-import CategoryBadge from '../../components/CategoryBadge';
 import styled from 'styled-components';
 
-const CartItem = styled.div`
-  // border-style:solid;
-  // border-color : white;
+const Lecture = styled.div`
   border-bottom: 2px solid #4a4a4a;
   display: grid;
   grid-template-columns: 0.8fr 1fr 1fr 1fr 1fr;
@@ -16,25 +12,19 @@ const CartItem = styled.div`
     width : 80%;
     height :60px;
   }
-`
-const BadgeDiv = styled.div`
-  display: flex;
-  & div {
-    margin-right: 10px;
-  }
 `;
 
 export const LectureInfoSimple = ({data},key) =>{
   return (
-    <CartItem>
-      <img  src={data.thumbnail}></img>
+    <Lecture>
+      <img  src={data.thumbnail} alt="강의 이미지"></img>
       <p>{data.lecTitle}</p>
-      <p>{data.insId}</p>
+      <p>{data.insName}</p>
       <div>
         <p>{data.lecSchedule}</p>
         <p>{data.lecDayAndTime}</p>
       </div>
       <div>{data.lecPrice} 원</div>
-    </CartItem>
+    </Lecture>
   )
 }

@@ -2,21 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUser, userCartCount } from '../../features/cart/cartActions';
+import { fetchUser } from '../../features/cart/cartActions';
 import CloseIcon from '@mui/icons-material/Close';
 import TvOffIcon from '@mui/icons-material/TvOff';
-import { getCartList, deleteCartItem, user } from '../../api/cart';
+import defaultImage from '../../img/default.jpeg';
+import { getCartList, deleteCartItem } from '../../api/cart';
 import { LectureInfo } from '../../components/carts/LectureInfo';
 import { PayLecture } from '../../components/carts/PayLecture';
 import Alert from '../../components/Alert';
-import RequestPay from '../../components/carts/requestPay';
+import RequestPay from '../../components/carts/RequestPay';
 import StyledButton from '../../components/Button';
 
 const ProfilePageBlock = styled.div`
   input {
     accent-color: #ff2c55;
   }
-
   line-height: 25px;
   font-size: 15px;
   color: #ffffffd3;
@@ -36,7 +36,6 @@ const Side = styled.div`
   // flex-direction: column;
   display: grid;
   grid-template-rows: 0.5fr 0.5fr 0.5fr 2fr 1fr;
-  -webkit-align-items: center;
   -webkit-box-align: unset;
   justify-content: initial;
 
@@ -47,6 +46,9 @@ const Side = styled.div`
     text-align: center;
     margin-top: 1rem;
     font-size: 1.2rem;
+  }
+  h3 {
+    margin-top: 0.8rem;
   }
 `;
 const Profile = styled.div`
@@ -86,7 +88,6 @@ const CartLecInfo = styled.div`
 const PayList = styled.div`
   // border-style : solid;
   // border-color : white;
-
   width: 100%;
   height: 100%;
   padding: 3% 0;
@@ -213,7 +214,6 @@ const CartPage = () => {
               setCheckedItems([]);
               setCheckedIds([]);
             }
-            dispatch(userCartCount());
           });
         } else {
           console.log(res.data.message);
@@ -242,7 +242,14 @@ const CartPage = () => {
         {userProfile !== null && (
           <Profile>
             <div>
-              <img src={userProfile.userProfile} alt="프로필 사진"></img>
+              <img
+                src={
+                  userProfile.userProfile !== null
+                    ? userProfile.userProfile
+                    : defaultImage
+                }
+                alt="프로필 사진"
+              ></img>
             </div>
             <p>{userProfile.userNickname}</p>
           </Profile>
@@ -280,7 +287,7 @@ const CartPage = () => {
                   }
                   onChange={(e) => checkHandler(e)}
                 ></input>
-                <LectureInfo data={lecture} key={i} {...lecture} />
+                <LectureInfo data={lecture} key={i} />
                 <CloseIcon
                   className="icon"
                   onClick={() => deleteItem(lecture.cartItemId)}
