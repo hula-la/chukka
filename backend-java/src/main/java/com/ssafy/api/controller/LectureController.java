@@ -83,8 +83,8 @@ public class LectureController {
         String userId = userDetails.getUsername();
         int userGender = userService.getUserByUserId(userId).getUserGender();
         int ageGroup = enrollService.getEnrollByUserId(userId).getAgeGroup();
-        List<LectureGetForYouRes> forUser = lectureService.getLectureByYourBirthAndGender(userGender, ageGroup, pageable);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", forUser));
+        List<LectureGetForListRes> forUser = lectureService.getLectureByYourBirthAndGender(userGender, ageGroup, pageable);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureGetForYouRes.of(forUser, userGender, ageGroup)));
     }
 
     // 상세페이지

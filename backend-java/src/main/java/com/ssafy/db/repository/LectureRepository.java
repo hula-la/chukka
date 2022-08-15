@@ -39,7 +39,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
             "where e.lecture.lecId = lec.lecId and e.user.userGender = :userGender and e.ageGroup = :ageGroup " +
             "group by e.lecture.lecId " +
             "order by count(e.enrollId) desc")
-    List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable);
+    List<Lecture> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable);
 
     // 공지사항 수정
     @Modifying(clearAutomatically = true)

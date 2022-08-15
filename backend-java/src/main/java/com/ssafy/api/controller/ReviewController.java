@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.review.ReviewPostReq;
 import com.ssafy.api.response.Review.ReviewGetRes;
 import com.ssafy.api.service.ReviewService;
+import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Lecture;
 import com.ssafy.db.entity.Review;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 
@@ -24,14 +27,19 @@ public class ReviewController {
     @Autowired
     ReviewService reviewService;
 
-    @PostMapping("/create")
+    @PostMapping("/{lecId}")
     @ApiOperation(value = "리뷰 작성", notes = "리뷰를 작성한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공")
     })
     public ResponseEntity<BaseResponseBody> createReview(
+            @ApiIgnore Authentication authentication,
+            @PathVariable@ApiParam(value = "리뷰를 생성하는 강의정보", required = true) int lecId,
             @RequestBody @ApiParam(value = "리뷰 작성 정보", required = true) ReviewPostReq reviewPostReq) {
-        reviewService.createReview(reviewPostReq);
+
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String userId = userDetails.getUsername();
+        reviewService.createReview(lecId, userId, reviewPostReq);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
     }

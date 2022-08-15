@@ -87,10 +87,19 @@ public class LectureServiceImpl implements LectureService {
 
     // 유저별
     @Override
-    public List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable) {
+    public List<LectureGetForListRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(0, 2);
-        List<LectureGetForYouRes> enroll = lectureRepository.getLectureByYourBirthAndGender(userGender, ageGroup, pageRequest);
-        return enroll;
+        List<Lecture> enroll = lectureRepository.getLectureByYourBirthAndGender(userGender, ageGroup, pageRequest);
+        List<LectureGetForListRes> dtoPage = enroll.stream()
+                .map(m -> new LectureGetForListRes(
+                        m.getLecId(),
+                        m.getLecThumb(),
+                        m.getLecTitle(),
+                        m.getLecCategory(),
+                        m.getLecLevel(),
+                        m.getLecGenre()
+                )).collect(Collectors.toList());
+        return dtoPage;
     }
 
     // 전부다
