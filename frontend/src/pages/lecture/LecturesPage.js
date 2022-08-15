@@ -37,14 +37,6 @@ const Wrapper = styled.div`
   }
 `;
 
-const Lectures2 = styled.div`
-  display: flex;
-  justify-content: space-between;
-  /* flex-wrap: nowrap;
-  flex: 0 0 90%;
-  overflow-x: scroll; */
-`;
-
 const LecturesPage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -57,42 +49,44 @@ const LecturesPage = () => {
   // Dummy Data
   const dummy = [
     {
-      title: '강의 제목1',
-      content: '강의 컨텐츠1',
-      thumbnail: thumbnail1,
-      level: 2,
-      genre: '아이돌',
-      category: '실시간',
+      lecTitle: '강의 제목1',
+      lecContent: '강의 컨텐츠1',
+      lecThumb: thumbnail1,
+      lecLevel: 2,
+      lecGenre: '아이돌',
+      lecCategory: '실시간',
     },
     {
-      title: '강의 제목2',
-      content: '강의 컨텐츠2',
-      thumbnail: thumbnail2,
-      level: 3,
-      genre: '힙합',
-      category: '녹화',
+      lecTitle: '강의 제목2',
+      lecContent: '강의 컨텐츠2',
+      lecThumb: thumbnail2,
+      lecLevel: 3,
+      lecGenre: '힙합',
+      lecCategory: '녹화',
     },
   ];
 
   return (
     <Wrapper>
-      <div>
-        <h1>인기 강의</h1>
-        <div className="popular-lectures-div">
-          {popularLectures.map((lecture, index) => (
-            <LectureSmall props={lecture} key={index} />
-          ))}
+      {popularLectures ? (
+        <div>
+          <h1>인기 강의</h1>
+          <div className="popular-lectures-div">
+            {popularLectures.map((lecture, index) => (
+              <Lecture props={lecture} key={index} />
+            ))}
+          </div>
         </div>
-      </div>
+      ) : null}
       <div>
         <h1>20대 여성 인기</h1>
-        <Lectures2>
+        <div className="popular-lectures-div">
           {dummy.map((lecture, index) => (
             <Lecture props={lecture} key={index} />
           ))}
           {/* <Lecture props={dummy[0]} />
-        <Lecture props={dummy[1]} /> */}
-        </Lectures2>
+          <Lecture props={dummy[1]} /> */}
+        </div>
       </div>
       <div>
         <h1>강의 목록</h1>

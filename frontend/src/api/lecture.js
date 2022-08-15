@@ -27,24 +27,18 @@ export const sections = async (lectureId) => {
 
 export const isEnroll = async (lectureId) => {
   const res = await client.get(`enroll/${lectureId}`);
-  console.log('isEnroll', res);
   return res;
 };
 
-// export const lectureCart = async () => {
-//   const res = await client.post(`lectures/cart/`);
-//   return res.data;
-// };
+export const postReview = async (lecId, params) => {
+  const res = await client.post(`reviews/${lecId}`, params);
+  return res;
+};
 
-// export const reviews = async (lectureId) => {
-//   const res = await client.get(`lectures/${lectureId}/reviews/`);
-//   return res.data;
-// };
-
-// export const makeReview = async (lectureId, data) => {
-//   const res = await client.post(`lectures/${lectureId}/reviews/`, data);
-//   return res.data;
-// };
+export const reviews = async (lectureId) => {
+  const res = await client.get(`reviews/${lectureId}`);
+  return res;
+};
 
 // export const removeReview = async (lectureId, reviewId) => {
 //   const res = await client.delete(`lectures/${lectureId}/reviews/${reviewId}`);

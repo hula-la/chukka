@@ -5,6 +5,8 @@ import {
   sections,
   isEnroll,
   recommendLectures,
+  reviews,
+  postReview,
 } from '../../api/lecture';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -104,32 +106,31 @@ export const fetchIsEnroll = createAsyncThunk(
   },
 );
 
-// export const postCart = createAsyncThunk(
-//   'lecture/postCart',
-//   async ({ rejectWithValue }) => {
-//     try {
-//       await lectureCart();
-//     } catch (e) {}
-//   },
-// );
+export const fetchReviews = createAsyncThunk(
+  'lecture/fetchReviews',
+  async (lectureId, { rejectWithValue }) => {
+    console.log('fetchReviews');
+    try {
+      const { data } = await reviews(lectureId);
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  },
+);
 
-// export const fetchReviews = createAsyncThunk(
-//   'lecture/fetchReviews',
-//   async (lectureId, { rejectWithValue }) => {
-//     try {
-//       const { data } = await reviews(lectureId);
-//     } catch (e) {}
-//   },
-// );
-
-// export const createReview = createAsyncThunk(
-//   'lecture/createReview',
-//   async (lectureId, { rejectWithValue }) => {
-//     try {
-//       const { data } = await makeReview(lectureId);
-//     } catch (e) {}
-//   },
-// );
+export const createReview = createAsyncThunk(
+  'lecture/createReview',
+  async (params, { rejectWithValue }) => {
+    const { lecId } = params;
+    try {
+      const { data } = await postReview(lecId, params);
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  },
+);
 
 // export const deleteReview = createAsyncThunk(
 //   'lecture/deleteReview',

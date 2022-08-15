@@ -6,7 +6,10 @@ import StyledButton from '../../components/Button';
 import ReviewStar from '../../components/lectures/ReviewStar';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
-import { fetchLectureDetail } from '../../features/lecture/lectureActions';
+import {
+  fetchLectureDetail,
+  fetchReviews,
+} from '../../features/lecture/lectureActions';
 import { insertCartItem, userCartCount } from '../../features/cart/cartActions';
 
 const Wrapper = styled.div`
@@ -106,6 +109,7 @@ const LectureDetailComponent = () => {
 
   useEffect(() => {
     dispatch(fetchLectureDetail(lectureId));
+    dispatch(fetchReviews(lectureId));
   }, [dispatch, lectureId]);
 
   const {
@@ -126,31 +130,32 @@ const LectureDetailComponent = () => {
     lecLimit,
     insInfo,
   } = useSelector((state) => state.lecture.lecture);
+  const reviews = useSelector((state) => state.lecture.reviews);
 
-  const reviews = [
-    {
-      review_id: 1,
-      user_id: '유노준',
-      review_score: 4,
-      review_regdate: '2022-08-10',
-      review_contents: '낫밷',
-    },
-    {
-      review_id: 2,
-      user_id: '최지원',
-      review_score: 5,
-      review_regdate: '2022-08-10',
-      review_contents: '나연 최고',
-    },
-    {
-      review_id: 3,
-      user_id: '홍성목',
-      review_score: 3,
-      review_regdate: '2022-08-10',
-      review_contents:
-        '가나다라마바사 아자차카타파하 목업이 거의 완성이 되는 것 같습니다. 아마도 ?  배경이 너무 어둡지 않나 라는 생각이 조금 들긴 하지만 괜찮은 것 같습니다. 이것은 리뷰입니다. 한 세줄정도 쓰고 그만 쓰려고 합니다. 배가 고파요. 오늘 점심에 해물 야끼우동이었나 그랬던거 같은데 맛있었으면 좋곘습니다. 그럼 이만',
-    },
-  ];
+  // const reviews = [
+  //   {
+  //     review_id: 1,
+  //     user_id: '유노준',
+  //     review_score: 4,
+  //     review_regdate: '2022-08-10',
+  //     review_contents: '낫밷',
+  //   },
+  //   {
+  //     review_id: 2,
+  //     user_id: '최지원',
+  //     review_score: 5,
+  //     review_regdate: '2022-08-10',
+  //     review_contents: '나연 최고',
+  //   },
+  //   {
+  //     review_id: 3,
+  //     user_id: '홍성목',
+  //     review_score: 3,
+  //     review_regdate: '2022-08-10',
+  //     review_contents:
+  //       '가나다라마바사 아자차카타파하 목업이 거의 완성이 되는 것 같습니다. 아마도 ?  배경이 너무 어둡지 않나 라는 생각이 조금 들긴 하지만 괜찮은 것 같습니다. 이것은 리뷰입니다. 한 세줄정도 쓰고 그만 쓰려고 합니다. 배가 고파요. 오늘 점심에 해물 야끼우동이었나 그랬던거 같은데 맛있었으면 좋곘습니다. 그럼 이만',
+  //   },
+  // ];
 
   const scrollToRev = () => {
     if (revRef && revRef.current) {
@@ -348,6 +353,7 @@ const ReviewItem = ({ review }) => {
       margin-right: 12px;
     }
   `;
+  const { userNickname, reviewRegdate, reviewScore, reviewContents } = review;
   return (
     <ReviewItemWrapper>
       <img
@@ -356,10 +362,10 @@ const ReviewItem = ({ review }) => {
       />
       <div className="review-body">
         <div className="review-header">
-          <span className="review-title">{review.user_id}</span>
-          <ReviewStar score={review.review_score} />
+          <span className="review-title">{userNickname}</span>
+          <ReviewStar score={reviewScore} />
         </div>
-        <div>{review.review_contents}</div>
+        <div>{reviewContents}</div>
       </div>
     </ReviewItemWrapper>
   );
