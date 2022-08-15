@@ -61,4 +61,9 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query(value = "update User u set u.user_lv_game = u.user_lv_game + :exp where u.user_id = :userId", nativeQuery = true)
     int updateGameExp(String userId, int exp);
 
+    @Transactional
+    @Modifying
+    @Query(value = "update User u set u.user_lv_snacks = u.user_lv_snacks + :exp where u.user_id = :userId", nativeQuery = true)
+    int updateSnacksExp(String userId, int exp);
+
 }

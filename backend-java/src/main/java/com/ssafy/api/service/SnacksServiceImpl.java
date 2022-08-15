@@ -29,6 +29,7 @@ public class SnacksServiceImpl implements SnacksService{
     private final SnacksRepository snacksRepository;
     private final SnacksTagRepository snacksTagRepository;
     private final SnacksReplyRepository snacksReplyRepository;
+    private final UserRepository userRepository;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     @Value("${cloud.aws.region.static}")
@@ -97,6 +98,7 @@ public class SnacksServiceImpl implements SnacksService{
                         .snacks(snacks.get())
                         .contents(replyInfo.getContents())
                         .build();
+            userRepository.updateSnacksExp(user.getUserId(), 1);
             return snacksReplyRepository.save(reply);
         }
         return null;
@@ -118,6 +120,8 @@ public class SnacksServiceImpl implements SnacksService{
         snacksRepository.save(snackss);
         // 태그 추가
         uploadTags(snacksInfo, snackss);
+        // 경험치 증가
+        userRepository.updateSnacksExp(user.getUserId(), 10);
         return snackss;
     }
 
