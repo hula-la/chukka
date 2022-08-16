@@ -97,6 +97,7 @@ const Introduce = styled.div`
     margin-top: 3.2rem;
     margin-bottom: 3.2rem;
   }
+
   .higtlight {
     color: #ff2c55;
   }

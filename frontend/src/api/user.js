@@ -78,3 +78,9 @@ export const insLectures = async () => {
   const res = await client.get('accounts/myteach/');
   return res;
 };
+
+export const lecture = async () => {
+  const res = await client.get(`accounts/mylectures/`);
+
+  return res;
+};

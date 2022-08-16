@@ -12,7 +12,11 @@ const CartItem = styled.div`
   place-items: center;
   column-gap: 10px;
   row-gap:10px;
+<<<<<<< HEAD
+  padding : 20px 5px;
+=======
   padding : 20px 5px 20px 15px;
+>>>>>>> develop/front
 
   img{
     width : 100%;

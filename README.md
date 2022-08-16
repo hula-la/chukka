@@ -16,9 +16,9 @@
 
 ## 브랜치 구조
 
-- `master / develop / [front, back, embedded]`
+- `master / develop / [front, fastapi, spring]`
 
-- `master / feature / [front, back, embedded] / [기능명]`
+- `master / feature / [front, fastapi, spring] / [기능명]`
 
 ```
 |-- master
@@ -26,13 +26,13 @@
 |------feature/front/feature1
 |------feature/front/feature2
 
-|----develop/back
-|------feature/back/feature1
-|------feature/back/feature2
+|----develop/fastapi
+|------feature/fastapi/feature1
+|------feature/fastapi/feature2
 
-|----develop/embedded
-|------feature/embedded/feature1
-|------feature/embedded/feature2
+|----develop/spring
+|------feature/spring/feature1
+|------feature/spring/feature2
 ```
 
 ## 커밋 메시지

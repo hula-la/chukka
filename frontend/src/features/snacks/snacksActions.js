@@ -109,7 +109,6 @@ export const uploadSnacks = createAsyncThunk(
   'snacks/upload',
   async ({ snacksTitle, snacksTag, video }, { rejectWithValue }) => {
     try {
-      console.log(snacksTitle, snacksTag);
       await upload({ snacksTitle, snacksTag }, video);
     } catch (error) {
       if (error.response && error.response.data.message) {

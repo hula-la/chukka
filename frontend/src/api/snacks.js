@@ -4,6 +4,7 @@ export const fsnacks = async (pageNum, sort, tags) => {
   const res = await client.post(`snacks/`, tags, {
     params: { page: pageNum, size: 3, sort: sort },
   });
+
   return res;
 };
 
@@ -14,6 +15,7 @@ export const fTags = async () => {
 
 export const freply = async (data) => {
   const res = await client.get(`snacks/${data}/reply`);
+
   return res;
 };
 
