@@ -151,6 +151,7 @@ const SignUpPage = () => {
   const [userPhone, setUserPhone] = useState('');
   const [userBirth, setUserBirth] = useState('');
   const [userGender, setUserGender] = useState('0');
+  const [userProfile, setUserProfile] = useState('img/profile.png');
 
   // 오류메세지 상태저장
   const [userIdMessage, setUserIdMessage] = useState('');
@@ -306,6 +307,7 @@ const SignUpPage = () => {
           userPhone,
           userBirth,
           userGender,
+          userProfile,
         }),
       );
     } catch (e) {

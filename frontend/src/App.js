@@ -18,6 +18,7 @@ import LecturesPage from './pages/lecture/LecturesPage';
 import LivePage from './pages/lecture/LivePage';
 import VideoLecturePage from './pages/lecture/VideoLecturePage';
 import LectureDetailpage from './pages/lecture/LectureDetailpage';
+
 // snacks
 import SnacksPage from './pages/snacks/SnacksPage';
 import DetailSnacksPage from './pages/snacks/DetailSnacksPage';
@@ -30,6 +31,7 @@ import MainPage from './pages/game/MainPage';
 import GamesPage from './pages/game/GamesPage';
 import MultiGamePage from './pages/game/MultiGamePage';
 import ResultPage from './pages/game/ResultPage';
+import MultiGamePage from './pages/game/Multi/MultiGamePage';
 
 // admin
 import AdminPage from './pages/admin/AdminPage';
@@ -38,6 +40,7 @@ import AddLiveLecture from './pages/admin/AddLiveLecture';
 import AddRecordLecture from './pages/admin/AddRecordLecture';
 import DetailLectue from './pages/admin/DetailLectue';
 import AddSection from './pages/admin/AddSection';
+
 // notfount
 import NotFound from './pages/NotFound';
 
@@ -90,8 +93,9 @@ const App = () => {
         {/* games */}
         <Route path="games" element={<Layout />}>
           <Route path="" element={<MainPage />} />
-          <Route path="multi" element={<MultiGamePage />} />
+          
         </Route>
+        <Route path="game/multi" element={<MultiGamePage />} />
         <Route path="game" element={<GamesPage />} />
         <Route path="game/result" element={<ResultPage />} />
         {/* admin */}

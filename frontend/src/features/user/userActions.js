@@ -9,11 +9,13 @@ import {
   snacks,
   myLectures,
   insLectures,
+  changePw,
 } from '../../api/user';
 
 export const registerUser = createAsyncThunk(
   'user/register',
   async (data, { rejectWithValue }) => {
+    console.log(data);
     try {
       await register(data);
     } catch (error) {
@@ -106,8 +108,23 @@ export const findPw = createAsyncThunk(
   'user/findPw',
   async (input, { rejectWithValue }) => {
     try {
-      console.log(input);
       const { data } = await find(input);
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const changePassword = createAsyncThunk(
+  'user/changePassword',
+  async (pwInfo, { rejectWithValue }) => {
+    try {
+      const { data } = await changePw(pwInfo);
       return data;
     } catch (error) {
       if (error.response && error.response.data.message) {

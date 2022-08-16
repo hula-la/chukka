@@ -89,12 +89,12 @@ const MainPage = () => {
 
   return (
     <Wrapper>
-      <div class="select-music">
+      <div className="select-music">
         {thumbnailList.length !== 0 && (
           <Carousel slides={thumbnailList} onSlideChange={onSlideChange} />
         )}
       </div>
-      <div class="btn">
+      <div className="btn">
         <StyledButton onClick={onClick}>게임시작</StyledButton>
       </div>
     </Wrapper>

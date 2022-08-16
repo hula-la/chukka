@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import vid from './bird.mp4';
 import defaultImage from '../../img/default.jpeg';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
@@ -7,12 +6,12 @@ import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useInView } from 'react-intersection-observer';
 import {
   fetchReply,
   createReply,
   likeSnacks,
 } from '../../features/snacks/snacksActions';
+import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
   #my-video {
@@ -123,10 +122,16 @@ const Wrapper = styled.div`
       fill: #ff2c55;
     }
   }
+  .noReply {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const SnacksItem = ({ snacks }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { snacksReply } = useSelector((state) => state.snacks);
 
   // 댓글 컴포넌트 열고 닫기
@@ -150,6 +155,7 @@ const SnacksItem = ({ snacks }) => {
   const onSubmitRelpy = (e) => {
     e.preventDefault();
     dispatch(createReply({ snacksId, contents }));
+    e.target.reset();
   };
 
   // 게시글 좋아요
@@ -160,14 +166,16 @@ const SnacksItem = ({ snacks }) => {
   }, []);
 
   const onClickLike = () => {
+    // document.getElementById('my-video').play();
     setSnacksLike((isLike) => {
       return !isLike;
     });
     dispatch(likeSnacks(snacksId));
   };
 
-  // 자동재생
-  const [ref, inView] = useInView({ threshold: 1 });
+  const onClickNick = (e) => {
+    navigate(`/accounts/profile/${e.target.innerText}`);
+  };
 
   return (
     <Wrapper>
@@ -176,7 +184,9 @@ const SnacksItem = ({ snacks }) => {
           src={snacks.userProfile === null ? defaultImage : snacks.userProfile}
           className="profile"
         ></img>
-        <span className="snacks-nickname">{snacks.userNickname}</span>
+        <span className="snacks-nickname" onClick={onClickNick}>
+          {snacks.userNickname}
+        </span>
       </div>
       <div className="tags">
         {snacks.snacksTag.map((tag, index) => {
@@ -195,7 +205,6 @@ const SnacksItem = ({ snacks }) => {
             controls
             // preload="auto"
           >
-            <div ref={ref} />
             <source
               src={`https://chukkadance.s3.ap-northeast-2.amazonaws.com/vid/snacks/${snacks.snacksId}`}
               type="video/mp4"
@@ -203,17 +212,37 @@ const SnacksItem = ({ snacks }) => {
           </video>
           <div className="snacks-info">
             <span className="snacks-ttl">{snacks.snacksTitle}</span>
-            {isReply && (
-              <div className="reply-container">
-                {snacksReply.length !== 0 && (
-                  <div className="reply-list">
-                    {snacksReply.map((reply, index) => {
-                      return <li key={index} className="reply-contents">
-                        <span className='reply-writer'>작성자</span><br/>
-                        {reply.contents}</li>;
-                    })}
-                  </div>
-                )}
+            {isReply && snacksReply.length !== 0 && (
+              <div className={'reply-container' + (isReply ? ' active' : '')}>
+                <div className="reply-list">
+                  {snacksReply.map((reply, index) => {
+                    return (
+                      <li key={index} className="reply-contents">
+                        <span className="reply-writer">
+                          {reply.userNickname}
+                        </span>
+                        <br />
+                        {reply.contents}
+                      </li>
+                    );
+                  })}
+                </div>
+                {snacksReply.length === 0 && <div>등록된 댓글이 없습니다!</div>}
+                <form onSubmit={onSubmitRelpy} className="reply-form">
+                  <input
+                    onChange={onChangeReply}
+                    className="reply-input"
+                    placeholder="댓글을 입력하세요"
+                  />
+                  <button>
+                    <EditOutlinedIcon className="reply-upload-btn" />
+                  </button>
+                </form>
+              </div>
+            )}
+            {isReply && snacksReply.length === 0 && (
+              <div className="reply-container noReply">
+                <div>등록된 댓글이 없습니다!</div>
                 <form onSubmit={onSubmitRelpy} className="reply-form">
                   <input
                     onChange={onChangeReply}

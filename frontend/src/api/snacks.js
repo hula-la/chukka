@@ -10,7 +10,6 @@ export const fsnacks = async (pageNum, sort, tags) => {
 
 export const fTags = async () => {
   const res = await client.get('snacks/tag/popular');
-
   return res;
 };
 
@@ -22,7 +21,6 @@ export const freply = async (data) => {
 
 export const creply = async (data) => {
   const res = await client.post(`snacks/comments`, data);
-
   return res;
 };
 
@@ -37,7 +35,6 @@ export const detail = async (snacksId) => {
 
 export const upload = async (snacksInfo, file) => {
   const formData = new FormData();
-  console.log(snacksInfo);
   formData.append('file', file);
   formData.append(
     'snacksInfo',

@@ -56,6 +56,11 @@ export const change = async (profileInputs, profilePicture) => {
   return res;
 };
 
+export const changePw = async (pwInfo) => {
+  const res = await client.put('accounts/password', pwInfo);
+  return res;
+};
+
 export const snacks = async (paramsNickname, snacksPage) => {
   const res = await client.get(`snacks/${paramsNickname}`, {
     params: { page: snacksPage, size: 8 },

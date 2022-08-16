@@ -120,6 +120,10 @@ const UploadPage = () => {
   const [snacksTitle, setSnacksTitle] = useState('');
   const [snacksTag, setSnacksTag] = useState();
   const [video, setVideo] = useState(null);
+  const [uploadMessage, setUploadMessage] = useState('SELECT YOUR SNACKS');
+
+  const [isVideo, setIsVideo] = useState(false);
+  const [isTag, setIsTag] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -134,11 +138,24 @@ const UploadPage = () => {
 
   const onChangeTag = (e) => {
     const tags = e.detail.tagify.getCleanValue();
-    setSnacksTag(tags);
+    if (tags.length === 0) {
+      setIsTag(false);
+    } else {
+      setSnacksTag(tags);
+      setIsTag(true);
+    }
   };
 
   const onChangeVideo = (e) => {
     setVideo(e.target.files[0]);
+    console.log(!e.target.value);
+    if (!e.target.value) {
+      setUploadMessage('SELECT YOUR SNACKS');
+      setIsVideo(false);
+    } else {
+      setUploadMessage(e.target.value);
+      setIsVideo(true);
+    }
   };
 
   const onSubmit = (e) => {
@@ -150,7 +167,7 @@ const UploadPage = () => {
   return (
     <Wrapper>
       <VideoCallOutlinedIcon className="upload-icon" onClick={onClickUpload} />
-      <p className="upload-msg">SELECT YOUR SNACKS</p>
+      <p className="upload-msg">{uploadMessage}</p>
       <SnacksUploadForm onSubmit={onSubmit}>
         <input
           type="file"
@@ -158,6 +175,7 @@ const UploadPage = () => {
           accept="video/*"
           className="upload-input"
           id="file"
+          required
         />
         <div className="upload-ttl">
           <StyledLabel for="title">제목</StyledLabel>
@@ -166,6 +184,7 @@ const UploadPage = () => {
             value={snacksTitle}
             onChange={onChangeTitle}
             placeholder="제목을 입력하세요"
+            required
           />
         </div>
         <div className="tag-container">
@@ -176,7 +195,7 @@ const UploadPage = () => {
             className="upload-tag"
           />
         </div>
-        <StyledButton>UPLOAD</StyledButton>
+        <StyledButton disabled={!isTag || !isVideo}>UPLOAD</StyledButton>
       </SnacksUploadForm>
     </Wrapper>
   );
