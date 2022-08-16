@@ -1,7 +1,6 @@
 package com.ssafy.api.request.enroll;
 
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 import lombok.Getter;
 import lombok.Setter;
 
