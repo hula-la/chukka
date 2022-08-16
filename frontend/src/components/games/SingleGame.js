@@ -3,16 +3,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './singleGame.css';
 import pop from '../../img/pop.jpeg';
-import styled from 'styled-components';
+import { useLocation } from 'react-router-dom';
 
 import './button.css';
 
-
-import "./singleGame.css";
-import pop from '../../img/pop.jpeg';
-import styled from 'styled-components';
-
-import './button.css';
 
 
 const SingleMode = (state) => {
@@ -461,9 +455,8 @@ const SingleMode = (state) => {
               <button onClick={() => { setIsMyVideo(!isMyVideo); }}> 내영상  </button>
 
               </div>
-            )}
 
-            {/* </div> */}
+            </div>
 
             {/* 내 영상 */}
             {isMyVideo == true && (

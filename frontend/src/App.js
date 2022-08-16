@@ -31,7 +31,6 @@ import MainPage from './pages/game/MainPage';
 import GamesPage from './pages/game/GamesPage';
 import MultiGamePage from './pages/game/MultiGamePage';
 import ResultPage from './pages/game/ResultPage';
-import MultiGamePage from './pages/game/Multi/MultiGamePage';
 
 // admin
 import AdminPage from './pages/admin/AdminPage';
