@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUser } from '../../features/cart/cartActions';
+import { fetchUser, userCartCount } from '../../features/cart/cartActions';
 import CloseIcon from '@mui/icons-material/Close';
 import TvOffIcon from '@mui/icons-material/TvOff';
 import defaultImage from '../../img/default.jpeg';
@@ -219,6 +219,7 @@ const CartPage = () => {
               setCheckedIds([]);
             }
           });
+          dispatch(userCartCount());
         } else {
           console.log(res.data.message);
         }
