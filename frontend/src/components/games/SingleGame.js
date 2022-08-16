@@ -29,7 +29,7 @@ const SingleMode = (songID) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [userPoseImg, setUserPoseImg] = useState(null);
   // 게임 시작 카운터
-  const [gameStartCounter, setGameStartCounter] = useState(30);
+  const [gameStartCounter, setGameStartCounter] = useState(3);
 
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
@@ -258,7 +258,7 @@ const SingleMode = (songID) => {
 
   const Styles = {
     GamePage: { position: 'relative',width: '100vw',height: '100vh' },
-    gameCountDown:{position: 'relative', width: '50vw',height: '50vw', left:'calc(50% - 25vw)', top:'calc(50% - 25vh)'},
+    gameCountDown:{position: 'relative', width: '30vw',height: '30vw', left:'calc(50% - 15vw)', top:'calc(20vh)'},
 
     pageTitle: {padding: '10px'},
 
@@ -298,9 +298,9 @@ const SingleMode = (songID) => {
 
        {/* 게임 시작 전 카운터 */}
       {gameStartCounter != 0 && (
-          <div id="gameStartCounter" style={Styles.gameCountDown}>
-            <img src="../../img/game_effect/countdown.gif" alt="loading..." />
-          </div>
+            <img src="../../img/game_effect/countdown.gif" alt="loading..." style={Styles.gameCountDown}/>
+          // <div id="gameStartCounter" style={Styles.gameCountDown}>
+          // </div>
       )}
       
       {/* 게임 카운터 후 시작 */}
@@ -339,7 +339,7 @@ const SingleMode = (songID) => {
                   height="180"
                   preload="auto"
                   style={Styles.stream}
-                  muted="muted"
+                  // muted="muted"
                 >
                   <source
                     src={
@@ -395,7 +395,7 @@ const SingleMode = (songID) => {
 
               <div className="wrapper">
               
-                  <input type="checkbox" id="switch" value={isSkeleton}/>
+                  <input type="checkbox" id="switch" className="switch" value={isSkeleton}/>
                 <label htmlFor="switch" className="switch_label">
                   
                     <span className="onf_btn"></span>
@@ -407,7 +407,7 @@ const SingleMode = (songID) => {
               </div>
               <div className="wrapper">
               
-                  <input type="checkbox" id="switch2" value={isMyVideo}/>
+                  <input type="checkbox" id="switch2" className="switch" value={isMyVideo}/>
                 <label htmlFor="switch2" className="switch_label">
                   
                     <span className="onf_btn"></span>
