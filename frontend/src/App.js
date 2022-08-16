@@ -18,6 +18,7 @@ import LecturesPage from './pages/lecture/LecturesPage';
 import LivePage from './pages/lecture/LivePage';
 import VideoLecturePage from './pages/lecture/VideoLecturePage';
 import LectureDetailpage from './pages/lecture/LectureDetailpage';
+
 // snacks
 import SnacksPage from './pages/snacks/SnacksPage';
 import DetailSnacksPage from './pages/snacks/DetailSnacksPage';
@@ -37,6 +38,7 @@ import AddLiveLecture from './pages/admin/AddLiveLecture';
 import AddRecordLecture from './pages/admin/AddRecordLecture';
 import DetailLectue from './pages/admin/DetailLectue';
 import AddSection from './pages/admin/AddSection';
+
 // notfount
 import NotFound from './pages/NotFound';
 

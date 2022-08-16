@@ -42,8 +42,6 @@ const Score = (props) =>{
 
   useEffect(() => {
 
-    console.log(props.result[0].name);
-
       interval1 = setInterval( () => {
         setProgress1((prev) => prev + 1);
       },10);
