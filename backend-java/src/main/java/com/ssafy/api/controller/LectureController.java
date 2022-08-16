@@ -13,6 +13,7 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 
+import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -84,8 +86,11 @@ public class LectureController {
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String userId = userDetails.getUsername();
         int userGender = userService.getUserByUserId(userId).getUserGender();
+        // 연령대 구하기
         Date birth = userService.getUserByUserId(userId).getUserBirth();
-        int ageGroup = LocalDate.now().getYear() - birth.getYear() + 1;
+        LocalDateTime today = LocalDateTime.now();
+        int userYear = Integer.parseInt(birth.toString().substring(0,4));
+        int ageGroup = ((today.getYear() - userYear  + 1) / 10 )*10;
         List<LectureGetForListRes> forUser = lectureService.getLectureByYourBirthAndGender(userGender, ageGroup, pageable);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureGetForYouRes.of(forUser, userGender, ageGroup)));
     }
