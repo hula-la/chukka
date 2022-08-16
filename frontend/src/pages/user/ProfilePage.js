@@ -8,6 +8,7 @@ import {
   changeProfile,
   fetchSnacks,
   fetchMyLectures,
+  fetchInsLectures,
 } from '../../features/user/userActions';
 import MySnacksItem from '../../components/snacks/MySnacksItem';
 import defaultImage from '../../img/default.jpeg';
@@ -29,6 +30,7 @@ const ProfilePageBlock = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   align-items: flex-start;
+
   .item {
     width: 100%;
   }
@@ -61,6 +63,9 @@ const Side = styled.div`
   }
   & p {
     margin-bottom: 2.5rem;
+  }
+  & button {
+    border: none;
   }
 `;
 const Profile = styled.img`
@@ -326,7 +331,7 @@ const LectureBox = ({ myLectures }) => {
         {myLectures
           .filter((lecture) => lecture.lecCategory)
           .map((lecture, index) => (
-            <LectureSmall key={index} props={lecture} noBadge classOpen />
+            <LectureSmall key={index} props={lecture} noBadge />
           ))}
       </LectureBox>
       <hr />
@@ -336,7 +341,134 @@ const LectureBox = ({ myLectures }) => {
         {myLectures
           .filter((lecture) => !lecture.lecCategory)
           .map((lecture, index) => (
-            <LectureSmall key={index} props={lecture} noBadge classOpen />
+            <LectureSmall key={index} props={lecture} noBadge />
+          ))}
+      </LectureBox>
+      {/* <LiveLectureBox>
+        <p>실시간 강의</p>
+        <img src="/img/login.png" alt="loginImg" />
+      </LiveLectureBox> */}
+      {/* <FinishLectureBox>
+        <h3>수강완료 강의</h3>
+        <img src="/img/login.png" alt="loginImg" />
+      </FinishLectureBox> */}
+    </Wrapper>
+  );
+};
+
+// 나의 강의 목록
+const InsLectureBox = ({ insLectures }) => {
+  const Wrapper = styled.div`
+    padding: 0 5rem;
+    & h3 {
+      margin-bottom: 0.5rem;
+    }
+    width: 100%;
+    .on-air {
+      background-color: #ff2c55;
+      width: 10rem;
+      height: 4rem;
+      padding: 0.4rem 0.1rem 0.5rem 0.8rem;
+      border-radius: 5rem;
+      margin: 1rem 0 2rem;
+    }
+    .on-air-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      vertical-align: middle;
+    }
+    .on-air-msg {
+      margin-left: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      line-height: 3rem;
+    }
+    & hr {
+      margin: 1.5rem 0;
+      border: none;
+      height: 0.1rem;
+      background: #ff2c55;
+      opacity: 0.5;
+    }
+    .lecture-header {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+  `;
+
+  const LectureBox = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 20px;
+    column-gap: 20px;
+    min-height: 200px;
+    & p {
+      margin-left: 0.5rem;
+      font-size: small;
+      color: #ff2c55;
+    }
+    /* & img {
+      height: 160px;
+      width: 200px;
+      margin-top: 10px;
+    } */
+  `;
+
+  const LiveLectureBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    & p {
+      margin-left: 0.5rem;
+      font-size: small;
+      color: #ff2c55;
+    }
+    & img {
+      height: 160px;
+      width: 200px;
+      margin-top: 10px;
+    }
+  `;
+
+  const FinishLectureBox = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    & p {
+      margin-left: 0.5rem;
+      font-size: small;
+      color: #ff2c55;
+    }
+    & img {
+      height: 160px;
+      width: 200px;
+      margin-top: 10px;
+    }
+  `;
+
+  return (
+    <Wrapper>
+      <div className="on-air">
+        <CircleIcon className="on-air-icon" />
+        <span className="on-air-msg">수강중</span>
+      </div>
+      <div className="lecture-header">녹화 강의</div>
+      <LectureBox>
+        {/* <LectureSmall /> */}
+        {insLectures
+          .filter((lecture) => lecture.lecCategory)
+          .map((lecture, index) => (
+            <LectureSmall key={index} props={lecture} noBadge />
+          ))}
+      </LectureBox>
+      <hr />
+      <div className="lecture-header">실시간 강의</div>
+      <LectureBox>
+        {/* <LectureSmall /> */}
+        {insLectures
+          .filter((lecture) => !lecture.lecCategory)
+          .map((lecture, index) => (
+            <LectureSmall key={index} props={lecture} noBadge />
           ))}
       </LectureBox>
       {/* <LiveLectureBox>
@@ -357,6 +489,7 @@ const ProfilePage = () => {
 
   const dispatch = useDispatch();
   const { myLectures } = useSelector((state) => state.user);
+  const { insLectures } = useSelector((state) => state.user);
 
   // 내 페이지인지 남의 페이지인지 구분
   // 1이면 나의 프로필페이지, 2이면 남의 프로필
@@ -368,6 +501,12 @@ const ProfilePage = () => {
       ? state.user.userInfo.userNickname
       : '';
     return userNickname;
+  });
+
+  // 현재 유저의 타입
+  const userType = useSelector((state) => {
+    const type = state.user.userInfo ? state.user.userInfo.userType : '';
+    return type;
   });
 
   useEffect(() => {
@@ -400,7 +539,7 @@ const ProfilePage = () => {
   const [profileInputs, setProfileInputs] = useState({
     userBirth: '',
     userEmail: '',
-    userGender: '',
+    userGender: '0',
     userName: '',
     userNickname: '',
     userPhone: '',
@@ -498,8 +637,16 @@ const ProfilePage = () => {
 
   // 나의 강의 목록 불러오기
   useEffect(() => {
-    dispatch(fetchMyLectures());
-  }, [dispatch]);
+    if (userType !== 1) {
+      dispatch(fetchMyLectures());
+    }
+  }, [dispatch, userType]);
+
+  useEffect(() => {
+    if (userType === 1) {
+      dispatch(fetchInsLectures());
+    }
+  }, [dispatch, userType]);
 
   return (
     <ProfilePageBlock>
@@ -540,7 +687,12 @@ const ProfilePage = () => {
           <div ref={ref}>1</div>
         </div>
       )}
-      {pageNum === '2' && <LectureBox myLectures={myLectures} />}
+      {pageNum === '2' && userType !== 1 && (
+        <LectureBox myLectures={myLectures} />
+      )}
+      {pageNum === '2' && userType === 1 && (
+        <InsLectureBox insLectures={insLectures} />
+      )}
       {pageNum === '3' && (
         <ChangeProfileBox>
           <Profile src={userProfile}></Profile>
@@ -591,20 +743,36 @@ const ProfilePage = () => {
                 required
               />
             </div>
-            <div className="infoDiv flexDiv">
+
+            {/* <div className="infoDiv flexDiv">
               <div>
                 <StyledLabel for="male">
                   남성<MaleIcon className="icon"></MaleIcon>
                 </StyledLabel>
-                <StyledInput id="male" type="radio" name="gender" value="1" />
+                <StyledInput
+                  id="male"
+                  type="radio"
+                  name="userGender"
+                  checkded={profileInputs.userGender === '0'}
+                  value="0"
+                  onChange={onChangeProfile}
+                />
               </div>
               <div>
                 <StyledLabel for="female">
                   여성<FemaleIcon className="icon"></FemaleIcon>
                 </StyledLabel>
-                <StyledInput id="female" type="radio" name="gender" value="0" />
+                <StyledInput
+                  id="female"
+                  type="radio"
+                  name="userGender"
+                  checkded={profileInputs.userGender === '1'}
+                  value="1"
+                  onChange={onChangeProfile}
+                />
               </div>
-            </div>
+            </div> */}
+
             <StyledButton>프로필 수정</StyledButton>
           </ChangeProfileForm>
         </ChangeProfileBox>

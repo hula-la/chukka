@@ -5,11 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUser } from '../../features/cart/cartActions';
 import CloseIcon from '@mui/icons-material/Close';
 import TvOffIcon from '@mui/icons-material/TvOff';
-import { getCartList, deleteCartItem, user } from '../../api/cart';
+import defaultImage from '../../img/default.jpeg';
+import { getCartList, deleteCartItem } from '../../api/cart';
 import { LectureInfo } from '../../components/carts/LectureInfo';
 import { PayLecture } from '../../components/carts/PayLecture';
 import Alert from '../../components/Alert';
-import RequestPay from '../../components/carts/requestPay';
+import RequestPay from '../../components/carts/RequestPay';
 import StyledButton from '../../components/Button';
 
 const ProfilePageBlock = styled.div`
@@ -35,7 +36,10 @@ const Side = styled.div`
   // flex-direction: column;
   display: grid;
   grid-template-rows: 0.5fr 0.5fr 0.5fr 2fr 1fr;
+<<<<<<< HEAD
   -webkit-align-items: center;
+=======
+>>>>>>> develop/front
   -webkit-box-align: unset;
   justify-content: initial;
 
@@ -46,6 +50,9 @@ const Side = styled.div`
     text-align: center;
     margin-top: 1rem;
     font-size: 1.2rem;
+  }
+  h3 {
+    margin-top: 0.8rem;
   }
 `;
 const Profile = styled.div`
@@ -73,7 +80,7 @@ const CartList = styled.div`
   // border-style : solid;
   // border-color : white;
   width: 100%;
-  overflow: scroll;
+  overflow: auto;
   padding: 0 10px;
   height: 95%;
 `;
@@ -85,12 +92,11 @@ const CartLecInfo = styled.div`
 const PayList = styled.div`
   // border-style : solid;
   // border-color : white;
-
   width: 100%;
   height: 100%;
   padding: 3% 0;
   text-align: center;
-  overflow: scroll;
+  overflow: auto;
 `;
 
 const PayResult = styled.div`
@@ -240,7 +246,14 @@ const CartPage = () => {
         {userProfile !== null && (
           <Profile>
             <div>
-              <img src={userProfile.userProfile} alt="프로필 사진"></img>
+              <img
+                src={
+                  userProfile.userProfile !== null
+                    ? userProfile.userProfile
+                    : defaultImage
+                }
+                alt="프로필 사진"
+              ></img>
             </div>
             <p>{userProfile.userNickname}</p>
           </Profile>
@@ -278,7 +291,7 @@ const CartPage = () => {
                   }
                   onChange={(e) => checkHandler(e)}
                 ></input>
-                <LectureInfo data={lecture} key={i} {...lecture} />
+                <LectureInfo data={lecture} key={i} />
                 <CloseIcon
                   className="icon"
                   onClick={() => deleteItem(lecture.cartItemId)}

@@ -6,12 +6,17 @@ import {
   fetchLectureDetail,
   fetchSections,
   fetchIsEnroll,
+  fetchReviews,
 } from './lectureActions';
 import thumbnail1 from '../../img/pop.jpeg';
 
 const initialState = {
   popularLectures: [],
-  recommendLectures: [],
+  recommendLectures: {
+    lecList: [],
+    ageGroup: 0,
+    userGender: 0,
+  },
   lectures: [],
   lecture: {
     lecId: '',
@@ -33,6 +38,7 @@ const initialState = {
   },
   isEnroll: false,
   sections: [],
+  reviews: [],
 };
 
 const lectureSlice = createSlice({
@@ -58,6 +64,9 @@ const lectureSlice = createSlice({
     },
     [fetchIsEnroll.fulfilled]: (state, { payload }) => {
       state.isEnroll = payload.data;
+    },
+    [fetchReviews.fulfilled]: (state, { payload }) => {
+      state.reviews = payload.data.content;
     },
   },
 });

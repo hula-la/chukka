@@ -84,6 +84,7 @@ class VideoRoomComponent extends Component {
     // window.addEventListener('resize', this.updateLayout);
     // window.addEventListener('resize', this.checkSize);
     // this.joinSession();
+    this.onSubmitStartSession();
   }
 
   componentWillUnmount() {
@@ -601,7 +602,7 @@ class VideoRoomComponent extends Component {
 
     return (
       <>
-        {!this.isStarted ? (
+        {/* {!this.isStarted ? (
           <div id="join">
             <div id="join-dialog" className="jumbotron vertical-center">
               <h1> Join a video session </h1>
@@ -645,11 +646,12 @@ class VideoRoomComponent extends Component {
               </form>
             </div>
           </div>
-        ) : null}
+        ) : null} */}
         {this.isStarted ? (
           <div className="container" id="container">
             <ToolbarComponent
-              sessionId={this.state.mySessionId}
+              // sessionId={this.state.mySessionId}
+              sessionId={this.props.lecTitle}
               user={localUser}
               showNotification={this.state.messageReceived}
               camStatusChanged={this.camStatusChanged}

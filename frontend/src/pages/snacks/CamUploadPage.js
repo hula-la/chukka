@@ -5,7 +5,6 @@ import Tags from '@yaireo/tagify/dist/react.tagify';
 import '@yaireo/tagify/dist/tagify.css';
 import styled from 'styled-components';
 import { uploadSnacks } from '../../features/snacks/snacksActions';
-import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined';
 import { useNavigate } from 'react-router-dom';
 // import SubscriptionsOutlinedIcon from '@mui/icons-material/SubscriptionsOutlined';
 
@@ -13,10 +12,10 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top:2rem;
+  margin-top: 2rem;
 
-  video{
-    margin : 0 auto;
+  video {
+    margin: 0 auto;
   }
 
   .upload-icon {
@@ -29,7 +28,6 @@ const Wrapper = styled.div`
     :hover {
       opacity: 1;
     }
-    
   }
   .upload-msg {
     top: -2rem;
@@ -90,7 +88,7 @@ const StyledInput = styled.input`
   outline-color: #ffffff;
   display: inline;
   background-color: #0b0b0b;
-  margin : 0 1.8rem;
+  margin: 0 1.8rem;
   :hover {
     border-bottom: #ff2c55 0.08rem solid;
   }
@@ -123,7 +121,7 @@ const StyledButton = styled.button`
 
 const UploadPage = () => {
   const navigate = useNavigate();
-  const {state} = useLocation();
+  const { state } = useLocation();
   const [snacksTitle, setSnacksTitle] = useState('');
   const [snacksTag, setSnacksTag] = useState();
   const [video, setVideo] = useState(null);
@@ -145,9 +143,12 @@ const UploadPage = () => {
     setSnacksTag(tags);
   };
 
-  const onChangeVideo = (e) => {
-    setVideo(e.target.files[0]);
-  };
+  // const onChangeVideo = (e) => {
+  //   setVideo(e.target.files[0]);
+  // };
+  useEffect(() => {
+    setVideo(state.data);
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -160,10 +161,10 @@ const UploadPage = () => {
         <p className="upload-msg">UPLOAD SNACKS</p>
         <video
           src={URL.createObjectURL(state.data)}
-            controls
-            ref={refVideo}
-            style={{ width: '300px', height:'400px'}}
-          />
+          controls
+          ref={refVideo}
+          style={{ width: '300px', height: '400px' }}
+        />
         <div className="upload-ttl">
           <StyledLabel for="title">제목</StyledLabel>
           <StyledInput

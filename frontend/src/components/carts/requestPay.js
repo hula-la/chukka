@@ -9,7 +9,7 @@ const StyledButton = styled.button`
   font-size: 1.1rem;
   padding: 0.5rem 1rem;
   border-radius: 12px;
-  width: 140px;
+  width: 100%;
   height: 42px;
   border: none;
   cursor: pointer;
@@ -27,24 +27,25 @@ const RequestPay= (props)=> {
     const { IMP } = window;
     IMP.init('imp73882568');
     
-    /* 주문번호 생성 */
-    var merchant_uid ="";
-    await getPayId().then((res)=>{
-      console.log(res)
-      merchant_uid = res.data+115;
-    })
-    console.log(merchant_uid);
     /* 주문 이름 생성 */
     var pay_name="[CHUKKA]";
     if(props.payList.length > 1){
       pay_name += ` ${props.payList[0].lecTitle} 외 ${props.payList.length-1} 건`;
-    }else{
+    }else if(props.payList.length == 1){
       pay_name += ` ${props.payList[0].lecTitle}` ;
+    }else{
+      alert("결제할 강의를 선택해주세요");
+      return;
     }
+    /* 주문번호 생성 */
+    var merchant_uid ="";
+    await getPayId().then((res)=>{
+
+      merchant_uid = res.data;
+    })
 
     /* 주문 강의 id 정보 */
     const payLecList = props.payList.map(item=> item.lecId);
-    console.log(payLecList);
 
     // IMP.request_pay(param, callback) 결제창 호출
     IMP.request_pay({ // param
@@ -61,9 +62,7 @@ const RequestPay= (props)=> {
       buyer_postcode: ""
 
     }, (res) => { // callback
-      console.log(res);
       if (res.success) {
-        console.log(res);
         /*
         결제 정보 DB에 저장하기
         */
@@ -77,9 +76,8 @@ const RequestPay= (props)=> {
         }
         
         completePay(data).then((response)=>{
-          console.log(response);
           if(response.message === "Success"){
-            navigate("/accounts/pay",{state :{ list : props.payList, amount : res.paid_amount, user : props.user}});
+            navigate("/accounts/pay",{state :{ list : props.payList, amount : res.paid_amount, merchant_uid:res.merchant_uid, user : props.user}});
           }else{
             console.log("결제 정보 저장 실패");
           }

@@ -111,6 +111,29 @@ const Wrapper = styled.div`
       opacity: 1;
     }
   }
+  .upload-menu{
+    transition: all 0.8s;
+    text-align: center;
+    width: 113px;
+    position: absolute;
+    top: 3.5rem;
+    right: 6.1rem;
+    padding : 0rem 1.2em 0 1.2rem;
+    display:none;
+  }
+  .upload-menu li {
+    list-style: none;
+    margin-top:1rem;
+    padding-bottom:0.2rem;
+    border-bottom : solid 3px #6b6b6b;
+    :hover { 
+      border-bottom : solid 3px #ff2c55;
+    }
+  }
+  .show-menu{
+    display: block;
+  }
+
 `;
 
 const SnacksPage = ({ history }) => {
@@ -128,6 +151,7 @@ const SnacksPage = ({ history }) => {
   const [sortSnacks, setSortSnacks] = useState('snacksId,DESC');
   const [tagList, setTagList] = useState([]);
   const [tags, setTags] = useState([]);
+  const [openMenu, setOpenMenu] = useState(false);
 
   const onClickNew = () => {
     if (sortSnacks !== 'snacksId,DESC') {
@@ -139,6 +163,14 @@ const SnacksPage = ({ history }) => {
       setSortSnacks('snacksLikes,ASC');
     }
   };
+
+  const onMouseEnterHandler = () =>{
+    setOpenMenu(true);
+  }
+
+  const onMouseLeaveHandler = () =>{
+    setOpenMenu(false);
+  }
 
   // 무한 스크롤, 스낵스 받아오기
   const [pageNum, setPageNum] = useState(1);
@@ -250,10 +282,10 @@ const SnacksPage = ({ history }) => {
         </div>
         <div className="item">
           <ul className="nonelist list">
-            {snacksList.map((snacks) => {
+            {snacksList.map((snacks, index) => {
               return (
                 <li className="snacksitem">
-                  <SnacksItem key={snacks.snacksId} snacks={snacks} />
+                  <SnacksItem key={index} snacks={snacks} />
                 </li>
               );
             })}
@@ -261,8 +293,14 @@ const SnacksPage = ({ history }) => {
           <div ref={ref}>1</div>
         </div>
         <Link to="upload">
-          <div className="upload-parent">
+          <div className="upload-parent" onMouseLeave={onMouseLeaveHandler} onMouseEnter={onMouseEnterHandler}>
             <LoupeOutlinedIcon className="upload-btn" />
+            <div className={openMenu?"upload-menu show-menu":"upload-menu"}>
+              <ul>
+                <li><Link to="record">촬영하기</Link></li>
+                <li><Link to="upload">업로드</Link></li>
+              </ul>
+            </div>
           </div>
         </Link>
       </div>

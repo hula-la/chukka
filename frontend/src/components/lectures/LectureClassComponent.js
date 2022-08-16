@@ -5,12 +5,16 @@ import CategoryBadge from '../../components/CategoryBadge';
 import StyledButton from '../../components/Button';
 import ReviewStar from '../../components/lectures/ReviewStar';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   fetchLectureDetail,
   fetchSections,
+  fetchReviews,
+  createReview,
 } from '../../features/lecture/lectureActions';
 import CampaignIcon from '@mui/icons-material/Campaign';
+import CloseIcon from '@mui/icons-material/Close';
+import { Rating } from '@mui/material';
 
 // style
 const Wrapper = styled.div`
@@ -115,6 +119,7 @@ const LectureClassComponent = () => {
   useEffect(() => {
     dispatch(fetchLectureDetail(lectureId));
     dispatch(fetchSections(lectureId));
+    dispatch(fetchReviews(lectureId));
   }, [dispatch, lectureId]);
 
   const onClickSectionHandler = (sectionId) => {
@@ -141,31 +146,7 @@ const LectureClassComponent = () => {
   } = useSelector((state) => state.lecture.lecture);
 
   const sections = useSelector((state) => state.lecture.sections);
-
-  const reviews = [
-    {
-      review_id: 1,
-      user_id: '유노준',
-      review_score: 4,
-      review_regdate: '2022-08-10',
-      review_contents: '낫밷',
-    },
-    {
-      review_id: 2,
-      user_id: '최지원',
-      review_score: 5,
-      review_regdate: '2022-08-10',
-      review_contents: '나연 최고',
-    },
-    {
-      review_id: 3,
-      user_id: '홍성목',
-      review_score: 3,
-      review_regdate: '2022-08-10',
-      review_contents:
-        '가나다라마바사 아자차카타파하 목업이 거의 완성이 되는 것 같습니다. 아마도 ?  배경이 너무 어둡지 않나 라는 생각이 조금 들긴 하지만 괜찮은 것 같습니다. 이것은 리뷰입니다. 한 세줄정도 쓰고 그만 쓰려고 합니다. 배가 고파요. 오늘 점심에 해물 야끼우동이었나 그랬던거 같은데 맛있었으면 좋곘습니다. 그럼 이만',
-    },
-  ];
+  const reviews = useSelector((state) => state.lecture.reviews);
 
   const scrollToRev = () => {
     if (revRef && revRef.current) {
@@ -213,12 +194,23 @@ const LectureClassComponent = () => {
               </span>
             </div>
           </div>
-          <StyledButton
-            content="수업 들으러 가기"
-            onClick={() => {
-              navigate(`/lectures/${lectureId}/section/1`);
-            }}
-          />
+          {/* 수업 버튼 */}
+          {lecCategory ? (
+            <StyledButton
+              content="동영상 강의 바로가기"
+              onClick={() => {
+                navigate(`/lectures/${lectureId}/section/1`);
+              }}
+            />
+          ) : null}
+          {!lecCategory ? (
+            <StyledButton
+              content="라이브 강의 바로가기"
+              onClick={() => {
+                navigate(`live`);
+              }}
+            />
+          ) : null}
         </LectureInfoDetail>
       </LectureInfo>
       <NoticeDiv>
@@ -226,15 +218,17 @@ const LectureClassComponent = () => {
         <div className="notice-content">공지사항 : {lecNotice}</div>
       </NoticeDiv>
       <LectureNav>
-        <a
-          href=""
-          onClick={(e) => {
-            e.preventDefault();
-            scrollToSec();
-          }}
-        >
-          목차
-        </a>
+        {lecCategory ? (
+          <a
+            href=""
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSec();
+            }}
+          >
+            목차
+          </a>
+        ) : null}
         <a
           href=""
           onClick={(e) => {
@@ -254,14 +248,17 @@ const LectureClassComponent = () => {
           리뷰
         </a>
       </LectureNav>
-      <LectureSubTitle id="sections" ref={secRef}>
-        <h1>목차</h1>
-      </LectureSubTitle>
-      {console.log('sections', sections)}
-      <SectionContainer
-        sections={sections}
-        onClickSectionHandler={onClickSectionHandler}
-      />
+      {lecCategory ? (
+        <>
+          <LectureSubTitle id="sections" ref={secRef}>
+            <h1>목차</h1>
+          </LectureSubTitle>
+          <SectionContainer
+            sections={sections}
+            onClickSectionHandler={onClickSectionHandler}
+          />
+        </>
+      ) : null}
 
       <LectureSubTitle id="instructor" ref={insRef}>
         <h1>강사 소개</h1>
@@ -277,16 +274,6 @@ const LectureClassComponent = () => {
 };
 
 export default LectureClassComponent;
-
-const LectureSubContent = ({ content }) => {
-  const SubContent = styled.div`
-    margin: 1rem 0rem;
-    padding: 2rem;
-    min-height: 500px;
-    font-size: 24px;
-  `;
-  return <SubContent>{content}</SubContent>;
-};
 
 const SectionContainer = ({ sections, onClickSectionHandler }) => {
   const Wrapper = styled.div`
@@ -399,13 +386,257 @@ const ReviewContainer = ({ reviews }) => {
     flex-direction: column;
     margin: 1rem 0rem;
     padding: 2rem;
+
+    & .review-btn {
+      margin-top: 1rem;
+      background-color: transparent;
+      height: 60px;
+      border: 2px solid #ff2c55;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      &:hover {
+        transition: background-color 0.7s;
+        background-color: #ff2c55;
+      }
+    }
   `;
+  const [modalOpen, setModalOpen] = useState(false);
+  const { userInfo } = useSelector((state) => state.user);
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
   return (
     <ReviewWrapper>
       {reviews.map((review, index) => (
         <ReviewItem review={review} key={index} />
       ))}
+      {/* 수강생일때만 표시. */}
+      {!userInfo.userType &&
+      !reviews.filter((review) => review.userNickname == userInfo.userNickname)
+        .length ? (
+        <>
+          <button className="review-btn" onClick={() => setModalOpen(true)}>
+            리뷰 작성
+          </button>
+          <ReviewForm open={modalOpen} close={closeModal} />
+        </>
+      ) : null}
     </ReviewWrapper>
+  );
+};
+
+const ReviewForm = (props) => {
+  const dispatch = useDispatch();
+  const lecId = useParams().lectureId;
+  const ReviewFormWrapper = styled.div`
+    display: flex;
+    margin-top: 1rem;
+
+    .review-modal {
+      text-align: center;
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 99;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+    .review-modal button {
+      outline: none;
+      cursor: pointer;
+      border: 0;
+    }
+    .review-modal > section {
+      /* width: 90%; */
+      width: 500px;
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      /* max-width: 450px; */
+      margin: 0 auto;
+      border: solid 2px;
+      border-radius: 0.3rem;
+      border-color: #ff2c55;
+      background-color: black;
+      /* 팝업이 열릴때 스르륵 열리는 효과 */
+      animation: modal-show 0.3s;
+      overflow: hidden;
+    }
+    .review-modal > section > header {
+      position: relative;
+      padding: 16px 50px 16px 50px;
+      background-color: black;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+    .review-modal > section > header button {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 30px;
+      font-size: 21px;
+      font-weight: 700;
+      text-align: center;
+      background-color: transparent;
+    }
+    .review-modal > section > main {
+      padding: 16px;
+      flex-grow: 1;
+      /* border-top: 1px solid #dee2e6; */
+    }
+    .review-modal form > label {
+      font-size: 1.3rem;
+      /* border-top: 1px solid #dee2e6; */
+    }
+    .review-modal .review-star-div {
+      color: #faaf00 !important ;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 1.5rem;
+      & .MuiRating-iconEmpty {
+        color: #faaf00 !important;
+      }
+    }
+    .review-modal .review-star {
+      color: #faaf00 !important;
+      & label {
+        font-size: 60px;
+      }
+    }
+
+    .review-modal > section form {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+    }
+    .review-modal > section > main .review-content {
+      color: black;
+      width: 100%;
+      margin-top: 1rem;
+      height: 200px;
+      flex-grow: 1;
+      font-size: 1.3rem;
+      border-radius: 10px;
+      padding: 1rem;
+      /* border-top: 1px solid #dee2e6; */
+    }
+    /* .review-input:focus {
+      outline: 2px solid #ff2c55;
+    } */
+
+    .review-modal > section footer {
+      padding: 0px 16px 16px;
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .review-modal > section footer button {
+      padding: 6px 12px;
+      background-color: black;
+      border-radius: 5px;
+      font-size: 1.2rem;
+      /* font-size: 13px; */
+    }
+    .review-modal.openReviewModal {
+      display: flex;
+      align-items: center;
+      /* 팝업이 열릴때 스르륵 열리는 효과 */
+      animation: modal-bg-show 0.3s;
+    }
+    @keyframes modal-show {
+      from {
+        opacity: 0;
+        margin-top: -50px;
+      }
+      to {
+        opacity: 1;
+        margin-top: 0;
+      }
+    }
+    @keyframes modal-bg-show {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  `;
+  const { open, close } = props;
+  // const [reviewRating, setReviewRating] = useState(5);
+  const submitReview = (e) => {
+    e.preventDefault();
+    const reviewScore = document.querySelectorAll(
+      '.MuiRating-iconFilled',
+    ).length;
+    const reviewContents = document.querySelector('.review-content').value;
+    dispatch(createReview({ lecId, reviewScore, reviewContents }));
+    // dispatch(fetchReviews(lecId));
+    window.location.reload();
+    alert('리뷰 작성 완료!');
+    close();
+  };
+  return (
+    <ReviewFormWrapper>
+      <div className={open ? 'openReviewModal review-modal' : 'review-modal'}>
+        {open ? (
+          <section>
+            <header>
+              <div>리뷰 작성</div>
+              <button className="close" onClick={close}>
+                <CloseIcon />
+              </button>
+            </header>
+            <main>
+              <form action="" onSubmit={submitReview}>
+                <label htmlFor="review-star">별점</label>
+                {/* <input type="text" id="review-star" /> */}
+                <div className="review-star-div">
+                  <Rating
+                    defaultValue={3}
+                    className="review-star"
+                    // onChange={(e, newValue) => {
+                    //   setReviewRating(newValue);
+                    // }}
+                  />
+                </div>
+                <label htmlFor="review-content">리뷰 내용</label>
+                <textarea
+                  name=""
+                  id="review-content"
+                  cols="30"
+                  rows="10"
+                  className="review-content"
+                  maxLength="200"
+                  required
+                ></textarea>
+                <footer>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      close();
+                    }}
+                  >
+                    취소
+                  </button>
+                  <button className="close">확인</button>
+                </footer>
+              </form>
+              {/* <input type="text" className="review-input" /> */}
+            </main>
+          </section>
+        ) : null}
+      </div>
+    </ReviewFormWrapper>
   );
 };
 
@@ -434,6 +665,7 @@ const ReviewItem = ({ review }) => {
       margin-right: 12px;
     }
   `;
+  const { userNickname, reviewRegdate, reviewScore, reviewContents } = review;
   return (
     <ReviewItemWrapper>
       <img
@@ -442,10 +674,10 @@ const ReviewItem = ({ review }) => {
       />
       <div className="review-body">
         <div className="review-header">
-          <span className="review-title">{review.user_id}</span>
-          <ReviewStar score={review.review_score} />
+          <span className="review-title">{userNickname}</span>
+          <ReviewStar score={reviewScore} />
         </div>
-        <div>{review.review_contents}</div>
+        <div>{reviewContents}</div>
       </div>
     </ReviewItemWrapper>
   );

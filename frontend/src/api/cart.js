@@ -10,8 +10,8 @@ export const deleteCartItem = async (CartItemId) => {
   return res;
 };
 
-export const insertCartItem = async (data) => {
-  const res = await client.post('cart/', data);
+export const insertCart = async (data) => {
+  const res = await client.post(`cart/${data}`);
   return res;
 };
 
