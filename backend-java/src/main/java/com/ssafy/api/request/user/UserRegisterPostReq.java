@@ -17,11 +17,11 @@ import java.util.Date;
 public class UserRegisterPostReq {
 
 	@NotBlank(message="아이디는 필수값입니다.")
-	@Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z]).{4,16}", message = "아이디는 4~16자 영문 대소문자, 숫자를 사용하세요.")
+	@Pattern(regexp = "(?=[a-zA-Z]+[0-9a-zA-Z]).{4,16}", message = "아이디는 4~16자 영문 대소문자 또는 숫자를 사용하세요. 첫글자는 알파벳이어야 합니다.")
 	@ApiModelProperty(name="유저 ID", example="your_id")
 	String userId;
 	@NotBlank(message="비밀번호는 필수값입니다.")
-	@Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\\\W)(?=\\\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대소문자, 숫자, 특수문자를 사용하세요.")
+	@Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}", message = "비밀번호는 8~16자 영문 대문자, 소문자, 숫자, 그리고 특수문자를 모두 사용하세요.")
 	@ApiModelProperty(name="유저 Password", example="your_password")
 	String userPw;
 	@NotBlank(message="이름은 필수값입니다.")
@@ -29,7 +29,7 @@ public class UserRegisterPostReq {
 	@ApiModelProperty(name="유저 Name", example="your_name")
 	String userName;
 	@NotBlank(message="핸드폰 번호는 필수값입니다.")
-	@Pattern(regexp = "(?=01[016789])(?=\\\\d{3,4})(?=\\\\d{4})", message = "올바른 형식이 아닙니다. (올바른 형식 : 010-0000-0000)")
+	@Pattern(regexp = "01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})", message = "올바른 형식이 아닙니다. (올바른 형식 : 010-0000-0000)")
 	@ApiModelProperty(name="유저 Phone", example="010-1234-5678")
 	String userPhone;
 	@NotBlank(message="이메일은 필수값입니다.")
