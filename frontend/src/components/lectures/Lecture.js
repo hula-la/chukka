@@ -50,8 +50,12 @@ const Thumbnail = styled.div`
 const StyledButton = styled.button`
   display: none;
   position: absolute;
-  bottom: 5.5rem;
-  left: 4rem;
+  /* bottom: 5.5rem;
+  left: 4rem; */
+  top: 50%;
+  left: 50%;
+  width: 150px;
+  transform: translate(-50%, -50%);
   border: none;
   border-radius: 4px;
   font-size: 1.5rem;
