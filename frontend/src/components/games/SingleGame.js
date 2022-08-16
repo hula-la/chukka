@@ -1,7 +1,9 @@
 import { AccountBoxTwoTone } from '@material-ui/icons';
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SingleMode = (songID) => {
+  const navigate = useNavigate();
   songID = "soojin";
   // let isMsgReceived = false;
 
@@ -214,6 +216,22 @@ const SingleMode = (songID) => {
         } else {
           alert('[close] 커넥션이 죽었습니다.');
         }
+        const sendResult=[
+          {
+            name:"PERFECT",
+            count:123,
+          },
+          {
+            name:"GOOD",
+            count:28,
+          },
+          {
+            name:"BAD",
+            count:4,
+          },
+        ]
+        navigate("/game/result",{state:{data:sendResult}});
+
       };
 
       
