@@ -23,6 +23,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,7 +84,8 @@ public class LectureController {
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String userId = userDetails.getUsername();
         int userGender = userService.getUserByUserId(userId).getUserGender();
-        int ageGroup = enrollService.getEnrollByUserId(userId).getAgeGroup();
+        Date birth = userService.getUserByUserId(userId).getUserBirth();
+        int ageGroup = LocalDate.now().getYear() - birth.getYear() + 1;
         List<LectureGetForListRes> forUser = lectureService.getLectureByYourBirthAndGender(userGender, ageGroup, pageable);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureGetForYouRes.of(forUser, userGender, ageGroup)));
     }
