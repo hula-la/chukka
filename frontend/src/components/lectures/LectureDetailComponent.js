@@ -11,6 +11,7 @@ import {
   fetchReviews,
 } from '../../features/lecture/lectureActions';
 import { insertCartItem, userCartCount } from '../../features/cart/cartActions';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 const Wrapper = styled.div`
   display: flex;

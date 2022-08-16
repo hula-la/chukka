@@ -11,10 +11,13 @@ import {
   fetchSections,
   fetchReviews,
   createReview,
+  updateNotice,
 } from '../../features/lecture/lectureActions';
 import CampaignIcon from '@mui/icons-material/Campaign';
-import CloseIcon from '@mui/icons-material/Close';
 import { Rating } from '@mui/material';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
 // style
 const Wrapper = styled.div`
@@ -82,7 +85,7 @@ const NoticeDiv = styled.div`
   border-radius: 20px;
   display: flex;
   align-items: center;
-  padding-left: 20px;
+  padding: 0 20px;
   font-size: 22px;
   margin-bottom: 2rem;
   & .notice-content {
@@ -91,6 +94,34 @@ const NoticeDiv = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex-grow: 1;
+  }
+  & .notice-input-div {
+    margin-left: 8px;
+    margin-right: 8px;
+    display: flex;
+    flex-grow: 1;
+    & input {
+      font-size: 22px;
+      width: 100%;
+      padding: 0 8px;
+    }
+  }
+  & .notice-edit-btn-div {
+    display: flex;
+    align-items: center;
+  }
+  & .notice-edit-icon {
+    opacity: 1;
+    cursor: pointer;
+
+    right: 0;
+    &:hover {
+      transition: transform 0.4s;
+      transform: scale3d(1.3, 1.3, 1.3);
+      /* border: 1px solid white; */
+    }
+    /* border-radius: 2px; */
   }
 `;
 
@@ -115,6 +146,8 @@ const LectureClassComponent = () => {
   const secRef = useRef(null);
   const insRef = useRef(null);
   const revRef = useRef(null);
+  const [notice, setNotice] = useState('');
+  const [isEditNotice, setIsEditNotice] = useState(false);
 
   useEffect(() => {
     dispatch(fetchLectureDetail(lectureId));
@@ -145,6 +178,11 @@ const LectureClassComponent = () => {
     insInfo,
   } = useSelector((state) => state.lecture.lecture);
 
+  useEffect(() => {
+    setNotice(lecNotice);
+  }, [lecNotice]);
+
+  const { userInfo } = useSelector((state) => state.user);
   const sections = useSelector((state) => state.lecture.sections);
   const reviews = useSelector((state) => state.lecture.reviews);
 
@@ -215,7 +253,53 @@ const LectureClassComponent = () => {
       </LectureInfo>
       <NoticeDiv>
         <CampaignIcon />
-        <div className="notice-content">공지사항 : {lecNotice}</div>
+        {!isEditNotice ? (
+          <div className="notice-content">
+            <span>공지사항 : {notice}</span>
+          </div>
+        ) : (
+          <div className="notice-input-div">
+            <input placeholder="새 공지 입력" className="notice-input" />
+          </div>
+        )}
+
+        {userInfo.userType &&
+        userInfo.userNickname == insInfo.insName &&
+        !isEditNotice ? (
+          <ModeEditIcon
+            className="notice-edit-icon"
+            onClick={() => {
+              setIsEditNotice(true);
+              // setNotice('aaaa');
+            }}
+          />
+        ) : null}
+        {userInfo.userType &&
+        userInfo.userNickname == insInfo.insName &&
+        isEditNotice ? (
+          <div className="notice-edit-btn-div">
+            <CheckIcon
+              className="notice-edit-icon"
+              onClick={() => {
+                const newNotice = document.querySelector('.notice-input').value;
+                if (newNotice) {
+                  setNotice(newNotice);
+                  dispatch(updateNotice({ lecId, newNotice }));
+                  setIsEditNotice(false);
+                } else {
+                  alert('공지사항을 입력하세요!');
+                }
+              }}
+            />
+            <CloseIcon
+              className="notice-edit-icon"
+              onClick={() => {
+                setIsEditNotice(false);
+                // setNotice('aaaa');
+              }}
+            />
+          </div>
+        ) : null}
       </NoticeDiv>
       <LectureNav>
         {lecCategory ? (

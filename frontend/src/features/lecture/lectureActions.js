@@ -7,6 +7,7 @@ import {
   recommendLectures,
   reviews,
   postReview,
+  putNotice,
 } from '../../api/lecture';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -125,6 +126,19 @@ export const createReview = createAsyncThunk(
     const { lecId } = params;
     try {
       const { data } = await postReview(lecId, params);
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
+  },
+);
+
+export const updateNotice = createAsyncThunk(
+  'lecture/updateNotice',
+  async (params, { rejectWithValue }) => {
+    const { lecId, newNotice } = params;
+    try {
+      const { data } = await putNotice(lecId, { lecNotice: newNotice });
       return data;
     } catch (e) {
       console.log(e);
