@@ -54,7 +54,6 @@ export const flectures = async () => {
 
 export const crlecture = async (lectureInfo, lecThumb) => {
   const formData = new FormData();
-  console.log(lecThumb);
   formData.append('lecThumb', lecThumb);
   formData.append(
     'lectureInfo',
@@ -96,7 +95,6 @@ export const fsections = async (lecId) => {
 };
 
 export const csection = async (lecId, contents, sectionInfo) => {
-  console.log(sectionInfo);
   const formData = new FormData();
   formData.append('contents', contents);
   formData.append(

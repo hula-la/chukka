@@ -19,6 +19,7 @@ const NavBar = styled.div`
   margin: 0 auto;
   /* padding: 0 20px; */
   height: 80px;
+
   font-family: 'Russo One', sans-serif !important;
   // font-family: 'Montserrat', sans-serif;
   // font-weight: 600;

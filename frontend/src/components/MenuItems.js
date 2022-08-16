@@ -52,10 +52,15 @@ const NavItems = styled.li`
   }
   & .nav-link {
     // font-family: 'Montserrat', sans-serif;
+<<<<<<< HEAD
+    font-family: 'Russo One', sans-serif; 
+    font-weight: 600;
+=======
     font-family: 'Russo One', sans-serif;
     // font-weight: 600;
     cursor: pointer;
     font-size:1.3rem;
+>>>>>>> develop/front
   }
 `;
 

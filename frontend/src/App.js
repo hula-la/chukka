@@ -29,8 +29,8 @@ import MakeSnacksPage from './pages/snacks/MakeSnacksPage';
 // games
 import MainPage from './pages/game/MainPage';
 import GamesPage from './pages/game/GamesPage';
+import MultiGamePage from './pages/game/MultiGamePage';
 import ResultPage from './pages/game/ResultPage';
-import MultiGamePage from './pages/game/Multi/MultiGamePage';
 
 // admin
 import AdminPage from './pages/admin/AdminPage';
@@ -106,7 +106,7 @@ const App = () => {
           <Route path=":lecId" element={<DetailLectue />} />
           <Route path="section/:lecId" element={<AddSection />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </div>
   );

@@ -225,6 +225,21 @@ const SingleMode = (state) => {
         } else {
           alert('[close] 커넥션이 죽었습니다.');
         }
+        const sendResult=[
+          {
+            name:"PERFECT",
+            count:perfectCnt,
+          },
+          {
+            name:"GOOD",
+            count:goodCnt,
+          },
+          {
+            name:"BAD",
+            count:badCnt,
+          },
+        ]
+        navigate("/game/result",{state:{data:sendResult}});
       };
 
       websckt.onmessage = (e) => {
