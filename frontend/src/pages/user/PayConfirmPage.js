@@ -58,9 +58,9 @@ const PayCompelete = () => {
   const {state} = useLocation();
   const navigation = useNavigate();
 
-  useEffect( () =>{
+  useEffect( async () =>{
     // 장바구니에서 삭제
-    state.list.forEach(element => {
+    await state.list.forEach(element => {
       deleteCartItem(element.cartItemId)
       .then((res)=>{
         if(res.status === 202){
@@ -69,35 +69,36 @@ const PayCompelete = () => {
         }else if(res.status === 200){
           console.log("삭제 완료");
           setDelDone(true);
-
-          // 수강 등록
-          const data = {
-            lecIds : state.list.map(ele=> ele.lecId),
-            userId : state.user.userId,
-          }
-          
-          enrollLecture(data)
-          .then((res)=>{
-            if(res.status === 202){
-              alert(res.data.message);
-              navigation("/accounts/cart");
-            }else if(res.status === 200){
-              setAddDone(true);
-            }
-          }).catch((err)=>{
-            alert("아이쿠! 알 수 없는 에러 발생");
-            navigation("/accounts/cart");
-          })
         }
-
       }).catch((err)=>{
         alert("아이쿠! 알 수 없는 에러 발생");
         navigation("/accounts/cart");
       })
     });
 
-
-
+    // 수강 등록
+    const data = {
+      lecIds : state.list.map(ele=> ele.lecId),
+      userId : state.user.userId,
+    }
+    console.log(data);
+    
+    await enrollLecture(data)
+    .then((res)=>{
+      console.log(res);
+      if(res.message === "Success"){
+        setAddDone(true);
+        console.log("수강 추가 완료");
+        console.log(addDone);
+        console.log(delDone);
+      }else{
+        alert("수강 정보 저장 실패, 관리자에게 문의 하세요.");
+        navigation("/accounts/cart");
+      }
+    }).catch((err)=>{
+      alert("아이쿠! 알 수 없는 에러 발생");
+      navigation("/accounts/cart");
+    })
   },[])
 
   return (
