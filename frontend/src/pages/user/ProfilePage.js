@@ -46,6 +46,7 @@ const ProfilePageBlock = styled.div`
     border-top: 1px solid #ff2c55;
   }
   .noSnacks {
+    display: flex;
     width: 80%;
     height: 500px;
     justify-content: center;
@@ -684,6 +685,7 @@ const ProfilePage = () => {
 
   // 나의 강의 목록 불러오기
   useEffect(() => {
+    console.log(userType);
     if (userType !== 1) {
       dispatch(fetchMyLectures());
     }
