@@ -8,7 +8,7 @@ import './button.css';
 
 
 const SingleMode = (songID) => {
-  songID = 'soojin';
+  songID = '6';
   // let isMsgReceived = false;
 
   const [websckt, setWebsckt] = useState();
@@ -29,7 +29,7 @@ const SingleMode = (songID) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [userPoseImg, setUserPoseImg] = useState(null);
   // 게임 시작 카운터
-  const [gameStartCounter, setGameStartCounter] = useState(3);
+  const [gameStartCounter, setGameStartCounter] = useState(30);
 
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
@@ -257,7 +257,8 @@ const SingleMode = (songID) => {
   useEffect(() => {});
 
   const Styles = {
-    GamePage: { width: '100%' },
+    GamePage: { position: 'relative',width: '100vw',height: '100vh' },
+    gameCountDown:{position: 'relative', width: '50vw',height: '50vw', left:'calc(50% - 25vw)', top:'calc(50% - 25vh)'},
 
     pageTitle: {padding: '10px'},
 
@@ -286,25 +287,8 @@ const SingleMode = (songID) => {
     AlbumImg: { width: '50%' },
     AlbumInfo: { display: 'flex',flexDirection: 'column', justifyContent: 'space-around', marginLeft: '2vw'},
     AlbumTitle: { fontSize: '25px'}
-
-    // gameBox: { display: 'flex-column' },
-    // Videobox: { position: 'relative', display: 'flex' },
-    // Video: { backgroundColor: 'gray',  height: '90vh' },
-    // ScoreBox: { position: 'relative', zIndex: '3' },
-    // Score: { position: 'absolute', width: '100%' },
-    // Time: {
-    //   position: 'absolute',
-    //   width: '50%',
-    //   top: '10px',
-    //   height: '10vh',
-    //   zIndex: '5',
-    // },
-    // previewImage: { position: 'absolute', height: '15vh' },
-    // Pose: { width: '50%', height: '20vh', position: 'relative',textAlign:'center' },
   };
 
-  // if (loading) return <div>로딩중..</div>;
-  // if (error) return <div>에러가 발생했습니다</div>;
 
   return (
     <div style={Styles.GamePage}>
@@ -314,7 +298,7 @@ const SingleMode = (songID) => {
 
        {/* 게임 시작 전 카운터 */}
       {gameStartCounter != 0 && (
-          <div id="gameStartCounter">
+          <div id="gameStartCounter" style={Styles.gameCountDown}>
             <img src="../../img/game_effect/countdown.gif" alt="loading..." />
           </div>
       )}
@@ -423,15 +407,18 @@ const SingleMode = (songID) => {
               </div>
               <div className="wrapper">
               
-                  <input type="checkbox" id="switch" value={isSkeleton}/>
-                <label htmlFor="switch" className="switch_label">
+                  <input type="checkbox" id="switch2" value={isMyVideo}/>
+                <label htmlFor="switch2" className="switch_label">
                   
                     <span className="onf_btn"></span>
                   </label>
               </div>
 
+              <div style={Styles.None}>
               <button onClick={() => { setIsSkeleton(!isSkeleton);}}>  관절 영상  </button>
               <button onClick={() => { setIsMyVideo(!isMyVideo); }}> 내영상  </button>
+
+              </div>
             </div>
 
             
