@@ -22,7 +22,7 @@ import java.util.Optional;
 @Api(value = "장바구니 API", tags = {"Cart"})
 @RestController
 @RequestMapping("/cart")
-public abstract class CartController  {
+public class CartController  {
 
     @Autowired
     CartService cartService;
@@ -130,7 +130,6 @@ public abstract class CartController  {
         int count=0;
         try{
             Cart userCart = cartService.findCartByUser(user.getUserId());
-//            Cart userCart = cartService.findCartByUser("user3");
             if(userCart != null){
                 count = userCart.getCount();
             }

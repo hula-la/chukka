@@ -19,7 +19,7 @@ import java.util.Optional;
 
 
 @Service("CartService")
-public class CartServiceImpl extends CartController implements CartService{
+public class CartServiceImpl implements CartService{
 
     @Autowired
     CartRepository cartRepository;
@@ -37,7 +37,6 @@ public class CartServiceImpl extends CartController implements CartService{
     public Cart updateCart(Cart cart){
         cart.setCount(cart.getCount()-1);
         Cart updatedCart = cartRepository.save(cart);
-
         return updatedCart;
     }
 
