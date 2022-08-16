@@ -293,11 +293,11 @@ const SignUpPage = () => {
     setUserGender(e.target.value);
   });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      dispatch(
+      await dispatch(
         registerUser({
           userId,
           userNickname,
@@ -310,6 +310,8 @@ const SignUpPage = () => {
           userProfile,
         }),
       );
+      alert('회원가입을 완료하였습니다');
+      navigate('/accounts/login');
     } catch (e) {
       console.log(e);
     }
