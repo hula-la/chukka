@@ -89,8 +89,8 @@ public class LectureServiceImpl implements LectureService {
     @Override
     public List<LectureGetForListRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(0, 2);
-        List<Lecture> enroll = lectureRepository.getLectureByYourBirthAndGender(userGender, ageGroup, pageRequest);
-        List<LectureGetForListRes> dtoPage = enroll.stream()
+        List<Lecture> page = lectureRepository.getLectureByYourBirthAndGender(userGender, ageGroup, pageRequest);
+        List<LectureGetForListRes> dtoPage = page.stream()
                 .map(m -> new LectureGetForListRes(
                         m.getLecId(),
                         m.getLecThumb(),

@@ -26,7 +26,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     @Query(value = "select lec " +
             "from Enroll e, Lecture lec " +
             "where e.lecture.lecId = lec.lecId " +
-            "group by lec.lecId " +
+            "group by e.lecture.lecId " +
             "order by count(e.enrollId) desc")
     List<Lecture> getMostPopularLecture(Pageable pageable);
 
