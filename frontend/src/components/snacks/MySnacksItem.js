@@ -6,7 +6,7 @@ const Wrapper = styled.div`
   /* height: 70vh; */
   #my-video {
     width: 15vw;
-    height: 60vh;
+    height: 40vh;
     margin: 0 auto;
     transition: 200ms;
     cursor: pointer;
