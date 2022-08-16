@@ -1,24 +1,19 @@
 import { AccountBoxTwoTone } from '@material-ui/icons';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './singleGame.css';
+
+
+import "./singleGame.css";
 import pop from '../../img/pop.jpeg';
-import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
 
 import './button.css';
 
 
-
-const SingleMode = (state) => {
-  const location = useLocation()
-  const songID = location.state.songId
-  
+const SingleMode = (songID) => {
   const navigate = useNavigate();
 
-  // console.log('state: ' + state);
-  console.log('songID: ' + songID);
-  // const songID = state.state.songID;
-  // songID = '3';
+  songID = '3';
   // let isMsgReceived = false;
 
   const [websckt, setWebsckt] = useState();
@@ -60,6 +55,7 @@ const SingleMode = (state) => {
 
   // 관절 영상 분리를 위한 변수
   const [isMsgReceived, setIsMsgReceived] = useState(false);
+
 
   // 동영상 재생을 위한 변수
   const getWebcam = (callback) => {
@@ -205,27 +201,25 @@ const SingleMode = (state) => {
         clearInterval(IV);
 
         if (event.wasClean) {
-          alert(
-            `[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`,
-          );
+          alert(`[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`);
         } else {
           alert('[close] 커넥션이 죽었습니다.');
         }
-        const sendResult = [
+        const sendResult=[
           {
-            name: 'PERFECT',
-            count: 123,
+            name:"PERFECT",
+            count:123,
           },
           {
-            name: 'GOOD',
-            count: 28,
+            name:"GOOD",
+            count:28,
           },
           {
-            name: 'BAD',
-            count: 4,
+            name:"BAD",
+            count:4,
           },
-        ];
-        navigate('/game/result', { state: { data: sendResult } });
+        ]
+        navigate("/game/result",{state:{data:sendResult}});
       };
 
       websckt.onmessage = (e) => {
@@ -454,62 +448,6 @@ const SingleMode = (state) => {
               <button onClick={() => { setIsSkeleton(!isSkeleton);}}>  관절 영상  </button>
               <button onClick={() => { setIsMyVideo(!isMyVideo); }}> 내영상  </button>
 
-              </div>
-
-            </div>
-
-            {/* 내 영상 */}
-            {isMyVideo == true && (
-              <div id="canvasDiv" style={Styles.MyVideo}>
-                <canvas id="canvas" ref={canvasRef} style={Styles.Canvas} />
-              </div>
-            )}
-
-            <div style={Styles.ButtonContainer}>
-              <div>관절 영상</div>
-
-              <div className="wrapper">
-                <input
-                  type="checkbox"
-                  id="switch"
-                  className="switch"
-                  value={isSkeleton}
-                />
-                <label htmlFor="switch" className="switch_label">
-                  <span className="onf_btn"></span>
-                </label>
-              </div>
-
-              <div>내 영상</div>
-              <div className="wrapper">
-                <input
-                  type="checkbox"
-                  id="switch2"
-                  className="switch"
-                  value={isMyVideo}
-                />
-                <label htmlFor="switch2" className="switch_label">
-                  <span className="onf_btn"></span>
-                </label>
-              </div>
-
-              <div style={Styles.None}>
-                <button
-                  onClick={() => {
-                    setIsSkeleton(!isSkeleton);
-                  }}
-                >
-                  {' '}
-                  관절 영상{' '}
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMyVideo(!isMyVideo);
-                  }}
-                >
-                  {' '}
-                  내영상{' '}
-                </button>
               </div>
             </div>
 
