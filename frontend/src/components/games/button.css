@@ -4,7 +4,7 @@
     text-align: center;
     /* margin: 50px auto; */
   }
-  #switch {
+  .switch {
     position: absolute;
     /* hidden */
     appearance: none;
@@ -39,17 +39,17 @@
   }
   
   /* checking style */
-  #switch:checked+.switch_label {
+  .switch:checked+.switch_label {
     background: #c44;
     border: 2px solid #c44;
   }
   
-  #switch:checked+.switch_label:hover {
+  .switch:checked+.switch_label:hover {
     background: #e55;
   }
   
   /* move */
-  #switch:checked+.switch_label .onf_btn {
+  .switch:checked+.switch_label .onf_btn {
     left: 18px;
     background: #fff;
     box-shadow: 1px 2px 3px #00000020;
