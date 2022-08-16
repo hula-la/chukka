@@ -79,11 +79,11 @@ export default class ToolbarComponent extends Component {
     const mySessionId = this.props.sessionId;
     const localUser = this.props.user;
     return (
-      <AppBar className="toolbar" id="header">
-        <Toolbar className="toolbar">
+      <AppBar className="live-toolbar" id="live-header">
+        <Toolbar className="live-toolbar">
           <div id="navSessionInfo">
             {this.props.sessionId && (
-              <div id="titleContent">
+              <div id="live-titleContent">
                 <span id="session-title">{mySessionId}</span>
               </div>
             )}
