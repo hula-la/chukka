@@ -8,6 +8,7 @@ import {
   change,
   snacks,
   myLectures,
+  insLectures,
 } from '../../api/user';
 
 export const registerUser = createAsyncThunk(
@@ -135,10 +136,26 @@ export const fetchSnacks = createAsyncThunk(
 );
 
 export const fetchMyLectures = createAsyncThunk(
-  'user/fetchMyLecture',
+  'user/fetchMyLectures',
   async (tmp, { rejectWithValue }) => {
     try {
       const { data } = await myLectures();
+      return data;
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const fetchInsLectures = createAsyncThunk(
+  'user/fetchInsLectures',
+  async (tmp, { rejectWithValue }) => {
+    try {
+      const { data } = await insLectures();
       return data;
     } catch (error) {
       if (error.response && error.response.data.message) {

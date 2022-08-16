@@ -32,7 +32,6 @@ export const nickCheck = async (userNickname) => {
 export const fetchPro = async (data) => {
   const userNickname = data.paramsNickname;
   const res = await client.post(`accounts/`, { userNickname });
-  console.log(res);
   return res;
 };
 
@@ -43,7 +42,6 @@ export const find = async (data) => {
 
 export const change = async (profileInputs, profilePicture) => {
   const formData = new FormData();
-  console.log(profileInputs);
   formData.append('file', profilePicture);
   formData.append(
     'modifyInfo',
@@ -68,6 +66,10 @@ export const snacks = async (paramsNickname, snacksPage) => {
 
 export const myLectures = async () => {
   const res = await client.get(`accounts/mylectures/`);
+  return res;
+};
 
+export const insLectures = async () => {
+  const res = await client.get('accounts/myteach/');
   return res;
 };
