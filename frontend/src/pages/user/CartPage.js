@@ -76,7 +76,7 @@ const CartList = styled.div`
   // border-style : solid;
   // border-color : white;
   width: 100%;
-  overflow: scroll;
+  overflow: auto;
   padding: 0 10px;
   height: 95%;
 `;
@@ -92,7 +92,7 @@ const PayList = styled.div`
   height: 100%;
   padding: 3% 0;
   text-align: center;
-  overflow: scroll;
+  overflow: auto;
 `;
 
 const PayResult = styled.div`
