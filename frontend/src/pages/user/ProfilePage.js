@@ -29,6 +29,7 @@ const ProfilePageBlock = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   align-items: flex-start;
+
   .item {
     width: 100%;
   }
@@ -61,6 +62,9 @@ const Side = styled.div`
   }
   & p {
     margin-bottom: 2.5rem;
+  }
+  & button {
+    border: none;
   }
 `;
 const Profile = styled.img`
