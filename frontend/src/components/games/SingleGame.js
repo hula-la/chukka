@@ -1,5 +1,8 @@
 import { AccountBoxTwoTone } from '@material-ui/icons';
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+
 import "./singleGame.css";
 import pop from '../../img/pop.jpeg';
 import styled from 'styled-components';
@@ -8,6 +11,8 @@ import './button.css';
 
 
 const SingleMode = (songID) => {
+  const navigate = useNavigate();
+
   songID = '3';
   // let isMsgReceived = false;
 
@@ -196,12 +201,25 @@ const SingleMode = (songID) => {
         clearInterval(IV);
 
         if (event.wasClean) {
-          alert(
-            `[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`,
-          );
+          alert(`[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`);
         } else {
           alert('[close] 커넥션이 죽었습니다.');
         }
+        const sendResult=[
+          {
+            name:"PERFECT",
+            count:123,
+          },
+          {
+            name:"GOOD",
+            count:28,
+          },
+          {
+            name:"BAD",
+            count:4,
+          },
+        ]
+        navigate("/game/result",{state:{data:sendResult}});
       };
 
       websckt.onmessage = (e) => {
