@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import './index.css';
+import logo from '../img/logo1.png';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
-import FormatQuoteSharpIcon from '@mui/icons-material/FormatQuoteSharp';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const Container = styled.div`
@@ -49,8 +49,8 @@ const BackGround = styled.div`
     position: absolute;
     width: 100%;
     left: 0;
-    top: 31%;
-
+    top: 50%;
+    transform: translate(0,-50%);
     font-weight: 600;
     text-align: center;
   }
@@ -78,10 +78,11 @@ const Introduce = styled.div`
   }
   text-align: center;
   .wapper {
-    margin-top: 80px;
+    margin-top: 4rem;
   }
   img {
-    width: 700px;
+    width:500px;
+    margin: 1.5rem 0;
   }
   .btn {
     margin-top: 3rem;
@@ -93,16 +94,8 @@ const Introduce = styled.div`
   .context {
     font-size: 30px;
     line-height: 40px;
-    margin-bottom: 60px;
-  }
-  .quote {
-    font-size: 50px;
-  }
-  .flipped {
-    transform: scaleX(-1);
-    -moz-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    -ms-transform: scaleX(-1);
+    margin-top: 3.2rem;
+    margin-bottom: 3.2rem;
   }
   .higtlight {
     color: #ff2c55;
@@ -235,12 +228,7 @@ const IndexPage = () => {
 
       <Introduce id="introduce" ref={section2} className="section-2">
         <div className="wapper">
-          <img src="img/neon1.png"></img>
-          <p className="title">
-            {/* <FormatQuoteSharpIcon className='quote flipped'/>
-            우리 함께 춤 출까?
-            <FormatQuoteSharpIcon className='quote'/> */}
-          </p>
+          <img src={logo}></img>
           <p className="context">
             CHUKKA 는 <span className="higtlight">"우리 함께 춤 출까"</span>의
             줄임말로 <br />
