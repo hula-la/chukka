@@ -1,6 +1,6 @@
-#header {
+#live-header {
   color: #ffffff;
-  background-color: #333333;
+  background-color: transparent;
   padding: 0 14px 0 0;
   position: absolute;
   top: 0;
@@ -9,13 +9,13 @@
   min-width: 400px !important;
 }
 
-.toolbar {
+.live-toolbar {
   min-height: 40px !important;
 }
 
-#titleContent {
+#live-titleContent {
   max-width: 400px;
-  background-color: #494949;
+  background-color: transparent;
   margin: 5px -18px;
   padding: 0px 15px;
   font-size: 16px;

@@ -225,21 +225,6 @@ const SingleMode = (state) => {
         } else {
           alert('[close] 커넥션이 죽었습니다.');
         }
-        const sendResult=[
-          {
-            name:"PERFECT",
-            count:perfectCnt,
-          },
-          {
-            name:"GOOD",
-            count:goodCnt,
-          },
-          {
-            name:"BAD",
-            count:badCnt,
-          },
-        ]
-        navigate("/game/result",{state:{data:sendResult}});
       };
 
       websckt.onmessage = (e) => {
@@ -483,15 +468,13 @@ const SingleMode = (state) => {
 
             <div style={Styles.ButtonContainer}>
               <div>관절 영상</div>
+
               <div className="wrapper">
                 <input
                   type="checkbox"
                   id="switch"
                   className="switch"
-                  checked={isSkeleton}
-                  onClick={() => {
-                    setIsSkeleton(!isSkeleton);
-                  }}
+                  value={isSkeleton}
                 />
                 <label htmlFor="switch" className="switch_label">
                   <span className="onf_btn"></span>
@@ -504,14 +487,30 @@ const SingleMode = (state) => {
                   type="checkbox"
                   id="switch2"
                   className="switch"
-                  checked={isMyVideo}
-                  onClick={() => {
-                    setIsMyVideo(!isMyVideo);
-                  }}
+                  value={isMyVideo}
                 />
                 <label htmlFor="switch2" className="switch_label">
                   <span className="onf_btn"></span>
                 </label>
+              </div>
+
+              <div style={Styles.None}>
+                <button
+                  onClick={() => {
+                    setIsSkeleton(!isSkeleton);
+                  }}
+                >
+                  {' '}
+                  관절 영상{' '}
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMyVideo(!isMyVideo);
+                  }}
+                >
+                  {' '}
+                  내영상{' '}
+                </button>
               </div>
             </div>
           </div>

@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchMusic } from './gameActions';
+import { fetchDetail, fetchMusic } from './gameActions';
 
 const initialState = {
   musicList: [],
+  musicDetail: null,
+  error: null,
 };
 
 const gameSlice = createSlice({
@@ -11,8 +13,14 @@ const gameSlice = createSlice({
   reducers: {},
   extraReducers: {
     [fetchMusic.fulfilled]: (state, { payload }) => {
-      console.log(payload);
       state.musicList = payload.data;
+    },
+
+    [fetchDetail.fulfilled]: (state, { payload }) => {
+      state.musicDetail = payload.data;
+    },
+    [fetchDetail.rejected]: (state, payload) => {
+      state.error = payload;
     },
   },
 });
