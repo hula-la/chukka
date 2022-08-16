@@ -390,7 +390,7 @@ const LectureBox = ({ myLectures }) => {
   );
 };
 
-// 나의 강의 목록
+// 강사 강의 목록
 const InsLectureBox = ({ insLectures }) => {
   const Wrapper = styled.div`
     padding: 0 5rem;
@@ -479,6 +479,9 @@ const InsLectureBox = ({ insLectures }) => {
       margin-top: 10px;
     }
   `;
+
+  const recordLectures = insLectures.filter((lecture) => lecture.lecCategory);
+  const liveLectures = insLectures.filter((lecture) => !lecture.lecCategory);
   return (
     <Wrapper>
       <div className="on-air">
@@ -486,24 +489,34 @@ const InsLectureBox = ({ insLectures }) => {
         <span className="on-air-msg">수강중</span>
       </div>
       <div className="lecture-header">녹화 강의</div>
-      <LectureBox>
-        {/* <LectureSmall /> */}
-        {insLectures
-          .filter((lecture) => lecture.lecCategory)
-          .map((lecture, index) => (
+      {recordLectures.length !== 0 && (
+        <LectureBox>
+          {/* <LectureSmall /> */}
+          {recordLectures.map((lecture, index) => (
             <LectureSmall key={index} props={lecture} noBadge />
           ))}
-      </LectureBox>
+        </LectureBox>
+      )}
+      {recordLectures.length === 0 && (
+        <LectureBox>
+          <div>수업중인 강의가 없습니다</div>
+        </LectureBox>
+      )}
       <hr />
       <div className="lecture-header">실시간 강의</div>
-      <LectureBox>
-        {/* <LectureSmall /> */}
-        {insLectures
-          .filter((lecture) => !lecture.lecCategory)
-          .map((lecture, index) => (
+      {liveLectures.length !== 0 && (
+        <LectureBox>
+          {/* <LectureSmall /> */}
+          {liveLectures.map((lecture, index) => (
             <LectureSmall key={index} props={lecture} noBadge />
           ))}
-      </LectureBox>
+        </LectureBox>
+      )}
+      {liveLectures.length === 0 && (
+        <LectureBox>
+          <div>수업중인 강의가 없습니다</div>
+        </LectureBox>
+      )}
       {/* <LiveLectureBox>
         <p>실시간 강의</p>
         <img src="/img/login.png" alt="loginImg" />
