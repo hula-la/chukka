@@ -8,6 +8,8 @@ import pop from '../../img/pop.jpeg';
 import styled from 'styled-components';
 
 import './button.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDetail } from '../../features/game/gameActions';
 
 const SingleMode = (state) => {
   const navigate = useNavigate();
@@ -57,7 +59,7 @@ const SingleMode = (state) => {
 
   // 관절 영상 분리를 위한 변수
   const [isMsgReceived, setIsMsgReceived] = useState(false);
-
+  const dispatch = useDispatch();
   // 동영상 재생을 위한 변수
   const getWebcam = (callback) => {
     try {
@@ -205,41 +207,26 @@ const SingleMode = (state) => {
           alert(
             `[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`,
           );
-          const sendResult = [
-            {
-              name: 'PERFECT',
-              count: perfectCnt,
-            },
-            {
-              name: 'GOOD',
-              count: goodCnt,
-            },
-            {
-              name: 'BAD',
-              count: badCnt,
-            },
-          ];
-          navigate('/game/result', {
-            state: { data: sendResult, songID: songID },
-          });
         } else {
           alert('[close] 커넥션이 죽었습니다.');
         }
-        const sendResult=[
+        const sendResult = [
           {
-            name:"PERFECT",
-            count:perfectCnt,
+            name: 'PERFECT',
+            count: perfectCnt,
           },
           {
-            name:"GOOD",
-            count:goodCnt,
+            name: 'GOOD',
+            count: goodCnt,
           },
           {
-            name:"BAD",
-            count:badCnt,
+            name: 'BAD',
+            count: badCnt,
           },
-        ]
-        navigate("/game/result",{state:{data:sendResult}});
+        ];
+        navigate('/game/result', {
+          state: { data: sendResult, songID: songID },
+        });
       };
 
       websckt.onmessage = (e) => {
@@ -294,7 +281,10 @@ const SingleMode = (state) => {
     }
   }, [websckt, perfectCnt, goodCnt, badCnt, isMsgReceived, score]);
 
-  useEffect(() => {});
+  const { musicDetail } = useSelector((state) => state.game);
+  useEffect(() => {
+    dispatch(fetchDetail(songID));
+  }, [dispatch]);
 
   const Styles = {
     GamePage: {
@@ -414,13 +404,18 @@ const SingleMode = (state) => {
           <div style={Styles.gameColSide}>
             <h2 style={Styles.pageTitle}>Single Mode</h2>
             <div style={Styles.Score}>Score: {score}</div>
-            <div style={Styles.Album}>
-              <img src={pop} style={Styles.AlbumImg}></img>
-              <div style={Styles.AlbumInfo}>
-                <div style={Styles.AlbumTitle}>Pop</div>
-                <div>나연</div>
+            {musicDetail !== null && (
+              <div style={Styles.Album}>
+                <img
+                  src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${songID}`}
+                  style={Styles.AlbumImg}
+                ></img>
+                <div style={Styles.AlbumInfo}>
+                  <div style={Styles.AlbumTitle}>{musicDetail.songName}</div>
+                  <div>{musicDetail.singer}</div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* 중간 */}
@@ -489,7 +484,7 @@ const SingleMode = (state) => {
                   id="switch"
                   className="switch"
                   checked={isSkeleton}
-                  onClick={() => {
+                  onChange={() => {
                     setIsSkeleton(!isSkeleton);
                   }}
                 />
@@ -505,7 +500,7 @@ const SingleMode = (state) => {
                   id="switch2"
                   className="switch"
                   checked={isMyVideo}
-                  onClick={() => {
+                  onChange={() => {
                     setIsMyVideo(!isMyVideo);
                   }}
                 />
