@@ -1,6 +1,8 @@
 import { AccountBoxTwoTone } from '@material-ui/icons';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
 
 
 import "./singleGame.css";
@@ -10,10 +12,14 @@ import styled from 'styled-components';
 import './button.css';
 
 
-const SingleMode = (songID) => {
+const SingleMode = (state) => {
   const navigate = useNavigate();
+  const location = useLocation()
+  const songID = location.state.songId
+  
+  // const navigate = useNavigate();
 
-  songID = '3';
+  // songID = '3';
   // let isMsgReceived = false;
 
   const [websckt, setWebsckt] = useState();
@@ -208,15 +214,15 @@ const SingleMode = (songID) => {
         const sendResult=[
           {
             name:"PERFECT",
-            count:123,
+            count:perfectCnt,
           },
           {
             name:"GOOD",
-            count:28,
+            count:goodCnt,
           },
           {
             name:"BAD",
-            count:4,
+            count:badCnt,
           },
         ]
         navigate("/game/result",{state:{data:sendResult}});
