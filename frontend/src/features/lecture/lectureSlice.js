@@ -12,7 +12,11 @@ import thumbnail1 from '../../img/pop.jpeg';
 
 const initialState = {
   popularLectures: [],
-  recommendLectures: [],
+  recommendLectures: {
+    lecList: [],
+    ageGroup: 0,
+    userGender: 0,
+  },
   lectures: [],
   lecture: {
     lecId: '',

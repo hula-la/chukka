@@ -44,8 +44,11 @@ const LecturesPage = () => {
     dispatch(fetchRecommendLectures());
     dispatch(fetchLatestLectures());
   }, [dispatch]);
-  const lectures = useSelector((state) => state.lecture.lectures);
-  const popularLectures = useSelector((state) => state.lecture.popularLectures);
+  // const lectures = useSelector((state) => state.lecture.lectures);
+  // const popularLectures = useSelector((state) => state.lecture.popularLectures);
+  const { lectures, popularLectures, recommendLectures } = useSelector(
+    (state) => state.lecture,
+  );
   // Dummy Data
   const dummy = [
     {
@@ -79,11 +82,16 @@ const LecturesPage = () => {
         </div>
       ) : null}
       <div>
-        <h1>20대 여성 인기</h1>
+        <h1>{`${recommendLectures.ageGroup}대 ${
+          recommendLectures.userGender ? '여성' : '남성'
+        } 인기`}</h1>
         <div className="popular-lectures-div">
-          {dummy.map((lecture, index) => (
+          {recommendLectures.lecList.map((lecture, index) => (
             <Lecture props={lecture} key={index} />
           ))}
+          {/* {dummy.map((lecture, index) => (
+            <Lecture props={lecture} key={index} />
+          ))} */}
           {/* <Lecture props={dummy[0]} />
           <Lecture props={dummy[1]} /> */}
         </div>

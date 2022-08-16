@@ -17,7 +17,6 @@ import PayConfrim from './pages/user/PayConfirmPage';
 import LecturesPage from './pages/lecture/LecturesPage';
 import LivePage from './pages/lecture/LivePage';
 import VideoLecturePage from './pages/lecture/VideoLecturePage';
-import LectureClassPage from './pages/lecture/LectureClassPage';
 import LectureDetailpage from './pages/lecture/LectureDetailpage';
 // snacks
 import SnacksPage from './pages/snacks/SnacksPage';
@@ -68,7 +67,6 @@ const App = () => {
           <Route path="" element={<LecturesPage />} />
           <Route element={<AuthLayout />}>
             <Route path=":lectureId" element={<LectureDetailpage />} />
-            <Route path="class/:lectureId" element={<LectureClassPage />} />
           </Route>
         </Route>
         <Route element={<AuthLayout />}>
@@ -76,7 +74,7 @@ const App = () => {
             path="lectures/:lectureId/section/:sectionIdx"
             element={<VideoLecturePage />}
           />
-          <Route path="lectures/live" element={<LivePage />} />
+          <Route path="lectures/:lectureId/live" element={<LivePage />} />
         </Route>
         {/* snacks */}
         <Route element={<AuthLayout />}>
@@ -91,8 +89,6 @@ const App = () => {
         {/* games */}
         <Route path="games" element={<Layout />}>
           <Route path="" element={<MainPage />} />
-          
-          
         </Route>
         <Route path="game" element={<GamesPage />} />
         <Route path="game/result" element={<ResultPage />} />
