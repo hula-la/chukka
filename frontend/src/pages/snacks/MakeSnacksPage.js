@@ -1,12 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux/es/exports';
 import { useNavigate } from 'react-router-dom';
+import { fetchMusic } from '../../features/game/gameActions';
 import RecordRTC from 'recordrtc';
 import styled from 'styled-components';
 
 const Record = styled.div`
   display: flex;
   justify-content: center;
+  text-align: center;
   video{
+    margin-top : 1rem;
+  }
+  audio{
     margin-top : 1rem;
   }
 `
@@ -19,13 +25,14 @@ const SongTitle = styled.div`
 `
 
 const ButtonDiv = styled.div`
-position : relative;
+  position : relative;
   margin-left : 50%;
   transform: translate( -50%, 0 );
   text-align: center;
+  
 `
 const StyledButton = styled.button`
-  width:6rem;
+  width: 100%;
   margin : 1rem auto 0 auto;
   border: none;
   border-radius: 4px;
@@ -43,46 +50,45 @@ const StyledButton = styled.button`
 
 `;
 
+const StyledSelect=styled.select`
+  width:100%;
+  margin: 1rem 0 0.5rem 0;
+  height: 35px;
+  width : 65%;
+  text-align: center;
+  font-size: 1rem;
+  border-radius: 7px;
+  .options{
+    margin:5px 0;
+  }
+  option:hover{
+    color: yellow;
+  }
+`
 
 const CamUploadPage=()=> {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   
   const [stream, setStream] = useState(null);
-  const [blob, setBlob] = useState(null);
+  // const [blob, setBlob] = useState(null);
+  const [songSrc, setSongSrc] = useState("");
+  const { musicList } = useSelector((state) => state.game);
 
   const refVideo = useRef(null);
   const originVideo = useRef(null);
   const recorderRef = useRef(null);
   const refAudio = useRef(null);
   
-  
   const handleRecording = () => {
+    if(songSrc===""){
+      alert("노래를 선택해 주세요");
+      return;
+    }
     recorderRef.current = new RecordRTC(stream, { type: 'video' });
     recorderRef.current.startRecording();
     refAudio.current.play();
   };
-
-  const handleStop = () => {
-    refAudio.current.pause();
-    recorderRef.current.stopRecording(() => {
-      setBlob(new Blob([recorderRef.current.getBlob()], { type: 'video/mp4' }));
-    });
-    console.log("촬영 종료");
-  };
-
-  const handleUpload = () => {
-    console.log(blob);
-    // file 업로드
-    const videoURL = URL.createObjectURL(blob);
-    console.log(videoURL);
-  };
-
-  const handleReset = () =>{
-    setBlob(null);
-    startCam();
-  }
-
-  
 
   const playEnd = async() =>{
     refAudio.current.pause();
@@ -91,8 +97,15 @@ const CamUploadPage=()=> {
       console.log("send",blob);
       navigate("/snacks/camupload/",{state:{data:blob}});
     });
-    
-    
+  }
+
+  const handleSelect = (e) =>{
+    console.log(e.target.value);
+    // songId(value) 값으로 음악 가져오기
+    setSongSrc("https://chukkadance.s3.ap-northeast-2.amazonaws.com/vid/snacks/demo");
+  }
+  const HandleMouseEnter = (e)=>{
+    console.log(e.target.value);
   }
 
   const startCam = async () =>{
@@ -106,6 +119,11 @@ const CamUploadPage=()=> {
   },[])
 
   useEffect(() => {
+    dispatch(fetchMusic());
+    console.log(musicList);
+  }, [dispatch]);
+
+  useEffect(() => {
     if (!refVideo.current) {
       return;
     }
@@ -116,17 +134,22 @@ const CamUploadPage=()=> {
     <Record>
       <div>
       <Title>Snacks</Title>
-      <audio ref={refAudio} src="https://chukkadance.s3.ap-northeast-2.amazonaws.com/vid/snacks/demo" type="audio/mp3" controls onEnded={()=>playEnd()}/>
-      <SongTitle>현아 - Bubble PoP!</SongTitle>
+      <audio ref={refAudio} src={songSrc} type="audio/mp3" controls onEnded={()=>playEnd()}/>
+        <StyledSelect onChange={(e)=>handleSelect(e)}>
+        < option value="" selected disabled hidden> -- 노래 선택 -- </option>
+        {musicList.map((option,i)=>{return(
+          <option key={option.songId} value={option.songId} className="options">{option.songName} - {option.singer}</option>
+        )})}
+        </StyledSelect>
+        
       <div>
-      {!blob &&
       <video
         ref={originVideo}
         autoPlay
         muted
         style={{ width: '300px', height:'400px'}}
       >
-      </video>}
+      </video>
       </div>
       <ButtonDiv>
         <StyledButton onClick={handleRecording}>촬영 하기</StyledButton>

@@ -45,13 +45,20 @@ const Thumbnail = styled.div`
     transition: opacity 0.5s;
     opacity: 0.2;
   }
+  /* &:hover .btn {
+    display: inline-block;
+  } */
 `;
 
 const StyledButton = styled.button`
   display: none;
   position: absolute;
-  bottom: 5.5rem;
-  left: 4rem;
+  /* bottom: 5.5rem;
+  left: 4rem; */
+  top: 50%;
+  left: 50%;
+  width: 150px;
+  transform: translate(-50%, -50%);
   border: none;
   border-radius: 4px;
   font-size: 1.5rem;
@@ -89,7 +96,7 @@ const LectureSmall = ({ props, noBadge, classOpen }) => {
           <h1>{lecTitle}</h1>
         </div>
       </Thumbnail>
-      <StyledButton className='btn'>바로가기</StyledButton>
+      <StyledButton className="btn">바로가기</StyledButton>
       {!noBadge && (
         <BadgeDiv>
           <LevelBadge level={lecLevel} />

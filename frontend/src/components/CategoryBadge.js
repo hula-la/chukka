@@ -14,8 +14,8 @@ const Badge = styled.div`
 
 const CategoryBadge = ({ category }) => {
   let content;
-  if (category === 1) content = '실시간';
-  else if (category === 0) content = '녹화';
+  if (category === 0) content = '실시간';
+  else if (category === 1) content = '녹화';
   else content = category;
   return <Badge>{content}</Badge>;
 };

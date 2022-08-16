@@ -9,8 +9,6 @@ export const fsnacks = async (pageNum, sort, tags) => {
 
 export const fTags = async () => {
   const res = await client.get('snacks/tag/popular');
-  console.log('인기 태그');
-  console.log(res);
   return res;
 };
 
@@ -20,9 +18,7 @@ export const freply = async (data) => {
 };
 
 export const creply = async (data) => {
-  console.log(data);
   const res = await client.post(`snacks/comments`, data);
-  console.log(res);
   return res;
 };
 
@@ -37,7 +33,6 @@ export const detail = async (snacksId) => {
 
 export const upload = async (snacksInfo, file) => {
   const formData = new FormData();
-  console.log(snacksInfo);
   formData.append('file', file);
   formData.append(
     'snacksInfo',

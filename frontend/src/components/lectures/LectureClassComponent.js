@@ -147,30 +147,6 @@ const LectureClassComponent = () => {
 
   const sections = useSelector((state) => state.lecture.sections);
   const reviews = useSelector((state) => state.lecture.reviews);
-  // const reviews = [
-  //   {
-  //     review_id: 1,
-  //     user_id: '유노준',
-  //     review_score: 4,
-  //     review_regdate: '2022-08-10',
-  //     review_contents: '낫밷',
-  //   },
-  //   {
-  //     review_id: 2,
-  //     user_id: '최지원',
-  //     review_score: 5,
-  //     review_regdate: '2022-08-10',
-  //     review_contents: '나연 최고',
-  //   },
-  //   {
-  //     review_id: 3,
-  //     user_id: '홍성목',
-  //     review_score: 3,
-  //     review_regdate: '2022-08-10',
-  //     review_contents:
-  //       '가나다라마바사 아자차카타파하 목업이 거의 완성이 되는 것 같습니다. 아마도 ?  배경이 너무 어둡지 않나 라는 생각이 조금 들긴 하지만 괜찮은 것 같습니다. 이것은 리뷰입니다. 한 세줄정도 쓰고 그만 쓰려고 합니다. 배가 고파요. 오늘 점심에 해물 야끼우동이었나 그랬던거 같은데 맛있었으면 좋곘습니다. 그럼 이만',
-  //   },
-  // ];
 
   const scrollToRev = () => {
     if (revRef && revRef.current) {
@@ -218,12 +194,23 @@ const LectureClassComponent = () => {
               </span>
             </div>
           </div>
-          <StyledButton
-            content="수업 들으러 가기"
-            onClick={() => {
-              navigate(`/lectures/${lectureId}/section/1`);
-            }}
-          />
+          {/* 수업 버튼 */}
+          {lecCategory ? (
+            <StyledButton
+              content="동영상 강의 바로가기"
+              onClick={() => {
+                navigate(`/lectures/${lectureId}/section/1`);
+              }}
+            />
+          ) : null}
+          {!lecCategory ? (
+            <StyledButton
+              content="라이브 강의 바로가기"
+              onClick={() => {
+                navigate(`live`);
+              }}
+            />
+          ) : null}
         </LectureInfoDetail>
       </LectureInfo>
       <NoticeDiv>
@@ -231,15 +218,17 @@ const LectureClassComponent = () => {
         <div className="notice-content">공지사항 : {lecNotice}</div>
       </NoticeDiv>
       <LectureNav>
-        <a
-          href=""
-          onClick={(e) => {
-            e.preventDefault();
-            scrollToSec();
-          }}
-        >
-          목차
-        </a>
+        {lecCategory ? (
+          <a
+            href=""
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSec();
+            }}
+          >
+            목차
+          </a>
+        ) : null}
         <a
           href=""
           onClick={(e) => {
@@ -259,13 +248,17 @@ const LectureClassComponent = () => {
           리뷰
         </a>
       </LectureNav>
-      <LectureSubTitle id="sections" ref={secRef}>
-        <h1>목차</h1>
-      </LectureSubTitle>
-      <SectionContainer
-        sections={sections}
-        onClickSectionHandler={onClickSectionHandler}
-      />
+      {lecCategory ? (
+        <>
+          <LectureSubTitle id="sections" ref={secRef}>
+            <h1>목차</h1>
+          </LectureSubTitle>
+          <SectionContainer
+            sections={sections}
+            onClickSectionHandler={onClickSectionHandler}
+          />
+        </>
+      ) : null}
 
       <LectureSubTitle id="instructor" ref={insRef}>
         <h1>강사 소개</h1>
@@ -281,16 +274,6 @@ const LectureClassComponent = () => {
 };
 
 export default LectureClassComponent;
-
-const LectureSubContent = ({ content }) => {
-  const SubContent = styled.div`
-    margin: 1rem 0rem;
-    padding: 2rem;
-    min-height: 500px;
-    font-size: 24px;
-  `;
-  return <SubContent>{content}</SubContent>;
-};
 
 const SectionContainer = ({ sections, onClickSectionHandler }) => {
   const Wrapper = styled.div`
@@ -419,6 +402,7 @@ const ReviewContainer = ({ reviews }) => {
     }
   `;
   const [modalOpen, setModalOpen] = useState(false);
+  const { userInfo } = useSelector((state) => state.user);
   const openModal = () => {
     setModalOpen(true);
   };
@@ -431,10 +415,17 @@ const ReviewContainer = ({ reviews }) => {
       {reviews.map((review, index) => (
         <ReviewItem review={review} key={index} />
       ))}
-      <button className="review-btn" onClick={() => setModalOpen(true)}>
-        리뷰 작성
-      </button>
-      <ReviewForm open={modalOpen} close={closeModal} />
+      {/* 수강생일때만 표시. */}
+      {!userInfo.userType &&
+      !reviews.filter((review) => review.userNickname == userInfo.userNickname)
+        .length ? (
+        <>
+          <button className="review-btn" onClick={() => setModalOpen(true)}>
+            리뷰 작성
+          </button>
+          <ReviewForm open={modalOpen} close={closeModal} />
+        </>
+      ) : null}
     </ReviewWrapper>
   );
 };
@@ -508,7 +499,7 @@ const ReviewForm = (props) => {
       color: #faaf00 !important ;
       display: flex;
       justify-content: center;
-      width: 100%
+      width: 100%;
       margin-bottom: 1.5rem;
       & .MuiRating-iconEmpty {
         color: #faaf00 !important;
@@ -524,10 +515,10 @@ const ReviewForm = (props) => {
     .review-modal > section form {
       display: flex;
       flex-direction: column;
-      align-items: start
+      align-items: start;
     }
     .review-modal > section > main .review-content {
-      color: black
+      color: black;
       width: 100%;
       margin-top: 1rem;
       height: 200px;
@@ -545,8 +536,8 @@ const ReviewForm = (props) => {
       padding: 0px 16px 16px;
       margin-top: 16px;
       display: flex;
-      justify-content:space-between;
-      width: 100%
+      justify-content: space-between;
+      width: 100%;
     }
     .review-modal > section footer button {
       padding: 6px 12px;

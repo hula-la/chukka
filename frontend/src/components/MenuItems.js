@@ -6,7 +6,7 @@ import styled from 'styled-components';
 const NavItems = styled.li`
   position: relative;
   font-size: 1.2rem;
-  margin-left: 2rem;
+  margin: 0 1rem;
 
   & a {
     display: block;

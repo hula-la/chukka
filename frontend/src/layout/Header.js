@@ -7,7 +7,7 @@ import { logout } from '../features/user/userSlice';
 import { useDispatch } from 'react-redux';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import logo from '../img/logo2.png';
+import logo from '../img/logo1.png';
 import { useEffect } from 'react';
 import { userCartCount } from '../features/cart/cartActions';
 
@@ -17,7 +17,7 @@ const NavBar = styled.div`
   align-items: center;
   justify-content: space-between;
   margin: 0 auto;
-  padding: 0 20px;
+  /* padding: 0 20px; */
   height: 80px;
   font-family: 'Russo One', sans-serif !important;
   // font-family: 'Montserrat', sans-serif;
@@ -34,6 +34,7 @@ const NavBar = styled.div`
 
   .logo img {
     margin-top: 0.8rem;
+    margin-left: -10px;
     width: 10rem;
     height: 3rem;
   }

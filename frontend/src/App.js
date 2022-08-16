@@ -17,8 +17,8 @@ import PayConfrim from './pages/user/PayConfirmPage';
 import LecturesPage from './pages/lecture/LecturesPage';
 import LivePage from './pages/lecture/LivePage';
 import VideoLecturePage from './pages/lecture/VideoLecturePage';
-import LectureClassPage from './pages/lecture/LectureClassPage';
 import LectureDetailpage from './pages/lecture/LectureDetailpage';
+
 // snacks
 import SnacksPage from './pages/snacks/SnacksPage';
 import DetailSnacksPage from './pages/snacks/DetailSnacksPage';
@@ -39,6 +39,7 @@ import AddLiveLecture from './pages/admin/AddLiveLecture';
 import AddRecordLecture from './pages/admin/AddRecordLecture';
 import DetailLectue from './pages/admin/DetailLectue';
 import AddSection from './pages/admin/AddSection';
+
 // notfount
 import NotFound from './pages/NotFound';
 
@@ -69,7 +70,6 @@ const App = () => {
           <Route path="" element={<LecturesPage />} />
           <Route element={<AuthLayout />}>
             <Route path=":lectureId" element={<LectureDetailpage />} />
-            <Route path="class/:lectureId" element={<LectureClassPage />} />
           </Route>
         </Route>
         <Route element={<AuthLayout />}>
@@ -77,7 +77,7 @@ const App = () => {
             path="lectures/:lectureId/section/:sectionIdx"
             element={<VideoLecturePage />}
           />
-          <Route path="lectures/live" element={<LivePage />} />
+          <Route path="lectures/:lectureId/live" element={<LivePage />} />
         </Route>
         {/* snacks */}
         <Route element={<AuthLayout />}>
