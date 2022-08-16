@@ -15,6 +15,79 @@ import {
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import BuildIcon from '@mui/icons-material/Build';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  & div.MuiDataGrid-columnHeader {
+    width: 100px;
+  }
+  & div {
+    color: white;
+    text-align: center;
+  }
+  & div.MuiDataGrid-cellContent {
+    width: 100%;
+  }
+  & div.MuiDataGrid-columnHeaderTitleContainerContent {
+    width: 100%;
+    text-align: center;
+  }
+  & div.MuiDataGrid-columnHeaderTitle {
+    width: 100%;
+    font-weight: bolder;
+    font-size: 0.7rem;
+  }
+  & svg {
+    fill: white;
+    :hover {
+      fill: rgb(200, 200, 200);
+    }
+  }
+
+  & div.MuiDataGrid-row {
+    transition: 300ms;
+    :hover {
+      background-color: rgb(255, 44, 85, 1);
+    }
+  }
+
+  & div.table-container {
+    width: 85%;
+    height: 100vh;
+  }
+  & div.upload-container{
+    width: 15%;
+    font-size: 0.8rem;
+  }
+  & div.upload-record {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    transition: 300ms;
+    opacity: 0.7
+    :hover {
+      opacity: 1;
+      font-weight: bolder;
+      font-size: 1rem;
+    }
+  }
+  & div.upload-live {
+    opacity: 0.7
+    transition: 300ms;
+    :hover {
+      opacity: 1;
+      font-weight: bolder;
+      font-size: 1rem;
+    }
+  }
+  & .icon {
+    vertical-align: middle;
+    margin-right: 0.5rem;
+  }
+`;
 
 const AdminPageBlock = styled.div`
   display: grid;
@@ -31,6 +104,52 @@ const AdminPageBlock = styled.div`
 const InsBox = styled.div`
   display: flex;
   flex-direction: row;
+  width: 100%;
+  height: 100vh;
+  & div.table-container {
+    width: 85%;
+  }
+  & div {
+    color: white;
+    text-align: center;
+  }
+  & div.MuiDataGrid-cellContent {
+    width: 100%;
+  }
+  & div.MuiDataGrid-columnHeaderTitleContainerContent {
+    width: 100%;
+    text-align: center;
+  }
+  & div.MuiDataGrid-columnHeaderTitle {
+    width: 100%;
+    font-weight: bolder;
+    font-size: 0.7rem;
+  }
+  & svg {
+    fill: white;
+    }
+  }
+  & div.MuiDataGrid-row {
+    transition: 300ms;
+    :hover {
+      background-color: rgb(255, 44, 85, 1);
+    }
+  }
+  & .profile-add-container {
+    width: 15%;
+    height: 5rem;
+    opacity: 0.7;
+    transition: 300ms;
+    :hover {
+      opacity: 1;
+      font-size: 1.1rem;
+      font-weight: bolder;
+    }
+  }
+  & .profile-add-content {
+    font-size: smaller;
+    padding-top: 1rem;
+  }
 `;
 
 const SideBar = styled.div`
@@ -47,22 +166,8 @@ const SideBar = styled.div`
     padding: 0px;
     position: relative;
   }
-  ul ul {
-    display: none;
-    position: absolute;
-    left: 1.5rem;
-  }
-  ul li > ul {
-    font-size: 1rem;
-    left: 30%;
-  }
-
-  ul li > ul li {
-    margin: 10% 0;
-  }
-
-  ul li:hover > ul {
-    display: block;
+  ul li {
+    height: 3rem;
   }
   div {
     margin: 1.5rem 0.2rem;
@@ -73,7 +178,9 @@ const SideBar = styled.div`
     background-color: #0b0b0b;
     margin: 1.3rem 0;
     padding-bottom: 0.5rem;
-    border-bottom: solid 1px #ff2c55;
+    :hover {
+      border-bottom: solid 1px #ff2c55;
+    }
   }
 `;
 
@@ -110,7 +217,7 @@ const UserTab = ({ userList }) => {
     {
       field: 'userGender',
       headerName: 'Gender',
-      width: 80,
+      width: 110,
       headerAlign: 'center',
     },
     {
@@ -135,7 +242,7 @@ const UserTab = ({ userList }) => {
       field: 'userType',
       headerName: 'Type',
       type: 'singleSelect',
-      width: 80,
+      width: 110,
       editable: true,
       valueOptions: () => {
         return [0, 1, 2];
@@ -160,7 +267,7 @@ const UserTab = ({ userList }) => {
     },
   ];
   return (
-    <div style={{ height: 1000, width: '100%' }}>
+    <Wrapper>
       {userList !== undefined && (
         <DataGrid
           className="table"
@@ -169,7 +276,7 @@ const UserTab = ({ userList }) => {
           getRowId={(row) => row.userId}
         />
       )}
-    </div>
+    </Wrapper>
   );
 };
 
@@ -192,7 +299,7 @@ const InsTab = ({ instList }) => {
     {
       field: 'insIntroduce',
       headerName: 'Introduce',
-      width: 200,
+      width: 260,
       editable: true,
     },
     {
@@ -234,7 +341,7 @@ const InsTab = ({ instList }) => {
 
   return (
     <InsBox>
-      <div style={{ height: 1000, width: '80%' }}>
+      <div className='table-container'>
         <DataGrid
           className="table"
           rows={instList}
@@ -250,9 +357,12 @@ const InsTab = ({ instList }) => {
           // }}
         />
       </div>
-      <Link to="/admin/ins">
-        <button>강사 프로필 추가</button>
-      </Link>
+      <div className='profile-add-container'>
+        <Link to="/admin/ins">
+          <ControlPointIcon />
+          <p className='profile-add-content'>강사 프로필 추가</p>
+        </Link>
+      </div>
     </InsBox>
   );
 };
@@ -273,21 +383,21 @@ const LectureTab = ({ lectureList }) => {
     {
       field: 'lecTitle',
       headerName: 'Title',
-      width: 80,
+      width: 200,
       renderCell: (params) => (
         <Link to={`/admin/${params.id}`}>
           <div>{params.value}</div>
         </Link>
       ),
     },
-    { field: 'lecCategory', headerName: 'Category', width: 80 },
-    { field: 'lecGenre', headerName: 'Genre', width: 80 },
-    { field: 'lecLevel', headerName: 'Level', width: 80 },
-    { field: 'lecPrice', headerName: 'Price', width: 80 },
+    { field: 'lecCategory', headerName: 'Category', width: 110 },
+    { field: 'lecGenre', headerName: 'Genre', width: 110 },
+    { field: 'lecLevel', headerName: 'Level', width: 100 },
+    { field: 'lecPrice', headerName: 'Price', width: 110 },
     {
       field: 'actions',
       type: 'actions',
-      width: 80,
+      width: 60,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<DeleteIcon />}
@@ -303,8 +413,8 @@ const LectureTab = ({ lectureList }) => {
     dispatch(deleteLecture(lecId));
   };
   return (
-    <div>
-      <div style={{ height: 1000, width: '80%' }}>
+    <Wrapper>
+      <div className='table-container'>
         {lectureList.length !== 0 && (
           <DataGrid
             className="table"
@@ -314,13 +424,21 @@ const LectureTab = ({ lectureList }) => {
           />
         )}
       </div>
-      <Link to="lecture/record">
-        <button>녹화강의 추가</button>
-      </Link>
-      <Link to="lecture/live">
-        <button>라이브 강의 추가</button>
-      </Link>
-    </div>
+      <div className='upload-container'>
+        <div className='upload-record'>
+          <Link to="lecture/record">
+            <ControlPointIcon className='icon'/>
+            <span>녹화강의 추가</span>
+          </Link>
+        </div>
+        <div className='upload-live'>
+          <Link to="lecture/live">
+            <ControlPointIcon className='icon'/>
+            <span>라이브 강의 추가</span>
+          </Link>
+        </div>
+      </div>
+    </Wrapper>
   );
 };
 
@@ -371,11 +489,6 @@ const AdminPage = () => {
           </li>
           <li>
             <button onClick={onClickLecture}>강의관리</button>
-            <ul>
-              <li>서브1</li>
-              <li>서브2</li>
-              <li>서브3</li>
-            </ul>
           </li>
         </ul>
       </SideBar>
