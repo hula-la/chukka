@@ -90,7 +90,7 @@ public class LectureController {
         Date birth = userService.getUserByUserId(userId).getUserBirth();
         LocalDateTime today = LocalDateTime.now();
         int userYear = Integer.parseInt(birth.toString().substring(0,4));
-        int ageGroup = ((today.getYear() - userYear  + 1) / 10 )*10;
+        int ageGroup = ((today.getYear() - userYear  + 1) - (today.getYear() - userYear  + 1) % 10);
         List<LectureGetForListRes> forUser = lectureService.getLectureByYourBirthAndGender(userGender, ageGroup, pageable);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureGetForYouRes.of(forUser, userGender, ageGroup)));
     }
