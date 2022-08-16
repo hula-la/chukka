@@ -30,6 +30,7 @@ import MakeSnacksPage from './pages/snacks/MakeSnacksPage';
 import MainPage from './pages/game/MainPage';
 import GamesPage from './pages/game/GamesPage';
 import ResultPage from './pages/game/ResultPage';
+import MultiGamePage from './pages/game/Multi/MultiGamePage';
 
 // admin
 import AdminPage from './pages/admin/AdminPage';
@@ -91,7 +92,9 @@ const App = () => {
         {/* games */}
         <Route path="games" element={<Layout />}>
           <Route path="" element={<MainPage />} />
+          
         </Route>
+        <Route path="game/multi" element={<MultiGamePage />} />
         <Route path="game" element={<GamesPage />} />
         <Route path="game/result" element={<ResultPage />} />
         {/* admin */}
