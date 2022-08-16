@@ -333,7 +333,7 @@ const SignUpPage = () => {
             />
             {userId.length > 0 && (
               <ErrorMessage>
-                <div className={isuserId ? 'success' : 'error'}>
+                <div className={isuserId && isIdChecked ? 'success' : 'error'}>
                   {userIdMessage}
                 </div>
               </ErrorMessage>
@@ -352,10 +352,14 @@ const SignUpPage = () => {
               autoComplete="off"
             />
             {userNickname.length > 0 && (
-              <ErrorMessage
-                className={isuserNickname && isIdChecked ? 'success' : 'error'}
-              >
-                {userNicknameMessage}
+              <ErrorMessage>
+                <div
+                  className={
+                    isuserNickname && isNickChecked ? 'success' : 'error'
+                  }
+                >
+                  {userNicknameMessage}
+                </div>
               </ErrorMessage>
             )}
           </div>
@@ -372,8 +376,8 @@ const SignUpPage = () => {
               placeholder="비밀번호를 입력하세요"
             />
             {userPw.length > 0 && (
-              <ErrorMessage className={isPw ? 'success' : 'error'}>
-                {pwMessage}
+              <ErrorMessage>
+                <div className={isPw ? 'success' : 'error'}>{pwMessage}</div>
               </ErrorMessage>
             )}
           </div>
@@ -390,8 +394,10 @@ const SignUpPage = () => {
               placeholder="비밀번호를 다시 입력하세요"
             />
             {userPwConfirm.length > 0 && (
-              <ErrorMessage className={isPwConfirm ? 'success' : 'error'}>
-                {pwConfirmMessage}
+              <ErrorMessage>
+                <div className={isPwConfirm ? 'success' : 'error'}>
+                  {pwConfirmMessage}
+                </div>
               </ErrorMessage>
             )}
           </div>
@@ -408,8 +414,10 @@ const SignUpPage = () => {
               autoComplete="off"
             />
             {userName.length > 0 && (
-              <ErrorMessage className={isuserName ? 'success' : 'error'}>
-                {userNameMessage}
+              <ErrorMessage>
+                <div className={isuserName ? 'success' : 'error'}>
+                  {userNameMessage}
+                </div>
               </ErrorMessage>
             )}
           </div>
@@ -427,8 +435,10 @@ const SignUpPage = () => {
               autoComplete="off"
             />
             {userEmail.length > 0 && (
-              <ErrorMessage className={isuserEmail ? 'success' : 'error'}>
-                {userEmailMessage}
+              <ErrorMessage>
+                <div className={isuserEmail ? 'success' : 'error'}>
+                  {userEmailMessage}
+                </div>
               </ErrorMessage>
             )}
           </div>
@@ -445,8 +455,10 @@ const SignUpPage = () => {
               autoComplete="off"
             />
             {userPhone.length > 0 && (
-              <ErrorMessage className={isuserPhone ? 'success' : 'error'}>
-                {userPhoneMessage}
+              <ErrorMessage>
+                <div className={isuserPhone ? 'success' : 'error'}>
+                  {userPhoneMessage}
+                </div>
               </ErrorMessage>
             )}
           </div>

@@ -7,6 +7,7 @@ import {
   changeProfile,
   fetchSnacks,
   fetchMyLectures,
+  fetchInsLectures,
 } from './userActions';
 
 // initialize userToken from local storage
@@ -28,6 +29,7 @@ const initialState = {
   hasmore: false,
   lecture: null,
   myLectures: [],
+  insLectures: [],
 };
 
 const userSlice = createSlice({
@@ -58,7 +60,6 @@ const userSlice = createSlice({
     [userLogin.rejected]: (state, { payload }) => {
       // 요청 실패
       alert('로그인 실패!');
-      console.log('login rejected');
       state.loading = false;
       state.error = payload;
     },
@@ -67,17 +68,14 @@ const userSlice = createSlice({
     [registerUser.pending]: (state) => {
       state.loading = true;
       state.error = null;
-      console.log('register done');
     },
     [registerUser.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.success = true;
-      console.log('register fulfill');
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.loading = false;
       state.error = payload;
-      console.log('register rejected');
     },
 
     // AccessToken 가져오기
@@ -96,11 +94,9 @@ const userSlice = createSlice({
     // 프로필 변경
     [changeProfile.fulfilled]: (state, { payload }) => {
       state.userProInfo = payload.data;
-      console.log(payload);
     },
     [changeProfile.rejected]: (state, { payload }) => {
       state.error = payload;
-      console.log(state.error);
     },
 
     // 스낵스 받아오기
@@ -112,17 +108,20 @@ const userSlice = createSlice({
       const newList = state.snacksList.concat(payload.data.content);
       state.snacksList = newList;
       state.Loading = false;
-      console.log(state.snacksList);
     },
+
+    // 나의 강의목록 받아오기
     [fetchMyLectures.fulfilled]: (state, { payload }) => {
-      console.log(payload.data);
       const { lectureInfo } = payload.data;
-      console.log(lectureInfo);
       state.myLectures = lectureInfo;
     },
     [fetchMyLectures.rejected]: (state, { payload }) => {
       state.error = payload;
-      console.log('fetchMyLectures rejected', state.error);
+    },
+
+    // 강사 강의목록 받아오기
+    [fetchInsLectures.fulfilled]: (state, { payload }) => {
+      state.insLectures = payload.data;
     },
   },
 });
