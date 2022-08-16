@@ -9,6 +9,7 @@ import {
   fetchSnacks,
   fetchMyLectures,
   fetchInsLectures,
+  changePassword,
 } from '../../features/user/userActions';
 import MySnacksItem from '../../components/snacks/MySnacksItem';
 import defaultImage from '../../img/default.jpeg';
@@ -43,6 +44,12 @@ const ProfilePageBlock = styled.div`
   }
   .listItem {
     border-top: 1px solid #ff2c55;
+  }
+  .noSnacks {
+    width: 80%;
+    height: 500px;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
@@ -334,6 +341,8 @@ const LectureBox = ({ myLectures }) => {
     }
   `;
 
+  const recordLectures = myLectures.filter((lecture) => lecture.lecCategory);
+  const liveLectures = myLectures.filter((lecture) => !lecture.lecCategory);
   return (
     <Wrapper>
       <div className="on-air">
@@ -341,24 +350,34 @@ const LectureBox = ({ myLectures }) => {
         <span className="on-air-msg">수강중</span>
       </div>
       <div className="lecture-header">녹화 강의</div>
-      <LectureBox>
-        {/* <LectureSmall /> */}
-        {myLectures
-          .filter((lecture) => lecture.lecCategory)
-          .map((lecture, index) => (
+      {recordLectures.length !== 0 && (
+        <LectureBox>
+          {/* <LectureSmall /> */}
+          {recordLectures.map((lecture, index) => (
             <LectureSmall key={index} props={lecture} noBadge />
           ))}
-      </LectureBox>
+        </LectureBox>
+      )}
+      {recordLectures.length === 0 && (
+        <LectureBox>
+          <div>수강중인 강의가 없습니다</div>
+        </LectureBox>
+      )}
       <hr />
       <div className="lecture-header">실시간 강의</div>
-      <LectureBox>
-        {/* <LectureSmall /> */}
-        {myLectures
-          .filter((lecture) => !lecture.lecCategory)
-          .map((lecture, index) => (
+      {liveLectures.length !== 0 && (
+        <LectureBox>
+          {/* <LectureSmall /> */}
+          {liveLectures.map((lecture, index) => (
             <LectureSmall key={index} props={lecture} noBadge />
           ))}
-      </LectureBox>
+        </LectureBox>
+      )}
+      {liveLectures.length === 0 && (
+        <LectureBox>
+          <div>수강중인 강의가 없습니다.</div>
+        </LectureBox>
+      )}
       {/* <LiveLectureBox>
         <p>실시간 강의</p>
         <img src="/img/login.png" alt="loginImg" />
@@ -460,7 +479,6 @@ const InsLectureBox = ({ insLectures }) => {
       margin-top: 10px;
     }
   `;
-
   return (
     <Wrapper>
       <div className="on-air">
@@ -624,6 +642,7 @@ const ProfilePage = () => {
   const onSubmitProfile = (e) => {
     e.preventDefault();
     dispatch(changeProfile({ profileInputs, profilePicture }));
+    alert('프로필이 변경되었습니다.');
     setForce(...force);
   };
 
@@ -663,6 +682,34 @@ const ProfilePage = () => {
     }
   }, [dispatch, userType]);
 
+  // 비밀번호 변경
+  const [pwInfo, setPwInfo] = useState({
+    nowPassword: '',
+    newPassword: '',
+  });
+
+  const [pwConfirm, setPwConfirm] = useState('');
+
+  const onChangePassword = (e) => {
+    const { name, value } = e.target;
+    const nextPwInfo = {
+      ...pwInfo,
+      [name]: value,
+    };
+    setPwInfo(nextPwInfo);
+  };
+
+  const onChangePasswordConfirm = (e) => {
+    setPwConfirm(e.target.value);
+  };
+
+  const onSubmitChangePw = (e) => {
+    e.preventDefault();
+    if (pwConfirm === pwInfo.newPassword) {
+      dispatch(changePassword(pwInfo));
+    }
+  };
+
   return (
     <ProfilePageBlock>
       <Side>
@@ -690,7 +737,7 @@ const ProfilePage = () => {
         </Menu>
         <hr className="line" style={{ marginTop: '1rem' }} />
       </Side>
-      {pageNum === '1' && (
+      {pageNum === '1' && snacksList.length !== 0 && (
         <div className="item">
           <ul className="nonelist list">
             {snacksList.map((snacks, index) => (
@@ -699,7 +746,12 @@ const ProfilePage = () => {
               </li>
             ))}
           </ul>
-          <div ref={ref}>1</div>
+          <div ref={ref} />
+        </div>
+      )}
+      {pageNum === '1' && snacksList.length === 0 && (
+        <div className="noSnacks">
+          <p>등록된 스낵스가 없습니다!</p>
         </div>
       )}
       {pageNum === '2' && userType !== 1 && (
@@ -794,7 +846,7 @@ const ProfilePage = () => {
       )}
       {pageNum === '4' && (
         <ChangeProfileBox>
-          <ChangeProfileForm>
+          <ChangeProfileForm onSubmit={onSubmitChangePw}>
             <hr className="top" />
             <div className="msg">
               안전한 비밀번호로 내정보를 보호하세요
@@ -806,15 +858,29 @@ const ProfilePage = () => {
             <hr className="bottom" />
             <div>
               <StyledLabel>현재 비밀번호</StyledLabel>
-              <StyledInput className="normal" type="password" />
+              <StyledInput
+                onChange={onChangePassword}
+                name="nowPassword"
+                className="normal"
+                type="password"
+              />
             </div>
             <div>
               <StyledLabel>새 비밀번호</StyledLabel>
-              <StyledInput className="normal" type="password" />
+              <StyledInput
+                onChange={onChangePassword}
+                name="newPassword"
+                className="normal"
+                type="password"
+              />
             </div>
             <div>
               <StyledLabel>새 비밀번호 확인</StyledLabel>
-              <StyledInput className="normal" type="password" />
+              <StyledInput
+                onChange={onChangePasswordConfirm}
+                className="normal"
+                type="password"
+              />
             </div>
             <StyledButton>비밀번호 변경</StyledButton>
           </ChangeProfileForm>
