@@ -8,7 +8,7 @@ import './button.css';
 
 
 const SingleMode = (songID) => {
-  songID = '6';
+  songID = '3';
   // let isMsgReceived = false;
 
   const [websckt, setWebsckt] = useState();
@@ -34,9 +34,11 @@ const SingleMode = (songID) => {
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
 
+  // 점수
   const [goodCnt, setGoodCnt] = useState(0);
   const [perfectCnt, setPerfectCnt] = useState(0);
   const [badCnt, setBadCnt] = useState(0);
+  const [score, setScore] = useState(0);
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -215,14 +217,14 @@ const SingleMode = (songID) => {
             setGameEF('../../img/game_effect/notFound.png');
           } else if (similarity < 0.02) {
             setPerfectCnt((perfectCnt) => perfectCnt + 1);
+            setScore((score) => score + 1000);
             setGameEF('../../img/game_effect/perfect.png');
           } else if (similarity < 0.03) {
             setGoodCnt((prev) => prev + 1);
-            setGoodCnt((goodCnt) => goodCnt + 1);
+            setScore((score) => score + 500);
             setGameEF('../../img/game_effect/good.png');
           } else {
             setBadCnt((prev) => prev + 1);
-            setBadCnt((badCnt) => badCnt + 1);
             setGameEF('../../img/game_effect/bad.png');
           }
         }
@@ -252,24 +254,26 @@ const SingleMode = (songID) => {
         }
       };
     }
-  }, [websckt, perfectCnt, goodCnt, badCnt, isMsgReceived]);
+  }, [websckt, perfectCnt, goodCnt, badCnt, isMsgReceived, score]);
 
   useEffect(() => {});
 
   const Styles = {
-    GamePage: { position: 'relative',width: '100vw',height: '100vh' },
+    GamePage: { position: 'relative',width: '100vw',height: '100vh', overlay:'hidden' },
     gameCountDown:{position: 'relative', width: '30vw',height: '30vw', left:'calc(50% - 15vw)', top:'calc(20vh)'},
 
-    pageTitle: {padding: '10px'},
+    pageTitle: {padding: '30px'},
+    Score: {fontSize: '40px', paddingTop: '20vh',paddingLeft:'40px'},
 
     gameContainer: { display: 'flex', justifyContent: 'center', alignItems:'stretch',height: '100vh' },
-    gameColSide: { width: '20%',position: 'relative' },
-    gameColCenter: { display: 'flex', flexDirection: 'column', justifyContent: 'center',width: '60%',position: 'relative',alignItems: 'center'},
-    MyVideo: { width: '80%', position:'absolute', right:'2vw', bottom: '10vh', border: '3px solid #e7d8b4'},
+    gameColSide: { width: '25%',position: 'relative' },
+    gameColCenter: { display: 'flex', flexDirection: 'column', justifyContent: 'flex-start',width: '50%',position: 'relative',alignItems: 'center'},
+    MyVideo: { width: '80%', position:'absolute', right:'2vw', bottom: '10vh', border: '3px solid #e7d8b4', margin:'10px'},
     
-    ButtonContainer: { display:'flex',position: 'absolute', right: '2vw', bottom: '2vh' },
+    ButtonContainer: { display:'flex',position: 'absolute', right: '3vw', bottom: '3vh' },
     scoreEFContainer:{width: '100%', height:'20vh',textAlign: 'center'},
-    dancerContainer: {height:'80vh'},
+    dancerContainer: {height:'70vh', border: '3px solid rgb(60 126 187)'},
+    // SkeletonContainer: {height:'70vh'},
 
     stream: { height: '100%', width: '100%' },
 
@@ -279,8 +283,9 @@ const SingleMode = (songID) => {
       // background: 'rgba(245, 240, 215, 0.5)',
     },
     None: { display: 'none' },
-    PoseContainer: { display: 'flex',position:'absolute',width:'90%', top:'5vh'},
-    PoseObject: { width: '50%' },
+    PoseContainer: { display: 'flex',position:'absolute',width:'80%', top:'20vh',right: '2vw'},
+    DancerPoseObject: { width: '40%',margin:'3px', border: '3px solid rgb(60 126 187)' },
+    UserPoseObject: { width: '40%',margin:'3px', border: '3px solid #e7d8b4' },
 
     // 노래 정보
     Album: {position:'absolute',left:'0', bottom: '10vh',display: 'flex', justifyContent: 'flex-start',width: '100%',padding: '2vw'},
@@ -309,6 +314,9 @@ const SingleMode = (songID) => {
           {/* 왼쪽 */}
           <div style={Styles.gameColSide}>
             <h2 style={Styles.pageTitle}>Single Mode</h2>
+            <div style={Styles.Score}>
+              Score: {score}
+            </div>
             <div style={Styles.Album}>
 
               <img src={pop}  style={Styles.AlbumImg}></img>
@@ -327,7 +335,7 @@ const SingleMode = (songID) => {
               
           <div style={Styles.gameColCenter}>
             <div style={Styles.scoreEFContainer}>
-              {playing==true && (<img id="scoreCanvas" className="scoreEF" src={gameEF} style={Styles.Score } />)}
+              {playing==true && (<img id="scoreCanvas" className="scoreEF" src={gameEF} />)}
 
             </div>
              
@@ -357,27 +365,31 @@ const SingleMode = (songID) => {
           {/* 오른쪽 */}
           <div style={Styles.gameColSide}>
             
-
+            {/* <div style={Styles.SkeletonContainer}> */}
               {/* 관절 영상 */}
 
-                {isSkeleton && (
+                {playing==true&&isSkeleton && (
                   <div style={Styles.PoseContainer}>
                     <img
                       id="previewImg"
                       src={previewImage}
-                      style={Styles.PoseObject}
+                      style={Styles.DancerPoseObject}
                       />
     
                     <img
                       id="userPoseImg"
                       src={userPoseImg}
-                      style={Styles.PoseObject}
+                      style={Styles.UserPoseObject}
                   ></img>
                   </div>
                   
                   
                   
               )}
+
+            {/* </div> */}
+            
+
               {/* 내 영상 */}
               {isMyVideo == true && (
                 <div id="canvasDiv" style={Styles.MyVideo}>
