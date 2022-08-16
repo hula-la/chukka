@@ -86,11 +86,13 @@ public class LectureController {
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String userId = userDetails.getUsername();
         int userGender = userService.getUserByUserId(userId).getUserGender();
+
         // 연령대 구하기
         Date birth = userService.getUserByUserId(userId).getUserBirth();
         LocalDateTime today = LocalDateTime.now();
         int userYear = Integer.parseInt(birth.toString().substring(0,4));
         int ageGroup = ((today.getYear() - userYear  + 1) - (today.getYear() - userYear  + 1) % 10);
+        System.out.println(ageGroup);
         List<LectureGetForListRes> forUser = lectureService.getLectureByYourBirthAndGender(userGender, ageGroup, pageable);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureGetForYouRes.of(forUser, userGender, ageGroup)));
     }
