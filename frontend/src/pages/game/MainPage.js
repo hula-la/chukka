@@ -3,6 +3,40 @@ import { useDispatch, useSelector } from 'react-redux/es/exports';
 import { useNavigate } from 'react-router-dom';
 import { fetchMusic } from '../../features/game/gameActions';
 import { Carousel } from '3d-react-carousal';
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 2rem;
+
+  .select-music {
+    margin-top: 2rem;
+  }
+  .btn {
+    margin-bottom: 0;
+    align-items: center;
+  }
+`;
+
+const StyledButton = styled.button`
+  color: white;
+  background-color: #ff2c55;
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  width: 140px;
+  height: 42px;
+  border: none;
+  cursor: pointer;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+  :hover {
+    opacity: 0.7;
+  }
+`;
+
 
 const MainPage = () => {
   const dispatch = useDispatch();
@@ -54,12 +88,16 @@ const MainPage = () => {
   };
 
   return (
-    <div>
-      {thumbnailList.length !== 0 && (
-        <Carousel slides={thumbnailList} onSlideChange={onSlideChange} />
-      )}
-      <button onClick={onClick}>게임시작</button>
-    </div>
+    <Wrapper>
+      <div class="select-music">
+        {thumbnailList.length !== 0 && (
+          <Carousel slides={thumbnailList} onSlideChange={onSlideChange} />
+        )}
+      </div>
+      <div class="btn">
+        <StyledButton onClick={onClick}>게임시작</StyledButton>
+      </div>
+    </Wrapper>
   );
 };
 
