@@ -1,6 +1,11 @@
 import { AccountBoxTwoTone } from '@material-ui/icons';
 import React, { useState, useEffect, useRef } from 'react';
 import "./singleGame.css";
+import pop from '../../img/pop.jpeg';
+import styled from 'styled-components';
+
+import './button.css';
+
 
 const SingleMode = (songID) => {
   songID = 'soojin';
@@ -9,6 +14,10 @@ const SingleMode = (songID) => {
   const [websckt, setWebsckt] = useState();
   const [FPS, setFPS] = useState(1);
   const [playing, setPlaying] = useState(undefined);
+  const [isSkeleton, setIsSkeleton] = useState(true);
+  const [isMyVideo, setIsMyVideo] = useState(true);
+
+
   const [timer, setTimer] = useState(undefined);
 
   // setInterval
@@ -40,21 +49,6 @@ const SingleMode = (songID) => {
   // 관절 영상 분리를 위한 변수
   const [isMsgReceived, setIsMsgReceived] = useState(false);
 
-  // 미리동작 보기를 위한 타이머
-  // const [time, setTime] = useState(10);
-  // const clearTime = () => {
-  //   setTime(10);
-  // };
-
-  // 점수 업그레이드
-  // const scoreChange = type => {
-  //   console.log(type);
-  //   setScore({
-  //     ...score,
-  //     "bad": 1
-  //   });
-  //   console.log(score);
-  // }
 
   // 동영상 재생을 위한 변수
   const getWebcam = (callback) => {
@@ -196,17 +190,8 @@ const SingleMode = (songID) => {
     if (websckt) {
       websckt.onclose = function (event) {
         console.log('클로징 perfectCnt: ' + perfectCnt);
-        // // console.log(timeDecrease);
-        // // console.log(IV);
-        // console.log("IV_tmp: " + IV_tmp);
-        // console.log("IV: " + IV);
         clearInterval(timer);
         clearInterval(IV);
-        // clearInterval(IV_tmp);
-        // // setTimeDecrease(undefined);
-        // setIV(undefined);
-
-        // startOrStop();
 
         if (event.wasClean) {
           alert(
@@ -219,12 +204,7 @@ const SingleMode = (songID) => {
 
       websckt.onmessage = (e) => {
         setPlaying(true);
-        // console.log(perfectCnt);
-
-        // console.log("IV_tmp: " + IV_tmp);
-        // 전달받은 데이터가 문자열일 때(유사도)
         if (typeof e.data === 'string') {
-          // setIsMsgReceived(isMsgReceived=>true);
           setIsMsgReceived(true);
           let similarity = e.data;
           console.log(similarity);
@@ -232,9 +212,6 @@ const SingleMode = (songID) => {
           similarity = similarity.replace(/[\[\]]+/g, '');
 
           if (similarity == 0) {
-            // console.log("카운팅되는중~")
-            // setPerfectCnt((perfectRef.current+=1));
-            // console.log(perfectCnt);
             setGameEF('../../img/game_effect/notFound.png');
           } else if (similarity < 0.02) {
             setPerfectCnt((perfectCnt) => perfectCnt + 1);
@@ -280,49 +257,99 @@ const SingleMode = (songID) => {
   useEffect(() => {});
 
   const Styles = {
-    gameBox: { display: 'flex-column' },
-    Videobox: { position: 'relative', display: 'flex' },
-    Video: { backgroundColor: 'gray', width: '50%', height: '50vh' },
+    GamePage: { width: '100%' },
+
+    pageTitle: {padding: '10px'},
+
+    gameContainer: { display: 'flex', justifyContent: 'center', alignItems:'stretch',height: '100vh' },
+    gameColSide: { width: '20%',position: 'relative' },
+    gameColCenter: { display: 'flex', flexDirection: 'column', justifyContent: 'center',width: '60%',position: 'relative',alignItems: 'center'},
+    MyVideo: { width: '80%', position:'absolute', right:'2vw', bottom: '10vh', border: '3px solid #e7d8b4'},
+    
+    ButtonContainer: { display:'flex',position: 'absolute', right: '2vw', bottom: '2vh' },
+    scoreEFContainer:{width: '100%', height:'20vh',textAlign: 'center'},
+    dancerContainer: {height:'80vh'},
+
     stream: { height: '100%', width: '100%' },
+
     Canvas: {
       width: '100%',
       height: '100%',
-      background: 'rgba(245, 240, 215, 0.5)',
-    },
-    ScoreBox: { position: 'relative', zIndex: '3' },
-    Score: { position: 'absolute', width: '50%', top: '10px', height: '10vh' },
-    Time: {
-      position: 'absolute',
-      width: '50%',
-      top: '10px',
-      height: '10vh',
-      zIndex: '5',
+      // background: 'rgba(245, 240, 215, 0.5)',
     },
     None: { display: 'none' },
-    previewImage: { position: 'absolute', height: '15vh' },
-    PoseContainer: { display: 'flex' },
-    Pose: { width: '50%', height: '20vh', position: 'relative',textAlign:'center' },
-    PoseObject: { width: '50%', margin: 'auto' },
+    PoseContainer: { display: 'flex',position:'absolute',width:'90%', top:'5vh'},
+    PoseObject: { width: '50%' },
+
+    // 노래 정보
+    Album: {position:'absolute',left:'0', bottom: '10vh',display: 'flex', justifyContent: 'flex-start',width: '100%',padding: '2vw'},
+    AlbumImg: { width: '50%' },
+    AlbumInfo: { display: 'flex',flexDirection: 'column', justifyContent: 'space-around', marginLeft: '2vw'},
+    AlbumTitle: { fontSize: '25px'}
+
+    // gameBox: { display: 'flex-column' },
+    // Videobox: { position: 'relative', display: 'flex' },
+    // Video: { backgroundColor: 'gray',  height: '90vh' },
+    // ScoreBox: { position: 'relative', zIndex: '3' },
+    // Score: { position: 'absolute', width: '100%' },
+    // Time: {
+    //   position: 'absolute',
+    //   width: '50%',
+    //   top: '10px',
+    //   height: '10vh',
+    //   zIndex: '5',
+    // },
+    // previewImage: { position: 'absolute', height: '15vh' },
+    // Pose: { width: '50%', height: '20vh', position: 'relative',textAlign:'center' },
   };
 
   // if (loading) return <div>로딩중..</div>;
   // if (error) return <div>에러가 발생했습니다</div>;
 
   return (
-    <div>
-      <h2>Sigle Mode</h2>
-      {gameStartCounter != 0 && (
-        <div id="gameStartCounter">
-          <img src="../../img/game_effect/countdown.gif" alt="loading..." />
-        </div>
-      )}
+    <div style={Styles.GamePage}>
 
+
+      
+
+       {/* 게임 시작 전 카운터 */}
+      {gameStartCounter != 0 && (
+          <div id="gameStartCounter">
+            <img src="../../img/game_effect/countdown.gif" alt="loading..." />
+          </div>
+      )}
+      
+      {/* 게임 카운터 후 시작 */}
       {gameStartCounter == 0 && (
-        <div>
-          {/* <button color="warning" onClick={() => startOrStop()}>{timer} </button> */}
-          <div style={Styles.gameBox}>
-            <div style={Styles.Videobox}>
-              <div style={Styles.Video}>
+        <div style={Styles.gameContainer}>
+          {/* 왼쪽 */}
+          <div style={Styles.gameColSide}>
+            <h2 style={Styles.pageTitle}>Single Mode</h2>
+            <div style={Styles.Album}>
+
+              <img src={pop}  style={Styles.AlbumImg}></img>
+              <div style={Styles.AlbumInfo} >
+                <div  style={Styles.AlbumTitle}>Pop</div>
+                <div>나연</div>
+              </div>
+
+            </div>
+            
+              
+
+          </div>
+
+          {/* 중간 */}
+              
+          <div style={Styles.gameColCenter}>
+            <div style={Styles.scoreEFContainer}>
+              {playing==true && (<img id="scoreCanvas" className="scoreEF" src={gameEF} style={Styles.Score } />)}
+
+            </div>
+             
+            
+            <div style={Styles.dancerContainer}>
+
                 <video
                   id="dancer_video"
                   height="180"
@@ -337,35 +364,77 @@ const SingleMode = (songID) => {
                     }
                     type="video/mp4"
                   />
-                  {/* <source src="http://localhost:8000/fastAPI/game/dancer" type="video/mp4"/> */}
                 </video>
-              </div>
-              <div id="canvasDiv" style={Styles.Video}>
-                <div style={Styles.ScoreBox}>
+
+            </div>
+
+          </div>
+
+          {/* 오른쪽 */}
+          <div style={Styles.gameColSide}>
+            
+
+              {/* 관절 영상 */}
+
+                {isSkeleton && (
+                  <div style={Styles.PoseContainer}>
+                    <img
+                      id="previewImg"
+                      src={previewImage}
+                      style={Styles.PoseObject}
+                      />
+    
+                    <img
+                      id="userPoseImg"
+                      src={userPoseImg}
+                      style={Styles.PoseObject}
+                  ></img>
+                  </div>
                   
-                  <canvas id="canvas" ref={canvasRef} style={Styles.Canvas} />
+                  
+                  
+              )}
+              {/* 내 영상 */}
+              {isMyVideo == true && (
+                <div id="canvasDiv" style={Styles.MyVideo}>
+                    
+                    <canvas id="canvas" ref={canvasRef} style={Styles.Canvas} />
                 </div>
+                  
+            )}
+
+            
+            <div style={Styles.ButtonContainer} >
+              <div>
+              관절 영상
               </div>
+
+              <div className="wrapper">
+              
+                  <input type="checkbox" id="switch" value={isSkeleton}/>
+                <label htmlFor="switch" className="switch_label">
+                  
+                    <span className="onf_btn"></span>
+                  </label>
+              </div>
+
+              <div>
+              내 영상
+              </div>
+              <div className="wrapper">
+              
+                  <input type="checkbox" id="switch" value={isSkeleton}/>
+                <label htmlFor="switch" className="switch_label">
+                  
+                    <span className="onf_btn"></span>
+                  </label>
+              </div>
+
+              <button onClick={() => { setIsSkeleton(!isSkeleton);}}>  관절 영상  </button>
+              <button onClick={() => { setIsMyVideo(!isMyVideo); }}> 내영상  </button>
             </div>
-            <div style={Styles.PoseContainer}>
-              <div style={Styles.Pose}>
-                {/* <div style={Styles.Time}>ms: { time }</div> */}
-                <img
-                  id="previewImg"
-                  src={previewImage}
-                  style={Styles.PoseObject}
-                />
-              </div>
-              <div style={Styles.Pose}>
-                {playing==true && (<img id="scoreCanvas" class="scoreEF" src={gameEF} style={Styles.Score } />)}
-                <img
-                  id="userPoseImg"
-                  src={userPoseImg}
-                  style={Styles.PoseObject}
-                ></img>
-              </div>
-            </div>
-            <div></div>
+
+            
           </div>
         </div>
       )}
