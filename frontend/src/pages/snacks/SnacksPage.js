@@ -114,9 +114,10 @@ const Wrapper = styled.div`
   .upload-menu{
     transition: all 0.8s;
     text-align: center;
-    position: inherit;
-    top: 12rem;
-    right: 23.5rem;
+    width: 113px;
+    position: absolute;
+    top: 3.5rem;
+    right: 6.1rem;
     padding : 0rem 1.2em 0 1.2rem;
     display:none;
   }
