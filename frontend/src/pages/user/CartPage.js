@@ -10,7 +10,7 @@ import { getCartList, deleteCartItem } from '../../api/cart';
 import { LectureInfo } from '../../components/carts/LectureInfo';
 import { PayLecture } from '../../components/carts/PayLecture';
 import Alert from '../../components/Alert';
-import RequestPay from '../../components/carts/requestPay';
+import RequestPay from '../../components/carts/RequestPay';
 import StyledButton from '../../components/Button';
 
 const ProfilePageBlock = styled.div`
