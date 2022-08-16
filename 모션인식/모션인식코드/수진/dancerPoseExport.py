@@ -151,6 +151,9 @@ data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
 songId = "4"
 data, keyp_list = get_position(video_path=baseURL+songId)
 data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
+songId = "5"
+data, keyp_list = get_position(video_path=baseURL+songId)
+data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
 songId = "6"
 data, keyp_list = get_position(video_path=baseURL+songId)
 data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
