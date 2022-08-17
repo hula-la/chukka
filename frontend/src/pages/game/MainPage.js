@@ -37,7 +37,6 @@ const StyledButton = styled.button`
   }
 `;
 
-
 const MainPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,6 +44,7 @@ const MainPage = () => {
   const { musicList } = useSelector((state) => state.game);
   const [thumbnailList, setThumbnailList] = useState([]);
   const [musicNum, setMusicNum] = useState(null);
+  const [highScore, setHighScore] = useState(null);
 
   useEffect(() => {
     if (musicList.lengh === 0) {
@@ -60,9 +60,8 @@ const MainPage = () => {
             />
 
             <div>
-              {music.songName}
-              {music.singer}
-              {'★'.repeat(music.level)}
+              {music.songName} | {music.singer} | {'★'.repeat(music.level)} |{' '}
+              {music.highScore}
             </div>
           </div>
         );
@@ -77,12 +76,14 @@ const MainPage = () => {
 
   const onSlideChange = (index) => {
     setMusicNum(musicList[index].songId);
+    setHighScore(musicList[index].highScore);
   };
 
   const onClick = () => {
     navigate('/game', {
       state: {
         songId: musicNum,
+        highScore: highScore,
       },
     });
   };
