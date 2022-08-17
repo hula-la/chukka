@@ -470,11 +470,11 @@ const SingleMode = (state) => {
             {/* </div> */}
 
             {/* 내 영상 */}
-            {isMyVideo == true && (
-              <div id="canvasDiv" style={Styles.MyVideo}>
-                <canvas id="canvas" ref={canvasRef} style={Styles.Canvas} />
-              </div>
-            )}
+            {/* {isMyVideo == true && ( */}
+            <div id="canvasDiv" style={Styles.MyVideo}>
+              <canvas id="canvas" className={isMyVideo == true?'':'Hidden' } ref={canvasRef} style={Styles.Canvas} />
+            </div>
+            {/* )} */}
 
             <div style={Styles.ButtonContainer}>
               <div>관절 영상</div>
