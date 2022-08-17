@@ -9,6 +9,7 @@ import {
   fetchMyLectures,
   fetchInsLectures,
   changePassword,
+  findPw,
 } from './userActions';
 
 // initialize userToken from local storage
@@ -123,11 +124,6 @@ const userSlice = createSlice({
     // 강사 강의목록 받아오기
     [fetchInsLectures.fulfilled]: (state, { payload }) => {
       state.insLectures = payload.data;
-    },
-
-    // 비밀번호 변경
-    [changePassword.fulfilled]: (state, { payload }) => {
-      console.log('ok');
     },
   },
 });

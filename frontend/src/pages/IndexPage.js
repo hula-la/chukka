@@ -50,7 +50,7 @@ const BackGround = styled.div`
     width: 100%;
     left: 0;
     top: 50%;
-    transform: translate(0,-50%);
+    transform: translate(0, -50%);
     font-weight: 600;
     text-align: center;
   }
@@ -81,7 +81,7 @@ const Introduce = styled.div`
     margin-top: 4rem;
   }
   img {
-    width:500px;
+    width: 500px;
     margin: 1.5rem 0;
   }
   .btn {
@@ -314,7 +314,7 @@ const IndexPage = () => {
           </ServiceItem>
         </ServiceContainer>
         <Join>
-          <Link to="accounts/signup">
+          <Link to="accounts/login">
             <div className="btn">
               Join us !
               <KeyboardDoubleArrowRightIcon className="icon" />
