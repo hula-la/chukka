@@ -16,7 +16,7 @@ server:
       enabled: 'true'
       force: 'true'
       charset: UTF-8
-    contextPath: /
+    contextPath: /api
   address: localhost
   port: '8080'
   compression:
