@@ -32,17 +32,20 @@ const Header = styled.div`
 `;
 const Content = styled.div`
   display: grid;
-  grid-template-rows: 1fr 2fr 0.5fr;
+  grid-template-rows: 1fr 2.5fr 0.5fr;
   height: 100%;
 `;
 const Info = styled.div`
   display: grid;
   grid-template-columns: 1fr 2.5fr 1fr;
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
   img {
-    width: 90%;
+    max-height : 115px;
   }
 `;
+const Img = styled.div`
+  margin: auto;
+`
 const Song = styled.div`
   display: grid;
   grid-template-rows: 1fr 1fr;
@@ -215,9 +218,11 @@ const ResultPage = () => {
         <Content>
           {musicDetail !== null && (
             <Info>
-              <img
-                src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${musicDetail.songId}`}
-              ></img>
+              <Img>
+                <img
+                  src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${musicDetail.songId}`}
+                ></img>
+              </Img>
               <Song>
                 <SongTitle>{musicDetail.songName}</SongTitle>
                 <Singer>{musicDetail.singer}</Singer>
