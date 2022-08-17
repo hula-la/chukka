@@ -36,6 +36,7 @@ const initialState = {
     lecLimit: '',
     insInfo: {},
   },
+  loading: false,
   isEnroll: false,
   sections: [],
   reviews: [],
@@ -44,7 +45,28 @@ const initialState = {
 const lectureSlice = createSlice({
   name: 'lecture',
   initialState,
-  reducers: {},
+  reducers: {
+    clearLecture: (state) => {
+      state.lecture = {
+        lecId: '',
+        lecThumb: '',
+        lecTitle: '',
+        lecLevel: '',
+        lecGenre: '',
+        lecCategory: '',
+        lecPrice: '',
+        lecContents: '',
+        lecNotice: '',
+        lecSchedule: '',
+        dayAndTime: '',
+        lecStartDate: '',
+        lecEndDate: '',
+        lecStudent: '',
+        lecLimit: '',
+        insInfo: {},
+      };
+    },
+  },
   extraReducers: {
     [fetchPopularLectures.fulfilled]: (state, { payload }) => {
       state.popularLectures = payload.data;
@@ -56,9 +78,14 @@ const lectureSlice = createSlice({
     [fetchLatestLectures.fulfilled]: (state, { payload }) => {
       state.lectures = payload.content;
     },
+    [fetchLectureDetail.pending]: (state, { payload }) => {
+      state.loading = true;
+    },
     [fetchLectureDetail.fulfilled]: (state, { payload }) => {
       state.lecture = payload.data;
+      state.loading = false;
     },
+
     [fetchSections.fulfilled]: (state, { payload }) => {
       state.sections = payload.data.content;
     },
@@ -70,5 +97,7 @@ const lectureSlice = createSlice({
     },
   },
 });
+
+export const { clearLecture } = lectureSlice.actions;
 
 export default lectureSlice.reducer;

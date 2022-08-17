@@ -10,6 +10,7 @@ import {
   fetchLectureDetail,
   fetchReviews,
 } from '../../features/lecture/lectureActions';
+import { clearLecture } from '../../features/lecture/lectureSlice';
 import { insertCartItem, userCartCount } from '../../features/cart/cartActions';
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
@@ -107,6 +108,11 @@ const LectureDetailComponent = () => {
   const infoRef = useRef(null);
   const insRef = useRef(null);
   const revRef = useRef(null);
+  useEffect(() => {
+    return () => {
+      dispatch(clearLecture());
+    };
+  }, []);
 
   useEffect(() => {
     dispatch(fetchLectureDetail(lectureId));
