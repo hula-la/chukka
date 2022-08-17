@@ -29,10 +29,10 @@ public interface CartService {
     List<CartLecGetRes> findCartItemsByCartId(String cartId);
 
     //장바구니 삭제
-    void deleteByCartItemId(int cartItemId);
+    Cart deleteByCartItemId(int cartItemId, Cart cart);
 
-    //장바구니 수정 ( 수량 업데이트 )
-    Cart updateCart(int cartId, int cnt);
+    //장바구니 여러개 삭제
+    Cart deleteListByCartItemId(Cart cart, List<Integer> cartItemIds);
 
     // 장바구니 중복 확인
     CartItem findCartItem(int lecId, int cartId);

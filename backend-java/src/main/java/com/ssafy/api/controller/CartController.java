@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.request.cart.CartDelReq;
 import com.ssafy.api.response.cart.CartLecGetRes;
 import com.ssafy.api.request.cart.CartPostReq;
 
@@ -96,6 +97,31 @@ public class CartController  {
 
     }
 
+    // 장바구니 item list 삭제 ========================================================================================================
+    @PostMapping("/items")
+    @ApiOperation(value = "장바구니 목록 리스트 삭제", notes = "<strong>장바구니 목록 id 리스트를 받아</strong> 장바구니 목록에서 강의들을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<BaseResponseBody> deleteList(@ApiIgnore Authentication authentication,
+            @RequestBody @ApiParam(value="장바구니 목록 아이디 리스트", required = true) CartDelReq cartDelReq) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId(loginUserId);
+        try{
+            Cart userCart = cartService.findCartByUser(user.getUserId());
+            System.out.println("전 >> "+ userCart.getCount());
+            Cart updated = cartService.deleteListByCartItemId(userCart,cartDelReq.getItemIds());
+            System.out.println("후 >> "+updated.getCount());
+            String msg="Success";
+            if(updated == null){
+                msg = "정보 업데이트 중 에러 발생";
+            }
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, msg, null));
+        }catch (Exception e){
+            return ResponseEntity.status(403).body(BaseResponseBody.of(403, "fail", null));
+        }
+    }
     // 장바구니 item 삭제 ========================================================================================================
     @DeleteMapping("/{cartItemId}")
     @ApiOperation(value = "장바구니 목록 삭제", notes = "<strong>장바구니 목록 id를 받아</strong> 장바구니 목록에서 강의를 삭제한다.")
@@ -108,14 +134,12 @@ public class CartController  {
         String loginUserId = userDetails.getUsername();
         User user = userService.getUserByUserId(loginUserId);
         try{
-            cartService.deleteByCartItemId(cartItemId);
             Cart userCart = cartService.findCartByUser(user.getUserId());
-            cartService.updateCart(userCart);
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+            Cart updateCart = cartService.deleteByCartItemId(cartItemId, userCart);
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", updateCart.getCount()));
         }catch (Exception e){
             return ResponseEntity.status(403).body(BaseResponseBody.of(403, "fail", null));
         }
-
     }
 
     @GetMapping("/count")
