@@ -11,6 +11,7 @@ import {
   fetchInsLectures,
   changePassword,
 } from '../../features/user/userActions';
+import Alert from '../../components/Alert';
 import MySnacksItem from '../../components/snacks/MySnacksItem';
 import defaultImage from '../../img/default.jpeg';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -538,6 +539,9 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { myLectures } = useSelector((state) => state.user);
   const { insLectures } = useSelector((state) => state.user);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalHeader, setModalHeader] = useState('');
+  const [modalMain, setModalMain] = useState('');
 
   // 내 페이지인지 남의 페이지인지 구분
   // 1이면 나의 프로필페이지, 2이면 남의 프로필
@@ -728,13 +732,31 @@ const ProfilePage = () => {
     setPwConfirm(e.target.value);
   };
 
-  const onSubmitChangePw = (e) => {
+  const onSubmitChangePw = async (e) => {
     e.preventDefault();
-    if (pwConfirm === pwInfo.newPassword) {
-      dispatch(changePassword(pwInfo));
+    if (pwConfirm !== pwInfo.newPassword) {
+      setModalHeader('비밀번호가 일치하지 않습니다!');
+      setModalMain('죄송합니다. 다시 시도해 주시기 바랍니다.');
+      openModal();
+    } else if (pwConfirm === pwInfo.newPassword) {
+      const { payload } = await dispatch(changePassword(pwInfo));
+      if (payload === 'Invalid Password') {
+        setModalHeader('현재 비밀번호가 틀렸습니다!');
+        setModalMain('죄송합니다. 다시 시도해 주시기 바랍니다.');
+        openModal();
+      } else if (payload.message === 'Success') {
+        alert('비밀번호가 성공적으로 변경되었습니다.');
+        setpageNum('1');
+        navigate('');
+      }
     }
   };
-
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
   return (
     <ProfilePageBlock>
       <Side>
@@ -871,6 +893,9 @@ const ProfilePage = () => {
       )}
       {pageNum === '4' && (
         <ChangeProfileBox>
+          <Alert open={modalOpen} close={closeModal} header={modalHeader}>
+            {modalMain}
+          </Alert>
           <ChangeProfileForm onSubmit={onSubmitChangePw}>
             <hr className="top" />
             <div className="msg">
