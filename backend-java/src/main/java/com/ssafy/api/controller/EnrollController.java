@@ -31,8 +31,11 @@ public class EnrollController {
         try{
             System.out.println(enrollPostReq.getUserId());
             System.out.println(enrollPostReq.getLecIds());
-            enrollService.createEnroll(enrollPostReq.getUserId(), enrollPostReq.getLecIds());
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+            if (enrollService.createEnroll(enrollPostReq.getUserId(), enrollPostReq.getLecIds())==1){
+                return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+            }else{
+                return ResponseEntity.status(200).body(BaseResponseBody.of(200, "수강 등록 중 오류가 발생했습니다. 관리자에게 문의 해주세요.", null));
+            }
         }catch (Exception e){
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "fail", null));
         }

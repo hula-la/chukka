@@ -7,6 +7,7 @@ import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.db.entity.*;
 import com.ssafy.db.repository.*;
+import org.checkerframework.checker.nullness.Opt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -289,5 +290,9 @@ public class LectureServiceImpl implements LectureService {
             return lecture.get();
         }
         return null;
+    }
+
+    public int updateLectureStudent(int lecId){
+        return lectureRepository.updateLectureStudent(lecId);
     }
 }
