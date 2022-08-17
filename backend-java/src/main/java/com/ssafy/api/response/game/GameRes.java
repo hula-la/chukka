@@ -26,13 +26,16 @@ public class GameRes {
     private String singer;
     @ApiModelProperty(name="게임 난이도")
     private int level;
+    @ApiModelProperty(name="최고 점수")
+    private int highScore;
 
-    public static GameRes of(Game game) {
+    public static GameRes of(Game game, int highScore) {
         GameRes res = new GameRes();
         res.setSongId(game.getSongId());
         res.setSongName(game.getSongName());
         res.setSinger(game.getSinger());
         res.setLevel(game.getLevel());
+        res.setHighScore(highScore);
         return res;
     }
 

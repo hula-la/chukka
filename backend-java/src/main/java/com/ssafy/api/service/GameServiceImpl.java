@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,16 +29,23 @@ public class GameServiceImpl implements GameService{
     GameHighScoreRepository gameHighScoreRepository;
 
     @Override
-    public List<GameRes> findAll() {
-        List<GameRes> games = gameRepository.findAll().stream().map(s -> GameRes.of(s)).collect(Collectors.toList());
+    public List<GameRes> findAll(User user) {
+        List<Game> gameList = gameRepository.findAll();
+        List<GameRes> games = new ArrayList<GameRes>();
+        for (Game g: gameList){
+            Optional<Integer> highScore = gameHighScoreRepository.findGameHighScoreByUserAndGame_SongId(user, g.getSongId());
+            GameRes gr = GameRes.of(g, highScore.isPresent()?highScore.get():0);
+            games.add(gr);
+        }
 
         return games;
     }
 
-    public GameRes findBySongId(Long songId) {
+    public GameRes findBySongId(User user, Long songId) {
         Optional<Game> game = gameRepository.findBySongId(songId);
+        Optional<Integer> highScore = gameHighScoreRepository.findGameHighScoreByUserAndGame_SongId(user, songId);
         if(game.isPresent()) {
-            return GameRes.of(game.get());
+            return GameRes.of(game.get(), highScore.isPresent()?highScore.get():0);
         }
         return null;
     }

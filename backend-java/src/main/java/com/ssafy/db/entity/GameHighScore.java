@@ -18,7 +18,7 @@ public class GameHighScore {
     private Long gameHighScoreId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gameId")
+    @JoinColumn(name = "songId")
     private Game game;
 
     @ManyToOne(fetch = FetchType.LAZY)
