@@ -55,6 +55,7 @@ public interface LectureService {
     // Delete ==========================================================================================================
     boolean delete(int lecId);
 
+    //id 로 조회
     Lecture findLectureByLecId(int ledId);
 
 }
