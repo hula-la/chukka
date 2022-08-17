@@ -6,14 +6,8 @@ import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.lecture.LectureGetForYouRes;
-import com.ssafy.db.entity.CartItem;
-import com.ssafy.db.entity.Enroll;
-import com.ssafy.db.entity.Instructor;
-import com.ssafy.db.entity.Lecture;
-import com.ssafy.db.repository.CartItemRepository;
-import com.ssafy.db.repository.EnrollRepository;
-import com.ssafy.db.repository.InstructorRepository;
-import com.ssafy.db.repository.LectureRepository;
+import com.ssafy.db.entity.*;
+import com.ssafy.db.repository.*;
 import javassist.runtime.Desc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +31,9 @@ import java.util.stream.Collectors;
 public class LectureServiceImpl implements LectureService {
     @Autowired
     LectureRepository lectureRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     InstructorRepository instructorRepository;
@@ -272,8 +269,13 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public void updateLecNotice(int lecId, String lecNotice) {
-        lectureRepository.updateLecNotice(lecId, lecNotice);
+    public void updateLecNotice(String userId, int lecId, String lecNotice) {
+        if (lectureRepository.findById(lecId).isPresent()) {
+            Optional<User> user = userRepository.findByUserId(userId);
+            if (user.get().getUserType() == 1) {
+                lectureRepository.updateLecNotice(lecId, lecNotice);
+            }
+        }
     }
 
     @Override
