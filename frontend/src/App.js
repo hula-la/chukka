@@ -68,6 +68,10 @@ const App = () => {
           <Route path="password" element={<FindPwPage />} />
           <Route element={<AuthLayout />}>
             <Route path="profile/:nickName" element={<ProfilePage />} />
+            <Route
+              path="profile/:nickName/:pageNum"
+              element={<ProfilePage />}
+            />
             <Route path="cart" element={<CartPage />} />
             <Route path="pay" element={<PayConfrim />} />
           </Route>
