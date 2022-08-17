@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { detail, music } from '../../api/game';
+import { detail, maxScore, music } from '../../api/game';
 
 export const fetchMusic = createAsyncThunk(
   'game/fetchMusic',
@@ -32,3 +32,19 @@ export const fetchDetail = createAsyncThunk(
     }
   },
 );
+
+export const songScore = createAsyncThunk(
+  'game/songScore',
+  async ({ score, songId }, { rejectWithValue }) => {
+    try {
+      const { data } = await maxScore(score, songId);
+      return data
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+)
