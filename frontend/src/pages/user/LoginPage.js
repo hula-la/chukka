@@ -180,7 +180,7 @@ const LoginForm = () => {
     e.preventDefault();
     // 로그인 form Submit
     dispatch(userLogin(loginInputs));
-    navigate('/lectures');
+    // navigate('/lectures');
   };
 
   return (
@@ -241,7 +241,7 @@ const LoginPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { userInfo } = useSelector((state) => state.user);
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || '/lectures';
   useEffect(() => {
     if (userInfo) {
       navigate(from, { replace: true });
