@@ -26,6 +26,7 @@ public class CartServiceImpl implements CartService{
     @Autowired
     CartItemRepository cartItemRepository;
 
+    /* 사용자 장바구니 생성*/
     public Cart createCart(User user){
         Cart cart = new Cart();
         cart.setUser(user);
@@ -34,12 +35,17 @@ public class CartServiceImpl implements CartService{
         return cart;
     }
 
+    /* 장바구니의 수량 변경*/
     public Cart updateCart(Cart cart){
+        System.out.println("===== 수량 변경=========");
         cart.setCount(cart.getCount()-1);
+        System.out.println(">>"+cart.getCount());
         Cart updatedCart = cartRepository.save(cart);
+        cartRepository.flush();
         return updatedCart;
     }
 
+    /* 장바구니 강의 생성 */
     public CartItem createCartItem(Cart cart, Lecture lecture) {
 
         CartItem cartItem = new CartItem();
@@ -53,6 +59,7 @@ public class CartServiceImpl implements CartService{
 
     }
 
+    /* 사용자의 장바구니 정보 반환*/
     @Override
     public Cart findCartByUser(String userId) {
         Optional<Cart> cart = cartRepository.findByUser_UserId(userId);
@@ -62,6 +69,7 @@ public class CartServiceImpl implements CartService{
         return null;
     }
 
+    /* 사용자의 장바구니 강의 list 반환*/
     @Override
     public List<CartLecGetRes> findCartItemsByCartId(String userId) {
         Optional<Cart> findCart = cartRepository.findByUser_UserId(userId);
@@ -79,16 +87,29 @@ public class CartServiceImpl implements CartService{
         return null;
     }
 
+    /* 장바구니 강의 삭제*/
     @Override
-    public void deleteByCartItemId(int cartItemId) {
+    public Cart deleteByCartItemId(int cartItemId, Cart cart) {
         cartItemRepository.deleteById(cartItemId);
+        cart.setCount(cart.getCount()-1);
+        Cart updatedCart = cartRepository.save(cart);
+        cartRepository.flush();
+        return updatedCart;
     }
 
+    /* 장바구니 강의 list 삭제*/
     @Override
-    public Cart updateCart(int cartId, int cnt) {
-        return null;
+    public Cart deleteListByCartItemId(Cart cart, List<Integer> cartItemIds) {
+        for(int itemId : cartItemIds){
+            cartItemRepository.deleteById(itemId);
+        }
+        cart.setCount(cart.getCount()-cartItemIds.size());
+        Cart updatedCart = cartRepository.save(cart);
+        cartRepository.flush();
+        return updatedCart;
     }
 
+    /* 장바구니 item 조회*/
     @Override
     public CartItem findCartItem(int lecId, int cartId) {
         Optional<CartItem> cartItem = cartItemRepository.findByLecture_LecIdAndCart_Id(lecId, cartId);

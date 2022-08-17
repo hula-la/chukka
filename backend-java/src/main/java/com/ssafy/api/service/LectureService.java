@@ -1,9 +1,6 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.request.lecture.LecturePostReq;
-import com.ssafy.api.request.lecture.LectureUpdateReq;
-import com.ssafy.api.request.lecture.LiveLecturePostReq;
-import com.ssafy.api.request.lecture.LiveLectureUpdateReq;
+import com.ssafy.api.request.lecture.*;
 import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.admin.LectureRes;

@@ -41,11 +41,6 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
             "order by count(e.enrollId) desc")
     List<Lecture> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable);
 
-    // 공지사항 수정
-    @Modifying(clearAutomatically = true)
-    @Query(value = "update Lecture lec set lec.lecNotice = :lecNotice where lec.lecId = :lecId", nativeQuery = true)
-    void updateLecNotice(int lecId, String lecNotice);
-
     // 강의 수정
     @Modifying(clearAutomatically = true)
     @Query(value = "update Lecture lec " +

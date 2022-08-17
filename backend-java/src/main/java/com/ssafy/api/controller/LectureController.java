@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.lecture.LectureNoticeReq;
+import com.ssafy.api.request.lecture.NoticeUpdateReq;
 import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.lecture.LectureGetForYouRes;
