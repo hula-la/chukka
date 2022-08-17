@@ -5,16 +5,8 @@ import com.ssafy.api.request.lecture.*;
 import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
-import com.ssafy.api.response.lecture.LectureGetForYouRes;
-import com.ssafy.db.entity.CartItem;
-import com.ssafy.db.entity.Enroll;
-import com.ssafy.db.entity.Instructor;
-import com.ssafy.db.entity.Lecture;
-import com.ssafy.db.repository.CartItemRepository;
-import com.ssafy.db.repository.EnrollRepository;
-import com.ssafy.db.repository.InstructorRepository;
-import com.ssafy.db.repository.LectureRepository;
-import javassist.runtime.Desc;
+import com.ssafy.db.entity.*;
+import com.ssafy.db.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -23,9 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +26,9 @@ import java.util.stream.Collectors;
 public class LectureServiceImpl implements LectureService {
     @Autowired
     LectureRepository lectureRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     InstructorRepository instructorRepository;
@@ -272,8 +264,19 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public void updateLecNotice(int lecId, String lecNotice) {
-        lectureRepository.updateLecNotice(lecId, lecNotice);
+    public Lecture updateLecNotice(String userId, NoticeUpdateReq noticeUpdateReq) {
+        if (lectureRepository.findById(noticeUpdateReq.getLecId()).isPresent()) {
+            Optional<User> user = userRepository.findByUserId(userId);
+            if (user.get().getUserType() != 1) {
+                return null;
+            }
+            Lecture lecture = Lecture.builder()
+                    .lecId(noticeUpdateReq.getLecId())
+                    .lecNotice(noticeUpdateReq.getLecNotice())
+                    .build();
+            return lectureRepository.save(lecture);
+        }
+        return null;
     }
 
     @Override
