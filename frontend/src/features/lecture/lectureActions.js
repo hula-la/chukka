@@ -138,7 +138,9 @@ export const updateNotice = createAsyncThunk(
   async (params, { rejectWithValue }) => {
     const { lecId, newNotice } = params;
     try {
+      console.log('updateNotie data', newNotice);
       const { data } = await putNotice(lecId, { lecNotice: newNotice });
+      console.log('get response', data);
       return data;
     } catch (e) {
       console.log(e);

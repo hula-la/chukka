@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const StyledButton = styled.button`
   color: white;
@@ -15,10 +15,22 @@ const StyledButton = styled.button`
     z-index: 100;
     background-color: #be2446;
   }
+
+  ${(props) =>
+    props.disabled &&
+    css`
+      background-color: #be2446;
+      cursor: default;
+    `}
 `;
 
 const Button = (props) => {
-  return <StyledButton onClick={props.onClick}>{props.content}</StyledButton>;
+  const disabled = props.disabled ? true : null;
+  return (
+    <StyledButton onClick={props.onClick} disabled={disabled}>
+      {props.content}
+    </StyledButton>
+  );
 };
 
 export default Button;

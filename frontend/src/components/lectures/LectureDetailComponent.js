@@ -4,8 +4,9 @@ import LevelBadge from '../../components/LevelBadge';
 import CategoryBadge from '../../components/CategoryBadge';
 import StyledButton from '../../components/Button';
 import ReviewStar from '../../components/lectures/ReviewStar';
+import Alert from '../Alert';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   fetchLectureDetail,
   fetchReviews,
@@ -108,6 +109,7 @@ const LectureDetailComponent = () => {
   const infoRef = useRef(null);
   const insRef = useRef(null);
   const revRef = useRef(null);
+  const [modalOpen, setModalOpen] = useState(false);
   useEffect(() => {
     return () => {
       dispatch(clearLecture());
@@ -140,31 +142,6 @@ const LectureDetailComponent = () => {
   } = useSelector((state) => state.lecture.lecture);
   const reviews = useSelector((state) => state.lecture.reviews);
 
-  // const reviews = [
-  //   {
-  //     review_id: 1,
-  //     user_id: '유노준',
-  //     review_score: 4,
-  //     review_regdate: '2022-08-10',
-  //     review_contents: '낫밷',
-  //   },
-  //   {
-  //     review_id: 2,
-  //     user_id: '최지원',
-  //     review_score: 5,
-  //     review_regdate: '2022-08-10',
-  //     review_contents: '나연 최고',
-  //   },
-  //   {
-  //     review_id: 3,
-  //     user_id: '홍성목',
-  //     review_score: 3,
-  //     review_regdate: '2022-08-10',
-  //     review_contents:
-  //       '가나다라마바사 아자차카타파하 목업이 거의 완성이 되는 것 같습니다. 아마도 ?  배경이 너무 어둡지 않나 라는 생각이 조금 들긴 하지만 괜찮은 것 같습니다. 이것은 리뷰입니다. 한 세줄정도 쓰고 그만 쓰려고 합니다. 배가 고파요. 오늘 점심에 해물 야끼우동이었나 그랬던거 같은데 맛있었으면 좋곘습니다. 그럼 이만',
-  //   },
-  // ];
-
   const scrollToRev = () => {
     if (revRef && revRef.current) {
       revRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -184,10 +161,25 @@ const LectureDetailComponent = () => {
   const onClick = async () => {
     await dispatch(insertCartItem(lecId));
     dispatch(userCartCount());
-    navigate(`/accounts/cart`);
+    dispatch(fetchLectureDetail(lectureId));
+    openModal();
+    // alert('강의를 장바구니에 담았습니다.');
+    // navigate(`/accounts/cart`);
   };
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   return (
     <Wrapper>
+      <Alert open={modalOpen} close={closeModal} header={'CHUKKA'}>
+        {'강의를 장바구니에 담았습니다.'}
+      </Alert>
       <LectureInfo>
         <img src={lecThumb} alt="" className="thumbnail-img" />
         <LectureInfoDetail>
@@ -225,8 +217,11 @@ const LectureDetailComponent = () => {
               </span>
             </div>
           </div>
-          {!cart && (
+          {!cart && lecStudent < lecLimit && (
             <StyledButton content="장바구니에 담기" onClick={onClick} />
+          )}
+          {!cart && lecStudent >= lecLimit && (
+            <StyledButton content="강의 인원이 가득 찼습니다." disabled />
           )}
           {cart && <StyledButton content="장바구니에 담겨 있습니다" disabled />}
         </LectureInfoDetail>
