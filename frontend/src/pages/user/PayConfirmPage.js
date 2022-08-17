@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import {LectureInfoSimple} from '../../components/carts/LectureInfoSimple';
-import {deleteCartItem} from '../../api/cart'
+import { deleteCartItemList} from '../../api/cart'
 import { enrollLecture } from '../../api/pay';
 
 const Wrapper = styled.div`
@@ -52,45 +52,44 @@ const Buttons = styled.div`
 
 `
 const PayCompelete = () => {
-  
-  const [delDone, setDelDone] = useState(false);
+
+  const [delDone, setDelDone] = useState(0);
   const [addDone, setAddDone] = useState(false);
   const {state} = useLocation();
   const navigation = useNavigate();
 
-  useEffect( async () =>{
-    // 장바구니에서 삭제
-    await state.list.forEach(element => {
-      deleteCartItem(element.cartItemId)
-      .then((res)=>{
-        if(res.status === 202){
+  const deleteCart = () =>{
+    const data = {
+      itemIds : state.list.map(ele=> ele.cartItemId)
+    }
+    deleteCartItemList(data)
+    .then((res)=>{
+        console.log(res);
+        if(res.data.message === "Success"){
+        }else {
           alert(res.data.message);
           navigation("/accounts/cart");
-        }else if(res.status === 200){
-          console.log("삭제 완료");
-          setDelDone(true);
         }
       }).catch((err)=>{
         alert("아이쿠! 알 수 없는 에러 발생");
         navigation("/accounts/cart");
       })
-    });
+    
+    setDelDone(true);
+  }
 
-    // 수강 등록
+  const enroll = () =>{
     const data = {
       lecIds : state.list.map(ele=> ele.lecId),
       userId : state.user.userId,
     }
-    console.log(data);
-    
-    await enrollLecture(data)
+    enrollLecture(data)
     .then((res)=>{
       console.log(res);
       if(res.message === "Success"){
         setAddDone(true);
-        console.log("수강 추가 완료");
-        console.log(addDone);
-        console.log(delDone);
+        deleteCart();
+        setDelDone(true);
       }else{
         alert("수강 정보 저장 실패, 관리자에게 문의 하세요.");
         navigation("/accounts/cart");
@@ -98,11 +97,15 @@ const PayCompelete = () => {
     }).catch((err)=>{
       alert("아이쿠! 알 수 없는 에러 발생");
       navigation("/accounts/cart");
-    })
+    })    
+  }
+
+  useEffect( () =>{
+    enroll();
   },[])
 
   return (
-    (delDone && addDone ? 
+    (addDone && delDone ? 
     <Wrapper>
       <Content>
           <h2>결제가 완료되었습니다.</h2>
@@ -113,10 +116,10 @@ const PayCompelete = () => {
           ))}
         </LecList>
         <Summary>
-            <span className='span-left'>총 결제 금액</span>
-            <span className='span-right'>
-              {state.amount} 원
-            </span>
+          <span className='span-left'>총 결제 금액</span>
+          <span className='span-right'>
+            {state.amount} 원
+          </span>
           </Summary>
         </Content>
 

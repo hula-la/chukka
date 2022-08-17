@@ -27,11 +27,12 @@ const LectureDetailpage = () => {
 
   return (
     <>
-      {(userType == 1 && insName == userNickname) || isEnroll ? (
+      {(insName && userType == 1 && insName == userNickname) || isEnroll ? (
         <LectureClassComponent />
-      ) : (
+      ) : null}
+      {insName && !((userType == 1 && insName == userNickname) || isEnroll) ? (
         <LectureDetailComponent />
-      )}
+      ) : null}
     </>
   );
 };

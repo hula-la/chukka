@@ -11,10 +11,14 @@ import {
   fetchSections,
   fetchReviews,
   createReview,
+  updateNotice,
 } from '../../features/lecture/lectureActions';
+import { clearLecture } from '../../features/lecture/lectureSlice';
 import CampaignIcon from '@mui/icons-material/Campaign';
-import CloseIcon from '@mui/icons-material/Close';
 import { Rating } from '@mui/material';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
 // style
 const Wrapper = styled.div`
@@ -82,7 +86,7 @@ const NoticeDiv = styled.div`
   border-radius: 20px;
   display: flex;
   align-items: center;
-  padding-left: 20px;
+  padding: 0 20px;
   font-size: 22px;
   margin-bottom: 2rem;
   & .notice-content {
@@ -91,6 +95,34 @@ const NoticeDiv = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex-grow: 1;
+  }
+  & .notice-input-div {
+    margin-left: 8px;
+    margin-right: 8px;
+    display: flex;
+    flex-grow: 1;
+    & input {
+      font-size: 22px;
+      width: 100%;
+      padding: 0 8px;
+    }
+  }
+  & .notice-edit-btn-div {
+    display: flex;
+    align-items: center;
+  }
+  & .notice-edit-icon {
+    opacity: 1;
+    cursor: pointer;
+
+    right: 0;
+    &:hover {
+      transition: transform 0.4s;
+      transform: scale3d(1.3, 1.3, 1.3);
+      /* border: 1px solid white; */
+    }
+    /* border-radius: 2px; */
   }
 `;
 
@@ -115,12 +147,20 @@ const LectureClassComponent = () => {
   const secRef = useRef(null);
   const insRef = useRef(null);
   const revRef = useRef(null);
+  const [notice, setNotice] = useState('');
+  const [isEditNotice, setIsEditNotice] = useState(false);
 
   useEffect(() => {
     dispatch(fetchLectureDetail(lectureId));
     dispatch(fetchSections(lectureId));
     dispatch(fetchReviews(lectureId));
   }, [dispatch, lectureId]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearLecture());
+    };
+  }, []);
 
   const onClickSectionHandler = (sectionId) => {
     navigate(`/lectures/${lectureId}/section/${sectionId}`);
@@ -143,8 +183,14 @@ const LectureClassComponent = () => {
     lecStudent,
     lecLimit,
     insInfo,
+    loading,
   } = useSelector((state) => state.lecture.lecture);
 
+  useEffect(() => {
+    setNotice(lecNotice);
+  }, [lecNotice]);
+
+  const { userInfo } = useSelector((state) => state.user);
   const sections = useSelector((state) => state.lecture.sections);
   const reviews = useSelector((state) => state.lecture.reviews);
 
@@ -166,109 +212,160 @@ const LectureClassComponent = () => {
 
   return (
     <Wrapper>
-      <LectureInfo>
-        <img src={lecThumb} alt="" className="thumbnail-img" />
-        <LectureInfoDetail>
-          <div className="title">
-            <h1>{lecTitle}</h1>
-          </div>
-          <BadgeDiv>
-            <LevelBadge level={lecLevel} />
-            <CategoryBadge category={lecGenre} />
-            <CategoryBadge category={lecCategory} />
-          </BadgeDiv>
-          <div className="sub-info">
-            <div>
-              강사 : <span>{insInfo.insName}</span>
-            </div>
-            <div>
-              강의 기간 : <span>{lecSchedule}</span>
-            </div>
-            <div>
-              강의 시간 : <span>{dayAndTime}</span>
-            </div>
-            <div>
-              수강 인원 :{' '}
-              <span>
-                {lecStudent} / {lecLimit}
-              </span>
-            </div>
-          </div>
-          {/* 수업 버튼 */}
-          {lecCategory ? (
-            <StyledButton
-              content="동영상 강의 바로가기"
-              onClick={() => {
-                navigate(`/lectures/${lectureId}/section/1`);
-              }}
-            />
-          ) : null}
-          {!lecCategory ? (
-            <StyledButton
-              content="라이브 강의 바로가기"
-              onClick={() => {
-                navigate(`live`);
-              }}
-            />
-          ) : null}
-        </LectureInfoDetail>
-      </LectureInfo>
-      <NoticeDiv>
-        <CampaignIcon />
-        <div className="notice-content">공지사항 : {lecNotice}</div>
-      </NoticeDiv>
-      <LectureNav>
-        {lecCategory ? (
-          <a
-            href=""
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSec();
-            }}
-          >
-            목차
-          </a>
-        ) : null}
-        <a
-          href=""
-          onClick={(e) => {
-            e.preventDefault();
-            scrollToIns();
-          }}
-        >
-          강사 소개
-        </a>
-        <a
-          href=""
-          onClick={(e) => {
-            e.preventDefault();
-            scrollToRev();
-          }}
-        >
-          리뷰
-        </a>
-      </LectureNav>
-      {lecCategory ? (
+      {!loading ? (
         <>
-          <LectureSubTitle id="sections" ref={secRef}>
-            <h1>목차</h1>
+          <LectureInfo>
+            <img src={lecThumb} alt="" className="thumbnail-img" />
+            <LectureInfoDetail>
+              <div className="title">
+                <h1>{lecTitle}</h1>
+              </div>
+              <BadgeDiv>
+                <LevelBadge level={lecLevel} />
+                <CategoryBadge category={lecGenre} />
+                <CategoryBadge category={lecCategory} />
+              </BadgeDiv>
+              <div className="sub-info">
+                <div>
+                  강사 : <span>{insInfo.insName}</span>
+                </div>
+                <div>
+                  강의 기간 : <span>{lecSchedule}</span>
+                </div>
+                <div>
+                  강의 시간 : <span>{dayAndTime}</span>
+                </div>
+                <div>
+                  수강 인원 :{' '}
+                  <span>
+                    {lecStudent} / {lecLimit}
+                  </span>
+                </div>
+              </div>
+              {/* 수업 버튼 */}
+              {lecCategory ? (
+                <StyledButton
+                  content="동영상 강의 바로가기"
+                  onClick={() => {
+                    navigate(`/lectures/${lectureId}/section/1`);
+                  }}
+                />
+              ) : null}
+              {!lecCategory ? (
+                <StyledButton
+                  content="라이브 강의 바로가기"
+                  onClick={() => {
+                    navigate(`live`);
+                  }}
+                />
+              ) : null}
+            </LectureInfoDetail>
+          </LectureInfo>
+          <NoticeDiv>
+            <CampaignIcon />
+            {!isEditNotice ? (
+              <div className="notice-content">
+                <span>공지사항 : {notice}</span>
+              </div>
+            ) : (
+              <div className="notice-input-div">
+                <input placeholder="새 공지 입력" className="notice-input" />
+              </div>
+            )}
+
+            {userInfo.userType &&
+            userInfo.userNickname == insInfo.insName &&
+            !isEditNotice ? (
+              <ModeEditIcon
+                className="notice-edit-icon"
+                onClick={() => {
+                  setIsEditNotice(true);
+                  // setNotice('aaaa');
+                }}
+              />
+            ) : null}
+            {userInfo.userType &&
+            userInfo.userNickname == insInfo.insName &&
+            isEditNotice ? (
+              <div className="notice-edit-btn-div">
+                <CheckIcon
+                  className="notice-edit-icon"
+                  onClick={() => {
+                    const newNotice =
+                      document.querySelector('.notice-input').value;
+                    if (newNotice) {
+                      setNotice(newNotice);
+                      dispatch(updateNotice({ lecId, newNotice }));
+                      setIsEditNotice(false);
+                    } else {
+                      alert('공지사항을 입력하세요!');
+                    }
+                  }}
+                />
+                <CloseIcon
+                  className="notice-edit-icon"
+                  onClick={() => {
+                    setIsEditNotice(false);
+                    // setNotice('aaaa');
+                  }}
+                />
+              </div>
+            ) : null}
+          </NoticeDiv>
+          <LectureNav>
+            {lecCategory ? (
+              <a
+                href=""
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSec();
+                }}
+              >
+                목차
+              </a>
+            ) : null}
+            <a
+              href=""
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToIns();
+              }}
+            >
+              강사 소개
+            </a>
+            <a
+              href=""
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToRev();
+              }}
+            >
+              리뷰
+            </a>
+          </LectureNav>
+          {lecCategory ? (
+            <>
+              <LectureSubTitle id="sections" ref={secRef}>
+                <h1>목차</h1>
+              </LectureSubTitle>
+              <SectionContainer
+                sections={sections}
+                onClickSectionHandler={onClickSectionHandler}
+              />
+            </>
+          ) : null}
+
+          <LectureSubTitle id="instructor" ref={insRef}>
+            <h1>강사 소개</h1>
           </LectureSubTitle>
-          <SectionContainer
-            sections={sections}
-            onClickSectionHandler={onClickSectionHandler}
-          />
+          <InstructorInfo instructorInfo={insInfo} />
+
+          <LectureSubTitle id="review" ref={revRef}>
+            <h1>리뷰</h1>
+          </LectureSubTitle>
+          <ReviewContainer reviews={reviews} />
         </>
       ) : null}
-
-      <LectureSubTitle id="instructor" ref={insRef}>
-        <h1>강사 소개</h1>
-      </LectureSubTitle>
-      <InstructorInfo instructorInfo={insInfo} />
-
-      <LectureSubTitle id="review" ref={revRef}>
-        <h1>리뷰</h1>
-      </LectureSubTitle>
-      <ReviewContainer reviews={reviews} />
     </Wrapper>
   );
 };
