@@ -22,5 +22,7 @@ public interface GameHighScoreRepository extends JpaRepository<GameHighScore,Lon
     @Query(value = "UPDATE GameHighScore g SET g.score = :score where g.user_id = :userId and g.song_id = :songId",nativeQuery = true)
     int updateGameHighScore(@Param(value="userId") String userId, @Param(value="songid") Long songId, @Param(value="score") int score);
 
+    Optional<Integer> findGameHighScoreByUserAndGame_SongId(User user, Long songId);
+
 
 }

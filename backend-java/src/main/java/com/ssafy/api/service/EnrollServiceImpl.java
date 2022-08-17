@@ -14,8 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.Integer.parseInt;
-
 @Service
 public class EnrollServiceImpl implements EnrollService {
 
@@ -26,7 +24,7 @@ public class EnrollServiceImpl implements EnrollService {
     @Autowired
     EnrollRepository enrollRepository;
 
-    public void createEnroll(String userId, List<Integer> lecIds) {
+    public int createEnroll(String userId, List<Integer> lecIds) {
         Optional<User> findUser = userRepository.findByUserId(userId);
         if(findUser.isPresent()){
             User user = findUser.get();
@@ -34,10 +32,9 @@ public class EnrollServiceImpl implements EnrollService {
             LocalDateTime today = LocalDateTime.now();
             int userYear = Integer.parseInt(birth.toString().substring(0,4));
             int ageGroup = ((today.getYear() - userYear  + 1) / 10 )*10;
-            System.out.println(ageGroup);
-            for (int i = 0; i < lecIds.size(); i++) {
-                System.out.println(i);
-                Lecture lecture = lectureRepository.findLectureByLecId(lecIds.get(i));
+            for (int ledId : lecIds) {
+                System.out.println(ledId);
+                Lecture lecture = lectureRepository.findLectureByLecId(ledId);
                 Enroll enroll = Enroll.builder()
                         .user(user)
                         .lecture(lecture)
@@ -45,10 +42,13 @@ public class EnrollServiceImpl implements EnrollService {
                         .ageGroup(ageGroup)
                         .build();
                 System.out.println("=========");
-                System.out.println(enroll);
-                enrollRepository.save(enroll);
+                enroll = enrollRepository.save(enroll);
+                if(enroll == null) return 0;
+                if(lectureRepository.updateLectureStudent(ledId) != 1) return 0;
             }
+            return 1;
         }
+        return 0;
     }
 
     @Override
