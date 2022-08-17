@@ -76,8 +76,7 @@ public class SnacksController {
     public ResponseEntity<BaseResponseBody> uploadSnacks(
             @ApiIgnore Authentication authentication,
             @RequestPart @ApiParam(value="스낵스 정보") SnacksUploadReq snacksInfo,
-            @RequestPart @ApiParam(value="스낵스 영상 파일") MultipartFile file,
-            HttpServletRequest req) throws IOException {
+            @RequestPart @ApiParam(value="스낵스 영상 파일") MultipartFile file) throws IOException {
         // 로그인 유저 판별
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String loginUserId = userDetails.getUsername();
@@ -88,7 +87,7 @@ public class SnacksController {
         Snacks snacks = snacksService.uploadSnacks(snacksInfo, user);
         // 스낵스 영상 파일 업로드
         if(file != null) {
-            s3Uploader.uploadFiles(file, "vid/snacks", req.getServletContext().getRealPath("/img/"), String.valueOf(snacks.getSnacksId()));
+            s3Uploader.uploadFiles(file, "vid/snacks", String.valueOf(snacks.getSnacksId()));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
     }
