@@ -10,6 +10,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   margin-top: 2rem;
+  position: relative;
 
   .select-music {
     margin-top: 2rem;
@@ -18,9 +19,32 @@ const Wrapper = styled.div`
     margin-bottom: 0;
     align-items: center;
   }
-`;
+  .container {
+    height: 70vh;
+  }
+  `;
+
+const SongInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  .songName {
+    font-size: 1.5rem;
+  }
+  div {
+    margin: 5px;
+  }
+  .singer{
+    font-size: 0.8rem;
+  }
+  `
 
 const StyledButton = styled.button`
+  position: absolute;
+  bottom: 0px;
+  left: calc(50% - 70px);
+
   color: white;
   background-color: #ff2c55;
   font-size: 1.1rem;
@@ -59,10 +83,24 @@ const MainPage = () => {
               alt={`${music.songId}`}
             />
 
+<<<<<<< Updated upstream
             <div>
               {music.songName} | {music.singer} | {'★'.repeat(music.level)} |{' '}
               {music.highScore}
             </div>
+=======
+            <SongInfo>
+              <div className='songName'>
+                {music.songName}
+              </div>
+              <div className='singer'>
+                {music.singer}
+              </div>
+              <div>
+                {'★'.repeat(music.level)}
+              </div>
+            </SongInfo>
+>>>>>>> Stashed changes
           </div>
         );
       });
@@ -90,13 +128,16 @@ const MainPage = () => {
 
   return (
     <Wrapper>
-      <div className="select-music">
-        {thumbnailList.length !== 0 && (
-          <Carousel slides={thumbnailList} onSlideChange={onSlideChange} />
-        )}
-      </div>
-      <div className="btn">
-        <StyledButton onClick={onClick}>게임시작</StyledButton>
+      <div className="container">
+        <div className="select-music">
+          {thumbnailList.length !== 0 && (
+            <Carousel slides={thumbnailList} onSlideChange={onSlideChange} />
+          )}
+        </div>
+        <div className="btn">
+          <StyledButton onClick={onClick}>게임시작</StyledButton>
+        </div>
+
       </div>
     </Wrapper>
   );
