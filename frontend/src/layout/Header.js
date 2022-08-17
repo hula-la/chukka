@@ -6,7 +6,8 @@ import { useSelector } from 'react-redux';
 import { logout } from '../features/user/userSlice';
 import { useDispatch } from 'react-redux';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import UserBadge from '../components/UserBadge';
+import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import logo from '../img/logo1.png';
 import { useEffect } from 'react';
 import { userCartCount } from '../features/cart/cartActions';
@@ -43,29 +44,50 @@ const NavBar = styled.div`
   & .menus {
     display: flex;
     list-style: none;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
   }
   & .user-div {
     display: flex;
   }
+  & .admin-page-div {
+    display: flex;
+    align-items: center;
+    & .btn {
+      margin-left: 3px;
+    }
+  }
 
   .user-info {
-    width: 100%;
+    /* width: 100%; */
     height: 100%;
-    display: grid;
+    display: flex;
+    align-items: center;
+    & :nth-child(n) {
+      margin: 0 2px;
+    }
+    & a {
+      display: flex;
+      align-items: center;
+    }
+    /* display: grid;
     grid-template-columns: 0.5fr 1fr 1fr;
     place-items: center;
-    vertical-align: middle;
+    vertical-align: middle; */
   }
 
   .user-info .user-div {
-    vertical-align: middle;
+    /* vertical-align: middle;
     place-items: center;
     vertical-align: middle;
-    margin: 0 0.1rem 0 0.1rem;
+    margin: 0 0.1rem 0 0.1rem; */
+    display: flex;
+    align-items: center;
   }
   .user-info .cart-icon {
     margin-bottom: 0.2rem;
-    width: 100%;
+    /* width: 100%; */
     height: 100%;
   }
   .cart-num {
@@ -159,7 +181,13 @@ const Header = () => {
             </NavLink>
             <NavLink to={`/accounts/profile/${userInfo.userNickname}`}>
               <div className="user-div">
-                <p>{userInfo.userNickname}</p>
+                <UserBadge userType={userInfo.userType} />
+                <span>{userInfo.userNickname}</span>
+                {userInfo.userType == 2 && (
+                  <NavLink to={`/admin`}>
+                    <SettingsApplicationsIcon className="admin-page-icon" />
+                  </NavLink>
+                )}
               </div>
             </NavLink>
             <Link to="/">

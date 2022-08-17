@@ -9,7 +9,7 @@ import defaultImage from '../../img/default.jpeg';
 import Score from '../../components/games/Score';
 import { produceWithPatches } from 'immer';
 import StyledButton from '../../components/Button';
-import { fetchDetail } from '../../features/game/gameActions';
+import { fetchDetail, songScore } from '../../features/game/gameActions';
 
 // import gameResultSound from '../../img/gameResultSound.mp3';
 
@@ -40,12 +40,12 @@ const Info = styled.div`
   grid-template-columns: 1fr 2.5fr 1fr;
   padding-bottom: 0.5rem;
   img {
-    max-height : 115px;
+    max-height: 115px;
   }
 `;
 const Img = styled.div`
   margin: auto;
-`
+`;
 const Song = styled.div`
   display: grid;
   grid-template-rows: 1fr 1fr;
@@ -169,6 +169,7 @@ const ResultPage = () => {
   const [total, setTotal] = useState(0);
   const [rank, setRank] = useState(0);
   const [result, setResult] = useState([]);
+  const [ishigh, setIsHigh] = useState(false);
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -180,11 +181,25 @@ const ResultPage = () => {
     'rank_ss.jpg',
   ];
 
-  const { songID } = location.state;
-  useEffect(() => {
-    dispatch(fetchDetail(songID));
-  }, [dispatch, songID]);
+  const { songId } = location.state;
+  const { highScore } = location.state;
 
+  useEffect(() => {
+    dispatch(fetchDetail(songId));
+  }, [dispatch, songId]);
+
+  useEffect(() => {
+    if (total !== 0) {
+      if (highScore < total) {
+        dispatch(songScore({ score: total, songId: songId }));
+        setIsHigh(true);
+      }
+    } else {
+      return;
+    }
+  }, [dispatch, total, songId]);
+
+  const { data } = location.state;
   const { musicDetail } = useSelector((state) => state.game);
   const userNickname = useSelector(
     (state) => state.user.userInfo?.userNickname,
@@ -193,7 +208,7 @@ const ResultPage = () => {
     console.log(userNickname);
   });
   const calcTotal = () => {
-    return 234;
+    return 1000 * data[0].count + 500 * data[1].count;
   };
   const calcRank = () => {
     return 3;
@@ -206,6 +221,7 @@ const ResultPage = () => {
     // 랭크
     setRank(() => calcRank());
   }, []);
+
   return (
     <Rainbow>
       <GameResult className="background">

@@ -85,17 +85,18 @@ const PayCompelete = () => {
     }
     enrollLecture(data)
     .then((res)=>{
-      console.log(res);
+      console.log("수강 등록 완료",res);
       if(res.message === "Success"){
         setAddDone(true);
         deleteCart();
         setDelDone(true);
       }else{
-        alert("수강 정보 저장 실패, 관리자에게 문의 하세요.");
+        alert(res.message);
         navigation("/accounts/cart");
       }
     }).catch((err)=>{
       alert("아이쿠! 알 수 없는 에러 발생");
+      console.log("수강 등록 err>> ",err);
       navigation("/accounts/cart");
     })    
   }

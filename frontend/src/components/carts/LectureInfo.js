@@ -19,8 +19,8 @@ const CartItem = styled.div`
 >>>>>>> develop/front
 
   img{
-    width : 100%;
-    height : 90px;
+    width: 130px;
+    height: 90px;
   }
 `
 const BadgeDiv = styled.div`

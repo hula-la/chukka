@@ -1,7 +1,9 @@
-import React from 'react'
+import React,{useState} from 'react'
 import styled from 'styled-components';
+
 import { useNavigate } from 'react-router-dom';
 import { getPayId, completePay } from '../../api/pay';
+import Alert from '../../components/Alert';
 
 const StyledButton = styled.button`
   color: white;
@@ -19,9 +21,12 @@ const StyledButton = styled.button`
 `;
 
 const RequestPay= (props)=> {
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalHeader, setModalHeader] = useState('');
+  const [modalMain, setModalMain] = useState('');
+
   const navigate = useNavigate();
-
-
   const requestPay = async () => {
 
     const { IMP } = window;
@@ -34,7 +39,9 @@ const RequestPay= (props)=> {
     }else if(props.payList.length == 1){
       pay_name += ` ${props.payList[0].lecTitle}` ;
     }else{
-      alert("결제할 강의를 선택해주세요");
+      setModalHeader('결제');
+      setModalMain('결제할 강의를 선택해주세요.');
+      openModal();
       return;
     }
     /* 주문번호 생성 */
@@ -43,7 +50,7 @@ const RequestPay= (props)=> {
 
       merchant_uid = res.data;
     })
-
+    console.log("주문번호 생성");
     /* 주문 강의 id 정보 */
     const payLecList = props.payList.map(item=> item.lecId);
 
@@ -63,6 +70,7 @@ const RequestPay= (props)=> {
 
     }, (res) => { // callback
       if (res.success) {
+        console.log("결제 완료");
         /*
         결제 정보 DB에 저장하기
         */
@@ -77,20 +85,37 @@ const RequestPay= (props)=> {
         
         completePay(data).then((response)=>{
           if(response.message === "Success"){
+            console.log("결제 정보 저장 완료");
             navigate("/accounts/pay",{state :{ list : props.payList, amount : res.paid_amount, merchant_uid:res.merchant_uid, user : props.user}});
           }else{
-            console.log("결제 정보 저장 실패");
+            setModalHeader('결제 에러');
+            setModalMain('죄송합니다. 다시 시도해 주시기 바랍니다.');
+            openModal();
           }
         });
       } else {
-        alert("다시 시도해주시기 바랍니다.");
+        setModalHeader('결제 에러');
+        setModalMain('죄송합니다. 다시 시도해 주시기 바랍니다.');
+        openModal();
       }
     });
   }
 
+  const openModal = () => {
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
 
   return (
+    <div>
+      <Alert open={modalOpen} close={closeModal} header={modalHeader}>
+        {modalMain}
+      </Alert>
     <StyledButton onClick={()=>requestPay(props)}>결제하기</StyledButton>
+    </div>
   );
   
 }

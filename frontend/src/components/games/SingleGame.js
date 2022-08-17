@@ -2,6 +2,9 @@ import { AccountBoxTwoTone } from '@material-ui/icons';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { fetchDetail, giveExp } from '../../features/game/gameActions';
 
 import './singleGame.css';
 import pop from '../../img/pop.jpeg';
@@ -14,12 +17,16 @@ import { fetchDetail } from '../../features/game/gameActions';
 const SingleMode = (state) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const songID = location.state.songId;
+  const songId = location.state.songId;
+  const highScore = location.state.highScore;
 
+  const dispatch = useDispatch();
+  const { musicDetail } = useSelector((state) => state.game);
   // const navigate = useNavigate();
 
   // songID = '3';
   // let isMsgReceived = false;
+  const [isFinished, setIsFinished] = useState(true);
 
   const [websckt, setWebsckt] = useState();
   const [FPS, setFPS] = useState(1);
@@ -75,6 +82,13 @@ const SingleMode = (state) => {
     }
   };
 
+  // 동영상 재생을 위한 변수
+  const exitGame = async () => {
+    alert('게임을 종료합니다.');
+    await setIsFinished(false);
+    navigate(`/games`);
+  };
+
   const drawToCanvas = () => {
     try {
       const ctx = canvasRef.current.getContext('2d');
@@ -102,54 +116,24 @@ const SingleMode = (state) => {
     }
   };
 
-  // const stream = () => {
-  //   const a = setInterval(() => sendImage(), 1000 / FPS);
-  //   const b = setInterval(() => {
-  //     setTime(prevTime => prevTime - 1); // <-- Change this line!
-  //   }, 100)
-  //   console.log(a, b,timer);
-  //   setIV(a);
-  //   setTimeDecrease(b);
-
-  //   document.getElementById("dancer_video").play();
-  // }
-
   const startOrStop = () => {
-    // console.log("timer: " + timer)
-
     if (!timer) {
       const a = setInterval(() => sendImage(), 1000 / FPS);
-      // const b = setInterval(() => {
-      //   setTime(prevTime => prevTime - 1);
-      // }, 100)
-      // stream();****************
-      // console.log(a, b,timer);
       setIV(a);
-      // IV_tmp = a;
-      // setTimeDecrease(b);
 
       document.getElementById('dancer_video').play();
       // **********************************
 
       const t = setInterval(() => drawToCanvas(), 50);
-      // const video_stream = videoRef.current.srcObject;
-      // videoRef.current.srcObject = video_stream;
       setTimer(t);
-      // timer_tmp = t;
     } else {
       document.getElementById('dancer_video').pause();
-
-      // console.log("************");
-      // console.log(IV, timer);
-      // console.log("************");
 
       clearInterval(timer);
       setTimer(undefined);
 
-      //
-      // clearInterval(timeDecrease);
       clearInterval(IV);
-      // setTimeDecrease(undefined);
+
       setIV(undefined);
     }
     // setPlaying(!playing);
@@ -189,7 +173,7 @@ const SingleMode = (state) => {
     ws.onopen = (event) => {
       console.log('ws.open');
       // 노래제목 보내기
-      ws.send(songID);
+      ws.send(songId);
     };
 
     //clean up function when we close page
@@ -203,12 +187,26 @@ const SingleMode = (state) => {
         clearInterval(timer);
         clearInterval(IV);
 
-        if (event.wasClean) {
-          alert(
-            `[close] 커넥션이 정상적으로 종료되었습니다(code=${event.code} reason=${event.reason})`,
-          );
-        } else {
-          alert('[close] 커넥션이 죽었습니다.');
+        const sendResult = [
+          {
+            name: 'PERFECT',
+            count: perfectCnt,
+          },
+          {
+            name: 'GOOD',
+            count: goodCnt,
+          },
+          {
+            name: 'BAD',
+            count: badCnt,
+          },
+        ];
+
+        if (isFinished) {
+          navigate('/game/result', {
+            state: { data: sendResult, songId: songId, highScore: highScore },
+          });
+          dispatch(giveExp());
         }
         const sendResult = [
           {
@@ -240,7 +238,7 @@ const SingleMode = (state) => {
 
           if (similarity == 0) {
             setGameEF('../../img/game_effect/notFound.png');
-          } else if (similarity < 0.02) {
+          } else if (similarity < 0.015) {
             setPerfectCnt((perfectCnt) => perfectCnt + 1);
             setScore((score) => score + 1000);
             setGameEF('../../img/game_effect/perfect.png');
@@ -279,11 +277,10 @@ const SingleMode = (state) => {
         }
       };
     }
-  }, [websckt, perfectCnt, goodCnt, badCnt, isMsgReceived, score]);
+  }, [websckt, perfectCnt, goodCnt, badCnt, isMsgReceived, score, isFinished]);
 
-  const { musicDetail } = useSelector((state) => state.game);
   useEffect(() => {
-    dispatch(fetchDetail(songID));
+    dispatch(fetchDetail(songId));
   }, [dispatch]);
 
   const Styles = {
@@ -364,6 +361,13 @@ const SingleMode = (state) => {
       border: '3px solid #e7d8b4',
     },
 
+    BackButton: {
+      display: 'flex',
+      position: 'absolute',
+      right: '5px',
+      top: '5px',
+    },
+
     // 노래 정보
     Album: {
       position: 'absolute',
@@ -403,11 +407,12 @@ const SingleMode = (state) => {
           {/* 왼쪽 */}
           <div style={Styles.gameColSide}>
             <h2 style={Styles.pageTitle}>Single Mode</h2>
+            <div style={Styles.Score}>HighScore: {highScore}</div>
             <div style={Styles.Score}>Score: {score}</div>
             {musicDetail !== null && (
               <div style={Styles.Album}>
                 <img
-                  src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${songID}`}
+                  src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${songId}`}
                   style={Styles.AlbumImg}
                 ></img>
                 <div style={Styles.AlbumInfo}>
@@ -438,7 +443,7 @@ const SingleMode = (state) => {
                 <source
                   src={
                     'https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/video/' +
-                    songID
+                    songId
                   }
                   type="video/mp4"
                 />
@@ -448,6 +453,15 @@ const SingleMode = (state) => {
 
           {/* 오른쪽 */}
           <div style={Styles.gameColSide}>
+            <div
+              className="video-lecture-left-div"
+              onClick={() => exitGame()}
+              style={Styles.BackButton}
+            >
+              <ExitToAppIcon className="video-lecture-exit" />
+              <h3>메인으로 돌아가기</h3>
+            </div>
+
             {/* <div style={Styles.SkeletonContainer}> */}
             {/* 관절 영상 */}
 
@@ -472,7 +486,12 @@ const SingleMode = (state) => {
             {/* 내 영상 */}
             {/* {isMyVideo == true && ( */}
             <div id="canvasDiv" style={Styles.MyVideo}>
-              <canvas id="canvas" className={isMyVideo == true?'':'Hidden' } ref={canvasRef} style={Styles.Canvas} />
+              <canvas
+                id="canvas"
+                className={isMyVideo == true ? '' : 'Hidden'}
+                ref={canvasRef}
+                style={Styles.Canvas}
+              />
             </div>
             {/* )} */}
 
