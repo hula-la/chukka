@@ -197,23 +197,21 @@ const CartPage = () => {
     deleteCartItem(id)
       .then((res) => {
         if (res.data.message === 'Success') {
-          getCartList('user1').then((data) => {
+          getCartList().then((data) => {
             if (data.data) {
               setLectures(data.data);
 
               setCheckedItems(data.data);
 
               setCheckedIds(data.data.map((item) => item.cartItemId));
-
-              setModalHeader('장바구니 삭제');
-              setModalMain('장바구니에서 삭제되었습니다.');
-
-              openModal();
             } else {
               setLectures([]);
               setCheckedItems([]);
               setCheckedIds([]);
             }
+            setModalHeader('장바구니 삭제');
+            setModalMain('장바구니에서 삭제되었습니다.');
+            openModal();
           });
           dispatch(userCartCount());
         } else {
