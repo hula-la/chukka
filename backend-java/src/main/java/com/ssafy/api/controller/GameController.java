@@ -37,8 +37,12 @@ public class GameController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = GameRes.class),
     })
-    public ResponseEntity<BaseResponseBody> getGames() {
-        List<GameRes> gameList = gameService.findAll();
+    public ResponseEntity<BaseResponseBody> getGames(@ApiIgnore Authentication authentication) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId(loginUserId);
+
+        List<GameRes> gameList = gameService.findAll(user);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", gameList));
     }
@@ -50,8 +54,8 @@ public class GameController {
     })
     public ResponseEntity<BaseResponseBody> updateGameHighScore(
             @ApiIgnore Authentication authentication,
-            @RequestParam @ApiParam(value="노래 아이디", required = true) Long songId,
-            @RequestParam @ApiParam(value="점수", required = true) int score
+            @RequestBody @ApiParam(value="노래 아이디", required = true) Long songId,
+            @RequestBody @ApiParam(value="점수", required = true) int score
     ) {
 
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
@@ -69,10 +73,15 @@ public class GameController {
             @ApiResponse(code = 200, message = "성공", response = GameRes.class),
     })
     public ResponseEntity<BaseResponseBody> getGameById(
+            @ApiIgnore Authentication authentication,
             @PathVariable @ApiParam(value="노래 아이디", required = true) Long songId
     ) {
 
-        GameRes game = gameService.findBySongId(songId);
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId(loginUserId);
+
+        GameRes game = gameService.findBySongId(user,songId);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", game));
     }
