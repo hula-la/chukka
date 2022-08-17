@@ -99,7 +99,7 @@ const PayResult = styled.div`
   // border-style : solid;
   // border-color : white;
 
-  padding: 0 8% 0 5%;
+  padding: 0 5% 0 5%;
   width: 100%;
   text-align: center;
   font-size: 1.2rem;
@@ -111,8 +111,8 @@ const PayResult = styled.div`
     float: left;
     color: #ff2c55;
   }
-  button {
-    margin-top: 5%;
+  .pay-info {
+    margin-bottom: 15%;
   }
 `;
 
@@ -263,11 +263,11 @@ const CartPage = () => {
             ))}
         </PayList>
         <PayResult>
-          <div>
+          <div className='pay-info'>
             <span className="span-left">총 결제 금액</span>
             <span className="span-right">{totalPrice} 원</span>
           </div>
-          <RequestPay
+          <RequestPay 
             user={userProfile}
             price={totalPrice}
             payList={checkedItems}
