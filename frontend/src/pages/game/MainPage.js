@@ -38,6 +38,10 @@ const SongInfo = styled.div`
   .singer{
     font-size: 0.8rem;
   }
+  .highScore{
+    
+    font-size: 0.4rem;
+  }
   `
 
 const StyledButton = styled.button`
@@ -83,12 +87,7 @@ const MainPage = () => {
               alt={`${music.songId}`}
             />
 
-<<<<<<< Updated upstream
-            <div>
-              {music.songName} | {music.singer} | {'★'.repeat(music.level)} |{' '}
-              {music.highScore}
-            </div>
-=======
+
             <SongInfo>
               <div className='songName'>
                 {music.songName}
@@ -99,8 +98,10 @@ const MainPage = () => {
               <div>
                 {'★'.repeat(music.level)}
               </div>
+              <div className='highScore'>
+                HighScore: {music.highScore}
+              </div>
             </SongInfo>
->>>>>>> Stashed changes
           </div>
         );
       });

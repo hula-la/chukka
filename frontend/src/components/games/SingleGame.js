@@ -11,8 +11,6 @@ import pop from '../../img/pop.jpeg';
 import styled from 'styled-components';
 
 import './button.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchDetail } from '../../features/game/gameActions';
 
 const SingleMode = (state) => {
   const navigate = useNavigate();
@@ -66,7 +64,7 @@ const SingleMode = (state) => {
 
   // 관절 영상 분리를 위한 변수
   const [isMsgReceived, setIsMsgReceived] = useState(false);
-  const dispatch = useDispatch();
+
   // 동영상 재생을 위한 변수
   const getWebcam = (callback) => {
     try {
@@ -208,23 +206,6 @@ const SingleMode = (state) => {
           });
           dispatch(giveExp());
         }
-        const sendResult = [
-          {
-            name: 'PERFECT',
-            count: perfectCnt,
-          },
-          {
-            name: 'GOOD',
-            count: goodCnt,
-          },
-          {
-            name: 'BAD',
-            count: badCnt,
-          },
-        ];
-        navigate('/game/result', {
-          state: { data: sendResult, songID: songID },
-        });
       };
 
       websckt.onmessage = (e) => {
@@ -503,7 +484,7 @@ const SingleMode = (state) => {
                   id="switch"
                   className="switch"
                   checked={isSkeleton}
-                  onChange={() => {
+                  onClick={() => {
                     setIsSkeleton(!isSkeleton);
                   }}
                 />
@@ -519,7 +500,7 @@ const SingleMode = (state) => {
                   id="switch2"
                   className="switch"
                   checked={isMyVideo}
-                  onChange={() => {
+                  onClick={() => {
                     setIsMyVideo(!isMyVideo);
                   }}
                 />
