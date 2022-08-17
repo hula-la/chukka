@@ -1,4 +1,11 @@
-import { Navigate, Route, Routes, useLocation, Outlet } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  Outlet,
+} from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './App.css';
 // page
@@ -61,6 +68,10 @@ const App = () => {
           <Route path="password" element={<FindPwPage />} />
           <Route element={<AuthLayout />}>
             <Route path="profile/:nickName" element={<ProfilePage />} />
+            <Route
+              path="profile/:nickName/:pageNum"
+              element={<ProfilePage />}
+            />
             <Route path="cart" element={<CartPage />} />
             <Route path="pay" element={<PayConfrim />} />
           </Route>
@@ -92,19 +103,20 @@ const App = () => {
         {/* games */}
         <Route path="games" element={<Layout />}>
           <Route path="" element={<MainPage />} />
-          
         </Route>
         <Route path="game/multi" element={<MultiGamePage />} />
         <Route path="game" element={<GamesPage />} />
         <Route path="game/result" element={<ResultPage />} />
         {/* admin */}
-        <Route path="admin" element={<Layout />}>
-          <Route path="" element={<AdminPage />} />
-          <Route path="ins" element={<AdminInsProfile />} />
-          <Route path="lecture/record" element={<AddRecordLecture />} />
-          <Route path="lecture/live" element={<AddLiveLecture />} />
-          <Route path=":lecId" element={<DetailLectue />} />
-          <Route path="section/:lecId" element={<AddSection />} />
+        <Route element={<AdminLayout />}>
+          <Route path="admin" element={<Layout />}>
+            <Route path="" element={<AdminPage />} />
+            <Route path="ins" element={<AdminInsProfile />} />
+            <Route path="lecture/record" element={<AddRecordLecture />} />
+            <Route path="lecture/live" element={<AddLiveLecture />} />
+            <Route path=":lecId" element={<DetailLectue />} />
+            <Route path="section/:lecId" element={<AddSection />} />
+          </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -122,6 +134,20 @@ const AuthLayout = () => {
     return <Navigate to="/accounts/login" state={{ from: location }} replace />;
   }
   return <Outlet />;
+};
+
+const AdminLayout = () => {
+  const { userInfo } = useSelector((state) => state.user);
+  const location = useLocation();
+  const navigate = useNavigate();
+  if (userInfo?.userType !== 2) {
+    alert('권한이 없습니다.');
+    // navigate(-1);
+    // return;
+    return <Navigate to={-1} replace />;
+  } else {
+    return <Outlet />;
+  }
 };
 
 // const RequireAuth = ({ children }) => {

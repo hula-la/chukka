@@ -77,7 +77,7 @@ export const changeProfile = createAsyncThunk(
   'user/changeProfile',
   async ({ profileInputs, profilePicture }, { rejectWithValue }) => {
     try {
-      console.log(profileInputs);
+      console.log(profilePicture);
       const { data } = await change(profileInputs, profilePicture);
       return data;
     } catch (error) {
@@ -108,7 +108,7 @@ export const findPw = createAsyncThunk(
   'user/findPw',
   async (input, { rejectWithValue }) => {
     try {
-      const { data } = await find(input);
+      const data = await find(input);
       return data;
     } catch (error) {
       if (error.response && error.response.data.message) {

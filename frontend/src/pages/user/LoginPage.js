@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from '../../features/user/userActions';
+import { useCookies } from 'react-cookie';
+import { CookiesProvider } from 'react-cookie';
 import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
 
@@ -136,10 +138,38 @@ const LoginTemplate = ({ children }) => {
 
 const LoginForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [loginInputs, setLoginInputs] = useState({
     userId: '',
     userPw: '',
   });
+
+  const [cookies, setCookie, removeCookie] = useCookies(['rememberUser']);
+  const [isRember, setIsRemember] = useState(false);
+
+  useEffect(() => {
+    if (cookies.rememberUser !== undefined) {
+      console.log(cookies.rememberUser);
+      const { userId, userPw } = cookies.rememberUser;
+      console.log(userId);
+      setLoginInputs({
+        userId: userId,
+        userPw: userPw,
+      });
+      setIsRemember(true);
+    }
+  }, []);
+
+  const handleOnChange = (e) => {
+    setIsRemember(e.target.checked);
+    if (e.target.checked) {
+      setCookie('rememberUser', loginInputs, { maxAge: 2000 });
+    }
+    if (!e.target.checked) {
+      removeCookie('rememberUser');
+    }
+  };
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -152,6 +182,7 @@ const LoginForm = () => {
     e.preventDefault();
     // 로그인 form Submit
     dispatch(userLogin(loginInputs));
+    navigate('/lectures');
   };
 
   return (
@@ -164,6 +195,7 @@ const LoginForm = () => {
           <input
             id="userId"
             name="userId"
+            defaultValue={loginInputs.userId}
             onChange={onChange}
             placeholder="아이디를 입력하세요"
             autoComplete="off"
@@ -177,6 +209,7 @@ const LoginForm = () => {
             id="userPw"
             name="userPw"
             type="password"
+            defaultValue={loginInputs.userPw}
             onChange={onChange}
             placeholder="비밀번호를 입력하세요"
           />
@@ -185,7 +218,12 @@ const LoginForm = () => {
           <label for="remember" className="remember">
             Remember me
           </label>
-          <input id="remember" type="checkbox" />
+          <input
+            id="remember"
+            type="checkbox"
+            checked={isRember}
+            onChange={handleOnChange}
+          />
         </div>
         <button>LOGIN</button>
         <div className="linkdiv">
