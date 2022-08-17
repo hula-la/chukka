@@ -9,7 +9,7 @@ import defaultImage from '../../img/default.jpeg';
 import Score from '../../components/games/Score';
 import { produceWithPatches } from 'immer';
 import StyledButton from '../../components/Button';
-import { fetchDetail } from '../../features/game/gameActions';
+import { fetchDetail, songScore } from '../../features/game/gameActions';
 
 // import gameResultSound from '../../img/gameResultSound.mp3';
 
@@ -185,6 +185,15 @@ const ResultPage = () => {
     dispatch(fetchDetail(songID));
   }, [dispatch, songID]);
 
+  useEffect(() => {
+    if (total === 0) {
+      dispatch(songScore({total, songID}))
+    } else {
+      return
+    }
+  }, [dispatch, total, songID])
+
+  const { data } = location.state
   const { musicDetail } = useSelector((state) => state.game);
   const userNickname = useSelector(
     (state) => state.user.userInfo?.userNickname,
@@ -193,7 +202,7 @@ const ResultPage = () => {
     console.log(userNickname);
   });
   const calcTotal = () => {
-    return 234;
+    return 1000*data[0].count+500*data[1].count;
   };
   const calcRank = () => {
     return 3;
@@ -206,6 +215,8 @@ const ResultPage = () => {
     // 랭크
     setRank(() => calcRank());
   }, []);
+
+
   return (
     <Rainbow>
       <GameResult className="background">
