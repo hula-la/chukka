@@ -335,6 +335,7 @@ const VideoLecturePage = () => {
   };
 
   const sideBarClickHandler = (secId) => {
+    setIsSideBarOpen(false);
     navigate(`/lectures/${lectureId}/section/${secId}`);
   };
 

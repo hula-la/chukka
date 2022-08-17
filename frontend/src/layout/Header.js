@@ -103,16 +103,16 @@ const Header = () => {
     {
       title: 'Lectures',
       url: '/lectures',
-      submenu: [
-        {
-          title: 'Lectures Video',
-          url: '/lectures/1/section/1',
-        },
-        {
-          title: 'Lectures Live',
-          url: '/lectures/live',
-        },
-      ],
+      // submenu: [
+      //   {
+      //     title: 'Lectures Video',
+      //     url: '/lectures/1/section/1',
+      //   },
+      //   {
+      //     title: 'Lectures Live',
+      //     url: '/lectures/live',
+      //   },
+      // ],
     },
     {
       title: 'Games',

@@ -40,6 +40,11 @@ export const reviews = async (lectureId) => {
   return res;
 };
 
+export const putNotice = async (lecId, params) => {
+  const res = await client.put(`lectures/${lecId}`, params);
+  return res;
+};
+
 // export const removeReview = async (lectureId, reviewId) => {
 //   const res = await client.delete(`lectures/${lectureId}/reviews/${reviewId}`);
 //   return res.data;
