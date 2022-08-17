@@ -15,8 +15,8 @@ const CartItem = styled.div`
   padding : 20px 5px 20px 15px;
 
   img{
-    width : 100%;
-    height : 90px;
+    width: 130px;
+    height: 90px;
   }
 `
 const BadgeDiv = styled.div`
