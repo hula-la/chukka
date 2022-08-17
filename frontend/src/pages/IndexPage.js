@@ -314,7 +314,7 @@ const IndexPage = () => {
           </ServiceItem>
         </ServiceContainer>
         <Join>
-          <Link to="accounts/login">
+          <Link to="/accounts/login">
             <div className="btn">
               Join us !
               <KeyboardDoubleArrowRightIcon className="icon" />

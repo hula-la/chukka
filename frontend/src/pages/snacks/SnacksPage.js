@@ -158,8 +158,8 @@ const SnacksPage = ({ history }) => {
     }
   };
   const onClickPop = () => {
-    if (sortSnacks !== 'snacksLikes,ASC') {
-      setSortSnacks('snacksLikes,ASC');
+    if (sortSnacks !== 'snacksLikes,DESC') {
+      setSortSnacks('snacksLikes,DESC');
     }
   };
 

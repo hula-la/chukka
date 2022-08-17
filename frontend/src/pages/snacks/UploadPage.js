@@ -148,13 +148,18 @@ const UploadPage = () => {
 
   const onChangeVideo = (e) => {
     setVideo(e.target.files[0]);
-    console.log(!e.target.value);
-    if (!e.target.value) {
-      setUploadMessage('SELECT YOUR SNACKS');
-      setIsVideo(false);
+    const maxSize = 1 * 1024 * 1024;
+    const fileSize = e.target.files[0].size;
+    if (fileSize > maxSize) {
+      alert('파일의 사이즈는 20MB이내로 등록가능합니다');
     } else {
-      setUploadMessage(e.target.value);
-      setIsVideo(true);
+      if (!e.target.value) {
+        setUploadMessage('SELECT YOUR SNACKS');
+        setIsVideo(false);
+      } else {
+        setUploadMessage(e.target.value.slice(12, -1));
+        setIsVideo(true);
+      }
     }
   };
 
