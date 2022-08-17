@@ -134,13 +134,8 @@ public class CartController  {
         String loginUserId = userDetails.getUsername();
         User user = userService.getUserByUserId(loginUserId);
         try{
-            System.out.println("==== 삭제 " + cartItemId + " ====");
             Cart userCart = cartService.findCartByUser(user.getUserId());
-            System.out.println("전 >>"+userCart.getCount());
             Cart updateCart = cartService.deleteByCartItemId(cartItemId, userCart);
-            System.out.println("==== 삭제 완료 ====");
-            System.out.println("후 >>" + updateCart.getCount());
-//            cartService.updateCart(userCart);
             return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", updateCart.getCount()));
         }catch (Exception e){
             return ResponseEntity.status(403).body(BaseResponseBody.of(403, "fail", null));
