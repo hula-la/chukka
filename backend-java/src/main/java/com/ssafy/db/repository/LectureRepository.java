@@ -73,7 +73,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     List<Lecture> findLecturesByUserId(String userId);
 
     @Modifying(clearAutomatically = true)
-    @Query(value = "update Lecture lec set lec.lecNotice = :lecNotice where lec.lecId = :lecId", nativeQuery = true)
+    @Query(value = "update Lecture lec set lec.lecNotice = :lecNotice where lec.lecId = :lecId")
     void updateLecNotice(int lecId, String lecNotice);
 
 
