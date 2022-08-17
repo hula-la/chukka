@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useInView } from 'react-intersection-observer';
 import styled from 'styled-components';
@@ -575,12 +575,22 @@ const ProfilePage = () => {
   }, [dispatch, paramsNickname]);
 
   // 컴포넌트 바꾸기 용
-  const [pageNum, setpageNum] = useState('1');
+  const pageNum = params.pageNum ? params.pageNum : '1';
+  console.log(pageNum);
+  // const [pageNum, setpageNum] = useState('1');
 
-  const onClickSnacks = () => setpageNum('1');
-  const onClickMyList = () => setpageNum('2');
-  const onClickChangeProfile = () => setpageNum('3');
-  const onClickPassword = () => setpageNum('4');
+  // const onClickSnacks = () => setpageNum('1');
+  // const onClickMyList = () => setpageNum('2');
+  // const onClickChangeProfile = () => setpageNum('3');
+  // const onClickPassword = () => setpageNum('4');
+  const onClickSnacks = () =>
+    navigate(`/accounts/profile/${params.nickName}/1`, { replace: true });
+  const onClickMyList = () =>
+    navigate(`/accounts/profile/${params.nickName}/2`, { replace: true });
+  const onClickChangeProfile = () =>
+    navigate(`/accounts/profile/${params.nickName}/3`, { replace: true });
+  const onClickPassword = () =>
+    navigate(`/accounts/profile/${params.nickName}/4`, { replace: true });
 
   const onClickUpload = () => {
     let fileInput = document.getElementById('profile');
@@ -690,7 +700,6 @@ const ProfilePage = () => {
 
   // 나의 강의 목록 불러오기
   useEffect(() => {
-    console.log(userType);
     if (userType !== 1) {
       dispatch(fetchMyLectures());
     }
