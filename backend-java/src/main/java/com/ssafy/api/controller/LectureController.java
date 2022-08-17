@@ -120,11 +120,13 @@ public class LectureController {
     @ApiOperation(value = "공지사항", notes = "공지사항을 업데이트한다.")
     public ResponseEntity<BaseResponseBody> updateLecNotice(
             @ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value = "수정할 공지사항", required = true) NoticeUpdateReq updateInfo) {
+            @RequestBody @ApiParam(value = "수정할 공지사항", required = true) LectureNoticeReq updateInfo) {
 
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String userId = userDetails.getUsername();
-        lectureService.updateLecNotice(userId, updateInfo);
+        String lecNotice = updateInfo.getLecNotice();
+        int lecId = updateInfo.getLecId();
+        lectureService.updateLecNotice(userId, lecId, lecNotice);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success", null));
     }

@@ -264,19 +264,13 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public Lecture updateLecNotice(String userId, NoticeUpdateReq noticeUpdateReq) {
-        if (lectureRepository.findById(noticeUpdateReq.getLecId()).isPresent()) {
+    public void updateLecNotice(String userId, int lecId, String lecNotice) {
+        if (lectureRepository.findById(lecId).isPresent()) {
             Optional<User> user = userRepository.findByUserId(userId);
-            if (user.get().getUserType() != 1) {
-                return null;
+            if (user.get().getUserType() == 1) {
+                lectureRepository.updateLecNotice(lecId, lecNotice);
             }
-            Lecture lecture = Lecture.builder()
-                    .lecId(noticeUpdateReq.getLecId())
-                    .lecNotice(noticeUpdateReq.getLecNotice())
-                    .build();
-            return lectureRepository.save(lecture);
         }
-        return null;
     }
 
     @Override

@@ -50,7 +50,7 @@ public interface LectureService {
     Lecture updateLiveLecture(LiveLectureUpdateReq liveLectureUpdateReq);
 
     // 공지사항 수정
-    Lecture updateLecNotice(String userId, NoticeUpdateReq noticeUpdateReq);
+    void updateLecNotice(String userId, int lecId, String lecNotice);
 
     // Delete ==========================================================================================================
     boolean delete(int lecId);
