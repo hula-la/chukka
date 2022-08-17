@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from '../../features/user/userActions';
 import { useCookies } from 'react-cookie';
+import { CookiesProvider } from 'react-cookie';
 import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
 
@@ -149,10 +150,11 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (cookies.rememberUser !== undefined) {
+      console.log(cookies.rememberUser);
       const { userId, userPw } = cookies.rememberUser;
+      console.log(userId);
       setLoginInputs({
-        ...loginInputs,
-        userID: userId,
+        userId: userId,
         userPw: userPw,
       });
       setIsRemember(true);
@@ -193,7 +195,7 @@ const LoginForm = () => {
           <input
             id="userId"
             name="userId"
-            defaultValue={loginInputs.userID}
+            defaultValue={loginInputs.userId}
             onChange={onChange}
             placeholder="아이디를 입력하세요"
             autoComplete="off"

@@ -17,7 +17,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import BuildIcon from '@mui/icons-material/Build';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
-
 const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
@@ -59,7 +58,7 @@ const Wrapper = styled.div`
     width: 85%;
     height: 100vh;
   }
-  & div.upload-container{
+  & div.upload-container {
     width: 15%;
     font-size: 0.8rem;
   }
@@ -67,7 +66,7 @@ const Wrapper = styled.div`
     margin-top: 2rem;
     margin-bottom: 1rem;
     transition: 300ms;
-    opacity: 0.7
+    opacity: 0.7;
     :hover {
       opacity: 1;
       font-weight: bolder;
@@ -75,7 +74,7 @@ const Wrapper = styled.div`
     }
   }
   & div.upload-live {
-    opacity: 0.7
+    opacity: 0.7;
     transition: 300ms;
     :hover {
       opacity: 1;
@@ -127,8 +126,8 @@ const InsBox = styled.div`
   }
   & svg {
     fill: white;
-    }
   }
+
   & div.MuiDataGrid-row {
     transition: 300ms;
     :hover {
@@ -341,7 +340,7 @@ const InsTab = ({ instList }) => {
 
   return (
     <InsBox>
-      <div className='table-container'>
+      <div className="table-container">
         <DataGrid
           className="table"
           rows={instList}
@@ -357,10 +356,10 @@ const InsTab = ({ instList }) => {
           // }}
         />
       </div>
-      <div className='profile-add-container'>
+      <div className="profile-add-container">
         <Link to="/admin/ins">
           <ControlPointIcon />
-          <p className='profile-add-content'>강사 프로필 추가</p>
+          <p className="profile-add-content">강사 프로필 추가</p>
         </Link>
       </div>
     </InsBox>
@@ -414,7 +413,7 @@ const LectureTab = ({ lectureList }) => {
   };
   return (
     <Wrapper>
-      <div className='table-container'>
+      <div className="table-container">
         {lectureList.length !== 0 && (
           <DataGrid
             className="table"
@@ -424,16 +423,16 @@ const LectureTab = ({ lectureList }) => {
           />
         )}
       </div>
-      <div className='upload-container'>
-        <div className='upload-record'>
+      <div className="upload-container">
+        <div className="upload-record">
           <Link to="lecture/record">
-            <ControlPointIcon className='icon'/>
+            <ControlPointIcon className="icon" />
             <span>녹화강의 추가</span>
           </Link>
         </div>
-        <div className='upload-live'>
+        <div className="upload-live">
           <Link to="lecture/live">
-            <ControlPointIcon className='icon'/>
+            <ControlPointIcon className="icon" />
             <span>라이브 강의 추가</span>
           </Link>
         </div>

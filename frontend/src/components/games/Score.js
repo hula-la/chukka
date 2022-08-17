@@ -39,6 +39,7 @@ const Score = (props) =>{
   const [progress1, setProgress1] = useState(0);
   const [progress2, setProgress2] = useState(0);
   const [progress3, setProgress3] = useState(0);
+  const [max, setMax] = useState(0);
 
   useEffect(() => {
 
@@ -62,6 +63,7 @@ const Score = (props) =>{
   }, []);
 
   useEffect(() => {
+    setMax(props.result[0].count+props.result[1].count+props.result[2].count)
     if (progress1 === props.result[0].count) {
       clearInterval(interval1);
     }
@@ -77,15 +79,15 @@ const Score = (props) =>{
     <Score>
       <ScoreItem>
         <div className='score-title'>{props.result[0].name}</div>
-        <progress id="progress" value={progress1} min="0" max="100"></progress>
+        <progress id="progress" value={progress1} min="0" max={ max }></progress>
       </ScoreItem>
       <ScoreItem>
         <div className='score-title'>{props.result[1].name}</div>
-        <progress id="progress" value={progress2} min="0" max="100"></progress>
+        <progress id="progress" value={progress2} min="0" max={ max }></progress>
       </ScoreItem>
       <ScoreItem>
         <div className='score-title'>{props.result[2].name}</div>
-        <progress id="progress" value={progress3} min="0" max="100"></progress>
+        <progress id="progress" value={progress3} min="0" max={ max }></progress>
       </ScoreItem>
     </Score>
   )

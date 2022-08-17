@@ -746,7 +746,6 @@ const ProfilePage = () => {
         openModal();
       } else if (payload.message === 'Success') {
         alert('비밀번호가 성공적으로 변경되었습니다.');
-        // setpageNum('1');
         navigate('');
       }
     }
