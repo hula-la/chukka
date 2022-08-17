@@ -25,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -116,6 +117,7 @@ public class LectureController {
 
     // 공지사항 수정 =====================================================================================================
     // 강사 userType == 1 권한 주기
+    @Transactional
     @PutMapping("/{lecId}")
     @ApiOperation(value = "공지사항", notes = "공지사항을 업데이트한다.")
     public ResponseEntity<BaseResponseBody> updateLecNotice(
