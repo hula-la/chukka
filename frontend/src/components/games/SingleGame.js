@@ -2,7 +2,9 @@ import { AccountBoxTwoTone } from '@material-ui/icons';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { fetchDetail, giveExp } from '../../features/game/gameActions';
 
 import './singleGame.css';
 import pop from '../../img/pop.jpeg';
@@ -11,16 +13,18 @@ import styled from 'styled-components';
 import './button.css';
 
 const SingleMode = (state) => {
-  let isFinished = true;
   const navigate = useNavigate();
   const location = useLocation();
-  const songID = location.state.songId;
+  const songId = location.state.songId;
+  const highScore = location.state.highScore;
 
+  const dispatch = useDispatch();
+  const { musicDetail } = useSelector((state) => state.game);
   // const navigate = useNavigate();
 
   // songID = '3';
   // let isMsgReceived = false;
-  // const [isFinished, setIsFinished] = useState(true);
+  const [isFinished, setIsFinished] = useState(true);
 
   const [websckt, setWebsckt] = useState();
   const [FPS, setFPS] = useState(1);
@@ -77,10 +81,10 @@ const SingleMode = (state) => {
   };
 
   // 동영상 재생을 위한 변수
-  const exitGame = () => {
-    alert("나가요?")
-    isFinished = false;
-      navigate(`/games`)
+  const exitGame = async () => {
+    alert('게임을 종료합니다.');
+    await setIsFinished(false);
+    navigate(`/games`);
   };
 
   const drawToCanvas = () => {
@@ -110,9 +114,7 @@ const SingleMode = (state) => {
     }
   };
 
-
   const startOrStop = () => {
-
     if (!timer) {
       const a = setInterval(() => sendImage(), 1000 / FPS);
       setIV(a);
@@ -122,7 +124,6 @@ const SingleMode = (state) => {
 
       const t = setInterval(() => drawToCanvas(), 50);
       setTimer(t);
-
     } else {
       document.getElementById('dancer_video').pause();
 
@@ -170,7 +171,7 @@ const SingleMode = (state) => {
     ws.onopen = (event) => {
       console.log('ws.open');
       // 노래제목 보내기
-      ws.send(songID);
+      ws.send(songId);
     };
 
     //clean up function when we close page
@@ -180,14 +181,9 @@ const SingleMode = (state) => {
   useEffect(() => {
     if (websckt) {
       websckt.onclose = function (event) {
-
-
         console.log('클로징 perfectCnt: ' + perfectCnt);
         clearInterval(timer);
         clearInterval(IV);
-
-        alert(isFinished);
-
 
         const sendResult = [
           {
@@ -206,10 +202,10 @@ const SingleMode = (state) => {
 
         if (isFinished) {
           navigate('/game/result', {
-            state: { data: sendResult, songID: songID },
+            state: { data: sendResult, songId: songId, highScore: highScore },
           });
+          dispatch(giveExp());
         }
-
       };
 
       websckt.onmessage = (e) => {
@@ -262,9 +258,11 @@ const SingleMode = (state) => {
         }
       };
     }
-  }, [websckt, perfectCnt, goodCnt, badCnt, isMsgReceived, score]);
+  }, [websckt, perfectCnt, goodCnt, badCnt, isMsgReceived, score, isFinished]);
 
-  useEffect(() => {});
+  useEffect(() => {
+    dispatch(fetchDetail(songId));
+  }, [dispatch]);
 
   const Styles = {
     GamePage: {
@@ -390,14 +388,20 @@ const SingleMode = (state) => {
           {/* 왼쪽 */}
           <div style={Styles.gameColSide}>
             <h2 style={Styles.pageTitle}>Single Mode</h2>
+            <div style={Styles.Score}>HighScore: {highScore}</div>
             <div style={Styles.Score}>Score: {score}</div>
-            <div style={Styles.Album}>
-              <img src={pop} style={Styles.AlbumImg}></img>
-              <div style={Styles.AlbumInfo}>
-                <div style={Styles.AlbumTitle}>Pop</div>
-                <div>나연</div>
+            {musicDetail !== null && (
+              <div style={Styles.Album}>
+                <img
+                  src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${songId}`}
+                  style={Styles.AlbumImg}
+                ></img>
+                <div style={Styles.AlbumInfo}>
+                  <div style={Styles.AlbumTitle}>{musicDetail.songName}</div>
+                  <div>{musicDetail.singer}</div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* 중간 */}
@@ -420,7 +424,7 @@ const SingleMode = (state) => {
                 <source
                   src={
                     'https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/video/' +
-                    songID
+                    songId
                   }
                   type="video/mp4"
                 />
@@ -431,18 +435,16 @@ const SingleMode = (state) => {
           {/* 오른쪽 */}
           <div style={Styles.gameColSide}>
             <div
-                  className="video-lecture-left-div"
+              className="video-lecture-left-div"
               onClick={() => exitGame()}
               style={Styles.BackButton}
-              >
+            >
               <ExitToAppIcon className="video-lecture-exit" />
               <h3>메인으로 돌아가기</h3>
             </div>
-            
-            
+
             {/* <div style={Styles.SkeletonContainer}> */}
             {/* 관절 영상 */}
-
 
             {playing == true && isSkeleton && (
               <div style={Styles.PoseContainer}>
@@ -465,7 +467,12 @@ const SingleMode = (state) => {
             {/* 내 영상 */}
             {/* {isMyVideo == true && ( */}
             <div id="canvasDiv" style={Styles.MyVideo}>
-              <canvas id="canvas" className={isMyVideo == true?'':'Hidden' } ref={canvasRef} style={Styles.Canvas} />
+              <canvas
+                id="canvas"
+                className={isMyVideo == true ? '' : 'Hidden'}
+                ref={canvasRef}
+                style={Styles.Canvas}
+              />
             </div>
             {/* )} */}
 
@@ -501,7 +508,6 @@ const SingleMode = (state) => {
                   <span className="onf_btn"></span>
                 </label>
               </div>
-              
             </div>
           </div>
         </div>

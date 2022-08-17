@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchDetail, fetchMusic, songScore } from './gameActions';
+import { fetchDetail, fetchMusic, giveExp, songScore } from './gameActions';
 
 const initialState = {
   musicList: [],
@@ -22,13 +22,20 @@ const gameSlice = createSlice({
     [fetchDetail.rejected]: (state, payload) => {
       state.error = payload;
     },
-    
+
     [songScore.fulfilled]: (state, { payload }) => {
-      console.log(payload)
+      console.log(payload);
     },
     [songScore.rejected]: (state, { payload }) => {
-      console.log(payload)
-    }
+      console.log(payload);
+    },
+
+    [giveExp.fulfilled]: (state, { payload }) => {
+      console.log(payload);
+    },
+    [giveExp.rejected]: (state, { payload }) => {
+      console.log(payload);
+    },
   },
 });
 

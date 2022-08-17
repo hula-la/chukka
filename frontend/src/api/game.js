@@ -11,12 +11,13 @@ export const detail = async (songID) => {
   return res;
 };
 
-export const maxScore = async (score, songId) => {
-  const res = await client.post('game/game/score', {
-    params: {
-      score: score,
-      songId: songId
-    }
-  })
-  return res
-}
+export const maxScore = async (data) => {
+  console.log(data);
+  const res = await client.post('game/game/score', data);
+  return res;
+};
+
+export const exp = async () => {
+  const res = await client.post('game/game/exp');
+  return res;
+};
