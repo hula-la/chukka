@@ -153,7 +153,7 @@ const UploadPage = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(uploadSnacks({ snacksTitle, snacksTag, video }));
-    navigate('/snacks');
+    window.location.replace('/snacks');
   };
   return (
     <Wrapper>
