@@ -7,6 +7,7 @@ import {
   like,
   detail,
   upload,
+  dropSnacks,
 } from '../../api/snacks';
 
 export const fetchSnacks = createAsyncThunk(
@@ -111,6 +112,21 @@ export const uploadSnacks = createAsyncThunk(
     try {
       console.log(snacksTitle, snacksTag);
       await upload({ snacksTitle, snacksTag }, video);
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  },
+);
+
+export const deleteSnacks = createAsyncThunk(
+  'snacks/delete',
+  async (snacksId, { rejectWithValue }) => {
+    try {
+      await dropSnacks(snacksId);
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message);

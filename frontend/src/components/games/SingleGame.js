@@ -447,7 +447,7 @@ const SingleMode = (state) => {
             {musicDetail !== null && (
               <div style={Styles.Album}>
                 <img
-                  src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${songId}`}
+                  src={`${process.env.REACT_APP_S3_URL_CHUKKA}/game/thumnail/${songId}`}
                   style={Styles.AlbumImg}
                 ></img>
                 <div style={Styles.AlbumInfo}>
@@ -477,7 +477,7 @@ const SingleMode = (state) => {
               >
                 <source
                   src={
-                    'https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/video/' +
+                    `${process.env.REACT_APP_S3_URL_CHUKKA}/game/video/` +
                     songId
                   }
                   type="video/mp4"
