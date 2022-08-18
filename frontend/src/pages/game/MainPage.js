@@ -82,13 +82,6 @@ const MainPage = () => {
               src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${music.songId}`}
               alt={`${music.songId}`}
             />
-
-<<<<<<< Updated upstream
-            <div>
-              {music.songName} | {music.singer} | {'★'.repeat(music.level)} |{' '}
-              {music.highScore}
-            </div>
-=======
             <SongInfo>
               <div className='songName'>
                 {music.songName}
@@ -100,7 +93,6 @@ const MainPage = () => {
                 {'★'.repeat(music.level)}
               </div>
             </SongInfo>
->>>>>>> Stashed changes
           </div>
         );
       });

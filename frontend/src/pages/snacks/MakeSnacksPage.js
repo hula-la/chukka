@@ -20,9 +20,9 @@ const Title = styled.div`
   font-size: 1.7rem;
 
 `
-const SongTitle = styled.div`
-  margin-top:1rem;
-`
+// const SongTitle = styled.div`
+//   margin-top:1rem;
+// `
 
 const ButtonDiv = styled.div`
   position : relative;
@@ -102,11 +102,11 @@ const CamUploadPage=()=> {
   const handleSelect = (e) =>{
     console.log(e.target.value);
     // songId(value) 값으로 음악 가져오기
-    setSongSrc("https://chukkadance.s3.ap-northeast-2.amazonaws.com/vid/snacks/demo");
+    setSongSrc(`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/snacks/music/${e.target.value}`);
   }
-  const HandleMouseEnter = (e)=>{
-    console.log(e.target.value);
-  }
+  // const HandleMouseEnter = (e)=>{
+  //   console.log(e.target.value);
+  // }
 
   const startCam = async () =>{
     const cameraStream = await navigator.mediaDevices.getUserMedia({ video: {width:300, height:400}, audio:true });
@@ -114,7 +114,7 @@ const CamUploadPage=()=> {
     setStream(cameraStream);
   }
 
-  useEffect( async ()=>{
+  useEffect(()=>{
     startCam();
   },[])
 
