@@ -133,11 +133,10 @@ public class AdminController {
 	})
 	public ResponseEntity<BaseResponseBody> registerLecture(
 			@RequestPart @ApiParam(value="강의 정보", required = true) LiveLecturePostReq liveInfo,
-			@RequestPart @ApiParam(value = "강의 썸네일 이미지 파일") MultipartFile lecThumb,
-			HttpServletRequest req) throws IOException {
+			@RequestPart @ApiParam(value = "강의 썸네일 이미지 파일") MultipartFile lecThumb) throws IOException {
 		Lecture lecture = lectureService.createLiveLecture(liveInfo, lecThumb != null);
 		if(lecThumb != null) {
-			s3Uploader.uploadFiles(lecThumb, "img/lecture/thumb", req.getServletContext().getRealPath("/img/"), Integer.toString(lecture.getLecId()));
+			s3Uploader.uploadFiles(lecThumb, "img/lecture/thumb", Integer.toString(lecture.getLecId()));
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lectureService.findAll()));
 	}
@@ -150,11 +149,10 @@ public class AdminController {
 	})
 	public ResponseEntity<BaseResponseBody> registerLecture(
 			@RequestPart @ApiParam(value="강의 정보", required = true) LecturePostReq lectureInfo,
-			@RequestPart @ApiParam(value = "강의 썸네일 이미지 파일") MultipartFile lecThumb,
-			HttpServletRequest req) throws IOException {
+			@RequestPart @ApiParam(value = "강의 썸네일 이미지 파일") MultipartFile lecThumb) throws IOException {
 		Lecture lecture = lectureService.createLecture(lectureInfo, lecThumb != null);
 		if(lecThumb != null) {
-			s3Uploader.uploadFiles(lecThumb, "img/lecture/thumb", req.getServletContext().getRealPath("/img/"), Integer.toString(lecture.getLecId()));
+			s3Uploader.uploadFiles(lecThumb, "img/lecture/thumb", Integer.toString(lecture.getLecId()));
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lectureService.findAll()));
 	}
@@ -169,11 +167,10 @@ public class AdminController {
 			@PathVariable @ApiParam(value="강의 아이디", required = true) int lecId,
 			@RequestPart @ApiParam(value="강의 정보", required = true) SectionPostReq sectionInfo,
 			@RequestPart @ApiParam(value = "강의 영상 파일") MultipartFile contents,
-			Pageable pageable,
-			HttpServletRequest req) throws IOException {
+			Pageable pageable) throws IOException {
 		Section section = sectionService.createSection(sectionInfo, contents != null);
 		if(contents != null) {
-			s3Uploader.uploadFiles(contents, "vid/section/contents", req.getServletContext().getRealPath("/img/"), Integer.toString(section.getSecId()));
+			s3Uploader.uploadFiles(contents, "vid/section/contents", Integer.toString(section.getSecId()));
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", sectionService.getSectionByLecId(lecId, pageable)));
 	}
@@ -269,10 +266,9 @@ public class AdminController {
 	})
 	public ResponseEntity<BaseResponseBody> modifyInstructorProfile(
 			@PathVariable @ApiParam(value="강사 아이디", required = true) String insId,
-			@RequestPart @ApiParam(value = "수정할 강사 정보", required = true) MultipartFile profile,
-			HttpServletRequest req) throws IOException {
+			@RequestPart @ApiParam(value = "수정할 강사 정보", required = true) MultipartFile profile) throws IOException {
 		if(profile != null) {
-			s3Uploader.uploadFiles(profile, "img/instructor/profile", req.getServletContext().getRealPath("/img/"), insId);
+			s3Uploader.uploadFiles(profile, "img/instructor/profile", insId);
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", instructorService.findAll()));
 	}

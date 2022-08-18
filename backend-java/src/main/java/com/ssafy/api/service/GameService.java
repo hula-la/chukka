@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GameService {
-    List<GameRes> findAll();
+    List<GameRes> findAll(User user);
 
-    GameRes findBySongId(Long songId);
+    GameRes findBySongId(User user,Long songId);
 
     GameHighScore updateHighScore(User user, Long songId, int score);
 
