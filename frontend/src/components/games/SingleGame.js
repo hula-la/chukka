@@ -438,11 +438,11 @@ const SingleMode = (state) => {
             <h2 style={Styles.pageTitle}>Play Game</h2>
             <div style={Styles.ScoreDiv}>
               <p style={Styles.HighScore}><Icon><RocketIcon/>High Score<RocketIcon/></Icon></p>
-              <p style={Styles.HighScoreNum}>12350</p>
+              <p style={Styles.HighScoreNum}>{highScore}</p>
               </div>
             <div style={Styles.ScoreDiv}>
               <p style={Styles.Score}>Score</p>
-              <p style={Styles.ScoreNum}>12354</p>
+              <p style={Styles.ScoreNum}>{score}</p>
             </div>
             {musicDetail !== null && (
               <div style={Styles.Album}>
