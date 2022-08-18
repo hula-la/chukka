@@ -236,7 +236,7 @@ const ResultPage = () => {
             <Info>
               <Img>
                 <img
-                  src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${musicDetail.songId}`}
+                  src={`${process.env.REACT_APP_S3_URL_CHUKKA}/game/thumnail/${musicDetail.songId}`}
                 ></img>
               </Img>
               <Song>
@@ -255,7 +255,7 @@ const ResultPage = () => {
                 <Player>
                   <div>
                     <img
-                      src={`https://chukkadance.s3.ap-northeast-2.amazonaws.com/img/profile/${userNickname}`}
+                      src={`${process.env.REACT_APP_S3_URL_DANCE}/img/profile/${userNickname}`}
                       alt="프로필 사진"
                     ></img>
                     <p>{userNickname}</p>

@@ -55,7 +55,7 @@ const MainPage = () => {
           <div>
             <img
               width={'300vW'}
-              src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${music.songId}`}
+              src={`${process.env.REACT_APP_S3_URL_CHUKKA}/game/thumnail/${music.songId}`}
               alt={`${music.songId}`}
             />
 
