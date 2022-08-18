@@ -61,7 +61,7 @@ const Wrapper = styled.div`
     list-style: none;
   }
   .snacksitem {
-    margin-bottom: 5rem;
+    margin-bottom: 2rem;
   }
   .listitem {
     float: left;
