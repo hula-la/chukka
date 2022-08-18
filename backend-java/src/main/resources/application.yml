@@ -1,0 +1,58 @@
+management:
+  health:
+    diskspace:
+      enabled: 'true'
+    default:
+      enabled: 'true'
+    db:
+      enabled: 'true'
+  servlet:
+    context-path: /manage
+spa:
+  default-file: /dist/index.html
+server:
+  servlet:
+    encoding:
+      enabled: 'true'
+      force: 'true'
+      charset: UTF-8
+    contextPath: /api
+  address: localhost
+  port: '8080'
+  compression:
+    enabled: 'true'
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
+logging:
+  level:
+    org:
+      springframework:
+#        boot: DEBUG
+#        security: DEBUG
+#        web: DEBUG
+      apache:
+        tiles: INFO
+      hibernate:
+        SQL:
+          DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+    root: INFO
+    com:
+      samsung:
+        security: DEBUG
+  file:
+    name: ./ssafy-web.log
+spring:
+  profiles:
+    include: hide
+build:
+  date: '@build.date@'
+jwt:
+  expiration: '1296000000'
+  secret: dyAeHubOOc8KaOfYB6XEQoEj1QzRlVgtjNL8PYs1A1tymZvvqkcEU7L1imkKHeDa
+springfox:
+  documentation:
+    swagger:
+      use-model-v3: 'false'
