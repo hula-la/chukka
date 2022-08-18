@@ -37,13 +37,6 @@ public class SnacksController {
     @Autowired
     S3Uploader s3Uploader;
 
-    /**
-     * /members?page=0&size=3&sort=id,desc&sort=username,desc
-     * page : 현재 페이지,0부터 시작
-     * size : 조회할 데이터 수
-     * sort : 정렬 조건, sort 파라미터 추가 가능
-     **/
-
     // 스낵스 태그 조건 조회 =======================================================================================================
     @PostMapping("/")
     @ApiOperation(value = "스낵스 태그 조건 조회 ", notes = "해당 태그를 검색하여 스낵스 목록을 페이징 방식으로 조회한다." +
@@ -90,6 +83,17 @@ public class SnacksController {
             s3Uploader.uploadFiles(file, "vid/snacks", String.valueOf(snacks.getSnacksId()));
         }
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+    }
+
+    // 특정 스낵스 삭제 ======================================================================================================
+    @DeleteMapping("/{snacksId}")
+    @ApiOperation(value = "특정 스낵스 삭제", notes = "<strong>스낵스 아이디</strong>를 통해 특정 스낵스를 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<BaseResponseBody> deleteSnacks(@PathVariable @ApiParam(value = "스낵스 아이디") Long snacksId) {
+        boolean isDeleted = snacksService.deleteSnacks(snacksId);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", isDeleted));
     }
 
     // 특정 스낵스 조회 ==================================================================================================
