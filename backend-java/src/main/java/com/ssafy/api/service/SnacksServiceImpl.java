@@ -171,4 +171,15 @@ public class SnacksServiceImpl implements SnacksService{
                 .map(s -> SnacksRes.of(s, snacksLikeRepository.findByUser_UserIdAndSnacks_SnacksId(userId, s.getSnacksId()).isPresent()));
         return snacksRes;
     }
+
+    // 스낵스 삭제
+    @Override
+    public boolean deleteSnacks(Long snacksId) {
+        Optional<Snacks> snacks = snacksRepository.findBySnacksId(snacksId);
+        if(snacks.isPresent()) {
+            snacksRepository.delete(snacks.get());
+            return true;
+        }
+        return false;
+    }
 }

@@ -28,5 +28,6 @@ public interface SnacksService {
     List<String> getPopularTags();
     List<SnacksReplyRes> getReplybySnacksId(Long snacksId);
     Slice<SnacksRes> searchTag(List<String> tags, String userId, Pageable pageable);
+    boolean deleteSnacks(Long snacksId);
 
 }
