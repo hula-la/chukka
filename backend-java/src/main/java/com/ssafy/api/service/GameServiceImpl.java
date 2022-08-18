@@ -33,8 +33,8 @@ public class GameServiceImpl implements GameService{
         List<Game> gameList = gameRepository.findAll();
         List<GameRes> games = new ArrayList<GameRes>();
         for (Game g: gameList){
-            Optional<Integer> highScore = gameHighScoreRepository.findGameHighScoreByUserAndGame_SongId(user, g.getSongId());
-            GameRes gr = GameRes.of(g, highScore.isPresent()?highScore.get():0);
+            Optional<GameHighScore> highScore = gameHighScoreRepository.findGameHighScoreByUserAndGame_SongId(user, g.getSongId());
+            GameRes gr = GameRes.of(g, highScore.isPresent()?highScore.get().getScore():0);
             games.add(gr);
         }
 
@@ -43,9 +43,9 @@ public class GameServiceImpl implements GameService{
 
     public GameRes findBySongId(User user, Long songId) {
         Optional<Game> game = gameRepository.findBySongId(songId);
-        Optional<Integer> highScore = gameHighScoreRepository.findGameHighScoreByUserAndGame_SongId(user, songId);
+        Optional<GameHighScore> highScore = gameHighScoreRepository.findGameHighScoreByUserAndGame_SongId(user, songId);
         if(game.isPresent()) {
-            return GameRes.of(game.get(), highScore.isPresent()?highScore.get():0);
+            return GameRes.of(game.get(), highScore.isPresent()?highScore.get().getScore():0);
         }
         return null;
     }
