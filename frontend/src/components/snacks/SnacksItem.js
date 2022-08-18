@@ -178,7 +178,7 @@ const SnacksItem = ({ snacks }) => {
   };
 
   const onClickNick = (e) => {
-    navigate(`/accounts/profile/${e.target.innerText}`);
+    window.location.replace(`/accounts/profile/${e.target.innerText}`);
   };
 
   return (

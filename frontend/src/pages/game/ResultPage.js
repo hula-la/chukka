@@ -207,6 +207,10 @@ const ResultPage = () => {
 
   const userId = useSelector((state) => state.user.userInfo.userId);
 
+  useEffect(() => {
+    console.log(userId);
+  });
+
   const calcTotal = () => {
     return 1000 * data[0].count + 500 * data[1].count;
   };
