@@ -98,12 +98,14 @@ const App = () => {
           </Route>
         </Route>
         {/* games */}
-        <Route path="games" element={<Layout />}>
-          <Route path="" element={<MainPage />} />
+        <Route element={<AuthLayout />}>
+          <Route path="games" element={<Layout />}>
+            <Route path="" element={<MainPage />} />
+          </Route>
+          <Route path="game/multi" element={<MultiGamePage />} />
+          <Route path="game" element={<GamesPage />} />
+          <Route path="game/result" element={<ResultPage />} />
         </Route>
-        <Route path="game/multi" element={<MultiGamePage />} />
-        <Route path="game" element={<GamesPage />} />
-        <Route path="game/result" element={<ResultPage />} />
         {/* admin */}
         <Route element={<AdminLayout />}>
           <Route path="admin" element={<Layout />}>

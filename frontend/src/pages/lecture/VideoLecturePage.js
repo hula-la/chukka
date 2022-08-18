@@ -281,7 +281,7 @@ const SectionLecture = ({ section, index, sideBarClickHandler }) => {
     margin-bottom: 2rem;
   `;
 
-  const { secTitle, secContents, secPlayTime } = section;
+  const { secTitle, secContents, secThumb } = section;
 
   return (
     <Wrapper onClick={() => sideBarClickHandler(index + 1)}>
@@ -289,7 +289,7 @@ const SectionLecture = ({ section, index, sideBarClickHandler }) => {
         <div className="side-section-title">
           {index + 1}. {secTitle}
         </div>
-        <div className="side-section-playtime">{secPlayTime}</div>
+        <div className="side-section-playtime">{}</div>
       </div>
       <div className="side-section-content">{secContents}</div>
     </Wrapper>
@@ -411,7 +411,7 @@ const VideoLecturePage = () => {
           {/* body */}
           <div className="video-lecture-body">
             <div className="lecture-video-container">
-              <video controls src="/video/video_pop.mp4" preload="auto">
+              <video controls src={sectionInfo.secThumb} preload="auto">
                 <source src="/video/video_pop.mp4" />
               </video>
             </div>
