@@ -5,14 +5,23 @@ import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { fetchDetail, giveExp } from '../../features/game/gameActions';
+import RocketIcon from '@mui/icons-material/Rocket';
 
 import './singleGame.css';
 import pop from '../../img/pop.jpeg';
 import styled from 'styled-components';
 
 import './button.css';
+import { grid } from '@mui/system';
+import styleFunctionSx from '@mui/system/styleFunctionSx';
 
 const SingleMode = (state) => {
+
+  const Icon = styled.div`
+    svg{
+      vertical-align:middle; 
+    }
+  `
   const navigate = useNavigate();
   const location = useLocation();
   const songId = location.state.songId;
@@ -163,19 +172,19 @@ const SingleMode = (state) => {
   }, []);
 
   useEffect(() => {
-    const url = 'wss://i7e202.p.ssafy.io/fastAPI/ws/client';
-    const ws = new WebSocket(url);
-    setWebsckt(ws);
-    setFPS(1);
+    // const url = 'wss://i7e202.p.ssafy.io/fastAPI/ws/client';
+    // const ws = new WebSocket(url);
+    // setWebsckt(ws);
+    // setFPS(1);
 
-    ws.onopen = (event) => {
-      console.log('ws.open');
-      // 노래제목 보내기
-      ws.send(songId);
-    };
+    // ws.onopen = (event) => {
+    //   console.log('ws.open');
+    //   // 노래제목 보내기
+    //   ws.send(songId);
+    // };
 
-    //clean up function when we close page
-    return () => ws.close();
+    // //clean up function when we close page
+    // return () => ws.close();
   }, []);
 
   useEffect(() => {
@@ -279,16 +288,55 @@ const SingleMode = (state) => {
       top: 'calc(20vh)',
     },
 
-    pageTitle: { padding: '30px' },
-    Score: { fontSize: '40px', paddingTop: '20vh', paddingLeft: '40px' },
-
+    pageTitle: {
+      margin: '0.5rem',
+      fontSize:'3rem',
+    },
+    HighScore:{
+      width:'70%',
+      fontSize: '20px',
+      paddingTop: '7vh',
+      paddingBottom:'5px',
+      marginLeft:'20px',
+      textAlign: 'center',
+    },
+    Score: {
+      width:'70%',
+      fontSize: '40px',
+      paddingTop: '7vh',
+      paddingBottom:'10px',
+      marginLeft:'20px',
+      borderBottom: 'solid 3px #ff2e55',
+      textAlign: 'center',
+    },
+    ScoreNum:{
+      marginLeft:'20px',
+      width:'70%',
+      fontSize: '50px',
+      textAlign:"center",
+      marginTop:"10px"
+    },
+    HighScoreNum:{
+      marginLeft:'20px',
+      width:'70%',
+      fontSize: '35px',
+      textAlign:"center",
+      border: 'solid 3px #ff2e55',
+      borderRadius: "7rem",
+      padding:"5px",
+    }
+    ,
     gameContainer: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'stretch',
       height: '100vh',
     },
-    gameColSide: { width: '25%', position: 'relative' },
+    gameColSide: {
+      width: '25%',
+      position: 'relative',
+      margin:'1rem',
+    },
     gameColCenter: {
       display: 'flex',
       flexDirection: 'column',
@@ -387,9 +435,15 @@ const SingleMode = (state) => {
         <div style={Styles.gameContainer}>
           {/* 왼쪽 */}
           <div style={Styles.gameColSide}>
-            <h2 style={Styles.pageTitle}>Single Mode</h2>
-            <div style={Styles.Score}>HighScore: {highScore}</div>
-            <div style={Styles.Score}>Score: {score}</div>
+            <h2 style={Styles.pageTitle}>Play Game</h2>
+            <div style={Styles.ScoreDiv}>
+              <p style={Styles.HighScore}><Icon><RocketIcon/>High Score<RocketIcon/></Icon></p>
+              <p style={Styles.HighScoreNum}>12350</p>
+              </div>
+            <div style={Styles.ScoreDiv}>
+              <p style={Styles.Score}>Score</p>
+              <p style={Styles.ScoreNum}>12354</p>
+            </div>
             {musicDetail !== null && (
               <div style={Styles.Album}>
                 <img
@@ -440,7 +494,7 @@ const SingleMode = (state) => {
               style={Styles.BackButton}
             >
               <ExitToAppIcon className="video-lecture-exit" />
-              <h3>메인으로 돌아가기</h3>
+              <h3>메인으로</h3>
             </div>
 
             {/* <div style={Styles.SkeletonContainer}> */}

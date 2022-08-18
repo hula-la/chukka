@@ -18,17 +18,21 @@ const Record = styled.div`
 `;
 const Title = styled.div`
   font-size: 1.7rem;
-`;
-const SongTitle = styled.div`
-  margin-top: 1rem;
-`;
+
+`
+// const SongTitle = styled.div`
+//   margin-top:1rem;
+// `
 
 const ButtonDiv = styled.div`
   position: relative;
   margin-left: 50%;
   transform: translate(-50%, 0);
   text-align: center;
-`;
+  .btn-hide{
+    visibility: hidden;
+  }
+`
 const StyledButton = styled.button`
   width: 100%;
   margin: 1rem auto 0 auto;
@@ -68,8 +72,8 @@ const CamUploadPage = () => {
   const navigate = useNavigate();
 
   const [stream, setStream] = useState(null);
-  // const [blob, setBlob] = useState(null);
-  const [songSrc, setSongSrc] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const [songSrc, setSongSrc] = useState("");
   const { musicList } = useSelector((state) => state.game);
 
   const refVideo = useRef(null);
@@ -78,13 +82,16 @@ const CamUploadPage = () => {
   const refAudio = useRef(null);
 
   const handleRecording = () => {
-    if (songSrc === '') {
-      alert('노래를 선택해 주세요');
+
+    if(songSrc===""){
+      alert("노래를 선택해 주세요");
       return;
     }
+    setIsRecording(true);
     recorderRef.current = new RecordRTC(stream, { type: 'video' });
     recorderRef.current.startRecording();
     refAudio.current.play();
+    
   };
 
   const playEnd = async () => {
@@ -101,11 +108,11 @@ const CamUploadPage = () => {
   const handleSelect = (e) => {
     console.log(e.target.value);
     // songId(value) 값으로 음악 가져오기
-    setSongSrc(`${process.env.REACT_APP_S3_URL_DANCE}/vid/snacks/demo`);
-  };
-  const HandleMouseEnter = (e) => {
-    console.log(e.target.value);
-  };
+    setSongSrc(`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/snacks/music/${e.target.value}`);
+  }
+  // const HandleMouseEnter = (e)=>{
+  //   console.log(e.target.value);
+  // }
 
   const startCam = async () => {
     const cameraStream = await navigator.mediaDevices.getUserMedia({
@@ -116,7 +123,7 @@ const CamUploadPage = () => {
     setStream(cameraStream);
   };
 
-  useEffect(async () => {
+  useEffect(()=>{
     startCam();
   }, []);
 
@@ -160,18 +167,19 @@ const CamUploadPage = () => {
             );
           })}
         </StyledSelect>
-
-        <div>
-          <video
-            ref={originVideo}
-            autoPlay
-            muted
-            style={{ width: '300px', height: '400px' }}
-          ></video>
-        </div>
-        <ButtonDiv>
-          <StyledButton onClick={handleRecording}>촬영 하기</StyledButton>
-        </ButtonDiv>
+        
+      <div>
+      <video
+        ref={originVideo}
+        autoPlay
+        muted
+        style={{ width: '300px', height:'400px'}}
+      >
+      </video>
+      </div>
+      <ButtonDiv>
+        <StyledButton className={isRecording?"btn-hide":""} onClick={handleRecording}>촬영 하기</StyledButton>
+      </ButtonDiv>
       </div>
     </Record>
   );

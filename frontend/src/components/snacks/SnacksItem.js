@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
+  position: relative;
   #my-video {
     max-height: 600px;
     margin-bottom: 20px;
@@ -36,6 +37,9 @@ const Wrapper = styled.div`
     color: #ffffff;
   }
   .tags {
+    position: absolute;
+    z-index: 2;
+    top: 5rem;
     margin-left: 20px;
     margin-bottom: 10px;
   }
