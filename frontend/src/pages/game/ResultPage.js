@@ -204,9 +204,9 @@ const ResultPage = () => {
   const userNickname = useSelector(
     (state) => state.user.userInfo?.userNickname,
   );
-  useEffect(() => {
-    console.log(userNickname);
-  });
+
+  const userId = useSelector((state) => state.user.userInfo.userId);
+
   const calcTotal = () => {
     return 1000 * data[0].count + 500 * data[1].count;
   };
@@ -236,14 +236,14 @@ const ResultPage = () => {
             <Info>
               <Img>
                 <img
-                  src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${musicDetail.songId}`}
+                  src={`${process.env.REACT_APP_S3_URL_CHUKKA}/game/thumnail/${musicDetail.songId}`}
                 ></img>
               </Img>
               <Song>
                 <SongTitle>{musicDetail.songName}</SongTitle>
                 <Singer>{musicDetail.singer}</Singer>
               </Song>
-              {userNickname === undefined && (
+              {userId === undefined && (
                 <Player>
                   <div>
                     <img src={defaultImage} alt="프로필 사진"></img>
@@ -251,11 +251,11 @@ const ResultPage = () => {
                   </div>
                 </Player>
               )}
-              {userNickname !== undefined && (
+              {userId !== undefined && (
                 <Player>
                   <div>
                     <img
-                      src={`https://chukkadance.s3.ap-northeast-2.amazonaws.com/img/profile/${userNickname}`}
+                      src={`${process.env.REACT_APP_S3_URL_DANCE}/img/profile/${userId}`}
                       alt="프로필 사진"
                     ></img>
                     <p>{userNickname}</p>

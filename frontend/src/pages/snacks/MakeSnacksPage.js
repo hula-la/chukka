@@ -9,13 +9,13 @@ const Record = styled.div`
   display: flex;
   justify-content: center;
   text-align: center;
-  video{
-    margin-top : 1rem;
+  video {
+    margin-top: 1rem;
   }
-  audio{
-    margin-top : 1rem;
+  audio {
+    margin-top: 1rem;
   }
-`
+`;
 const Title = styled.div`
   font-size: 1.7rem;
 
@@ -25,9 +25,9 @@ const Title = styled.div`
 // `
 
 const ButtonDiv = styled.div`
-  position : relative;
-  margin-left : 50%;
-  transform: translate( -50%, 0 );
+  position: relative;
+  margin-left: 50%;
+  transform: translate(-50%, 0);
   text-align: center;
   .btn-hide{
     visibility: hidden;
@@ -35,7 +35,7 @@ const ButtonDiv = styled.div`
 `
 const StyledButton = styled.button`
   width: 100%;
-  margin : 1rem auto 0 auto;
+  margin: 1rem auto 0 auto;
   border: none;
   border-radius: 4px;
   font-size: 1rem;
@@ -49,29 +49,28 @@ const StyledButton = styled.button`
   :hover {
     opacity: 1;
   }
-
 `;
 
-const StyledSelect=styled.select`
-  width:100%;
+const StyledSelect = styled.select`
+  width: 100%;
   margin: 1rem 0 0.5rem 0;
   height: 35px;
-  width : 65%;
+  width: 65%;
   text-align: center;
   font-size: 1rem;
   border-radius: 7px;
-  .options{
-    margin:5px 0;
+  .options {
+    margin: 5px 0;
   }
-  option:hover{
+  option:hover {
     color: yellow;
   }
-`
+`;
 
-const CamUploadPage=()=> {
+const CamUploadPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   const [stream, setStream] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [songSrc, setSongSrc] = useState("");
@@ -81,7 +80,7 @@ const CamUploadPage=()=> {
   const originVideo = useRef(null);
   const recorderRef = useRef(null);
   const refAudio = useRef(null);
-  
+
   const handleRecording = () => {
 
     if(songSrc===""){
@@ -95,16 +94,18 @@ const CamUploadPage=()=> {
     
   };
 
-  const playEnd = async() =>{
+  const playEnd = async () => {
     refAudio.current.pause();
     await recorderRef.current.stopRecording(() => {
-      const blob = new Blob([recorderRef.current.getBlob()], { type: 'video/mp4' });
-      console.log("send",blob);
-      navigate("/snacks/camupload/",{state:{data:blob}});
+      const blob = new Blob([recorderRef.current.getBlob()], {
+        type: 'video/mp4',
+      });
+      console.log('send', blob);
+      navigate('/snacks/camupload/', { state: { data: blob } });
     });
-  }
+  };
 
-  const handleSelect = (e) =>{
+  const handleSelect = (e) => {
     console.log(e.target.value);
     // songId(value) 값으로 음악 가져오기
     setSongSrc(`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/snacks/music/${e.target.value}`);
@@ -113,15 +114,18 @@ const CamUploadPage=()=> {
   //   console.log(e.target.value);
   // }
 
-  const startCam = async () =>{
-    const cameraStream = await navigator.mediaDevices.getUserMedia({ video: {width:300, height:400}, audio:true });
+  const startCam = async () => {
+    const cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: { width: 300, height: 400 },
+      audio: true,
+    });
     originVideo.current.srcObject = cameraStream;
     setStream(cameraStream);
-  }
+  };
 
   useEffect(()=>{
     startCam();
-  },[])
+  }, []);
 
   useEffect(() => {
     dispatch(fetchMusic());
@@ -138,13 +142,30 @@ const CamUploadPage=()=> {
   return (
     <Record>
       <div>
-      <Title>Snacks</Title>
-      <audio ref={refAudio} src={songSrc} type="audio/mp3" controls onEnded={()=>playEnd()}/>
-        <StyledSelect onChange={(e)=>handleSelect(e)}>
-        < option value="" selected disabled hidden> -- 노래 선택 -- </option>
-        {musicList.map((option,i)=>{return(
-          <option key={option.songId} value={option.songId} className="options">{option.songName} - {option.singer}</option>
-        )})}
+        <Title>Snacks</Title>
+        <audio
+          ref={refAudio}
+          src={songSrc}
+          type="audio/mp3"
+          controls
+          onEnded={() => playEnd()}
+        />
+        <StyledSelect onChange={(e) => handleSelect(e)}>
+          <option value="" selected disabled hidden>
+            {' '}
+            -- 노래 선택 --{' '}
+          </option>
+          {musicList.map((option, i) => {
+            return (
+              <option
+                key={option.songId}
+                value={option.songId}
+                className="options"
+              >
+                {option.songName} - {option.singer}
+              </option>
+            );
+          })}
         </StyledSelect>
         
       <div>
@@ -162,6 +183,6 @@ const CamUploadPage=()=> {
       </div>
     </Record>
   );
-}
+};
 
 export default CamUploadPage;
