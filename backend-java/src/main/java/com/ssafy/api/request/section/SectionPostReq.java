@@ -19,5 +19,7 @@ public class SectionPostReq {
     String insId;
     @ApiModelProperty(name = "섹션 제목", example = "파트 1")
     String secTitle;
+    @ApiModelProperty(name = "섹션 설명")
+    String secContents;
 
 }

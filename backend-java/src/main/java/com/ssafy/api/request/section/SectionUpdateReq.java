@@ -18,5 +18,6 @@ public class SectionUpdateReq {
     String insId;
     @ApiModelProperty(name = "섹션 제목",example = "section_title")
     String secTitle;
-
+    @ApiModelProperty(name = "섹션 설명")
+    String secContents;
 }

@@ -18,16 +18,8 @@ public interface SectionRepository extends JpaRepository<Section, Integer> {
     // 현재 해당하는 강의의 섹션들을 불러오기
     Page<Section> findAllByLecture(Lecture lecture, Pageable pageable);
 
+    // 섹션 전부 조회
     Page<Section> findAll(Pageable pageable);
-    // 소강의 수정하기
-    @Modifying(clearAutomatically = true)
-    @Query(value = "update Section sec " +
-            "set sec.secId = :secId," +
-            "sec.Instructor = :instructor," +
-            "sec.secTitle = :secTitle," +
-            "sec.secContents = :secContents " +
-            "where sec.secId = :secId", nativeQuery = true)
-    Optional<Integer> updateSection(int secId, Instructor instructor, String secTitle, String secContents);
 
     List<Section> findAllByLecture_LecId(int lecId);
 

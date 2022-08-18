@@ -38,6 +38,9 @@ public class EnrollServiceImpl implements EnrollService {
             for (int i = 0; i < lecIds.size(); i++) {
                 System.out.println(i);
                 Lecture lecture = lectureRepository.findLectureByLecId(lecIds.get(i));
+                if (lecture.getLecStudent() < lecture.getLecLimit()) {
+                    lectureRepository.updateLecStudent(lecture.getLecId());
+                }
                 Enroll enroll = Enroll.builder()
                         .user(user)
                         .lecture(lecture)

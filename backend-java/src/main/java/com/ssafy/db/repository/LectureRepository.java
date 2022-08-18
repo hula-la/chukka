@@ -72,10 +72,15 @@ public interface LectureRepository extends JpaRepository<Lecture, Integer> {
     @Query(value = "select l from Lecture l join Enroll e on l.lecId = e.lecture.lecId where e.user.userId = :userId order by e.enrollId desc")
     List<Lecture> findLecturesByUserId(String userId);
 
+    // 공지사항 수정
     @Modifying(clearAutomatically = true)
     @Query(value = "update Lecture lec set lec.lecNotice = :lecNotice where lec.lecId = :lecId")
     void updateLecNotice(int lecId, String lecNotice);
 
+    // 라이브 강의 결제 시 인원 추가
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update Lecture lec set lec.lecStudent = lec.lecStudent + 1 where lec.lecId = :lecId")
+    void updateLecStudent(int lecId);
 
     Lecture findLectureByLecId(int lecId);
 
