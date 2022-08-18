@@ -48,3 +48,7 @@ export const upload = async (snacksInfo, file) => {
   const res = await client.post(`snacks/upload`, formData, config);
   return res;
 };
+
+export const dropSnacks = async (snacksId) => {
+  const res = await client.delete(`snacks/${snacksId}`);
+};

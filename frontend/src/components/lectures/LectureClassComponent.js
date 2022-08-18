@@ -261,57 +261,60 @@ const LectureClassComponent = () => {
               ) : null}
             </LectureInfoDetail>
           </LectureInfo>
-          <NoticeDiv>
-            <CampaignIcon />
-            {!isEditNotice ? (
-              <div className="notice-content">
-                <span>공지사항 : {notice}</span>
-              </div>
-            ) : (
-              <div className="notice-input-div">
-                <input placeholder="새 공지 입력" className="notice-input" />
-              </div>
-            )}
+          {notice ? (
+            <NoticeDiv>
+              <CampaignIcon />
+              {!isEditNotice ? (
+                <div className="notice-content">
+                  <span>공지사항 : {notice}</span>
+                </div>
+              ) : (
+                <div className="notice-input-div">
+                  <input placeholder="새 공지 입력" className="notice-input" />
+                </div>
+              )}
 
-            {userInfo.userType &&
-            userInfo.userNickname == insInfo.insName &&
-            !isEditNotice ? (
-              <ModeEditIcon
-                className="notice-edit-icon"
-                onClick={() => {
-                  setIsEditNotice(true);
-                  // setNotice('aaaa');
-                }}
-              />
-            ) : null}
-            {userInfo.userType &&
-            userInfo.userNickname == insInfo.insName &&
-            isEditNotice ? (
-              <div className="notice-edit-btn-div">
-                <CheckIcon
+              {userInfo.userType &&
+              userInfo.userNickname == insInfo.insName &&
+              !isEditNotice ? (
+                <ModeEditIcon
                   className="notice-edit-icon"
                   onClick={() => {
-                    const newNotice =
-                      document.querySelector('.notice-input').value;
-                    if (newNotice) {
-                      setNotice(newNotice);
-                      dispatch(updateNotice({ lecId, newNotice }));
-                      setIsEditNotice(false);
-                    } else {
-                      alert('공지사항을 입력하세요!');
-                    }
-                  }}
-                />
-                <CloseIcon
-                  className="notice-edit-icon"
-                  onClick={() => {
-                    setIsEditNotice(false);
+                    setIsEditNotice(true);
                     // setNotice('aaaa');
                   }}
                 />
-              </div>
-            ) : null}
-          </NoticeDiv>
+              ) : null}
+              {userInfo.userType &&
+              userInfo.userNickname == insInfo.insName &&
+              isEditNotice ? (
+                <div className="notice-edit-btn-div">
+                  <CheckIcon
+                    className="notice-edit-icon"
+                    onClick={() => {
+                      const newNotice =
+                        document.querySelector('.notice-input').value;
+                      if (newNotice) {
+                        setNotice(newNotice);
+                        dispatch(updateNotice({ lecId, newNotice }));
+                        setIsEditNotice(false);
+                      } else {
+                        alert('공지사항을 입력하세요!');
+                      }
+                    }}
+                  />
+                  <CloseIcon
+                    className="notice-edit-icon"
+                    onClick={() => {
+                      setIsEditNotice(false);
+                      // setNotice('aaaa');
+                    }}
+                  />
+                </div>
+              ) : null}
+            </NoticeDiv>
+          ) : null}
+
           <LectureNav>
             {lecCategory ? (
               <a
@@ -453,7 +456,7 @@ const InstructorInfo = ({ instructorInfo }) => {
     padding: 2rem;
     & img {
       height: 400px;
-      width: 200px;
+      /* width: 200px; */
     }
     & .ins-info {
       padding-left: 2rem;
@@ -464,10 +467,13 @@ const InstructorInfo = ({ instructorInfo }) => {
     }
   `;
 
-  const { insProfile, insName, insIntroduce, insEmail } = instructorInfo;
+  const { insId, insName, insIntroduce, insEmail } = instructorInfo;
   return (
     <InstWrapper>
-      <img src={insProfile} alt="강사 이미지" />
+      <img
+        src={`${process.env.REACT_APP_S3_URL_DANCE}/img/instructor/profile/${insId}`}
+        alt="강사 이미지"
+      />
       <div className="ins-info">
         <h1>{insName}</h1>
         <div className="ins-email">{insEmail}</div>

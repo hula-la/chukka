@@ -22,27 +22,30 @@ const Wrapper = styled.div`
   .container {
     height: 70vh;
   }
-  `;
+  & .game-notice {
+    position: absolute;
+    bottom: 100px;
+    font-size: 1.3rem;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+`;
 
 const SongInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+
   .songName {
     font-size: 1.5rem;
   }
   div {
     margin: 5px;
   }
-  .singer{
+  .singer {
     font-size: 0.8rem;
   }
-  .highScore{
-    
-    font-size: 0.4rem;
-  }
-  `
+`;
 
 const StyledButton = styled.button`
   position: absolute;
@@ -83,24 +86,13 @@ const MainPage = () => {
           <div>
             <img
               width={'300vW'}
-              src={`https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/thumnail/${music.songId}`}
+              src={`${process.env.REACT_APP_S3_URL_CHUKKA}/game/thumnail/${music.songId}`}
               alt={`${music.songId}`}
             />
-
-
             <SongInfo>
-              <div className='songName'>
-                {music.songName}
-              </div>
-              <div className='singer'>
-                {music.singer}
-              </div>
-              <div>
-                {'★'.repeat(music.level)}
-              </div>
-              <div className='highScore'>
-                HighScore: {music.highScore}
-              </div>
+              <div className="songName">{music.songName}</div>
+              <div className="singer">{music.singer}</div>
+              <div>{'★'.repeat(music.level)}</div>
             </SongInfo>
           </div>
         );
@@ -136,9 +128,11 @@ const MainPage = () => {
           )}
         </div>
         <div className="btn">
+          <div className="game-notice">
+            게임시 발이 끝까지 보여야 재밌는 게임을 즐길 수 있습니다.
+          </div>
           <StyledButton onClick={onClick}>게임시작</StyledButton>
         </div>
-
       </div>
     </Wrapper>
   );

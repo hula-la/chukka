@@ -294,7 +294,7 @@ const InstructorInfo = ({ instructorInfo }) => {
     padding: 2rem;
     & img {
       height: 400px;
-      width: 200px;
+      /* width: 200px; */
     }
     & .ins-info {
       padding-left: 2rem;
@@ -305,10 +305,13 @@ const InstructorInfo = ({ instructorInfo }) => {
     }
   `;
 
-  const { insProfile, insName, insIntroduce, insEmail } = instructorInfo;
+  const { insId, insName, insIntroduce, insEmail } = instructorInfo;
   return (
     <InstWrapper>
-      <img src={insProfile} alt="강사 이미지" />
+      <img
+        src={`${process.env.REACT_APP_S3_URL_DANCE}/img/instructor/profile/${insId}`}
+        alt="강사 이미지"
+      />
       <div className="ins-info">
         <h1>{insName}</h1>
         <div className="ins-email">{insEmail}</div>

@@ -26,7 +26,7 @@ const MySnacksItem = ({ snacks }) => {
           preload="auto"
         >
           <source
-            src={`https://chukkadance.s3.ap-northeast-2.amazonaws.com/vid/snacks/${snacks.snacksId}`}
+            src={`${process.env.REACT_APP_S3_URL_DANCE}/vid/snacks/${snacks.snacksId}`}
             type="video/mp4"
           />
         </video>

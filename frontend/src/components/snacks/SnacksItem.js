@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 const Wrapper = styled.div`
+  position: relative;
   #my-video {
     max-height: 600px;
     margin-bottom: 20px;
@@ -36,6 +37,9 @@ const Wrapper = styled.div`
     color: #ffffff;
   }
   .tags {
+    position: absolute;
+    z-index: 2;
+    top: 5rem;
     margin-left: 20px;
     margin-bottom: 10px;
   }
@@ -174,7 +178,7 @@ const SnacksItem = ({ snacks }) => {
   };
 
   const onClickNick = (e) => {
-    navigate(`/accounts/profile/${e.target.innerText}`);
+    window.location.replace(`/accounts/profile/${e.target.innerText}`);
   };
 
   return (
@@ -206,7 +210,7 @@ const SnacksItem = ({ snacks }) => {
             // preload="auto"
           >
             <source
-              src={`https://chukkadance.s3.ap-northeast-2.amazonaws.com/vid/snacks/${snacks.snacksId}`}
+              src={`${process.env.REACT_APP_S3_URL_DANCE}/vid/snacks/${snacks.snacksId}`}
               type="video/mp4"
             />
           </video>

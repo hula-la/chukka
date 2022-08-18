@@ -148,7 +148,7 @@ const UploadPage = () => {
 
   const onChangeVideo = (e) => {
     setVideo(e.target.files[0]);
-    const maxSize = 1 * 1024 * 1024;
+    const maxSize = 20 * 1024 * 1024;
     const fileSize = e.target.files[0].size;
     if (fileSize > maxSize) {
       alert('파일의 사이즈는 20MB이내로 등록가능합니다');
@@ -166,7 +166,7 @@ const UploadPage = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(uploadSnacks({ snacksTitle, snacksTag, video }));
-    navigate('/snacks');
+    window.location.replace('/snacks');
   };
 
   return (
