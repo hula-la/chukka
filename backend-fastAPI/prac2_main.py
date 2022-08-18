@@ -119,22 +119,40 @@ async def websocket_endpoint(websocket: WebSocket):
                 # cv2.destroyAllWindows()
                 await websocket.close()
                 break
+            else:
+                data = await websocket.receive_text()
+                print(cnt)
 
                 # 댄서 영상 스켈레톤 매핑 후 클라이언트한테 전달
 
-            data = await websocket.receive_text()
-            print(cnt)
+                image_1 = cv2.imdecode(np.fromstring(base64.b64decode(
+                    data.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
 
-# 댄서 영상 스켈레톤 매핑 후 클라이언트한테 전달
-            if (cnt+1<len(keyp_list)):
-                dancer_image = np.zeros(dim)
-                dancer_image = TfPoseEstimator.sj_draw_humans(dancer_image, keyp_list[cnt+1], imgcopy=False)
-                cv2.imshow('Dancer', dancer_image)
+                # [수정] image_1 = cv2.flip(image_1, 1)
+                image_1 = cv2.resize(
+                    image_1, dim, interpolation=cv2.INTER_AREA)
 
-                ret, buffer = cv2.imencode('.jpg', dancer_image)
-                b_time = time.time()
-                print(f'댄서 영상 시간: {b_time-a_time}')
-                await websocket.send_bytes(bytearray(buffer))
+                cv2.imshow("이미지", image_1)
+
+                humans_2 = e.inference(image_1, resize_to_default=(
+                    w > 0 and h > 0), upsample_size=4.0)
+                # Dancer keypoints and normalization
+                image_1 = np.zeros(dim)
+                transformer = Normalizer().fit(keyp_list)
+                t_keyp_list = transformer.transform(keyp_list)
+                # Getting User keypoints, normalization and comparing also plotting the keypoints and lines to the image
+                image_1 = TfPoseEstimator.draw_humans(
+                    image_1, humans_2, imgcopy=False)  # 선 표시하는 코드
+                npimg = np.copy(image_1)
+                image_h, image_w = npimg.shape[:2]
+                centers = {}
+                # keypoints_list=[]
+                min_ = 0
+                for human in humans_2:
+                    # draw point
+                    for i in range(common.CocoPart.Background.value):
+                        if i not in human.body_parts.keys():
+                            continue
 
                         body_part = human.body_parts[i]
                         x_axis = int(body_part.x * image_w + 0.5)
@@ -156,109 +174,38 @@ async def websocket_endpoint(websocket: WebSocket):
                             features[k] = 0
                             features[k+1] = 0
 
+                            t_keyp_list[cnt][k] == 0
+                            t_keyp_list[cnt][k+1] == 0
+                    features = transformer.transform([features])
+                    min_ = 100  # Intializing a value to get minimum cosine similarity score from the dancer array list with the user
 
-            cnt += 1
-            img = cv2.imdecode(np.fromstring(base64.b64decode(
-                data.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
-            image_1 = img
-            e_d = 0
-            # current_time = time.time() - prev_time
-            # if img is not None  :
-            # resizing the images
-            
-            # [수정] image_1 = cv2.flip(image_1, 1)
-            image_1 = cv2.resize(image_1, dim, interpolation=cv2.INTER_AREA)
-            humans_2 = e.inference(image_1, resize_to_default=(
-                w > 0 and h > 0), upsample_size=4.0)
-            # Dancer keypoints and normalization
-            transformer = Normalizer().fit(keyp_list)
-            t_keyp_list = transformer.transform(keyp_list)
-            # Getting User keypoints, normalization and comparing also plotting the keypoints and lines to the image
-            image_1 = TfPoseEstimator.draw_humans(
-                image_1, humans_2, imgcopy=False)  # 선 표시하는 코드
-            npimg = np.copy(image_1)
-            image_h, image_w = npimg.shape[:2]
-            centers = {}
-            # keypoints_list=[]
-            min_ = 0
-            for human in humans_2:
-                # draw point
-                for i in range(common.CocoPart.Background.value):
-                    if i not in human.body_parts.keys():
-                        continue
+                    sim_score = findCosineSimilarity_1(
+                        t_keyp_list[cnt], np.transpose(features))
 
-                    body_part = human.body_parts[i]
-                    x_axis = int(body_part.x * image_w + 0.5)
-                    y_axis = int(body_part.y * image_h + 0.5)
-                    center = [x_axis, y_axis]
-                    centers[i] = center
-                k = -2
-                features = [0]*36
-                for j in range(0, 18):
-                    k = k+2
-                    try:
-                        if k >= 36:
-                            break
-                        features[k] = centers[j][0]
-                        features[k+1] = centers[j][1]
-                    except:
-                        features[k] = 0
-                        features[k+1] = 0
-                features = transformer.transform([features])
-                min_ = 100  # Intializing a value to get minimum cosine similarity score from the dancer array list with the user
+                    # Getting the minimum Cosine Similarity Score
+                    if min_ > sim_score:
+                        min_ = sim_score
 
-                sim_score = findCosineSimilarity_1(t_keyp_list[cnt], features[0])
-                # Getting the minimum Cosine Similarity Score
-                if min_ > sim_score:
-                    min_ = sim_score
-            # Displaying the minimum cosine score
-            cv2.putText(image_1, str(min_), (10, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
-            # If the disctance is below the threshold
-            if min_ < 0.15:
-                cv2.putText(image_1, "PERFECT", (120, 700),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            elif min_ < 0.22:
-                cv2.putText(image_1, "GREAT", (120, 700),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            else:
-                cv2.putText(image_1,  "BAD", (80, 700),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-            cv2.putText(image_1, "FPS: %f" % (1.0 / (time.time() - prev_time)), (10, 50),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                ret, buffer = cv2.imencode('.jpg', image_1)
 
-            ret, buffer = cv2.imencode('.jpg', image_1)
+                # 댄서영상
+                if (cnt < len(keyp_list)):
+                    dancer_image = np.zeros(dim)
+                    dancer_image = TfPoseEstimator.sj_draw_humans(
+                        dancer_image, keyp_list[cnt], imgcopy=False)
+                    # cv2.imshow('Dancer', dancer_image)
 
-            c_time = time.time()
-            print(f'댄서 영상 시간: {c_time-a_time}')
+                    ret, buffer2 = cv2.imencode('.jpg', dancer_image)
+                    await websocket.send_bytes(bytearray(buffer2))
 
-            await websocket.send_text(str(min_))  # client 에 메시지 전달
+                await websocket.send_text(str(min_))  # 유사도 전달
 
-            frame = buffer.tobytes()
-            ret, buffer = cv2.imencode('.jpg', dancer_image)
-            await websocket.send_bytes(bytearray(buffer))
+                await websocket.send_bytes(bytearray(buffer))  # user 영상 전달
 
-            prev_time = time.time()
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-            # else:
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
 
-            # if 1000*(c_time-a_time)<1000:
-                # cv2.waitKey(round(1000-1000*(c_time-a_time)))
-            
-            #     cv2.waitKey(1)
-
-        # cv2.waitKey(1)
-
-
-some_file_path = "dance_video/soojin.mp4"
-
-
-@app.get("/game/dancer")
-async def main():
-    # def iterfile():  #
-    #     with open(some_file_path, mode="rb") as file_like:  #
-    #         yield from file_like  #
-
-    # return StreamingResponse(iterfile(), media_type="video/mp4")
-    return FileResponse(some_file_path)
+# @app.get("/fastAPI/game/dancer")
+# async def main():
+#     print(some_file_path)
+#     return FileResponse(some_file_path)
