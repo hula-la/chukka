@@ -52,10 +52,7 @@ import NotFound from './pages/NotFound';
 
 const App = () => {
   return (
-    <div
-      className="App"
-      // onContextMenu={(e) => e.preventDefault()}
-    >
+    <div className="App" onContextMenu={(e) => e.preventDefault()}>
       <Routes>
         {/* Index */}
         <Route path="" element={<IndexPage />} />
