@@ -204,9 +204,9 @@ const ResultPage = () => {
   const userNickname = useSelector(
     (state) => state.user.userInfo?.userNickname,
   );
-  useEffect(() => {
-    console.log(userNickname);
-  });
+
+  const userId = useSelector((state) => state.user.userInfo.userId);
+
   const calcTotal = () => {
     return 1000 * data[0].count + 500 * data[1].count;
   };
@@ -243,7 +243,7 @@ const ResultPage = () => {
                 <SongTitle>{musicDetail.songName}</SongTitle>
                 <Singer>{musicDetail.singer}</Singer>
               </Song>
-              {userNickname === undefined && (
+              {userId === undefined && (
                 <Player>
                   <div>
                     <img src={defaultImage} alt="프로필 사진"></img>
@@ -251,11 +251,11 @@ const ResultPage = () => {
                   </div>
                 </Player>
               )}
-              {userNickname !== undefined && (
+              {userId !== undefined && (
                 <Player>
                   <div>
                     <img
-                      src={`${process.env.REACT_APP_S3_URL_DANCE}/img/profile/${userNickname}`}
+                      src={`${process.env.REACT_APP_S3_URL_DANCE}/img/profile/${userId}`}
                       alt="프로필 사진"
                     ></img>
                     <p>{userNickname}</p>
