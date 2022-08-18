@@ -29,7 +29,9 @@ const ButtonDiv = styled.div`
   margin-left : 50%;
   transform: translate( -50%, 0 );
   text-align: center;
-  
+  .btn-hide{
+    visibility: hidden;
+  }
 `
 const StyledButton = styled.button`
   width: 100%;
@@ -71,7 +73,7 @@ const CamUploadPage=()=> {
   const navigate = useNavigate();
   
   const [stream, setStream] = useState(null);
-  // const [blob, setBlob] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
   const [songSrc, setSongSrc] = useState("");
   const { musicList } = useSelector((state) => state.game);
 
@@ -81,13 +83,16 @@ const CamUploadPage=()=> {
   const refAudio = useRef(null);
   
   const handleRecording = () => {
+
     if(songSrc===""){
       alert("노래를 선택해 주세요");
       return;
     }
+    setIsRecording(true);
     recorderRef.current = new RecordRTC(stream, { type: 'video' });
     recorderRef.current.startRecording();
     refAudio.current.play();
+    
   };
 
   const playEnd = async() =>{
@@ -152,7 +157,7 @@ const CamUploadPage=()=> {
       </video>
       </div>
       <ButtonDiv>
-        <StyledButton onClick={handleRecording}>촬영 하기</StyledButton>
+        <StyledButton className={isRecording?"btn-hide":""} onClick={handleRecording}>촬영 하기</StyledButton>
       </ButtonDiv>
       </div>
     </Record>
