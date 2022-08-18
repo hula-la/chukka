@@ -111,15 +111,15 @@ async def websocket_endpoint(websocket: WebSocket):
         keyp_list = np.genfromtxt(f'./pose_data/{songId}.csv', delimiter=",")
 
         dim = (500, 500)
-        cnt = 0
+        cnt = -1
         # 노래 끝날 때까지 루프
         while True:
+            cnt += 1
             if cnt >= len(keyp_list):
                 # cv2.destroyAllWindows()
                 await websocket.close()
                 break
             else:
-                cnt += 1
                 data = await websocket.receive_text()
                 print(cnt)
 
@@ -131,6 +131,9 @@ async def websocket_endpoint(websocket: WebSocket):
 
                 # [수정] image_1 = cv2.flip(image_1, 1)
                 image_1 = cv2.resize(image_1, dim, interpolation=cv2.INTER_AREA)
+
+
+                cv2.imshow("이미지",image_1)
 
                 humans_2 = e.inference(image_1, resize_to_default=(
                     w > 0 and h > 0), upsample_size=4.0)

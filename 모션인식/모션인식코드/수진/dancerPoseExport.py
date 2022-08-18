@@ -142,13 +142,25 @@ def get_position(video_path,showBG = True):
 
 
 
-songId = "5"
+songId = "3"
 baseURL = "https://chukkachukka.s3.ap-northeast-2.amazonaws.com/game/video/"
 
 
-# data,keyp_list=get_position(video_path= baseURL+songId)
-data,keyp_list=get_position(video_path= r'dance_video/soojin.mp4')
+data,keyp_list=get_position(video_path= baseURL+songId)
+# data,keyp_list=get_position(video_path= r'dance_video/soojin.mp4')
 data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
 # data = pd.read_csv("dancer_keyp_list.csv",delimiter=",")
 # print(data)
 
+songId = "4"
+data,keyp_list=get_position(video_path= baseURL+songId)
+data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
+songId = "5"
+data,keyp_list=get_position(video_path= baseURL+songId)
+data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
+songId = "6"
+data,keyp_list=get_position(video_path= baseURL+songId)
+data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
+songId = "7"
+data,keyp_list=get_position(video_path= baseURL+songId)
+data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
