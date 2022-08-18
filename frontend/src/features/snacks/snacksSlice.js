@@ -60,6 +60,23 @@ const snacksSlice = createSlice({
       state.snacksDetail = payload.data;
       console.log(state.snacksDetail);
     },
+    // 스낵스 댓글 조회
+    [fetchReply.fulfilled]: (state, { payload }) => {
+      state.snacksReply = payload.data;
+    },
+    // 인기태그 조회
+    [fetchTags.fulfilled]: (state, { payload }) => {
+      state.snacksPopularTags = payload.data;
+    },
+    // 댓글 생성
+    [createReply.fulfilled]: (state, { payload }) => {
+      state.snacksReply = payload.data;
+    },
+    // 특정 스낵스 조회
+    [fetchDetail.fulfilled]: (state, { payload }) => {
+      state.snacksDetail = payload.data;
+      console.log(state.snacksDetail);
+    },
   },
 });
 

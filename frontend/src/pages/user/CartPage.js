@@ -36,6 +36,10 @@ const Side = styled.div`
   // flex-direction: column;
   display: grid;
   grid-template-rows: 0.5fr 0.5fr 0.5fr 2fr 1fr;
+<<<<<<< HEAD
+  -webkit-align-items: center;
+=======
+>>>>>>> develop/front
   -webkit-box-align: unset;
   justify-content: initial;
 

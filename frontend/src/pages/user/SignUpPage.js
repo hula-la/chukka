@@ -478,6 +478,7 @@ const SignUpPage = () => {
               required
             />
           </div>
+
           <div className="genderdiv">
             <div>
               <StyledLabel for="male">

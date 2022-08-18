@@ -187,21 +187,6 @@ const ChangeProfileForm = styled.form`
 `;
 
 // 스낵스 css
-// const Wrapper = styled.div`
-//   div::-webkit-scrollbar {
-//     display: none;
-//   }
-//   /* .item {
-//     width: 50%;
-//   } */
-//   .nonelist {
-//     list-style: none;
-//   }
-//   .list {
-//     margin-bottom: 10px;
-//   }
-// `;
-
 const StyledInput = styled.input`
   font-size: 1rem;
   color: #ffffff;
