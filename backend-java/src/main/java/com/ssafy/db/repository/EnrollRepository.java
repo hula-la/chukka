@@ -16,4 +16,6 @@ public interface EnrollRepository extends JpaRepository<Enroll, Integer> {
     Enroll getEnrollByUser(User user);
 
     Enroll getEnrollByUserAndLecture(User user, Lecture lecture);
+
+    Enroll findEnrollByUserUserId(String userId);
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ReviewService {
     // 리뷰 작성하기
-    Review createReview(ReviewPostReq reviewPostReq);
+    Review createReview(int lecId, String userId, ReviewPostReq reviewPostReq);
     // 강의별 전체 리뷰조회하기
     Page<ReviewGetRes> findByLecId(int lecId, Pageable pageable);
     // 리뷰 삭제하기

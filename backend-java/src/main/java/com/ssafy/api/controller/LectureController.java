@@ -1,6 +1,7 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.lecture.LectureNoticeReq;
+import com.ssafy.api.request.lecture.NoticeUpdateReq;
 import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.lecture.LectureGetForYouRes;
@@ -13,6 +14,7 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 
+import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,9 +88,15 @@ public class LectureController {
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String userId = userDetails.getUsername();
         int userGender = userService.getUserByUserId(userId).getUserGender();
-        int ageGroup = enrollService.getEnrollByUserId(userId).getAgeGroup();
-        List<LectureGetForYouRes> forUser = lectureService.getLectureByYourBirthAndGender(userGender, ageGroup, pageable);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", forUser));
+
+        // 연령대 구하기
+        Date birth = userService.getUserByUserId(userId).getUserBirth();
+        LocalDateTime today = LocalDateTime.now();
+        int userYear = Integer.parseInt(birth.toString().substring(0,4));
+        int ageGroup = ((today.getYear() - userYear  + 1) - (today.getYear() - userYear  + 1) % 10);
+        System.out.println(ageGroup);
+        List<LectureGetForListRes> forUser = lectureService.getLectureByYourBirthAndGender(userGender, ageGroup, pageable);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", LectureGetForYouRes.of(forUser, userGender, ageGroup)));
     }
 
     // 상세페이지
@@ -94,20 +106,29 @@ public class LectureController {
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<BaseResponseBody> lectureDetail( @PathVariable @ApiParam(value = "불러올 해당 강의 ID", required = true) int lecId) {
-        LectureDetailRes lecture = lectureService.getDetailLecture(lecId);
+    public ResponseEntity<BaseResponseBody> lectureDetail(
+            @ApiIgnore Authentication authentication,
+            @PathVariable @ApiParam(value = "불러올 해당 강의 ID", required = true) int lecId) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String userId = userDetails.getUsername();
+        LectureDetailRes lecture = lectureService.getDetailLecture(lecId, userId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", lecture));
     }
 
     // 공지사항 수정 =====================================================================================================
     // 강사 userType == 1 권한 주기
+    @Transactional
     @PutMapping("/{lecId}")
     @ApiOperation(value = "공지사항", notes = "공지사항을 업데이트한다.")
-    public ResponseEntity<BaseResponseBody> updateLecNotice(@RequestBody @ApiParam(value = "수정할 공지사항", required = true) LectureNoticeReq updateInfo) {
+    public ResponseEntity<BaseResponseBody> updateLecNotice(
+            @ApiIgnore Authentication authentication,
+            @PathVariable @ApiParam(value = "공지사항 수정할 강의 ID", required = true) int lecId,
+            @RequestBody @ApiParam(value = "수정할 공지사항", required = true) LectureNoticeReq updateInfo) {
 
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String userId = userDetails.getUsername();
         String lecNotice = updateInfo.getLecNotice();
-        int lecId = updateInfo.getLecId();
-        lectureService.updateLecNotice(lecId, lecNotice);
+        lectureService.updateLecNotice(userId, lecId, lecNotice);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Success", null));
     }

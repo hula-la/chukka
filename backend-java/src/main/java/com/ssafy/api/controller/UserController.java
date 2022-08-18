@@ -3,20 +3,18 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.user.UserModifyReq;
 import com.ssafy.api.response.snacks.SnacksRes;
 import com.ssafy.api.response.user.UserYourRes;
-import com.ssafy.api.service.LectureService;
 import com.ssafy.common.util.S3Uploader;
-import com.ssafy.db.entity.PayList;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ssafy.api.request.user.*;
 import com.ssafy.api.response.user.*;
 import com.ssafy.common.util.MailUtil;
-import com.ssafy.db.entity.Pay;
-import com.ssafy.db.entity.Snacks;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.api.request.user.UserLoginPostReq;
@@ -44,6 +42,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -64,10 +63,22 @@ public class UserController {
 	@PostMapping("/signup/")
 	@ApiOperation(value = "회원 가입", notes = "<strong>아이디, 패스워드, 이름, 핸드폰 번호, 이메일, 성별, 나이, 그리고 닉네임</strong>을 통해 회원가입한다.")
 	@ApiResponses({
-			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
+			@ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "Invalid", response = BaseResponseBody.class),
+			@ApiResponse(code = 403, message = "Invalid User", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<BaseResponseBody> register(
-			@RequestBody @ApiParam(value="회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
+			@Validated @RequestBody @ApiParam(value="회원가입 정보", required = true) UserRegisterPostReq registerInfo,
+			BindingResult bindingResult) {
+		// 유효성 검사
+		if (bindingResult.hasErrors()) {
+			List<String> errors = bindingResult.getAllErrors().stream().map(e -> e.getDefaultMessage()).collect(Collectors.toList());
+			return ResponseEntity.status(401).body(BaseResponseBody.of(401, "Invalid", errors));
+		}
+		// 해당 아이디 유저 있는지 확인
+		if (userService.getUserByUserId(registerInfo.getUserId()) != null) {
+			return ResponseEntity.status(403).body(BaseResponseBody.of(403, "Invalid User", null));
+		}
 		userService.createUser(registerInfo);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
 	}
@@ -194,13 +205,12 @@ public class UserController {
 	public ResponseEntity<BaseResponseBody> modifyProfile(
 			@ApiIgnore Authentication authentication,
 			@RequestPart @ApiParam(value="수정 회원 정보", required = true) UserModifyReq modifyInfo,
-			@RequestPart(required = false) @ApiParam(value="수정 회원 프로필 파일") MultipartFile file,
-			HttpServletRequest req) throws IOException {
+			@RequestPart(required = false) @ApiParam(value="수정 회원 프로필 파일") MultipartFile file) throws IOException {
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String loginUserId = userDetails.getUsername();
 		User user = userService.updateUser(loginUserId, modifyInfo, file != null, modifyInfo.getIsProfile().equals("true"));
 		if(file != null) {
-			s3Uploader.uploadFiles(file, "img/profile", req.getServletContext().getRealPath("/img/"), user.getUserId());
+			s3Uploader.uploadFiles(file, "img/profile", user.getUserId());
 		}
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", UserMyRes.of(user)));
 	}

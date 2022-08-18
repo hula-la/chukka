@@ -1,27 +1,21 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.request.game.GamePostReq;
 import com.ssafy.api.response.game.GameRes;
-import com.ssafy.api.response.lecture.LectureGetForListRes;
-import com.ssafy.api.response.user.UserMyRes;
-import com.ssafy.api.response.user.UserYourRes;
 import com.ssafy.api.service.GameService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
-import com.ssafy.db.entity.Game;
 import com.ssafy.db.entity.GameHighScore;
 import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
-import java.util.Map;
 
 @Api(value = "게임 API", tags = {"Game"})
 @RestController
@@ -30,15 +24,22 @@ public class GameController {
 
     @Autowired
     GameService gameService;
+    @Autowired
     UserService userService;
 
-    @GetMapping("/game")
+    @PostMapping("/game")
     @ApiOperation(value = "전체 음악 목록", notes = "전체 게임을 불러온다.", response = GameRes.class)
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공", response = GameRes.class),
     })
-    public ResponseEntity<BaseResponseBody> getGames() {
-        List<GameRes> gameList = gameService.findAll();
+    public ResponseEntity<BaseResponseBody> getGames(
+            @ApiIgnore Authentication authentication
+    ) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId(loginUserId);
+
+        List<GameRes> gameList = gameService.findAll(user);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", gameList));
     }
@@ -50,15 +51,15 @@ public class GameController {
     })
     public ResponseEntity<BaseResponseBody> updateGameHighScore(
             @ApiIgnore Authentication authentication,
-            @RequestParam @ApiParam(value="노래 아이디", required = true) Long songId,
-            @RequestParam @ApiParam(value="점수", required = true) int score
+            @RequestBody @ApiParam(value="노래 정보", required = true) GamePostReq gamePostReq
+
     ) {
 
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String loginUserId = userDetails.getUsername();
         User user = userService.getUserByUserId(loginUserId);
 
-        GameHighScore gameHighScore = gameService.updateHighScore(user,songId,score);
+        GameHighScore gameHighScore = gameService.updateHighScore(user,gamePostReq.getSongId(),gamePostReq.getScore());
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", gameHighScore.getScore()));
     }
@@ -69,10 +70,15 @@ public class GameController {
             @ApiResponse(code = 200, message = "성공", response = GameRes.class),
     })
     public ResponseEntity<BaseResponseBody> getGameById(
+            @ApiIgnore Authentication authentication,
             @PathVariable @ApiParam(value="노래 아이디", required = true) Long songId
     ) {
 
-        GameRes game = gameService.findBySongId(songId);
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId(loginUserId);
+
+        GameRes game = gameService.findBySongId(user,songId);
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", game));
     }

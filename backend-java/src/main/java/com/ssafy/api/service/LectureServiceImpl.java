@@ -5,14 +5,9 @@ import com.ssafy.api.request.lecture.*;
 import com.ssafy.api.response.admin.LectureRes;
 import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
-import com.ssafy.api.response.lecture.LectureGetForYouRes;
-import com.ssafy.db.entity.Enroll;
-import com.ssafy.db.entity.Instructor;
-import com.ssafy.db.entity.Lecture;
-import com.ssafy.db.repository.EnrollRepository;
-import com.ssafy.db.repository.InstructorRepository;
-import com.ssafy.db.repository.LectureRepository;
-import javassist.runtime.Desc;
+import com.ssafy.db.entity.*;
+import com.ssafy.db.repository.*;
+import org.checkerframework.checker.nullness.Opt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -21,9 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,10 +29,15 @@ public class LectureServiceImpl implements LectureService {
     LectureRepository lectureRepository;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     InstructorRepository instructorRepository;
 
     @Autowired
     EnrollRepository enrollRepository;
+    @Autowired
+    CartItemRepository cartItemRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -81,12 +78,21 @@ public class LectureServiceImpl implements LectureService {
         return dtoPage;
     }
 
-    // 인기순
+    // 유저별
     @Override
-    public List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable) {
+    public List<LectureGetForListRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable) {
         PageRequest pageRequest = PageRequest.of(0, 2);
-        List<LectureGetForYouRes> enroll = lectureRepository.getLectureByYourBirthAndGender(userGender, ageGroup, pageRequest);
-        return enroll;
+        List<Lecture> page = lectureRepository.getLectureByYourBirthAndGender(userGender, ageGroup, pageRequest);
+        List<LectureGetForListRes> dtoPage = page.stream()
+                .map(m -> new LectureGetForListRes(
+                        m.getLecId(),
+                        m.getLecThumb(),
+                        m.getLecTitle(),
+                        m.getLecCategory(),
+                        m.getLecLevel(),
+                        m.getLecGenre()
+                )).collect(Collectors.toList());
+        return dtoPage;
     }
 
     // 전부다
@@ -108,12 +114,13 @@ public class LectureServiceImpl implements LectureService {
 
     // 상세 페이지
     @Override
-    public LectureDetailRes getDetailLecture(int lecId) {
+    public LectureDetailRes getDetailLecture(int lecId, String userId) {
         Optional<Lecture> lecture = lectureRepository.findById(lecId);
         if (!lecture.isPresent()) {
             return null;
         }
-        LectureDetailRes dto = LectureDetailRes.of(lecture.get());
+        CartItem cartItem = cartItemRepository.findByLecture_LecIdAndCart_User_UserId(lecId, userId);
+        LectureDetailRes dto = LectureDetailRes.of(lecture.get(), cartItem != null);
         return dto;
     }
 
@@ -258,14 +265,22 @@ public class LectureServiceImpl implements LectureService {
     }
 
     @Override
-    public void updateLecNotice(int lecId, String lecNotice) {
-        lectureRepository.updateLecNotice(lecId, lecNotice);
+    public void updateLecNotice(String userId, int lecId, String lecNotice) {
+        if (lectureRepository.findById(lecId).isPresent()) {
+            Optional<User> user = userRepository.findByUserId(userId);
+            if (user.get().getUserType() == 1) {
+                lectureRepository.updateLecNotice(lecId, lecNotice);
+            }
+        }
     }
 
     @Override
-    public void delete(int lecId) {
-        Lecture lecture = lectureRepository.findLectureByLecId(lecId);
-        lectureRepository.delete(lecture);
+    public boolean delete(int lecId) {
+        if(lectureRepository.findById(lecId).isPresent()) {
+            lectureRepository.delete(Lecture.builder().lecId(lecId).build());
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -275,5 +290,9 @@ public class LectureServiceImpl implements LectureService {
             return lecture.get();
         }
         return null;
+    }
+
+    public int updateLectureStudent(int lecId){
+        return lectureRepository.updateLectureStudent(lecId);
     }
 }

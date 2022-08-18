@@ -1,12 +1,10 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.request.cart.CartDelReq;
 import com.ssafy.api.response.cart.CartLecGetRes;
 import com.ssafy.api.request.cart.CartPostReq;
 
-import com.ssafy.api.service.CartService;
-import com.ssafy.api.service.EnrollService;
-import com.ssafy.api.service.LectureService;
-import com.ssafy.api.service.UserService;
+import com.ssafy.api.service.*;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.*;
@@ -25,7 +23,7 @@ import java.util.Optional;
 @Api(value = "장바구니 API", tags = {"Cart"})
 @RestController
 @RequestMapping("/cart")
-public class CartController {
+public class CartController  {
 
     @Autowired
     CartService cartService;
@@ -41,18 +39,17 @@ public class CartController {
 
 
     // 장바구니 추가 ========================================================================================================
-    @PostMapping("/")
+    @PostMapping("/{lecId}")
     @ApiOperation(value = "장바구니 추가", notes = "<strong>강의 아이디</strong>를 받아 회원의 장바구니에 추가한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
     })
     public ResponseEntity<BaseResponseBody> insert(@ApiIgnore Authentication authentication,
-            @RequestParam @ApiParam(value="강의 아이디", required = true) int lecId) {
+            @PathVariable @ApiParam(value="강의 아이디", required = true) int lecId) {
         SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
         String loginUserId = userDetails.getUsername();
         User user = userService.getUserByUserId(loginUserId);
         Cart cart = cartService.findCartByUser(user.getUserId());
-
         System.out.println(user.getUserId());
         String msg = "";
         if(cart == null){ // 장바구니에 처음 담을 경우 cart 생성
@@ -100,6 +97,31 @@ public class CartController {
 
     }
 
+    // 장바구니 item list 삭제 ========================================================================================================
+    @PostMapping("/items")
+    @ApiOperation(value = "장바구니 목록 리스트 삭제", notes = "<strong>장바구니 목록 id 리스트를 받아</strong> 장바구니 목록에서 강의들을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success", response = BaseResponseBody.class)
+    })
+    public ResponseEntity<BaseResponseBody> deleteList(@ApiIgnore Authentication authentication,
+            @RequestBody @ApiParam(value="장바구니 목록 아이디 리스트", required = true) CartDelReq cartDelReq) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String loginUserId = userDetails.getUsername();
+        User user = userService.getUserByUserId(loginUserId);
+        try{
+            Cart userCart = cartService.findCartByUser(user.getUserId());
+            System.out.println("전 >> "+ userCart.getCount());
+            Cart updated = cartService.deleteListByCartItemId(userCart,cartDelReq.getItemIds());
+            System.out.println("후 >> "+updated.getCount());
+            String msg="Success";
+            if(updated == null){
+                msg = "정보 업데이트 중 에러 발생";
+            }
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, msg, null));
+        }catch (Exception e){
+            return ResponseEntity.status(403).body(BaseResponseBody.of(403, "fail", null));
+        }
+    }
     // 장바구니 item 삭제 ========================================================================================================
     @DeleteMapping("/{cartItemId}")
     @ApiOperation(value = "장바구니 목록 삭제", notes = "<strong>장바구니 목록 id를 받아</strong> 장바구니 목록에서 강의를 삭제한다.")
@@ -112,14 +134,12 @@ public class CartController {
         String loginUserId = userDetails.getUsername();
         User user = userService.getUserByUserId(loginUserId);
         try{
-            cartService.deleteByCartItemId(cartItemId);
             Cart userCart = cartService.findCartByUser(user.getUserId());
-            cartService.updateCart(userCart);
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", null));
+            Cart updateCart = cartService.deleteByCartItemId(cartItemId, userCart);
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success", updateCart.getCount()));
         }catch (Exception e){
             return ResponseEntity.status(403).body(BaseResponseBody.of(403, "fail", null));
         }
-
     }
 
     @GetMapping("/count")
@@ -134,7 +154,6 @@ public class CartController {
         int count=0;
         try{
             Cart userCart = cartService.findCartByUser(user.getUserId());
-//            Cart userCart = cartService.findCartByUser("user3");
             if(userCart != null){
                 count = userCart.getCount();
             }

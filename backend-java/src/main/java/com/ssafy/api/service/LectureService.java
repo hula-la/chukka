@@ -1,9 +1,6 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.request.lecture.LecturePostReq;
-import com.ssafy.api.request.lecture.LectureUpdateReq;
-import com.ssafy.api.request.lecture.LiveLecturePostReq;
-import com.ssafy.api.request.lecture.LiveLectureUpdateReq;
+import com.ssafy.api.request.lecture.*;
 import com.ssafy.api.response.lecture.LectureDetailRes;
 import com.ssafy.api.response.lecture.LectureGetForListRes;
 import com.ssafy.api.response.admin.LectureRes;
@@ -34,14 +31,14 @@ public interface LectureService {
     Page<LectureGetForListRes> getMostLatestLectures(Pageable pageable);
 
     // 유저별
-    List<LectureGetForYouRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable);
+    List<LectureGetForListRes> getLectureByYourBirthAndGender(int userGender, int ageGroup, Pageable pageable);
 
     // 전체 강의 조회
   	Page<LectureGetForListRes> findAll(Pageable pageable);
 
     List<LectureRes> findAll();
 
-    LectureDetailRes getDetailLecture(int lecId);
+    LectureDetailRes getDetailLecture(int lecId, String userId);
 
     // 결제한 강의 조회
 
@@ -53,11 +50,12 @@ public interface LectureService {
     Lecture updateLiveLecture(LiveLectureUpdateReq liveLectureUpdateReq);
 
     // 공지사항 수정
-    void updateLecNotice(int lecId, String lecNotice);
+    void updateLecNotice(String userId, int lecId, String lecNotice);
 
     // Delete ==========================================================================================================
-    void delete(int lecId);
+    boolean delete(int lecId);
 
+    //id 로 조회
     Lecture findLectureByLecId(int ledId);
 
 }

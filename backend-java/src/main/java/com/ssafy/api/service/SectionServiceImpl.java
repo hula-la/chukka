@@ -48,6 +48,7 @@ public class SectionServiceImpl implements SectionService{
                     .lecture(lec.get())
                     .instructor(ins.get())
                     .secTitle(sectionPostReq.getSecTitle())
+                    .secContents(sectionPostReq.getSecContents())
                     .build();
         Section sec = sectionRepository.save(section);
         if(isFile) {
@@ -56,7 +57,8 @@ public class SectionServiceImpl implements SectionService{
                     .lecture(sec.getLecture())
                     .instructor(sec.getInstructor())
                     .secTitle(sec.getSecTitle())
-                    .secContents("https://" + bucket + ".s3." + region + ".amazonaws.com/vid/section/contents/" + sec.getSecId())
+                    .secContents(sec.getSecContents())
+                    .secVideoUrl("https://" + bucket + ".s3." + region + ".amazonaws.com/vid/section/contents/" + sec.getSecId())
                     .build();
             return sectionRepository.save(sectionn);
         }
@@ -74,7 +76,7 @@ public class SectionServiceImpl implements SectionService{
                         m.getSecId(),
                         m.getSecTitle(),
                         m.getSecContents(),
-                        m.getSecThumb()
+                        m.getSecVideoUrl()
                 ));
         return dtoPage;
     }
@@ -88,7 +90,7 @@ public class SectionServiceImpl implements SectionService{
                         m.getSecId(),
                         m.getSecTitle(),
                         m.getSecContents(),
-                        m.getSecThumb()
+                        m.getSecVideoUrl()
                 ));
         return dtoPage;
     }
@@ -107,7 +109,8 @@ public class SectionServiceImpl implements SectionService{
                     .lecture(lec.get())
                     .instructor(ins.get())
                     .secTitle(sectionInfo.getSecTitle())
-                    .secContents("https://" + bucket + ".s3." + region + ".amazonaws.com/vid/section/contents/" + sectionInfo.getSecId())
+                    .secContents(sectionInfo.getSecContents())
+                    .secVideoUrl("https://" + bucket + ".s3." + region + ".amazonaws.com/vid/section/contents/" + sectionInfo.getSecId())
                     .build();
             return sectionRepository.save(section);
         }

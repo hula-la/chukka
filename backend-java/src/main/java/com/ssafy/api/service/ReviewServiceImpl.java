@@ -33,9 +33,9 @@ public class ReviewServiceImpl implements ReviewService{
 
     // 리뷰 생성
     @Override
-    public Review createReview(ReviewPostReq reviewPostReq) {
-        Optional<Lecture> lec = lectureRepository.findById(reviewPostReq.getLecId());
-        Optional<User> user = userRepository.findById(reviewPostReq.getUserId());
+    public Review createReview(int lecId, String userId, ReviewPostReq reviewPostReq) {
+        Optional<Lecture> lec = lectureRepository.findById(lecId);
+        Optional<User> user = userRepository.findById(userId);
         if ( !lec.isPresent() || !user.isPresent()) {
             return null;
         }

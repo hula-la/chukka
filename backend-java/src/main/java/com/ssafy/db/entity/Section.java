@@ -29,14 +29,13 @@ public class Section{
     @JoinColumn(name = "ins_id")
     private Instructor instructor;
 
-    private String secThumb;
     private String secTitle;
     private String secContents;
+    private String secVideoUrl;
 
     @Temporal(TemporalType.DATE)
     @CreatedDate
     private Date secRegDate;
-
 
     @OneToMany(mappedBy = "section")
     private List<SectionLike> sectionLikes = new ArrayList<>();

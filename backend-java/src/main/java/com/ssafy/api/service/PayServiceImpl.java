@@ -41,18 +41,20 @@ public class PayServiceImpl implements PayService {
         SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
         String today = format.format(now);
 
+        int min = 10;
+        int max = 99;
+        int random = (int) ((Math.random() * (max - min)) + min);
+
         Optional<Pay> lastPay = payRepository.findTopByPayDateOrderByPayIdDesc(now);
+        int newPayId=1; // 오늘 첫주문
         if(lastPay.isPresent()){
             Pay pay = lastPay.get();
-            int newPayId = pay.getPayId()+1;
-            merchantUid += today;
-            merchantUid += String.format("%04d", newPayId);
-            System.out.println(merchantUid);
-        }else{ // 오늘 첫 주문
-            merchantUid += today;
-            merchantUid += String.format("%04d", 1);
-            System.out.println(merchantUid);
+            newPayId = pay.getPayId()+1;
         }
+        merchantUid += today;
+        merchantUid += String.format("%04d", newPayId);
+        merchantUid += random;
+        System.out.println(merchantUid);
         return merchantUid;
     }
 
