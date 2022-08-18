@@ -35,6 +35,9 @@ print('********* Model Ready *************')
 
 def dance_video_processing(video_path=r'dance_video/dancer.mp4', showBG=True):
 
+
+def dance_video_processing(video_path=r'dance_video/dancer.mp4', showBG=True):
+
     cap = cv2.VideoCapture(video_path)
     video_fps = cap.get(cv2.CAP_PROP_FPS)
     # delay 추가, 실제 비디오 fps로 조절함
@@ -149,11 +152,14 @@ data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
 # print(data)
 
 songId = "4"
-data, keyp_list = get_position(video_path=baseURL+songId)
+data,keyp_list=get_position(video_path= baseURL+songId)
 data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
 songId = "5"
-data, keyp_list = get_position(video_path=baseURL+songId)
+data,keyp_list=get_position(video_path= baseURL+songId)
 data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
 songId = "6"
-data, keyp_list = get_position(video_path=baseURL+songId)
+data,keyp_list=get_position(video_path= baseURL+songId)
+data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)
+songId = "7"
+data,keyp_list=get_position(video_path= baseURL+songId)
 data.to_csv(f'./pose_data/{songId}.csv', index=False, header=False)

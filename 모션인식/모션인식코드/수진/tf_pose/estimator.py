@@ -433,8 +433,7 @@ class TfPoseEstimator:
                 center = (int(body_part.x * image_w + 0.5),
                           int(body_part.y * image_h + 0.5))
                 centers[i] = center
-                cv2.circle(npimg, center, 3, (255, 255, 255),
-                           thickness=3, lineType=8, shift=0)
+                cv2.circle(npimg, center, 3, (255,255,255), thickness=3, lineType=8, shift=0)
                 # cv2.circle(npimg, center, 3, common.CocoColors[i], thickness=3, lineType=8, shift=0)
 
             # draw line
@@ -443,9 +442,7 @@ class TfPoseEstimator:
                     continue
 
                 # npimg = cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
-                # cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
-                cv2.line(npimg, centers[pair[0]],
-                         centers[pair[1]], (255, 255, 255), 3)
+                cv2.line(npimg, centers[pair[0]], centers[pair[1]], common.CocoColors[pair_order], 3)
 
         return npimg
 
@@ -473,6 +470,8 @@ class TfPoseEstimator:
             # cv2.line(npimg, (int(humans[pair[0]*2]),int(humans[pair[0]*2+1])), (int(humans[pair[1]*2]),int(humans[pair[1]*2+1])), common.CocoColors[pair_order], 3)
 
         return npimg
+
+
 
     def _get_scaled_img(self, npimg, scale):
         def get_base_scale(s, w, h): return max(
@@ -635,8 +634,7 @@ if __name__ == '__main__':
     f.close()
 
     t = time.time()
-    humans = PoseEstimator.estimate_paf(
-        data['peaks'], data['heatMat'], data['pafMat'])
-    dt = time.time() - t
+    humans = PoseEstimator.estimate_paf(data['peaks'], data['heatMat'], data['pafMat'])
+    dt = time.time() - t;
     t = time.time()
     logger.info('elapsed #humans=%d time=%.8f' % (len(humans), dt))
