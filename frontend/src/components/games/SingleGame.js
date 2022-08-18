@@ -172,19 +172,19 @@ const SingleMode = (state) => {
   }, []);
 
   useEffect(() => {
-    // const url = 'wss://i7e202.p.ssafy.io/fastAPI/ws/client';
-    // const ws = new WebSocket(url);
-    // setWebsckt(ws);
-    // setFPS(1);
+    const url = 'wss://i7e202.p.ssafy.io/fastAPI/ws/client';
+    const ws = new WebSocket(url);
+    setWebsckt(ws);
+    setFPS(1);
 
-    // ws.onopen = (event) => {
-    //   console.log('ws.open');
-    //   // 노래제목 보내기
-    //   ws.send(songId);
-    // };
+    ws.onopen = (event) => {
+      console.log('ws.open');
+      // 노래제목 보내기
+      ws.send(songId);
+    };
 
-    // //clean up function when we close page
-    // return () => ws.close();
+    //clean up function when we close page
+    return () => ws.close();
   }, []);
 
   useEffect(() => {
