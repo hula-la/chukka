@@ -55,6 +55,17 @@ const ProfilePageBlock = styled.div`
   }
 `;
 
+const MedalContainer = styled.div`
+  display: flex;
+  margin-bottom: 10px;
+  /* div {
+    width: 20%;
+  } */
+  img {
+    width: 100%;
+  }
+`
+
 // 사이드바 css
 const Side = styled.div`
   display: flex;
@@ -527,6 +538,9 @@ const ProfilePage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalHeader, setModalHeader] = useState('');
   const [modalMain, setModalMain] = useState('');
+  const [lectureMedal, setLectureMedal] = useState(0);
+  const [gameMedal, setGameMedal] = useState(0);
+  const [snacksMedal, setSnacksMedal] = useState(0);
 
   // 내 페이지인지 남의 페이지인지 구분
   // 1이면 나의 프로필페이지, 2이면 남의 프로필
@@ -600,6 +614,7 @@ const ProfilePage = () => {
   const [userProfile, setUserProfile] = useState(null);
 
   const userProInfo = useSelector((state) => {
+    // console.log(state);
     return state.user.userProInfo;
   });
 
@@ -626,6 +641,9 @@ const ProfilePage = () => {
       userPhone: userPhone,
       isProfile: 'true',
     };
+    setSnacksMedal(Math.min(2, Math.floor(userProInfo.userLvSnacks / 10)));
+    setLectureMedal(Math.min(2, Math.floor(userProInfo.userLvLec / 10)));
+    setGameMedal(Math.min(2, Math.floor(userProInfo.userLvGame / 10)));
     setProfileInputs({ ...temp });
     setUserProfile(userProfile);
     if (!userProfile) {
@@ -666,6 +684,8 @@ const ProfilePage = () => {
 
   const { snacksList } = useSelector((state) => state.user);
   const { hasMore } = useSelector((state) => state.user);
+
+
 
   useEffect(() => {
     if (snacksList.length === 0) {
@@ -747,6 +767,17 @@ const ProfilePage = () => {
         <hr className="line" />
         <Profile src={userProfile}></Profile>
         <p>{paramsNickname}</p>
+        <MedalContainer>
+          <div>
+            <img src={require(`../../img/medal/lecture/${lectureMedal}.png`)} alt="lectureMedal" />
+          </div>
+          <div>
+            <img src={require(`../../img/medal/game/${gameMedal}.png`)} alt="gameMedal" />
+          </div>
+          <div>
+            <img src={require(`../../img/medal/snacks/${snacksMedal}.png`)} alt="snacksMedal" />
+          </div>
+        </MedalContainer>
         <hr className="line" />
         <Menu>
           <SideBarButton onClick={onClickSnacks}>스낵스</SideBarButton>
