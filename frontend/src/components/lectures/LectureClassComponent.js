@@ -232,15 +232,19 @@ const LectureClassComponent = () => {
                 <div>
                   강의 기간 : <span>{lecSchedule}</span>
                 </div>
-                <div>
-                  강의 시간 : <span>{dayAndTime}</span>
-                </div>
-                <div>
-                  수강 인원 :{' '}
-                  <span>
-                    {lecStudent} / {lecLimit}
-                  </span>
-                </div>
+                {!lecCategory ? (
+                  <>
+                    <div>
+                      강의 시간 : <span>{dayAndTime}</span>
+                    </div>
+                    <div>
+                      수강 인원 :{' '}
+                      <span>
+                        {lecStudent} / {lecLimit}
+                      </span>
+                    </div>
+                  </>
+                ) : null}
               </div>
               {/* 수업 버튼 */}
               {lecCategory ? (
