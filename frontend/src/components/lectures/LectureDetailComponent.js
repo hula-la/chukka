@@ -106,6 +106,7 @@ const LectureDetailComponent = () => {
   const { lectureId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const sectionRef = useRef(null);
   const infoRef = useRef(null);
   const insRef = useRef(null);
   const revRef = useRef(null);
@@ -140,7 +141,14 @@ const LectureDetailComponent = () => {
     insInfo,
     cart,
   } = useSelector((state) => state.lecture.lecture);
-  const reviews = useSelector((state) => state.lecture.reviews);
+  const { sections } = useSelector((state) => state.lecture);
+  const { reviews } = useSelector((state) => state.lecture);
+
+  const scrollToSection = () => {
+    if (sectionRef && sectionRef.current) {
+      sectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const scrollToRev = () => {
     if (revRef && revRef.current) {
@@ -248,6 +256,17 @@ const LectureDetailComponent = () => {
       </LectureInfo>
       {/* <NoticeDiv>공지사항 </NoticeDiv> */}
       <LectureNav>
+        {lecCategory ? (
+          <a
+            href=""
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection();
+            }}
+          >
+            강의 목차
+          </a>
+        ) : null}
         <a
           href=""
           onClick={(e) => {
@@ -276,6 +295,11 @@ const LectureDetailComponent = () => {
           리뷰
         </a>
       </LectureNav>
+
+      <LectureSubTitle id="section" ref={sectionRef}>
+        <h1>강의 목차</h1>
+      </LectureSubTitle>
+      <SectionContainer sections={sections} />
       <LectureSubTitle id="info" ref={infoRef}>
         <h1>강의 정보</h1>
       </LectureSubTitle>
@@ -290,6 +314,7 @@ const LectureDetailComponent = () => {
       <LectureSubTitle id="review" ref={revRef}>
         <h1>리뷰</h1>
       </LectureSubTitle>
+
       <ReviewContainer reviews={reviews} />
     </Wrapper>
   );
@@ -349,11 +374,17 @@ const ReviewContainer = ({ reviews }) => {
     padding: 2rem;
   `;
   return (
-    <ReviewWrapper>
-      {reviews.map((review, index) => (
-        <ReviewItem review={review} key={index} />
-      ))}
-    </ReviewWrapper>
+    <>
+      {reviews.length ? (
+        <ReviewWrapper>
+          {reviews.map((review, index) => (
+            <ReviewItem review={review} key={index} />
+          ))}
+        </ReviewWrapper>
+      ) : (
+        <ReviewWrapper>아직 작성된 리뷰가 없어요 :(</ReviewWrapper>
+      )}
+    </>
   );
 };
 
@@ -397,5 +428,65 @@ const ReviewItem = ({ review }) => {
         <div>{reviewContents}</div>
       </div>
     </ReviewItemWrapper>
+  );
+};
+
+const SectionContainer = ({ sections }) => {
+  const Wrapper = styled.div`
+    margin: 1rem 0rem;
+    padding: 2rem;
+    min-height: 500px;
+    font-size: 24px;
+  `;
+  return (
+    <Wrapper>
+      {sections.map((section, index) => (
+        <SectionLecture section={section} index={index} key={index} />
+      ))}
+    </Wrapper>
+  );
+};
+
+const SectionLecture = ({ section, index }) => {
+  const Wrapper = styled.div`
+    width: 100%;
+    display: block;
+    color: white;
+    border-bottom: #ff2c55 0.1rem solid;
+    & .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    & .section-title {
+      font-size: 1.6rem;
+      display: block;
+    }
+    & .section-regdate {
+      font-size: 1.3rem;
+      line-height: 1.5;
+      color: rgb(255, 44, 85, 0.7);
+    }
+    & .section-content {
+      font-size: 1.2rem;
+    }
+
+    min-height: 6rem;
+    margin-bottom: 2rem;
+  `;
+
+  const { secId, secTitle, secContents, secRegDate } = section;
+
+  return (
+    <Wrapper>
+      <div className="section-header">
+        <div className="section-title">
+          {index + 1}. {secTitle}
+        </div>
+        <div className="section-regdate">{secRegDate}</div>
+      </div>
+      <div className="section-content">{secContents}</div>
+    </Wrapper>
   );
 };
