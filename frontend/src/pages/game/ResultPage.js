@@ -235,6 +235,11 @@ const ResultPage = () => {
     setRank(() => calcRank());
   }, []);
 
+  const handleImgError = (e) => {
+    console.log(defaultImage)
+    e.target.src = defaultImage
+  }
+
   return (
     <Rainbow>
       <GameResult className="background">
@@ -249,6 +254,7 @@ const ResultPage = () => {
             <Info>
               <Img>
                 <img
+                  onError={handleImgError}
                   src={`${process.env.REACT_APP_S3_URL_CHUKKA}/game/thumnail/${musicDetail.songId}`}
                 ></img>
               </Img>
@@ -267,6 +273,7 @@ const ResultPage = () => {
               {userId !== undefined && (
                 <Player>
                   <div>
+                    { }
                     <img
                       src={`${process.env.REACT_APP_S3_URL_DANCE}/img/profile/${userId}`}
                       alt="프로필 사진"
