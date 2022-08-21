@@ -198,7 +198,20 @@ const LectureDetailComponent = () => {
             <div>
               강의 기간 : <span>{lecSchedule}</span>
             </div>
-            <div>
+            {!lecCategory ? (
+              <>
+                <div>
+                  강의 시간 : <span>{dayAndTime}</span>
+                </div>
+                <div>
+                  수강 인원 :{' '}
+                  <span>
+                    {lecStudent} / {lecLimit}
+                  </span>
+                </div>
+              </>
+            ) : null}
+            {/* <div>
               강의 시간 : <span>{dayAndTime}</span>
             </div>
             <div>
@@ -206,7 +219,7 @@ const LectureDetailComponent = () => {
               <span>
                 {lecStudent} / {lecLimit}
               </span>
-            </div>
+            </div> */}
             <div>
               <>총 금액 : </>
               <span>
@@ -217,13 +230,20 @@ const LectureDetailComponent = () => {
               </span>
             </div>
           </div>
-          {!cart && lecStudent < lecLimit && (
+          {!cart && (lecStudent < lecLimit || lecCategory) && (
+            <StyledButton content="장바구니에 담기" onClick={onClick} />
+          )}
+          {!cart && !(lecStudent < lecLimit || lecCategory) && (
+            <StyledButton content="강의 인원이 가득 찼습니다." disabled />
+          )}
+          {cart && <StyledButton content="장바구니에 담겨 있습니다" disabled />}
+          {/* {!cart && lecStudent < lecLimit && (
             <StyledButton content="장바구니에 담기" onClick={onClick} />
           )}
           {!cart && lecStudent >= lecLimit && (
             <StyledButton content="강의 인원이 가득 찼습니다." disabled />
           )}
-          {cart && <StyledButton content="장바구니에 담겨 있습니다" disabled />}
+          {cart && <StyledButton content="장바구니에 담겨 있습니다" disabled />} */}
         </LectureInfoDetail>
       </LectureInfo>
       {/* <NoticeDiv>공지사항 </NoticeDiv> */}
