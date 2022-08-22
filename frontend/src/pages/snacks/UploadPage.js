@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import Tags from '@yaireo/tagify/dist/react.tagify';
 import '@yaireo/tagify/dist/tagify.css';
 import styled from 'styled-components';
-import { uploadSnacks } from '../../features/snacks/snacksActions';
+import { uploadSnacks, fetchSnacks } from '../../features/snacks/snacksActions';
 import VideoCallOutlinedIcon from '@mui/icons-material/VideoCallOutlined';
 import { useNavigate } from 'react-router-dom';
 // import SubscriptionsOutlinedIcon from '@mui/icons-material/SubscriptionsOutlined';
@@ -163,10 +163,14 @@ const UploadPage = () => {
     }
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    dispatch(uploadSnacks({ snacksTitle, snacksTag, video }));
-    window.location.replace('/snacks');
+    await dispatch(uploadSnacks({ snacksTitle, snacksTag, video }));
+    console.log('aaa');
+    await dispatch(
+      fetchSnacks({ newPage: 1, sortSnacks: 'snacksId,DESC', tags: [] }),
+    );
+    navigate('/snacks');
   };
 
   return (

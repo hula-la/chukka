@@ -46,6 +46,7 @@ export const upload = async (snacksInfo, file) => {
     },
   };
   const res = await client.post(`snacks/upload`, formData, config);
+  console.log(res)
   return res;
 };
 
