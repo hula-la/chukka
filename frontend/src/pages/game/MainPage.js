@@ -20,7 +20,7 @@ const Wrapper = styled.div`
     align-items: center;
   }
   .container {
-    height: 70vh;
+    height: 77vh;
   }
   & .game-notice {
     position: absolute;
@@ -86,7 +86,7 @@ const MainPage = () => {
           <div>
             <img
               width={'300vW'}
-              src={`${process.env.REACT_APP_S3_URL_CHUKKA}/game/thumnail/${music.songId}`}
+              src={`${process.env.REACT_APP_S3_URL_CHUKKA}/game/thumnail/${music.songId}-2`}
               alt={`${music.songId}`}
             />
             <SongInfo>
