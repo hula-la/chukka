@@ -52,7 +52,7 @@ client.interceptors.response.use(
         ] = `Bearer ${accessToken}`;
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     } finally {
       return response;
     }
