@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   fetchLectureDetail,
   fetchReviews,
+  fetchSections,
 } from '../../features/lecture/lectureActions';
 import { clearLecture } from '../../features/lecture/lectureSlice';
 import { insertCartItem, userCartCount } from '../../features/cart/cartActions';
@@ -120,6 +121,7 @@ const LectureDetailComponent = () => {
   useEffect(() => {
     dispatch(fetchLectureDetail(lectureId));
     dispatch(fetchReviews(lectureId));
+    dispatch(fetchSections(lectureId));
   }, [dispatch, lectureId]);
 
   const {
