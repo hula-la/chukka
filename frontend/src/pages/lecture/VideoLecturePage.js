@@ -336,7 +336,7 @@ const VideoLecturePage = () => {
 
   const sideBarClickHandler = (secId) => {
     setIsSideBarOpen(false);
-    navigate(`/lectures/${lectureId}/section/${secId}`);
+    navigate(`/lectures/${lectureId}/section/${secId}`, { replace: true });
   };
 
   return (
@@ -347,7 +347,7 @@ const VideoLecturePage = () => {
           <div className="video-lecture-header">
             <div
               className="video-lecture-left-div"
-              onClick={() => navigate(`/lectures/${lectureId}`)}
+              onClick={() => navigate(-1)}
             >
               <ExitToAppIcon className="video-lecture-exit" />
               <h3>강의로 돌아가기</h3>
@@ -388,7 +388,6 @@ const VideoLecturePage = () => {
               <h1 className="sidebar-title">챕터</h1>
               <a
                 href=""
-                class="closebtn"
                 onClick={(e) => {
                   e.preventDefault();
                   setIsSideBarOpen(false);
@@ -437,6 +436,7 @@ const VideoLecturePage = () => {
                       `/lectures/${lectureId}/section/${
                         parseInt(sectionIdx) - 1
                       }`,
+                      { replace: true },
                     );
                   }}
                 >{`${sectionIdx - 1}. ${
@@ -454,6 +454,7 @@ const VideoLecturePage = () => {
                       `/lectures/${lectureId}/section/${
                         parseInt(sectionIdx) + 1
                       }`,
+                      { replace: true },
                     );
                   }}
                 >
