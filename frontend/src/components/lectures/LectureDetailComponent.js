@@ -298,10 +298,14 @@ const LectureDetailComponent = () => {
         </a>
       </LectureNav>
 
-      <LectureSubTitle id="section" ref={sectionRef}>
-        <h1>강의 목차</h1>
-      </LectureSubTitle>
-      <SectionContainer sections={sections} />
+      {lecCategory ? (
+        <>
+          <LectureSubTitle id="section" ref={sectionRef}>
+            <h1>강의 목차</h1>
+          </LectureSubTitle>
+          <SectionContainer sections={sections} />
+        </>
+      ) : null}
       <LectureSubTitle id="info" ref={infoRef}>
         <h1>강의 정보</h1>
       </LectureSubTitle>
