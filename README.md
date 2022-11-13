@@ -42,11 +42,11 @@
 
 - **라이브 강의** : WebRTC 기술을 통해서 강사 화면과 자신의 화면을 비교하며 춤을 배울 수 있습니다.
 
-  ![image-20221113120252092](assets/image-20221113120252092.png)
+  ![image](https://user-images.githubusercontent.com/88833439/201503873-f99ef8a3-8e8a-40da-9efb-6c5b182d9624.png)
 
 - **녹화 강의**: 녹화 강의를 들을 수 있고, 사용자의 카메라를 on/off 하며 춤을 배울 수 있습니다.
 
-  ![image-20221113120305356](assets/image-20221113120305356.png)
+  ![image](https://user-images.githubusercontent.com/88833439/201503883-0dbaf1b7-0c97-4fc4-95be-327693c19bb5.png)
 
 ---
 
